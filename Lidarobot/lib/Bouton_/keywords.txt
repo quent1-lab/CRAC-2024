@@ -1,0 +1,17 @@
+#######################################
+# Syntax Coloring Map For Bouton
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+Bouton	KEYWORD1
+bt	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+begin	KEYWORD2
+read_Bt	KEYWORD2
+click	KEYWORD2
+press	KEYWORD2

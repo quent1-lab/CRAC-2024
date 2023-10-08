@@ -25,11 +25,7 @@ void testMoteur(void);
 void testEncodeur(void);
 
 // Fonction utilitaire
-void printLCD(String message, int ligne, int colonne, bool effacer);
-int readAnalog(int pin);
 bool readDigital(int pin);
-float analog1(int pin);
-int analog100(int pin);
 
 // Fonction moteur
 void smoothMoteur();
@@ -41,11 +37,6 @@ void setVitesseDroit(int vitesse);
 void setSensDroit(bool sensD);
 void setSensGauche(bool sensG);
 void setSpeed(float cmd);
-
-// Fonction course
-void suivieLigne(void);
-void suivie(void);
-
 
 /*---------------------- Variable des pins de sortis ---------------------------*/
 // Aucune des pins ne sont bien définies, il faut les définir en fonction des branchements
@@ -62,7 +53,6 @@ const int pinEncodeurDroitA = 17;
 const int pinEncodeurDroitB = 16;
 
 const int pinLed = 19;
-const int pinBuzzer = 5;
 const int pinBoutonJaune = 35;
 const int pinBoutonBleu = 4;
 const int pinBoutonVert = 32;
@@ -74,7 +64,7 @@ const int button_pin[4] = {pinBoutonJaune, pinBoutonBleu, pinBoutonVert, 0};
 /*----------------------------- Variables systèmes ------------------------------*/
 // Machine à état
 int etat_suivie = 0;
-int etat_sys = 1;
+int etat_sys = 0;
 int etat_test_moteur = 0;
 
 unsigned long temps_test = 0;
@@ -95,52 +85,7 @@ unsigned long temps_mot[2] = {0, 0};
 unsigned long temps_course = 0;
 unsigned long millis_avant = 0;
 
-
-/*-------------------------------- Variable asservissement --------------------------------------------*/
-// Asservissement
-float Kp = 0.55;
-float Kd = 0.5;
-float vmax = 0;
-float vitesse_max = 80.0;
-float servooo = 0;
-float erreur = 0;
-float erreur_1 = 0;
-float deriv = 0;
-float commande = 0;
-
-float distance;
-
-int last_G_D = 0;
-int compteur = 0;
-int compteur1 = 0;
-int compteur_crois = 0;
-
-int capteurAv[4] = {0};
-int capteurAr[2] = {0};
-
-float Cig = 0;
-float Cid = 0;
-float Cag = 0;
-float Cad = 0;
-
-float CigMax = 1050.0;
-float CigMin = 140.0;
-float CidMax = 1050.0;
-float CidMin = 140.0;
-
 float coefLigneDroite = 0.98;
-
-bool marque_d = false;
-bool marque_d2 = false;
-bool marque_g = false;
-bool croisement = false;
-bool cha11 = false;
-
-float gyro[3] = {0};
-float angle[3] = {0};
-
-int compteur2 = 0;
-int compteur3 = 0;
 
 void setup()
 {
@@ -158,7 +103,6 @@ void setup()
   pinMode(pinBoutonJaune, INPUT);
   pinMode(pinBoutonBleu, INPUT);
   pinMode(pinBoutonVert, INPUT);
-  pinMode(pinBuzzer, OUTPUT);
   pinMode(pinLed, OUTPUT);
 
   // initialisation des moteurs
@@ -176,11 +120,18 @@ void setup()
 void loop()
 {
   read_bt(4);
-  etat_sys = 1;
   switch (etat_sys)
   {
   case 0:
-    // Etat 0 : TEST
+    // Etat 0 : Attente du départ
+    if(bt[NOIR].click())
+    {
+      etat_sys = 1;
+      temps_test = millis();
+    }
+    break;
+  case 1:
+    // Etat 1 : Test des moteurs
     digitalWrite(pinLed, HIGH);
     testMoteur();
     break;
@@ -223,6 +174,8 @@ void read_bt(int nb_bt)
 // Fonction de test des moteurs
 void testMoteur(void)
 {
+  moteur();
+
   if (millis() > temps_test + 2000)
   {
     etat_test_moteur++;
@@ -233,10 +186,6 @@ void testMoteur(void)
   switch (etat_test_moteur)
   {
   case 0:
-    printLCD("Moteur", 0, 0, true);
-    printLCD("Niveau : ", 1, 0, false);
-    printLCD("1", 1, 9, false);
-
     setVitesseDroit(0);
     setVitesseGauche(240);
     setSensGauche(true);
@@ -250,7 +199,6 @@ void testMoteur(void)
     }
     break;
   case 2:
-    printLCD("2", 1, 9, false);
     setVitesseGauche(240);
     setSensGauche(false);
     break;
@@ -262,8 +210,6 @@ void testMoteur(void)
       temps_test = millis();
     }
   case 4:
-    printLCD("3", 1, 9, false);
-
     setVitesseDroit(240);
     setVitesseGauche(0);
     setSensDroit(true);
@@ -277,7 +223,6 @@ void testMoteur(void)
     }
     break;
   case 6:
-    printLCD("4", 1, 9, false);
     setVitesseDroit(240);
     setSensDroit(false);
     break;
@@ -289,7 +234,6 @@ void testMoteur(void)
       temps_test = millis();
     }
   case 8:
-    printLCD("5", 1, 9, false);
     setVitesseDroit(240);
     setVitesseGauche(240);
     setSensDroit(true);
@@ -305,7 +249,6 @@ void testMoteur(void)
     }
     break;
   case 10:
-    printLCD("6", 1, 9, false);
     setVitesseDroit(240);
     setVitesseGauche(240);
     setSensDroit(false);
@@ -321,7 +264,6 @@ void testMoteur(void)
     }
     break;
   case 12:
-    printLCD("7", 1, 9, false);
     setVitesseDroit(240);
     setVitesseGauche(240);
     setSensDroit(true);
@@ -337,7 +279,6 @@ void testMoteur(void)
     }
     break;
   case 14:
-    printLCD("8", 1, 9, false);
     setVitesseDroit(240);
     setVitesseGauche(240);
     setSensDroit(false);
@@ -355,7 +296,6 @@ void testMoteur(void)
   default:
     break;
   }
-  printLCD(String(digitalRead(pinEncodeurDroitB)), 1, 12, false);
 }
 
 // Fonction de test des encodeurs
@@ -397,26 +337,6 @@ void testEncodeur(void)
   }
 }
 
-// Fonction print LCD
-void printLCD(String message, int ligne, int colonne, bool effacer){
-  return;
-}
-
-int readAnalog(int pin)
-{
-  return analogRead(pin);
-}
-
-int analog100(int pin)
-{
-  return map(analogRead(pin), 0, 4095, 0, 100);
-}
-
-float analog1(int pin)
-{
-  return (analogRead(pin) / 4095.0);
-}
-
 bool readDigital(int pin)
 {
   return digitalRead(pin);
@@ -454,7 +374,7 @@ void setSensDroit(bool sensD)
 
 void moteur()
 {
-  smoothMoteur();
+  //smoothMoteur();
   digitalWrite(pinMotGaucheSens, sens_actuelle[1]);
   digitalWrite(pinMotDroitSens, sens_actuelle[0]);
   moteurGauche(vitesse_actuelle[1]);
@@ -507,160 +427,4 @@ void setSpeed(float cmd)
 
   setVitesseGauche((unsigned int)(255 * valD));
   setVitesseGauche((unsigned int)(255 * valG));
-}
-
-void getCapteurAv(void)
-{
-  // Cette fonction permet de lire les capteurs avant et de les stocker dans un tableau
-  // Les capteurs sont numérotés de 0 à 3
-}
-
-void getCapteurAr(void)
-{
-}
-
-/*-----------------------------------------− Suivie de ligne --------------------------------------------*/
-
-void suivieLigne(void)
-{
-  // Suivie d'une ligne noire sur fond blanc (noir = 0, blanc = 1050)
-  // La ligne est comprise entre les capteurs 2 et 3
-
-  if (CigMax < capteurAv[1])
-    CigMax = capteurAv[1];
-  if (CigMin > capteurAv[1])
-    CigMin = capteurAv[1];
-  if (CidMax < capteurAv[2])
-    CidMax = capteurAv[2];
-  if (CidMin > capteurAv[2])
-    CidMin = capteurAv[2];
-
-  Cig = (capteurAv[1] - CigMin) / (CigMax - CigMin);
-  Cid = (capteurAv[2] - CidMin) / (CidMax - CidMin);
-
-  erreur = Cig - Cid;
-  time_course = millis() - time_course;
-  deriv = 8 * 4000 * (erreur - erreur_1) / time_course;
-  time_course = millis();
-  erreur_1 = erreur;
-  commande = Kp * erreur + Kd * deriv;
-
-  printLCD("Cig:" + String(Cig), 0, 0, true);
-  printLCD("Cid:" + String(Cid), 0, 9, false);
-  printLCD("Erreur : " + String(erreur), 1, 0, false);
-
-  switch (etat_suivie)
-  {
-  case (0):
-    // INIT
-    printLCD("Attente depart", 0, 1, true);
-    delay(10);
-    if (bt[3].click())
-    {
-      temps_course = millis();
-      etat_suivie = 1;
-      // klaxon_reset();
-    }
-    break;
-  case (1):
-    // COURSE
-    setSpeed(commande);
-    break;
-  default:
-    break;
-  }
-  /*
-    if (erreur > 0.1)
-    {
-      setVitesseGauche(vitesse_max);
-      setVitesseDroit(vitesse_max * (1 - erreur));
-    }
-    else if (erreur < -0.1)
-    {
-      setVitesseGauche(vitesse_max * (1 + erreur));
-      setVitesseDroit(vitesse_max);
-    }
-    else
-    {
-      setVitesseGauche(vitesse_max);
-      setVitesseDroit(vitesse_max);
-    }*/
-}
-
-void suivie()
-{
-  Cig = 100 - ((capteurAv[1] * 100) / 1050);
-  Cid = 100 - ((capteurAv[2] * 100) / 1050);
-
-  int G__D = (Cig - Cid);
-
-  printLCD("Cig:" + String(Cig), 0, 0, true);
-  printLCD("Cid:" + String(Cid), 0, 9, false);
-  printLCD("G__D:" + String(G__D), 1, 0, false);
-  printLCD("etat:" + String(etat_suivie), 1, 9, false);
-
-  switch (etat_suivie)
-  {
-  case (0):
-    // INIT
-    printLCD("Attente depart", 0, 1, true);
-    delay(10);
-    if (bt[3].click())
-    {
-      //lcd.clear();
-      temps_course = millis();
-      etat_suivie = 1;
-      // klaxon_reset();
-    }
-    break;
-  case (1):
-    moteurDroit(vitesse_max);
-    moteurGauche(vitesse_max);
-    if (G__D > 0)
-      etat_suivie = 2;
-    if (G__D < 0)
-      etat_suivie = 3;
-    break;
-  case (2): // Dérive vers la droite
-  {
-    float vit = (G__D * Kp + (Kd * (G__D - last_G_D)));
-
-    moteurDroit(vitesse_max + vit);
-    moteurGauche(vitesse_max - vit);
-
-    if (G__D <= 0)
-      etat_suivie = 1;
-    /*if (Cig > 80)
-      etat_suivie = 4;*/
-    break;
-  }
-  case (3): // Dérive vers la gauche
-  {
-    float vit = (G__D * Kp + (Kd * (G__D - last_G_D))); // normalement néfatif
-
-    moteurDroit(vitesse_max + vit);
-    moteurGauche(vitesse_max - vit);
-
-    if (G__D >= 0)
-      etat_suivie = 1;
-    /*if (Cid > 80)
-      etat_suivie = 5;*/
-    break;
-  }
-  case (4): // Rattrapge vers la gauche
-    setVitesseDroit(vitesse_max * 0.9);
-    setVitesseGauche(vitesse_max * 0.2);
-
-    if (Cid > 20)
-      etat_suivie = 1;
-  case (5): // Rattrapage vers la droite
-    setVitesseDroit(vitesse_max * 0.2);
-    setVitesseGauche(vitesse_max * 0.9);
-
-    if (Cig > 20)
-      etat_suivie = 1;
-    break;
-  }
-  last_G_D = G__D;
-  millis_avant = millis();
 }

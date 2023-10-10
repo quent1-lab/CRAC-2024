@@ -297,7 +297,7 @@ void testMoteur(void)
     break;
   }
 }
-
+/*
 // Fonction de test des encodeurs
 void testEncodeur(void)
 {
@@ -336,7 +336,7 @@ void testEncodeur(void)
     printLCD("Arret", 1, 9, false);
   }
 }
-
+*/
 bool readDigital(int pin)
 {
   return digitalRead(pin);
@@ -414,8 +414,8 @@ void setSpeed(float cmd)
 {
   static float valG, valD;
 
-  valG = vmax * (1.0 + cmd);
-  valD = vmax * (1.0 - cmd);
+  valG = 255 * (1.0 + cmd);
+  valD = 255 * (1.0 - cmd);
   if (valD < 0)
     valD = 0;
   if (valD > 1)

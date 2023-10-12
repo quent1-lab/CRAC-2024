@@ -10,10 +10,9 @@
 #define VERT 2
 #define DEPART 3
 
-
 /*---------------------- Constructeur Bibliothèque -----------------------------*/
 
-Bouton bt[4];         // création d'un tableau de 3 boutons
+Bouton bt[4]; // création d'un tableau de 3 boutons
 
 /*----------------------- Prototypes des fonctions -----------------------------*/
 // Fonction pour la bibliothèque Bouton
@@ -23,6 +22,10 @@ void read_bt(int nb_bt);
 // Fonction test
 void testMoteur(void);
 void testEncodeur(void);
+
+//Fonction encodeur
+void updateEncoderRight();
+void updateEncoderLeft();
 
 // Fonction utilitaire
 bool readDigital(int pin);
@@ -64,7 +67,7 @@ const int button_pin[4] = {pinBoutonJaune, pinBoutonBleu, pinBoutonVert, 0};
 /*----------------------------- Variables systèmes ------------------------------*/
 // Machine à état
 int etat_suivie = 0;
-int etat_sys = 0;
+int etat_sys = 1;
 int etat_test_moteur = 0;
 
 unsigned long temps_test = 0;
@@ -84,8 +87,18 @@ bool sens_consigne[2] = {0, 0};
 unsigned long temps_mot[2] = {0, 0};
 unsigned long temps_course = 0;
 unsigned long millis_avant = 0;
+unsigned long millis_motG = 0;
+unsigned long millis_motD = 0;
 
 float coefLigneDroite = 0.98;
+
+// Variables pour les compteurs des encodeurs
+volatile long countLeft = 0;
+volatile bool encoderLeftAState = LOW;
+volatile bool encoderLeftBState = LOW;
+volatile long countRight = 0;
+volatile bool encoderRightAState = LOW;
+volatile bool encoderRightBState = LOW;
 
 void setup()
 {
@@ -106,41 +119,52 @@ void setup()
   pinMode(pinLed, OUTPUT);
 
   // initialisation des moteurs
-  ledcSetup(ledc_channel[0], 20000, 8);
+  ledcSetup(ledc_channel[0], 20000, 10);
   ledcSetup(ledc_channel[1], 20000, 8);
   ledcAttachPin(pinMotGauchePWM, ledc_channel[1]);
   ledcAttachPin(pinMotDroitPWM, ledc_channel[0]);
   ledcWrite(ledc_channel[0], 0);
   ledcWrite(ledc_channel[1], 0);
 
+
+
+  attachInterrupt(digitalPinToInterrupt(pinEncodeurGaucheA), updateEncoderLeft, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(pinEncodeurDroitA), updateEncoderRight, CHANGE);
+
   // initialisation des boutons
   setup_bt(4);
+  temps_test = millis();
+  temps_course = millis();
+  millis_avant = millis();
+  millis_motG = millis();
+  millis_motD = millis();
 }
 
 void loop()
 {
-  read_bt(4);
+  read_bt(3);
+  testEncodeur();
+  testMoteur();
   switch (etat_sys)
   {
   case 0:
     // Etat 0 : Attente du départ
-    if(bt[NOIR].click())
+    
+    if (bt[NOIR].click())
     {
       etat_sys = 1;
-      temps_test = millis();
     }
     break;
   case 1:
     // Etat 1 : Test des moteurs
-    digitalWrite(pinLed, HIGH);
-    testMoteur();
+    
     break;
   default:
 
     break;
   }
 
-  // moteur();
+  //moteur();
 }
 
 /*---------------------------------- Fonction Setup BT ------------------------------------*/
@@ -174,9 +198,8 @@ void read_bt(int nb_bt)
 // Fonction de test des moteurs
 void testMoteur(void)
 {
-  moteur();
 
-  if (millis() > temps_test + 2000)
+  if (millis() > temps_test + 5000)
   {
     etat_test_moteur++;
     temps_test = millis();
@@ -186,11 +209,68 @@ void testMoteur(void)
   switch (etat_test_moteur)
   {
   case 0:
+    digitalWrite(pinLed, HIGH);
+      //marche avant
+    digitalWrite(pinMotDroitSens, LOW);
+    digitalWrite(pinMotGaucheSens, LOW);
+    moteurGauche(150);
+    moteurDroit(150);
+    break;
+  case 1:
+    digitalWrite(pinLed, LOW);
+    //marche arrière
+    digitalWrite(pinMotDroitSens, HIGH);
+    digitalWrite(pinMotGaucheSens, HIGH);
+    moteurGauche(150);
+    moteurDroit(150);
+    break;
+  case 2:
+    digitalWrite(pinLed, HIGH);
+    //marche avant
+    digitalWrite(pinMotDroitSens, LOW);
+    digitalWrite(pinMotGaucheSens, LOW);
+    moteurGauche(150);
+    moteurDroit(150);
+    break;
+  case 3:
+    digitalWrite(pinLed, LOW);
+    //marche arrière
+    digitalWrite(pinMotDroitSens, HIGH);
+    digitalWrite(pinMotGaucheSens, HIGH);
+    moteurGauche(250);
+    moteurDroit(250);
+    break;
+  case 4:
+    //stop
+    digitalWrite(pinMotDroitSens, LOW);
+    digitalWrite(pinMotGaucheSens, LOW);
+    moteurGauche(0);
+    moteurDroit(0);
+    etat_test_moteur = 0;
+    break;
+  case 5:
+      etat_test_moteur = 0;
+    break;
+  default:
+    break;
+  }
+  /*if (millis() > temps_test + 2000)
+  {
+    etat_test_moteur++;
+    temps_test = millis();
+  }
+
+  // test des moteurs
+  switch (etat_test_moteur)
+  {
+  case 0:
+    digitalWrite(pinLed, HIGH);
     setVitesseDroit(0);
     setVitesseGauche(240);
     setSensGauche(true);
     break;
   case 1:
+    digitalWrite(pinLed, LOW);
     setVitesseGauche(0);
     if (vitesse_actuelle[1] == vitesse_consigne[1])
     {
@@ -199,6 +279,7 @@ void testMoteur(void)
     }
     break;
   case 2:
+    digitalWrite(pinLed, HIGH);
     setVitesseGauche(240);
     setSensGauche(false);
     break;
@@ -295,48 +376,78 @@ void testMoteur(void)
     break;
   default:
     break;
-  }
+  }*/
 }
-/*
-// Fonction de test des encodeurs
-void testEncodeur(void)
-{
-  // test des encodeurs
-  // moteur gauche
-  if (digitalRead(pinEncodeurGaucheA) == 1 && digitalRead(pinEncodeurGaucheB) == 0)
-  {
-    printLCD("Gauche : ", 0, 0, true);
-    printLCD("Avance", 1, 0, false);
-  }
-  else if (digitalRead(pinEncodeurGaucheA) == 0 && digitalRead(pinEncodeurGaucheB) == 1)
-  {
-    printLCD("Gauche : ", 0, 0, true);
-    printLCD("Recule", 1, 0, false);
-  }
-  else
-  {
-    printLCD("Gauche : ", 0, 0, true);
-    printLCD("Arret", 1, 0, false);
-  }
 
-  // moteur droit
-  if (digitalRead(pinEncodeurDroitA) == 1 && digitalRead(pinEncodeurDroitB) == 0)
-  {
-    printLCD("Droit : ", 0, 9, true);
-    printLCD("Avance", 1, 9, false);
-  }
-  else if (digitalRead(pinEncodeurDroitA) == 0 && digitalRead(pinEncodeurDroitB) == 1)
-  {
-    printLCD("Droit : ", 0, 9, true);
-    printLCD("Recule", 1, 9, false);
-  }
-  else
-  {
-    printLCD("Droit : ", 0, 9, true);
-    printLCD("Arret", 1, 9, false);
-  }
+void updateEncoderRight() {
+  // Lire l'état actuel des broches A et B de l'encodeur droit
+  bool newAState = digitalRead(pinEncodeurDroitA);
+  bool newBState = digitalRead(pinEncodeurDroitB);
+
+  // Combiner les états actuels pour déterminer le sens de rotation
+  // Cette logique peut varier en fonction de votre encodeur
+  int encoderDirection = (encoderRightAState ^ newBState) ? 1 : -1;
+
+  // Mettre à jour le compteur de l'encodeur en fonction du sens de rotation
+  countRight += encoderDirection;
+
+  // Mettre à jour les états pour la prochaine interruption
+  encoderRightAState = newAState;
+  encoderRightBState = newBState;
+  
 }
-*/
+
+
+void updateEncoderLeft() {
+  // Lire l'état actuel des broches A et B de l'encodeur
+  bool newAState = digitalRead(pinEncodeurGaucheA);
+  bool newBState = digitalRead(pinEncodeurGaucheB);
+
+  // Combiner les états actuels pour déterminer le sens de rotation
+  // Cette logique peut varier en fonction de votre encodeur
+  int encoderDirection = (encoderLeftAState ^ newBState) ? 1 : -1;
+
+  // Mettre à jour le compteur de l'encodeur en fonction du sens de rotation
+  countLeft += encoderDirection;
+
+  // Mettre à jour les états pour la prochaine interruption
+  encoderLeftAState = newAState;
+  encoderLeftBState = newBState;
+}
+
+// Fonction de test des encodeurs
+void testEncodeur() {
+  // Lire les compteurs des encodeurs
+  long leftCount = countLeft;
+  long rightCount = countRight;
+
+  // Calculer la vitesse en fonction du nombre de pulsations par unité de temps
+  // Cela dépendra de la résolution de vos encodeurs et de votre configuration matérielle
+  double leftSpeed = leftCount * (1.0/(12*(millis() - millis_motG)));
+  double rightSpeed = rightCount * (1.0/(12*(millis() - millis_motD)));
+
+  // Réinitialiser les compteurs
+  //countLeft = 0;
+  //countRight = 0;
+  millis_motG = millis();
+  millis_motD = millis();
+
+  // Déterminer le sens de rotation en fonction du signe de la vitesse
+  String leftDirection = (leftSpeed > 0) ? "avant" : "arrière";
+  String rightDirection = (rightSpeed > 0) ? "avant" : "arrière";
+
+  // Afficher la vitesse et le sens de rotation
+  Serial.print("Moteur Gauche: Vitesse = ");
+  Serial.print(abs(leftSpeed));  // Vitesse absolue
+  Serial.print(" Sens: ");
+  Serial.print(leftDirection);
+
+  Serial.print("    Moteur Droit: Vitesse = ");
+  Serial.print(abs(rightSpeed));  // Vitesse absolue
+  Serial.print(" Sens: ");
+  Serial.println(rightDirection);
+}
+
 bool readDigital(int pin)
 {
   return digitalRead(pin);
@@ -374,7 +485,7 @@ void setSensDroit(bool sensD)
 
 void moteur()
 {
-  //smoothMoteur();
+  // smoothMoteur();
   digitalWrite(pinMotGaucheSens, sens_actuelle[1]);
   digitalWrite(pinMotDroitSens, sens_actuelle[0]);
   moteurGauche(vitesse_actuelle[1]);

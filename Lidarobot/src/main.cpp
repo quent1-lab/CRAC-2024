@@ -37,8 +37,9 @@ void testMoteur(void);
 void testEncodeur(void);
 
 // Fonction encodeur
-void updateEncoderRight();
-void updateEncoderLeft();
+void odometrie(float &x, float &y, float &theta);
+int readEncoderRight();
+int readEncoderLeft();
 
 // Fonction utilitaire
 bool readDigital(int pin);
@@ -391,6 +392,56 @@ void testEncodeur()
   Serial.println("   Encoder Position Gauche: " + String(encoderG.getCount() / 2));
 }
 
+/*---------------------- Fonction des encodeurs ---------------------------*/
+int readEncoderRight()
+{
+  return encoderD.getCount();
+}
+
+int readEncoderLeft()
+{
+  return encoderG.getCount();
+}
+
+void odometrie(float &x, float &y, float &theta)
+{
+  // Cette fonction permet de calculer la position du robot en fonction des encodeurs
+
+  // Variables locales  
+  float deltaD, deltaG, deltaT, deltaS, deltaTheta, theta;
+  float x0, y0, vitesse0;
+
+  // Lecture des encodeurs
+  deltaD = readEncoderRight() - oldPositionD;
+  deltaG = readEncoderLeft() - oldPositionG;
+
+  // Calcul de la distance parcourue par chaque roue
+  deltaD = deltaD * 2 * PI * rayon / 360;
+  deltaG = deltaG * 2 * PI * rayon / 360;
+
+  // Calcul de la distance parcourue par le robot
+  deltaS = (deltaD + deltaG) / 2;
+
+  // Calcul de la variation d'angle
+  deltaTheta = (deltaD - deltaG) / (2 * 0.143);
+
+  // Calcul de la nouvelle position
+  x = x + deltaS * cos(theta + deltaTheta / 2);
+  y = y + deltaS * sin(theta + deltaTheta / 2);
+  theta = theta + deltaTheta;
+
+  // Mise à jour des variables
+  oldPositionD = readEncoderRight();
+  oldPositionG = readEncoderLeft();
+
+  // Affichage des variables
+  Serial.print("x = ");
+  Serial.print(x);
+  Serial.print("   y = ");
+  Serial.print(y);
+  Serial.print("   theta = ");
+  Serial.println(theta);
+}
 bool readDigital(int pin)
 {
   return digitalRead(pin);

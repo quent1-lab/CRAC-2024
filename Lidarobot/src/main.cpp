@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <Wire.h>
 #include "Bouton.h"
-
+#include <ESP32Encoder.h>
 /*-------------------------------- DEFINE --------------------------------------*/
 
 // define pour les boutons
@@ -10,9 +10,22 @@
 #define VERT 2
 #define DEPART 3
 
+// Pin des encodeurs
+const int pinEncodeurGaucheA = 33;
+const int pinEncodeurGaucheB = 13;
+const int pinEncodeurDroitA = 17;
+const int pinEncodeurDroitB = 16;
+
 /*---------------------- Constructeur Bibliothèque -----------------------------*/
 
 Bouton bt[4]; // création d'un tableau de 3 boutons
+
+ESP32Encoder encoderG;
+ESP32Encoder encoderD;
+
+// timer and flag for example, not needed for encoders
+unsigned long encoder2lastToggled;
+bool encoder2Paused = false;
 
 /*----------------------- Prototypes des fonctions -----------------------------*/
 // Fonction pour la bibliothèque Bouton
@@ -23,7 +36,7 @@ void read_bt(int nb_bt);
 void testMoteur(void);
 void testEncodeur(void);
 
-//Fonction encodeur
+// Fonction encodeur
 void updateEncoderRight();
 void updateEncoderLeft();
 
@@ -49,12 +62,6 @@ const int pinMotGauchePWM = 14;
 const int pinMotDroitSens = 25;
 const int pinMotDroitPWM = 27;
 
-// Pin des encodeurs
-const int pinEncodeurGaucheA = 33;
-const int pinEncodeurGaucheB = 13;
-const int pinEncodeurDroitA = 17;
-const int pinEncodeurDroitB = 16;
-
 const int pinLed = 19;
 const int pinBoutonJaune = 35;
 const int pinBoutonBleu = 4;
@@ -67,7 +74,7 @@ const int button_pin[4] = {pinBoutonJaune, pinBoutonBleu, pinBoutonVert, 0};
 /*----------------------------- Variables systèmes ------------------------------*/
 // Machine à état
 int etat_suivie = 0;
-int etat_sys = 1;
+int etat_sys = 10;
 int etat_test_moteur = 0;
 
 unsigned long temps_test = 0;
@@ -93,26 +100,16 @@ unsigned long millis_motD = 0;
 float coefLigneDroite = 0.98;
 
 // Variables pour les compteurs des encodeurs
-volatile long countLeft = 0;
-volatile bool encoderLeftAState = LOW;
-volatile bool encoderLeftBState = LOW;
-volatile long countRight = 0;
-volatile bool encoderRightAState = LOW;
-volatile bool encoderRightBState = LOW;
+long oldPositionG = -999;
+long oldPositionD = -999;
+float rayon = 0.022;
 
 void setup()
 {
-  Wire.begin();
-  delay(100);
-
   // put your setup code here, to run once:
-  Serial.begin(9600);
+  Serial.begin(115200);
   pinMode(pinMotGaucheSens, OUTPUT);
   pinMode(pinMotDroitSens, OUTPUT);
-  pinMode(pinEncodeurGaucheA, INPUT);
-  pinMode(pinEncodeurGaucheB, INPUT);
-  pinMode(pinEncodeurDroitA, INPUT);
-  pinMode(pinEncodeurDroitB, INPUT);
   pinMode(pinBoutonJaune, INPUT);
   pinMode(pinBoutonBleu, INPUT);
   pinMode(pinBoutonVert, INPUT);
@@ -126,13 +123,20 @@ void setup()
   ledcWrite(ledc_channel[0], 0);
   ledcWrite(ledc_channel[1], 0);
 
+  // initialisation des encodeurs
+  // ESP32Encoder::useInternalWeakPullResistors=DOWN;
+  // Enable the weak pull up resistors
+  //ESP32Encoder::useInternalWeakPullResistors = UP;
 
+  encoderD.attachHalfQuad(pinEncodeurDroitA, pinEncodeurDroitB);
+  encoderG.attachHalfQuad(pinEncodeurGaucheA, pinEncodeurGaucheB);
 
-  attachInterrupt(digitalPinToInterrupt(pinEncodeurGaucheA), updateEncoderLeft, CHANGE);
-  attachInterrupt(digitalPinToInterrupt(pinEncodeurDroitA), updateEncoderRight, CHANGE);
+  // set starting count value after attaching
+  encoderD.setCount(0);
+  encoderG.setCount(0);
 
   // initialisation des boutons
-  setup_bt(4);
+  setup_bt(3);
   temps_test = millis();
   temps_course = millis();
   millis_avant = millis();
@@ -149,7 +153,7 @@ void loop()
   {
   case 0:
     // Etat 0 : Attente du départ
-    
+
     if (bt[NOIR].click())
     {
       etat_sys = 1;
@@ -164,7 +168,7 @@ void loop()
     break;
   }
 
-  //moteur();
+  // moteur();
 }
 
 /*---------------------------------- Fonction Setup BT ------------------------------------*/
@@ -210,7 +214,7 @@ void testMoteur(void)
   {
   case 0:
     digitalWrite(pinLed, HIGH);
-      //marche avant
+    // marche avant
     digitalWrite(pinMotDroitSens, LOW);
     digitalWrite(pinMotGaucheSens, LOW);
     moteurGauche(150);
@@ -218,7 +222,7 @@ void testMoteur(void)
     break;
   case 1:
     digitalWrite(pinLed, LOW);
-    //marche arrière
+    // marche arrière
     digitalWrite(pinMotDroitSens, HIGH);
     digitalWrite(pinMotGaucheSens, HIGH);
     moteurGauche(150);
@@ -226,7 +230,7 @@ void testMoteur(void)
     break;
   case 2:
     digitalWrite(pinLed, HIGH);
-    //marche avant
+    // marche avant
     digitalWrite(pinMotDroitSens, LOW);
     digitalWrite(pinMotGaucheSens, LOW);
     moteurGauche(150);
@@ -234,14 +238,14 @@ void testMoteur(void)
     break;
   case 3:
     digitalWrite(pinLed, LOW);
-    //marche arrière
+    // marche arrière
     digitalWrite(pinMotDroitSens, HIGH);
     digitalWrite(pinMotGaucheSens, HIGH);
     moteurGauche(250);
     moteurDroit(250);
     break;
   case 4:
-    //stop
+    // stop
     digitalWrite(pinMotDroitSens, LOW);
     digitalWrite(pinMotGaucheSens, LOW);
     moteurGauche(0);
@@ -249,7 +253,7 @@ void testMoteur(void)
     etat_test_moteur = 0;
     break;
   case 5:
-      etat_test_moteur = 0;
+    etat_test_moteur = 0;
     break;
   default:
     break;
@@ -379,73 +383,12 @@ void testMoteur(void)
   }*/
 }
 
-void updateEncoderRight() {
-  // Lire l'état actuel des broches A et B de l'encodeur droit
-  bool newAState = digitalRead(pinEncodeurDroitA);
-  bool newBState = digitalRead(pinEncodeurDroitB);
-
-  // Combiner les états actuels pour déterminer le sens de rotation
-  // Cette logique peut varier en fonction de votre encodeur
-  int encoderDirection = (encoderRightAState ^ newBState) ? 1 : -1;
-
-  // Mettre à jour le compteur de l'encodeur en fonction du sens de rotation
-  countRight += encoderDirection;
-
-  // Mettre à jour les états pour la prochaine interruption
-  encoderRightAState = newAState;
-  encoderRightBState = newBState;
-  
-}
-
-
-void updateEncoderLeft() {
-  // Lire l'état actuel des broches A et B de l'encodeur
-  bool newAState = digitalRead(pinEncodeurGaucheA);
-  bool newBState = digitalRead(pinEncodeurGaucheB);
-
-  // Combiner les états actuels pour déterminer le sens de rotation
-  // Cette logique peut varier en fonction de votre encodeur
-  int encoderDirection = (encoderLeftAState ^ newBState) ? 1 : -1;
-
-  // Mettre à jour le compteur de l'encodeur en fonction du sens de rotation
-  countLeft += encoderDirection;
-
-  // Mettre à jour les états pour la prochaine interruption
-  encoderLeftAState = newAState;
-  encoderLeftBState = newBState;
-}
-
 // Fonction de test des encodeurs
-void testEncodeur() {
-  // Lire les compteurs des encodeurs
-  long leftCount = countLeft;
-  long rightCount = countRight;
-
-  // Calculer la vitesse en fonction du nombre de pulsations par unité de temps
-  // Cela dépendra de la résolution de vos encodeurs et de votre configuration matérielle
-  double leftSpeed = leftCount * (1.0/(12*(millis() - millis_motG)));
-  double rightSpeed = rightCount * (1.0/(12*(millis() - millis_motD)));
-
-  // Réinitialiser les compteurs
-  //countLeft = 0;
-  //countRight = 0;
-  millis_motG = millis();
-  millis_motD = millis();
-
-  // Déterminer le sens de rotation en fonction du signe de la vitesse
-  String leftDirection = (leftSpeed > 0) ? "avant" : "arrière";
-  String rightDirection = (rightSpeed > 0) ? "avant" : "arrière";
-
-  // Afficher la vitesse et le sens de rotation
-  Serial.print("Moteur Gauche: Vitesse = ");
-  Serial.print(abs(leftSpeed));  // Vitesse absolue
-  Serial.print(" Sens: ");
-  Serial.print(leftDirection);
-
-  Serial.print("    Moteur Droit: Vitesse = ");
-  Serial.print(abs(rightSpeed));  // Vitesse absolue
-  Serial.print(" Sens: ");
-  Serial.println(rightDirection);
+void testEncodeur()
+{
+  long newPosition = encoderD.getCount() / 2;
+  Serial.print("Encoder Position Droit: " + String(newPosition));
+  Serial.println("   Encoder Position Gauche: " + String(encoderG.getCount() / 2));
 }
 
 bool readDigital(int pin)

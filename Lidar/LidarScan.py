@@ -100,6 +100,33 @@ def draw_point(x, y, angle, distance):
     pygame.display.update()
     lcd.fill(BLACK)
 
+def detect_object(scan):
+    """
+    détecte l'objet le plus proche du robot
+    et détermine une zone moyenne de l'objet
+    en fonction des points autour de l'objet
+    """
+
+    objet = min(scan, key=lambda x: x[2])
+    angle_objet = objet[1]
+    distance_objet = objet[2]
+
+    #détermine les points autour de l'objet
+    points_autour_objet = []
+    for point in scan:
+        if point[1] > angle_objet-5 and point[1] < angle_objet+5:
+            points_autour_objet.append(point)
+
+    #détermine la zone moyenne de l'objet
+    zone_objet = 0
+    for point in points_autour_objet:
+        zone_objet += point[2]
+    zone_objet = zone_objet/len(points_autour_objet)
+
+    return zone_objet
+
+
+
 try:
     # Commencez la collecte de données
     lidar.connect()

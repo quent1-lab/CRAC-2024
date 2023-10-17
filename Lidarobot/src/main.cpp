@@ -105,6 +105,11 @@ long oldPositionG = -999;
 long oldPositionD = -999;
 float rayon = 0.022;
 
+/*----------------------------- Variables pour l'odométrie ------------------------------*/
+float x = 0;
+float y = 0;
+float theta = 0;
+
 void setup()
 {
   // put your setup code here, to run once:
@@ -387,9 +392,7 @@ void testMoteur(void)
 // Fonction de test des encodeurs
 void testEncodeur()
 {
-  long newPosition = encoderD.getCount() / 2;
-  Serial.print("Encoder Position Droit: " + String(newPosition));
-  Serial.println("   Encoder Position Gauche: " + String(encoderG.getCount() / 2));
+  odometrie(&x, &y, &theta);
 }
 
 /*---------------------- Fonction des encodeurs ---------------------------*/
@@ -403,7 +406,7 @@ int readEncoderLeft()
   return encoderG.getCount();
 }
 
-void odometrie(float &x, float &y, float &theta)
+void odometrie(float* x, float* y, float* theta)
 {
   // Cette fonction permet de calculer la position du robot en fonction des encodeurs
 
@@ -426,9 +429,9 @@ void odometrie(float &x, float &y, float &theta)
   deltaTheta = (deltaD - deltaG) / (2 * 0.143);
 
   // Calcul de la nouvelle position
-  x = x + deltaS * cos(theta + deltaTheta / 2);
-  y = y + deltaS * sin(theta + deltaTheta / 2);
-  theta = theta + deltaTheta;
+  *x = *x + deltaS * cos(*theta + deltaTheta / 2);
+  *y = *y + deltaS * sin(*theta + deltaTheta / 2);
+  *theta = *theta + deltaTheta;
 
   // Mise à jour des variables
   oldPositionD = readEncoderRight();
@@ -436,12 +439,13 @@ void odometrie(float &x, float &y, float &theta)
 
   // Affichage des variables
   Serial.print("x = ");
-  Serial.print(x);
-  Serial.print("   y = ");
-  Serial.print(y);
-  Serial.print("   theta = ");
-  Serial.println(theta);
+  Serial.print(*x);
+  Serial.print(" y = ");
+  Serial.print(*y);
+  Serial.print(" theta = ");
+  Serial.println(*theta);
 }
+
 bool readDigital(int pin)
 {
   return digitalRead(pin);

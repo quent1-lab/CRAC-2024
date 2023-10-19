@@ -3,19 +3,13 @@ from rplidar import RPLidar
 import pygame
 import math
 import random
+import time
 
 # Set up logging
 logging.basicConfig(filename='lidar_scan.log', level=logging.INFO)
 
 # Specify the serial port you are using for the LiDAR S1 (e.g. '/dev/ttyUSB0' on Linux)
 port = 'COM8'  # Change this according to your configuration
-
-try:
-    # Create an instance of the LiDAR S1
-    lidar = RPLidar(port)
-except Exception as e:
-    logging.error(f"Failed to create an instance of RPLidar: {e}")
-    raise
 
 # Initialize pygame
 pygame.init()
@@ -28,6 +22,7 @@ pygame.mouse.set_visible(False)
 
 # Fill the screen with black
 BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
 lcd.fill(BLACK)
 
 # Update the screen to display black
@@ -52,15 +47,16 @@ def draw_robot(x, y, angle):
         y (int): Y coordinate of the robot in mm
         angle (int): Angle of the robot in degrees
     """
-    pygame.draw.circle(lcd, pygame.Color(POINT_COLOR), (x*(X_RATIO), y*(Y_RATIO)), 10)
-    pygame.draw.line(lcd, pygame.Color(POINT_COLOR), (x*(X_RATIO), y*(Y_RATIO)), ((x+50*math.cos(angle))*(X_RATIO), (y+50*math.sin(angle))*(Y_RATIO)), 2)
+    pygame.draw.circle(lcd, pygame.Color(0,0,250), (x*(X_RATIO), y*(Y_RATIO)), 10)
+    pygame.draw.line(lcd, pygame.Color(0,0,250), (x*(X_RATIO), y*(Y_RATIO)), ((x+50*math.cos(angle))*(X_RATIO), (y+50*math.sin(angle))*(Y_RATIO)), 3)
 
 def draw_field():
     """Draw the field on the pygame window
     """
-    pygame.draw.rect(lcd, pygame.Color(POINT_COLOR), (BORDER_DISTANCE*(X_RATIO), BORDER_DISTANCE*(Y_RATIO), (FIELD_SIZE[0]-2*BORDER_DISTANCE)*(X_RATIO), (FIELD_SIZE[1]-2*BORDER_DISTANCE)*(Y_RATIO)), 2)
+    pygame.draw.rect(lcd, pygame.Color(100,100,100), (BORDER_DISTANCE*(X_RATIO)-5, BORDER_DISTANCE*(Y_RATIO)-5, (FIELD_SIZE[0]-2*BORDER_DISTANCE)*(X_RATIO)+10, (FIELD_SIZE[1]-2*BORDER_DISTANCE)*(Y_RATIO)+10), 10)
 
 def draw_point(x, y, angle, distance):
+    global ROBOT_ANGLE
     """Draw a point on the pygame window
 
     Args:
@@ -69,9 +65,9 @@ def draw_point(x, y, angle, distance):
         angle (int): Angle of the point in degrees
         distance (int): Distance of the point in mm
     """
-    new_angle = angle + ROBOT_ANGLE
-    if new_angle > 360:
-        new_angle = new_angle - 360
+    new_angle = angle - ROBOT_ANGLE
+    if new_angle < 0:
+        new_angle = new_angle + 360
     x = X_ROBOT + int(distance * math.cos(new_angle * math.pi / 180)) #* 299 / 5000 
     y = Y_ROBOT + int(distance * math.sin(new_angle * math.pi / 180))
 
@@ -93,13 +89,17 @@ def draw_point(x, y, angle, distance):
         POINT_COLOR = (0,255,0)
     
     try:
-        pygame.draw.circle(lcd, pygame.Color(POINT_COLOR), (x*(X_RATIO), y*(Y_RATIO)), 2)
+        pygame.draw.circle(lcd, pygame.Color(POINT_COLOR), (x*(X_RATIO), y*(Y_RATIO)), 4)
     except pygame.error as e:
         print("Failed to draw circle")
         logging.error(f"Failed to draw circle: {e}")
 
-    pygame.display.update()
-    lcd.fill(BLACK)
+def draw_object(object):
+    """Draw an object on the pygame window
+    Args:
+        object (tuple): Tuple containing the x and y coordinates of the object in mm
+    """
+    pygame.draw.circle(lcd, pygame.Color(255,0,255), (object[0]*(X_RATIO), object[1]*(Y_RATIO)), object[2]*(X_RATIO))
 
 def detect_object(scan):
     """
@@ -116,18 +116,37 @@ def detect_object(scan):
     points_autour_objet = []
     for point in scan:
         if point[1] > angle_objet-5 and point[1] < angle_objet+5:
-            points_autour_objet.append(point)
+            #Il ne faut pas prendre les valeurs de distance trop éloigné de l'objet
+            if point[2] < distance_objet + 100 and point[2] > distance_objet - 100:
+                points_autour_objet.append(point)
+    """
+    Bloquer la detection au terrain
+    """
 
-    #détermine la zone moyenne de l'objet
-    zone_objet = 0
+    #détermine la zone moyenne de l'objet (x , y, taille)
+    x = 0
+    y = 0
+    taille = 0
     for point in points_autour_objet:
-        zone_objet += point[2]
-    zone_objet = zone_objet/len(points_autour_objet)
+        new_angle = point[1] - ROBOT_ANGLE
+        if new_angle < 0:
+            new_angle = new_angle + 360
+        x += point[2] * math.cos(new_angle * math.pi / 180)
+        y += point[2] * math.sin(new_angle * math.pi / 180)
+        #Taille de l'objet en fonction de la distance et l'angle entre les points extrêmes
+    angle_min = min(points_autour_objet, key=lambda x: x[1])
+    angle_max = max(points_autour_objet, key=lambda x: x[1])
+    distance_min = min(points_autour_objet, key=lambda x: x[2])
+    distance_max = max(points_autour_objet, key=lambda x: x[2])
+    taille = math.sqrt((distance_max[2] * math.cos(angle_max[1] * math.pi / 180) - distance_min[2] * math.cos(angle_min[1] * math.pi / 180))**2 + (distance_max[2] * math.sin(angle_max[1] * math.pi / 180) - distance_min[2] * math.sin(angle_min[1] * math.pi / 180))**2)
 
-    #affiche la zone de l'objet
-    pygame.draw.circle(lcd, pygame.Color(255,0,255), (X_ROBOT*(X_RATIO), Y_ROBOT*(Y_RATIO)), int(zone_objet*(X_RATIO)))
+    """x = x / len(points_autour_objet)
+    y = y / len(points_autour_objet)"""
 
-    return zone_objet
+    x = X_ROBOT + int(x / len(points_autour_objet))
+    y = Y_ROBOT + int(y / len(points_autour_objet))
+
+    return (x, y, taille)
 
 def tracking_object(zone_objet,zone_objet_precedente):
     """
@@ -142,41 +161,78 @@ def tracking_object(zone_objet,zone_objet_precedente):
         return "stable"
 
 def valeur_de_test():
+    global ROBOT_ANGLE
     """
     Permet de tester le code sans avoir le lidar avec des valeurs de test aléatoire
-    Les mesures en mm doivent avoir un lien avec les valeurs précédentes
+    Les mesures en mm doivent être cohérentes avec les valeurs de FIELD_SIZE
+    Il ne faut qu'un seul object sur le terrain
     """
+    #Décaler l'angle des points en fonction de l'angle du robot en degrés et en saturant les valeurs à 360
     scan = []
-    for i in range(360):
-        scan.append((0,i,random.randint(0,3000)))
+    for i in range(350):
+        angle = i + ROBOT_ANGLE
+        if angle > 360:
+            angle = angle - 360
+        distance = 3000
+        scan.append((0, angle, distance))
+    for i in range(350, 360):
+        angle = i + ROBOT_ANGLE
+        if angle > 360:
+            angle = angle - 360
+        distance = random.randint(800,850)
+        scan.append((0, angle, distance))
+
     return scan
 
 def programme_test():
+    global X_ROBOT, Y_ROBOT, ROBOT_ANGLE
     """
     Permet de tester le code sans avoir le lidar
     """
+    print("Programme de test")
     zone_objet_precedente = 0
     while True:
         scan = valeur_de_test()
         zone_objet = detect_object(scan)
         draw_field()
         draw_robot(X_ROBOT, Y_ROBOT, ROBOT_ANGLE)
-        draw_point(X_ROBOT, Y_ROBOT, 0, zone_objet)
-        detect_object(scan)
+        draw_object(zone_objet)
+        for point in scan:
+            draw_point(X_ROBOT, Y_ROBOT, point[1], point[2])
         zone_objet_precedente = zone_objet
+        pygame.display.update()
+        time.sleep(0.1)
+        lcd.fill(WHITE)
+        #Déplacement du robot dans une zone de 500*500 mm du centre du terrain
+        ROBOT_ANGLE += 1
 
-try:
-    # Commencez la collecte de données
-    lidar.connect()
-    logging.info("Starting LiDAR motor")
 
-    while True:
-        for scan in lidar.iter_scans(200000):
-            for (_, angle, distance) in scan:
-                draw_robot(X_ROBOT, Y_ROBOT, ROBOT_ANGLE)
-                draw_field()
-                draw_point(X_ROBOT, Y_ROBOT, angle, distance)
 
-except KeyboardInterrupt:
-    lidar.disconnect()
-    pass
+
+
+def __main__():
+    try:
+        # Create an instance of the LiDAR S1
+        lidar = RPLidar(port)
+    except Exception as e:
+        programme_test()
+        logging.error(f"Failed to create an instance of RPLidar: {e}")
+        raise
+    try:
+        # Commencez la collecte de données
+        lidar.connect()
+        logging.info("Starting LiDAR motor")
+
+        while True:
+            for scan in lidar.iter_scans(200000):
+                for (_, angle, distance) in scan:
+                    draw_robot(X_ROBOT, Y_ROBOT, ROBOT_ANGLE)
+                    draw_field()
+                    draw_point(X_ROBOT, Y_ROBOT, angle, distance)
+
+    except KeyboardInterrupt:
+        lidar.disconnect()
+        pass
+
+if __name__ == '__main__':
+    __main__()

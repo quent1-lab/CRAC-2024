@@ -2,6 +2,7 @@ import logging
 from rplidar import RPLidar
 import pygame
 import math
+import random
 
 # Set up logging
 logging.basicConfig(filename='lidar_scan.log', level=logging.INFO)
@@ -123,6 +124,9 @@ def detect_object(scan):
         zone_objet += point[2]
     zone_objet = zone_objet/len(points_autour_objet)
 
+    #affiche la zone de l'objet
+    pygame.draw.circle(lcd, pygame.Color(255,0,255), (X_ROBOT*(X_RATIO), Y_ROBOT*(Y_RATIO)), int(zone_objet*(X_RATIO)))
+
     return zone_objet
 
 def tracking_object(zone_objet,zone_objet_precedente):
@@ -137,7 +141,29 @@ def tracking_object(zone_objet,zone_objet_precedente):
     else:
         return "stable"
 
+def valeur_de_test():
+    """
+    Permet de tester le code sans avoir le lidar avec des valeurs de test aléatoire
+    Les mesures en mm doivent avoir un lien avec les valeurs précédentes
+    """
+    scan = []
+    for i in range(360):
+        scan.append((0,i,random.randint(0,3000)))
+    return scan
 
+def programme_test():
+    """
+    Permet de tester le code sans avoir le lidar
+    """
+    zone_objet_precedente = 0
+    while True:
+        scan = valeur_de_test()
+        zone_objet = detect_object(scan)
+        draw_field()
+        draw_robot(X_ROBOT, Y_ROBOT, ROBOT_ANGLE)
+        draw_point(X_ROBOT, Y_ROBOT, 0, zone_objet)
+        detect_object(scan)
+        zone_objet_precedente = zone_objet
 
 try:
     # Commencez la collecte de données

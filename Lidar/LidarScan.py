@@ -125,6 +125,18 @@ def detect_object(scan):
 
     return zone_objet
 
+def tracking_object(zone_objet,zone_objet_precedente):
+    """
+    Permet de tracker le robot pour connaitre sa trajectoire et sa vitesse
+    Meme si une perte de detection à lieu
+    """
+    if zone_objet > zone_objet_precedente:
+        return "avance"
+    elif zone_objet < zone_objet_precedente:
+        return "recule"
+    else:
+        return "stable"
+
 
 
 try:

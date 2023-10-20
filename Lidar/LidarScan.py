@@ -8,8 +8,8 @@ import time
 # Set up logging
 logging.basicConfig(filename='lidar_scan.log', level=logging.INFO)
 
-# Specify the serial port you are using for the LiDAR S1 (e.g. '/dev/ttyUSB0' on Linux)
-port = 'COM8'  # Change this according to your configuration
+# Specify the serial port you are using for the LiDAR S1 (e.g. '/dev/ttyUSB0' on Linux) and check in the list of devices 
+port = 'COM5'  # Change this according to your configuration
 
 # Initialize pygame
 pygame.init()
@@ -19,6 +19,9 @@ lcd = pygame.display.set_mode((900, 600))
 
 # Hide the mouse cursor
 pygame.mouse.set_visible(False)
+
+# Set the title of the pygame window
+pygame.display.set_caption('LiDAR Scan')
 
 # Fill the screen with black
 BLACK = (0, 0, 0)
@@ -231,19 +234,24 @@ def __main__():
                     draw_point(X_ROBOT, Y_ROBOT, angle, distance)
                     #SI la touche q est pressée, le programme s'arrête
                     if pygame.key.get_pressed()[pygame.K_q]:
-                        lidar.stop_motor()
+                        lidar.stop()
+                        lidar.reset()
+                        time.sleep(1)
                         lidar.disconnect()
                         pygame.quit()
+                        exit(0)
 
                 pygame.display.update()
                 lcd.fill(WHITE)
 
     except KeyboardInterrupt:
         print("Stopping LiDAR motor")
-        time.sleep(2)
-        lidar.stop_motor()
+        lidar.stop()
+        lidar.reset()
+        time.sleep(1)
         lidar.disconnect()
         pygame.quit()
+        exit(0)
         pass
 
 if __name__ == '__main__':

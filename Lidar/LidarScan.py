@@ -140,6 +140,7 @@ class LidarScanner:
 
     def programme_test(self):
         zone_objet_precedente = 0
+        print("Programme de test")
         while True:
             scan = self.valeur_de_test()
             zone_objet = self.detect_object(scan)
@@ -149,7 +150,10 @@ class LidarScanner:
             for point in scan:
                 self.draw_point(self.X_ROBOT, self.Y_ROBOT, point[1], point[2])
             zone_objet_precedente = zone_objet
+            pygame.display.update()
+            self.lcd.fill(self.WHITE)
             self.ROBOT_ANGLE += 1
+            time.sleep(0.1)
 
     def run(self):
         try:
@@ -180,5 +184,5 @@ class LidarScanner:
             self.lidar.disconnect()
 
 if __name__ == '__main__':
-    scanner = LidarScanner('COM8')
+    scanner = LidarScanner('COM7')
     scanner.run()

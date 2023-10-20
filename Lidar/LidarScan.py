@@ -154,6 +154,13 @@ class LidarScanner:
             self.lcd.fill(self.WHITE)
             self.ROBOT_ANGLE += 1
             time.sleep(0.1)
+    
+    def stop(self):
+        logging.info("Stopping LiDAR motor")
+        self.lidar.stop()
+        time.sleep(1)
+        self.lidar.disconnect()
+        exit(0)
 
     def run(self):
         try:
@@ -167,8 +174,20 @@ class LidarScanner:
             self.lidar.connect()
             logging.info("Starting LiDAR motor")
 
-            while True:
+            running = True  # Ajoutez une variable de contrôle pour gérer la fermeture de la fenêtre
+
+            while running:
+
                 for scan in self.lidar.iter_scans(8000):
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            self.stop()
+                            pass
+                        elif event.type == pygame.KEYDOWN:
+                            if event.key == pygame.K_ESCAPE:
+                                self.stop()
+                                pass
+                    
                     self.draw_robot(self.X_ROBOT, self.Y_ROBOT, self.ROBOT_ANGLE)
                     self.draw_field()
                     self.draw_object(self.detect_object(scan))
@@ -178,11 +197,9 @@ class LidarScanner:
                     self.lcd.fill(self.WHITE)
 
         except KeyboardInterrupt:
-            logging.info("Stopping LiDAR motor")
-            self.lidar.stop()
-            time.sleep(1)
-            self.lidar.disconnect()
+            self.stop()
+            pass
 
 if __name__ == '__main__':
-    scanner = LidarScanner('COM7')
+    scanner = LidarScanner('COM8')
     scanner.run()

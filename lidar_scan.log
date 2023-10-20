@@ -321,3 +321,5 @@ INFO:root:Starting LiDAR motor
 INFO:rplidar:Starting motor
 INFO:root:Stopping LiDAR motor
 INFO:rplidar:Stoping scanning
+ERROR:root:Failed to create an instance of RPLidar: Failed to connect to the sensor due to: could not open port 'COM7': FileNotFoundError(2, 'Le fichier spécifié est introuvable.', None, 2)
+ERROR:root:Failed to create an instance of RPLidar: Failed to connect to the sensor due to: could not open port 'COM7': FileNotFoundError(2, 'Le fichier spécifié est introuvable.', None, 2)

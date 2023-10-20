@@ -89,7 +89,7 @@ def draw_point(x, y, angle, distance):
         POINT_COLOR = (0,255,0)
     
     try:
-        pygame.draw.circle(lcd, pygame.Color(POINT_COLOR), (x*(X_RATIO), y*(Y_RATIO)), 4)
+        pygame.draw.circle(lcd, pygame.Color(POINT_COLOR), (x*(X_RATIO), y*(Y_RATIO)), 2)
     except pygame.error as e:
         print("Failed to draw circle")
         logging.error(f"Failed to draw circle: {e}")
@@ -200,9 +200,7 @@ def programme_test():
         for point in scan:
             draw_point(X_ROBOT, Y_ROBOT, point[1], point[2])
         zone_objet_precedente = zone_objet
-        pygame.display.update()
-        time.sleep(0.1)
-        lcd.fill(WHITE)
+        
         #Déplacement du robot dans une zone de 500*500 mm du centre du terrain
         ROBOT_ANGLE += 1
 
@@ -222,13 +220,17 @@ def __main__():
         # Commencez la collecte de données
         lidar.connect()
         logging.info("Starting LiDAR motor")
+        print("Starting LiDAR motor")
 
         while True:
             for scan in lidar.iter_scans(200000):
+                draw_robot(X_ROBOT, Y_ROBOT, ROBOT_ANGLE)
+                draw_field()
+                draw_object(detect_object(scan))
                 for (_, angle, distance) in scan:
-                    draw_robot(X_ROBOT, Y_ROBOT, ROBOT_ANGLE)
-                    draw_field()
                     draw_point(X_ROBOT, Y_ROBOT, angle, distance)
+                pygame.display.update()
+                lcd.fill(WHITE)
 
     except KeyboardInterrupt:
         lidar.disconnect()

@@ -229,11 +229,21 @@ def __main__():
                 draw_object(detect_object(scan))
                 for (_, angle, distance) in scan:
                     draw_point(X_ROBOT, Y_ROBOT, angle, distance)
+                    #SI la touche q est pressée, le programme s'arrête
+                    if pygame.key.get_pressed()[pygame.K_q]:
+                        lidar.stop_motor()
+                        lidar.disconnect()
+                        pygame.quit()
+
                 pygame.display.update()
                 lcd.fill(WHITE)
 
     except KeyboardInterrupt:
+        print("Stopping LiDAR motor")
+        time.sleep(2)
+        lidar.stop_motor()
         lidar.disconnect()
+        pygame.quit()
         pass
 
 if __name__ == '__main__':

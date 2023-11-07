@@ -84,10 +84,11 @@ class LidarScanner:
         distance_objet = objet[2]
         points_autour_objet = []
 
+        #sélectionne les points autour de l'objet en fonction de la distance des points
         for point in scan:
-            if angle_objet - 5 < point[1] < angle_objet + 5:
-                if distance_objet - 100 < point[2] < distance_objet + 100:
-                    points_autour_objet.append(point)
+            if point[2] < distance_objet + 100 and point[2] > distance_objet - 100:
+                points_autour_objet.append(point)
+
 
         x = 0
         y = 0
@@ -139,9 +140,15 @@ class LidarScanner:
         return scan
 
     def programme_test(self):
-        zone_objet_precedente = 0
         print("Programme de test")
         while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    exit(0)
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        exit(0)
+
             scan = self.valeur_de_test()
             zone_objet = self.detect_object(scan)
             self.draw_field()
@@ -149,7 +156,7 @@ class LidarScanner:
             self.draw_object(zone_objet)
             for point in scan:
                 self.draw_point(self.X_ROBOT, self.Y_ROBOT, point[1], point[2])
-            zone_objet_precedente = zone_objet
+
             pygame.display.update()
             self.lcd.fill(self.WHITE)
             self.ROBOT_ANGLE += 1

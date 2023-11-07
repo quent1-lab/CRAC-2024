@@ -374,3 +374,28 @@ ERROR:root:Failed to create an instance of RPLidar: module 'serial' has no attri
 ERROR:root:Failed to create an instance of RPLidar: module 'serial' has no attribute 'SerialException'
 INFO:root:Stopping LiDAR motor
 ERROR:root:Failed to create an instance of RPLidar: module 'serial' has no attribute 'SerialException'
+ERROR:root:Failed to create an instance of RPLidar: module 'serial' has no attribute 'SerialException'
+ERROR:root:Failed to create an instance of RPLidar: module 'serial' has no attribute 'SerialException'
+ERROR:root:Failed to create an instance of RPLidar: module 'serial' has no attribute 'SerialException'
+ERROR:root:Failed to create an instance of RPLidar: module 'serial' has no attribute 'SerialException'
+ERROR:root:Failed to create an instance of RPLidar: Failed to connect to the sensor due to: could not open port '5': FileNotFoundError(2, 'Le fichier spécifié est introuvable.', None, 2)
+INFO:rplidar:Starting motor
+INFO:root:Starting LiDAR motor
+INFO:rplidar:Starting motor
+INFO:root:Stopping LiDAR motor
+INFO:rplidar:Stoping scanning
+INFO:rplidar:Starting motor
+INFO:root:Starting LiDAR motor
+INFO:rplidar:Starting motor
+INFO:root:Stopping LiDAR motor
+INFO:rplidar:Stoping scanning
+INFO:rplidar:Starting motor
+INFO:root:Starting LiDAR motor
+INFO:rplidar:Starting motor
+INFO:root:Stopping LiDAR motor
+INFO:rplidar:Stoping scanning
+INFO:rplidar:Starting motor
+INFO:root:Starting LiDAR motor
+INFO:rplidar:Starting motor
+INFO:root:Stopping LiDAR motor
+INFO:rplidar:Stoping scanning

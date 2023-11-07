@@ -246,6 +246,8 @@ class LidarScanner:
             logging.info("Starting LiDAR motor")
             print("Démarrage du moteur LiDAR")
 
+            #ComESP32(port="COM3", baudrate=115200).run()
+
             running = True  # Ajoutez une variable de contrôle pour gérer la fermeture de la fenêtre
 
             while running:
@@ -260,6 +262,8 @@ class LidarScanner:
                                 self.stop()
                                 pass
                     
+                    ESP32.send(b'1')
+
                     self.draw_robot(self.X_ROBOT, self.Y_ROBOT, self.ROBOT_ANGLE)
                     self.draw_field()
                     self.draw_object(self.detect_object(scan))

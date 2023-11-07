@@ -399,3 +399,13 @@ INFO:root:Starting LiDAR motor
 INFO:rplidar:Starting motor
 INFO:root:Stopping LiDAR motor
 INFO:rplidar:Stoping scanning
+INFO:rplidar:Starting motor
+INFO:root:Starting LiDAR motor
+INFO:rplidar:Starting motor
+INFO:root:Stopping LiDAR motor
+INFO:rplidar:Stoping scanning
+INFO:rplidar:Starting motor
+INFO:root:Starting LiDAR motor
+INFO:rplidar:Starting motor
+INFO:root:Stopping LiDAR motor
+INFO:rplidar:Stoping scanning

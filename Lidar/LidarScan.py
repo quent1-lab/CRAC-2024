@@ -169,17 +169,29 @@ class LidarScanner:
         
     def choix_du_port(self):
         ports = serial.tools.list_ports.comports()
+
+        #Affichage des ports détectés
         for port in ports:
             print(port.device)
+        
+        #Si un seul port est détecté, on le retourne
         if len(ports) == 1:
             return ports[0].device
-        port = "COM"
+        
+        #Distinction entre les ports windows et linux
+        if ports[0].device[:3] == "COM":
+            port = "COM"
+        else:
+            port = "/dev/ttyUSB"
+
+        #Choix du port
         while True:
             try:
-                numero = int(input("Entrez le port du LiDAR : COM"))
-                for port in ports:
-                    if port.device == "COM" + str(numero):
-                        return port.device
+                numero = int(input("Entrez le port du LiDAR : " + port))
+                #Vérification de l'existence du port
+                for port_ in ports:
+                    if port_.device == port + str(numero):
+                        return port_.device
                 raise ValueError
             except ValueError:
                 print("Port invalide")

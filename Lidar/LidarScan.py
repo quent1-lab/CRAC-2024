@@ -6,6 +6,51 @@ import random
 import time
 import serial.tools.list_ports
 
+class ComESP32:
+    def __init__(self, port, baudrate):
+        self.port = port
+        self.baudrate = baudrate
+        self.esp32 = None
+
+    def connect(self):
+        try:
+            self.esp32 = serial.Serial(self.port, self.baudrate)
+        except Exception as e:
+            logging.error(f"Failed to connect to ESP32: {e}")
+            raise
+
+    def disconnect(self):
+        try:
+            self.esp32.close()
+        except Exception as e:
+            logging.error(f"Failed to disconnect from ESP32: {e}")
+            raise
+
+    def send(self, data):
+        try:
+            self.esp32.write(data)
+        except Exception as e:
+            logging.error(f"Failed to send data to ESP32: {e}")
+            raise
+
+    def receive(self):
+        try:
+            return self.esp32.readline()
+        except Exception as e:
+            logging.error(f"Failed to receive data from ESP32: {e}")
+            raise
+
+    def run(self):
+        try:
+            self.connect()
+            while True:
+                self.send(b'1')
+                print(self.receive())
+                time.sleep(1)
+        except KeyboardInterrupt:
+            self.disconnect()
+            pass
+
 class LidarScanner:
     def __init__(self, port):
         self.port = port
@@ -182,6 +227,7 @@ class LidarScanner:
     
     def stop(self):
         logging.info("Stopping LiDAR motor")
+        print("Arrêt du moteur LiDAR")
         self.lidar.stop()
         time.sleep(1)
         self.lidar.disconnect()
@@ -198,6 +244,7 @@ class LidarScanner:
         try:
             self.lidar.connect()
             logging.info("Starting LiDAR motor")
+            print("Démarrage du moteur LiDAR")
 
             running = True  # Ajoutez une variable de contrôle pour gérer la fermeture de la fenêtre
 

@@ -132,7 +132,7 @@ class LidarScanner:
 
         #sélectionne les points autour de l'objet en fonction de la distance des points
         for point in scan:
-            if point[2] < distance_objet + 100 and point[2] > distance_objet - 100:
+            if point[2] < distance_objet + 50 and point[2] > distance_objet - 50:
                 points_autour_objet.append(point)
 
         x = 0
@@ -171,6 +171,8 @@ class LidarScanner:
         ports = serial.tools.list_ports.comports()
         for port in ports:
             print(port.device)
+        if len(ports) == 1:
+            return ports[0].device
         port = "COM"
         while True:
             try:
@@ -258,11 +260,10 @@ class LidarScanner:
                             self.stop()
                             pass
                         elif event.type == pygame.KEYDOWN:
-                            if event.key == pygame.K_ESCAPE:
+                            if event.key == pygame.K_ESCAPE or event.key == pygame.K_SPACE:
                                 self.stop()
                                 pass
-                    
-                    ESP32.send(b'1')
+
 
                     self.draw_robot(self.X_ROBOT, self.Y_ROBOT, self.ROBOT_ANGLE)
                     self.draw_field()

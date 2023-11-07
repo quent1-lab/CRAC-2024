@@ -4,6 +4,7 @@ import pygame
 import math
 import random
 import time
+import serial.tools.list_ports
 
 class LidarScanner:
     def __init__(self, port):
@@ -76,7 +77,7 @@ class LidarScanner:
 
     def draw_object(self, objet):
         pygame.draw.circle(self.lcd, pygame.Color(255, 255, 0), (objet[0] * self.X_RATIO, objet[1] * self.Y_RATIO), 10)
-        pygame.draw.circle(self.lcd, pygame.Color(255, 255, 0), (objet[0] * self.X_RATIO, objet[1] * self.Y_RATIO), int(objet[2] / 2 * self.X_RATIO), 3)
+        pygame.draw.circle(self.lcd, pygame.Color(50, 50, 200), (objet[0] * self.X_RATIO, objet[1] * self.Y_RATIO), int(objet[2] / 2 * self.X_RATIO), 3)
 
     def detect_object(self, scan):
         objet = min(scan, key=lambda x: x[2])
@@ -88,7 +89,6 @@ class LidarScanner:
         for point in scan:
             if point[2] < distance_objet + 100 and point[2] > distance_objet - 100:
                 points_autour_objet.append(point)
-
 
         x = 0
         y = 0
@@ -121,6 +121,24 @@ class LidarScanner:
             return "recule"
         else:
             return "stable"
+        
+    def choix_du_port(self):
+        ports = serial.tools.list_ports.comports()
+        for port in ports:
+            print(port.device)
+        port = "COM"
+        while True:
+            try:
+                numero = int(input("Entrez le port du LiDAR : COM"))
+                for port in ports:
+                    if port.device == "COM" + str(numero):
+                        return port.device
+                raise ValueError
+            except ValueError:
+                print("Port invalide")
+                continue
+            except KeyboardInterrupt:
+                exit(0)
 
     def valeur_de_test(self):
         scan = []
@@ -208,5 +226,5 @@ class LidarScanner:
             pass
 
 if __name__ == '__main__':
-    scanner = LidarScanner('COM8')
+    scanner = LidarScanner(LidarScanner.choix_du_port(self=0))
     scanner.run()

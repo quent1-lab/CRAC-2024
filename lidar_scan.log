@@ -442,3 +442,13 @@ INFO:root:Starting LiDAR motor
 INFO:rplidar:Starting motor
 INFO:root:Stopping LiDAR motor
 INFO:rplidar:Stoping scanning
+07/11/2023 22:36:23 - INFO - Starting motor
+07/11/2023 22:36:23 - INFO - Starting LiDAR motor
+07/11/2023 22:36:23 - INFO - Starting motor
+07/11/2023 22:36:27 - INFO - Stopping LiDAR motor
+07/11/2023 22:36:27 - INFO - Stoping scanning
+07/11/2023 22:38:28 - INFO - Starting motor
+07/11/2023 22:38:28 - INFO - Starting LiDAR motor
+07/11/2023 22:38:28 - INFO - Starting motor
+07/11/2023 22:38:32 - INFO - Stopping LiDAR motor
+07/11/2023 22:38:32 - INFO - Stoping scanning

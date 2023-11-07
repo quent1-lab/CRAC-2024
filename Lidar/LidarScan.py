@@ -75,7 +75,7 @@ class LidarScanner:
         self.lcd.fill(self.BLACK)
         pygame.display.update()
 
-        logging.basicConfig(filename='lidar_scan.log', level=logging.INFO)
+        logging.basicConfig(filename='lidar_scan.log', level=logging.INFO,datefmt='%d/%m/%Y %H:%M:%S',format='%(asctime)s - %(levelname)s - %(message)s')
 
     def draw_robot(self, x, y, angle):
         pygame.draw.circle(self.lcd, pygame.Color(0, 0, 250), (x * self.X_RATIO, y * self.Y_RATIO), 10)

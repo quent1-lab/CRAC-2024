@@ -75,7 +75,7 @@ class LidarScanner:
         self.lcd.fill(self.BLACK)
         pygame.display.update()
 
-        logging.basicConfig(filename='lidar_scan.log', level=logging.INFO,datefmt='%d/%m/%Y %H:%M:%S',format='%(asctime)s - %(levelname)s - %(message)s')
+        logging.basicConfig(filename='lidar_scan.log', level=logging.INFO,datefmt='%d/%m/%Y %H:%M:%S',format='%(asctime)s - %(levelname)s - %(level)s - %(message)s')
 
     def draw_robot(self, x, y, angle):
         pygame.draw.circle(self.lcd, pygame.Color(0, 0, 250), (x * self.X_RATIO, y * self.Y_RATIO), 10)
@@ -228,12 +228,13 @@ class LidarScanner:
 
     def programme_test(self):
         print("Programme de test")
+        logging.info("Test program")
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     exit(0)
                 elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
+                    if event.key == pygame.K_ESCAPE or event.key == pygame.K_SPACE:
                         exit(0)
 
             scan = self.valeur_de_test()
@@ -285,7 +286,6 @@ class LidarScanner:
                             if event.key == pygame.K_ESCAPE or event.key == pygame.K_SPACE:
                                 self.stop()
                                 pass
-
 
                     self.draw_robot(self.X_ROBOT, self.Y_ROBOT, self.ROBOT_ANGLE)
                     self.draw_field()

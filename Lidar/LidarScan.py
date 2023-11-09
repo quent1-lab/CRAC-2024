@@ -68,6 +68,11 @@ class LidarScanner:
         self.Y_ROBOT = self.FIELD_SIZE[1] / 2
         self.POINT_COLOR = (255, 0, 0)
 
+        self.nb_scan = 0
+        self.tab_scan = []
+
+        self.port = self.choix_du_port()
+
         pygame.init()
         self.lcd = pygame.display.set_mode(self.WINDOW_SIZE)
         pygame.mouse.set_visible(True)
@@ -75,7 +80,7 @@ class LidarScanner:
         self.lcd.fill(self.BLACK)
         pygame.display.update()
 
-        logging.basicConfig(filename='lidar_scan.log', level=logging.INFO,datefmt='%d/%m/%Y %H:%M:%S',format='%(asctime)s - %(levelname)s - %(level)s - %(message)s')
+        logging.basicConfig(filename='lidar_scan.log', level=logging.INFO,datefmt='%d/%m/%Y %H:%M:%S',format='%(asctime)s - %(levelname)s - %(message)s')
 
     def draw_robot(self, x, y, angle):
         pygame.draw.circle(self.lcd, pygame.Color(0, 0, 250), (x * self.X_RATIO, y * self.Y_RATIO), 10)
@@ -258,6 +263,19 @@ class LidarScanner:
         self.lidar.disconnect()
         exit(0)
 
+    def moyenne_scan(self, tab_scan):
+        #moyenne des points sur N scan
+        moyenne_scan = []
+        for i in range(len(tab_scan[0])):
+            moyenne_scan.append((0, 0, 0))
+        for scan in tab_scan:
+            for i in range(len(scan)):
+                if i < len(moyenne_scan):  # Vérifiez si l'index est dans les limites
+                    moyenne_scan[i] = (0, moyenne_scan[i][1] + scan[i][1], moyenne_scan[i][2] + scan[i][2])
+        for i in range(len(moyenne_scan)):
+            moyenne_scan[i] = (0, moyenne_scan[i][1] / len(tab_scan), moyenne_scan[i][2] / len(tab_scan))
+        return moyenne_scan
+
     def run(self):
         try:
             self.lidar = RPLidar(self.port)
@@ -290,6 +308,7 @@ class LidarScanner:
                     self.draw_robot(self.X_ROBOT, self.Y_ROBOT, self.ROBOT_ANGLE)
                     self.draw_field()
                     self.draw_object(self.detect_object(scan))
+
                     for (_, angle, distance) in scan:
                         self.draw_point(self.X_ROBOT, self.Y_ROBOT, angle, distance)
                     pygame.display.update()
@@ -301,5 +320,4 @@ class LidarScanner:
 
 if __name__ == '__main__':
     scanner = LidarScanner()
-    scanner.choix_du_port()
     scanner.run()

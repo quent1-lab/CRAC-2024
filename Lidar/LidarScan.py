@@ -52,7 +52,7 @@ class ComESP32:
             pass
 
 class LidarScanner:
-    def __init__(self, port):
+    def __init__(self, port=None):
         self.port = port
         self.lidar = None
         self.lcd = None
@@ -177,6 +177,12 @@ class LidarScanner:
         #Si un seul port est détecté, on le retourne
         if len(ports) == 1:
             return ports[0].device
+
+        #Si aucun port n'est détecté, on lance le programme de test
+        if len(ports) == 0:
+            print("Aucun port détecté")
+            self.programme_test()
+            exit(0)
         
         #Distinction entre les ports windows et linux
         if ports[0].device[:3] == "COM":
@@ -290,5 +296,6 @@ class LidarScanner:
             pass
 
 if __name__ == '__main__':
-    scanner = LidarScanner(LidarScanner.choix_du_port(self=0))
+    scanner = LidarScanner()
+    scanner.choix_du_port()
     scanner.run()

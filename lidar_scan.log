@@ -452,3 +452,11 @@ INFO:rplidar:Stoping scanning
 07/11/2023 22:38:28 - INFO - Starting motor
 07/11/2023 22:38:32 - INFO - Stopping LiDAR motor
 07/11/2023 22:38:32 - INFO - Stoping scanning
+09/11/2023 18:20:33 - INFO - Port detected: COM5
+09/11/2023 18:20:33 - INFO - Starting motor
+09/11/2023 18:20:33 - ERROR - Failed to create an instance of RPLidar: Attempting to use a port that is not open
+09/11/2023 18:20:33 - INFO - Test program
+09/11/2023 18:25:28 - INFO - Port detected: COM5
+09/11/2023 18:25:28 - INFO - Starting motor
+09/11/2023 18:25:28 - ERROR - Failed to create an instance of RPLidar: Attempting to use a port that is not open
+09/11/2023 18:25:28 - INFO - Test program

@@ -176,11 +176,13 @@ class LidarScanner:
         
         #Si un seul port est détecté, on le retourne
         if len(ports) == 1:
+            logging.info(f"Port detected: {ports[0].device}")
             return ports[0].device
 
         #Si aucun port n'est détecté, on lance le programme de test
         if len(ports) == 0:
             print("Aucun port détecté")
+            logging.error("No port detected")
             self.programme_test()
             exit(0)
         
@@ -197,9 +199,11 @@ class LidarScanner:
                 #Vérification de l'existence du port
                 for port_ in ports:
                     if port_.device == port + str(numero):
+                        logging.info(f"Port detected: {port_.device}")
                         return port_.device
                 raise ValueError
             except ValueError:
+                logging.error("Invalid port")
                 print("Port invalide")
                 continue
             except KeyboardInterrupt:

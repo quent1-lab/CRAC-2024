@@ -2,6 +2,8 @@
 #include <Wire.h>
 #include "Bouton.h"
 #include <ESP32Encoder.h>
+#include "esp32/rom/rtc.h"
+
 /*-------------------------------- DEFINE --------------------------------------*/
 
 // define pour les boutons
@@ -37,7 +39,7 @@ void testMoteur(void);
 void testEncodeur(void);
 
 // Fonction encodeur
-void odometrie(float &x, float &y, float &theta);
+void odometrie(float* x, float* y, float* theta);
 int readEncoderRight();
 int readEncoderLeft();
 
@@ -112,6 +114,8 @@ float theta = 0;
 
 void setup()
 {
+  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);
+
   // put your setup code here, to run once:
   Serial.begin(115200);
   pinMode(pinMotGaucheSens, OUTPUT);
@@ -411,7 +415,7 @@ void odometrie(float* x, float* y, float* theta)
   // Cette fonction permet de calculer la position du robot en fonction des encodeurs
 
   // Variables locales  
-  float deltaD, deltaG, deltaT, deltaS, deltaTheta, theta;
+  float deltaD, deltaG, deltaT, deltaS;
   float x0, y0, vitesse0;
 
   // Lecture des encodeurs
@@ -423,15 +427,15 @@ void odometrie(float* x, float* y, float* theta)
   deltaG = deltaG * 2 * PI * rayon / 360;
 
   // Calcul de la distance parcourue par le robot
-  deltaS = (deltaD + deltaG) / 2;
+  deltaS = (deltaD + deltaG) * 90 / 2;
 
-  // Calcul de la variation d'angle
-  deltaTheta = (deltaD - deltaG) / (2 * 0.143);
+  // Calcul de la variation d'angle en fonction de l'entraxe 
+  deltaT = (deltaD - deltaG) / 0.1;
 
   // Calcul de la nouvelle position
-  *x = *x + deltaS * cos(*theta + deltaTheta / 2);
-  *y = *y + deltaS * sin(*theta + deltaTheta / 2);
-  *theta = *theta + deltaTheta;
+  *x = *x + deltaS * cos(*theta + deltaT / 2);
+  *y = *y + deltaS * sin(*theta + deltaT / 2);
+  *theta = *theta + deltaT;
 
   // Mise à jour des variables
   oldPositionD = readEncoderRight();

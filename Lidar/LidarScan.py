@@ -71,7 +71,7 @@ class LidarScanner:
         self.nb_scan = 0
         self.tab_scan = []
 
-        self.port = self.choix_du_port()
+        
 
         pygame.init()
         self.lcd = pygame.display.set_mode(self.WINDOW_SIZE)
@@ -79,6 +79,8 @@ class LidarScanner:
         pygame.display.set_caption('LiDAR Scan')
         self.lcd.fill(self.BLACK)
         pygame.display.update()
+
+        self.port = self.choix_du_port()
 
         logging.basicConfig(filename='lidar_scan.log', level=logging.INFO,datefmt='%d/%m/%Y %H:%M:%S',format='%(asctime)s - %(levelname)s - %(message)s')
 

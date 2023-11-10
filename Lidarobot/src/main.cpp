@@ -427,10 +427,10 @@ void odometrie(float* x, float* y, float* theta)
   deltaG = deltaG * 2 * PI * rayon / 360;
 
   // Calcul de la distance parcourue par le robot
-  deltaS = (deltaD + deltaG) * 90 / 2;
+  deltaS = (deltaD + deltaG) / 2;
 
   // Calcul de la variation d'angle en fonction de l'entraxe 
-  deltaT = (deltaD - deltaG) / 0.1;
+  deltaT = (deltaD - deltaG) / 90;
 
   // Calcul de la nouvelle position
   *x = *x + deltaS * cos(*theta + deltaT / 2);

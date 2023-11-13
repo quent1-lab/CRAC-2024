@@ -4,14 +4,25 @@ Encodeur::Encodeur(int pinA, int pinB, int pinC, int pinD)
 {
     encoderD.attachHalfQuad(pinA, pinB);
     encoderG.attachHalfQuad(pinC, pinD);
-    oldPositionD = -999;
-    oldPositionG = -999;
+    this->oldPositionD = -999;
+    this->oldPositionG = -999;
 }
 
 void Encodeur::init()
 {
-    // Other initialization if needed
+    this->x = 0;
+    this->y = 0;
+    this->theta = 0;
+    this->rayon = 0.022;
 }
+
+void Encodeur::init(int x,int y, int theta,float rayon)
+{
+    this->x = x;
+    this->y = y;
+    this->theta = theta;
+    this->rayon = rayon;
+}   
 
 int Encodeur::readEncoderD()
 {
@@ -29,7 +40,21 @@ void Encodeur::reset()
     encoderG.setCount(0);
 }
 
-void Encodeur::odometrie(float *x, float *y, float *theta)
+void Encodeur::print()
+{
+    Serial.print("EncodeurD : ");
+    Serial.print(readEncoderD());
+    Serial.print(" EncodeurG : ");
+    Serial.print(readEncoderG());
+    Serial.print(" x : ");
+    Serial.print(this->x);
+    Serial.print(" y : ");
+    Serial.print(this->y);
+    Serial.print(" theta : ");
+    Serial.println(this->theta);
+}
+
+void Encodeur::odometrie()
 {
     // Cette fonction permet de calculer la position du robot en fonction des encodeurs
 
@@ -38,8 +63,8 @@ void Encodeur::odometrie(float *x, float *y, float *theta)
     float x0, y0, vitesse0;
 
     // Lecture des encodeurs
-    deltaD = readEncoderRight() - oldPositionD;
-    deltaG = readEncoderLeft() - oldPositionG;
+    deltaD = readEncoderD() - oldPositionD;
+    deltaG = readEncoderG() - oldPositionG;
 
     // Calcul de la distance parcourue par chaque roue
     deltaD = deltaD * 2 * PI * rayon / 360;
@@ -52,19 +77,11 @@ void Encodeur::odometrie(float *x, float *y, float *theta)
     deltaT = (deltaD - deltaG) / 90;
 
     // Calcul de la nouvelle position
-    *x = *x + deltaS * cos(*theta + deltaT / 2);
-    *y = *y + deltaS * sin(*theta + deltaT / 2);
-    *theta = *theta + deltaT;
+    this->x += deltaS * cos(*theta + deltaT / 2);
+    this->y += deltaS * sin(*theta + deltaT / 2);
+    this->theta += deltaT;
 
     // Mise à jour des variables
-    oldPositionD = readEncoderRight();
-    oldPositionG = readEncoderLeft();
-
-    // Affichage des variables
-    Serial.print("x = ");
-    Serial.print(*x);
-    Serial.print(" y = ");
-    Serial.print(*y);
-    Serial.print(" theta = ");
-    Serial.println(*theta);
+    this->oldPositionD = readEncoderRight();
+    this->oldPositionG = readEncoderLeft();
 }

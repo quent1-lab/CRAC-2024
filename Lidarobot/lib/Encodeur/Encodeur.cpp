@@ -1,9 +1,9 @@
 #include "Encodeur.h"
 
-Encodeur::Encodeur(int pinA, int pinB, int pinC, int pinD)
+Encodeur::Encodeur(int pinD_A, int pinD_B,int pinG_A, int pinG_B)
 {
-    encoderD.attachHalfQuad(pinA, pinB);
-    encoderG.attachHalfQuad(pinC, pinD);
+    encoderD.attachHalfQuad(pinD_A, pinD_B);
+    encoderG.attachHalfQuad(pinG_A, pinG_B);
     this->oldPositionD = -999;
     this->oldPositionG = -999;
 }
@@ -16,7 +16,7 @@ void Encodeur::init()
     this->rayon = 0.022;
 }
 
-void Encodeur::init(int x,int y, int theta,float rayon)
+void Encodeur::init(float x, float y, float theta, float rayon)
 {
     this->x = x;
     this->y = y;
@@ -54,7 +54,7 @@ void Encodeur::print()
     Serial.println(this->theta);
 }
 
-void Encodeur::change_position(int x, int y, int theta)
+void Encodeur::change_position(float x, float y, float theta)
 {
     this->x = x;
     this->y = y;
@@ -91,4 +91,19 @@ void Encodeur::odometrie()
     // Mise à jour des variables
     this->oldPositionD = readEncoderRight();
     this->oldPositionG = readEncoderLeft();
+}
+
+float Encodeur::get_x()
+{
+    return this->x;
+}
+
+float Encodeur::get_y()
+{
+    return this->y;
+}
+
+float Encodeur::get_theta()
+{
+    return this->theta;
 }

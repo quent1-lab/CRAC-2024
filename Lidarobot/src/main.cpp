@@ -84,7 +84,7 @@ void setup()
   moteurDroit.init();
 
   // Initialisation des encodeurs
-  encoder.init(pinEncodeurDroitA, pinEncodeurDroitB, pinEncodeurGaucheA, pinEncodeurGaucheB);
+  encoder.init(pinEncodeurDroitA, pinEncodeurDroitB, pinEncodeurGaucheA, pinEncodeurGaucheB,rayon);
 
   // initialisation des boutons
   setup_bt(3);
@@ -106,7 +106,7 @@ void loop()
     break;
   case 1:
     // Etat 1 : Test des moteurs
-    
+
     break;
   default:
 
@@ -147,56 +147,6 @@ void read_bt(int nb_bt)
 // Fonction de test des encodeurs
 void testEncodeur()
 {
-  odometrie(&x, &y, &theta);
-}
-
-/*---------------------- Fonction des encodeurs ---------------------------*/
-int readEncoderRight()
-{
-  return encoderD.getCount();
-}
-
-int readEncoderLeft()
-{
-  return encoderG.getCount();
-}
-
-void odometrie(float* x, float* y, float* theta)
-{
-  // Cette fonction permet de calculer la position du robot en fonction des encodeurs
-
-  // Variables locales  
-  float deltaD, deltaG, deltaT, deltaS;
-  float x0, y0, vitesse0;
-
-  // Lecture des encodeurs
-  deltaD = readEncoderRight() - oldPositionD;
-  deltaG = readEncoderLeft() - oldPositionG;
-
-  // Calcul de la distance parcourue par chaque roue
-  deltaD = deltaD * 2 * PI * rayon / 360;
-  deltaG = deltaG * 2 * PI * rayon / 360;
-
-  // Calcul de la distance parcourue par le robot
-  deltaS = (deltaD + deltaG) / 2;
-
-  // Calcul de la variation d'angle en fonction de l'entraxe 
-  deltaT = (deltaD - deltaG) / 90;
-
-  // Calcul de la nouvelle position
-  *x = *x + deltaS * cos(*theta + deltaT / 2);
-  *y = *y + deltaS * sin(*theta + deltaT / 2);
-  *theta = *theta + deltaT;
-
-  // Mise à jour des variables
-  oldPositionD = readEncoderRight();
-  oldPositionG = readEncoderLeft();
-
-  // Affichage des variables
-  Serial.print("x = ");
-  Serial.print(*x);
-  Serial.print(" y = ");
-  Serial.print(*y);
-  Serial.print(" theta = ");
-  Serial.println(*theta);
+  encodeur.odometrie();
+  encodeur.print();
 }

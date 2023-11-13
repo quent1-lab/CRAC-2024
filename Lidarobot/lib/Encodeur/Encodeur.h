@@ -10,21 +10,24 @@ class Encodeur {
     ESP32Encoder encoderG;
     long oldPositionD;
     long oldPositionG;
-    int x;
-    int y;
-    int theta;
+    float x;
+    float y;
+    float theta;
     float rayon;
 
   public:
-    Encodeur(int pinA, int pinB,int pinC, int pinD);
+    Encodeur(int pinD_A, int pinD_B,int pinG_A, int pinG_B);
     void init();
-    void init(int x, int y, int theta);
-    void change_position(int x, int y, int theta);
+    void init(float x, float y, float theta, float rayon);
+    void change_position(float x, float y, float theta);
     int readEncoderD();
     int readEncoderG();
     void reset();
-    void odometrie(float* x, float* y, float* theta);
+    void odometrie();
     void print();
+    float get_x();
+    float get_y();
+    float get_theta();
 };
 
 #endif

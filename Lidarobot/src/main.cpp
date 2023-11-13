@@ -2,7 +2,7 @@
 #include <Wire.h>
 #include "Bouton.h"
 #include "Moteur.h"
-#include <ESP32Encoder.h>
+#include <Encoder.h>
 #include "esp32/rom/rtc.h"
 
 /*-------------------------------- DEFINE --------------------------------------*/
@@ -19,10 +19,6 @@ const int pinEncodeurGaucheB = 13;
 const int pinEncodeurDroitA = 17;
 const int pinEncodeurDroitB = 16;
 
-// timer and flag for example, not needed for encoders
-unsigned long encoder2lastToggled;
-bool encoder2Paused = false;
-
 /*----------------------- Prototypes des fonctions -----------------------------*/
 // Fonction pour la bibliothèque Bouton
 void setup_bt(int nb_bt);
@@ -30,11 +26,6 @@ void read_bt(int nb_bt);
 
 // Fonction test
 void testEncodeur(void);
-
-// Fonction encodeur
-void odometrie(float* x, float* y, float* theta);
-int readEncoderRight();
-int readEncoderLeft();
 
 /*---------------------- Variable des pins de sortis ---------------------------*/
 // Aucune des pins ne sont bien définies, il faut les définir en fonction des branchements
@@ -63,8 +54,6 @@ int t_delay_press = 1500;
 int t_delay_bounce = 120;
 
 // Variables pour les compteurs des encodeurs
-long oldPositionG = -999;
-long oldPositionD = -999;
 float rayon = 0.022;
 
 /*----------------------------- Variables pour l'odométrie ------------------------------*/
@@ -80,8 +69,7 @@ Bouton bt[3]; // création d'un tableau de 3 boutons.
 Moteur moteurGauche(pinMotGaucheSens, pinMotGauchePWM);
 Moteur moteurDroit(pinMotDroitSens, pinMotDroitPWM);
 
-ESP32Encoder encoderG;
-ESP32Encoder encoderD;
+Encoder encoder;
 
 
 void setup()

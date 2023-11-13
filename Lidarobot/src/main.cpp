@@ -71,7 +71,6 @@ Moteur moteurDroit(pinMotDroitSens, pinMotDroitPWM);
 
 Encoder encoder;
 
-
 void setup()
 {
   WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);
@@ -84,13 +83,8 @@ void setup()
   moteurGauche.init();
   moteurDroit.init();
 
-  // initialisation des encodeurs
-  encoderD.attachHalfQuad(pinEncodeurDroitA, pinEncodeurDroitB);
-  encoderG.attachHalfQuad(pinEncodeurGaucheA, pinEncodeurGaucheB);
-
-  // set starting count value after attaching
-  encoderD.setCount(0);
-  encoderG.setCount(0);
+  // Initialisation des encodeurs
+  encoder.init(pinEncodeurDroitA, pinEncodeurDroitB, pinEncodeurGaucheA, pinEncodeurGaucheB);
 
   // initialisation des boutons
   setup_bt(3);

@@ -54,6 +54,13 @@ void Encodeur::print()
     Serial.println(this->theta);
 }
 
+void Encodeur::change_position(int x, int y, int theta)
+{
+    this->x = x;
+    this->y = y;
+    this->theta = theta;
+}
+
 void Encodeur::odometrie()
 {
     // Cette fonction permet de calculer la position du robot en fonction des encodeurs

@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <Wire.h>
 #include "Bouton.h"
+#include "Moteur.h"
 #include <ESP32Encoder.h>
 #include "esp32/rom/rtc.h"
 

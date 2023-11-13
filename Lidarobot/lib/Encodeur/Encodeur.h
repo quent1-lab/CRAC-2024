@@ -6,16 +6,16 @@
 
 class Encodeur {
   private:
-    ESP32Encoder encoderA;
-    ESP32Encoder encoderB;
-    long oldPositionA;
-    long oldPositionB;
+    ESP32Encoder encoderD;
+    ESP32Encoder encoderG;
+    long oldPositionD;
+    long oldPositionG;
 
   public:
     Encodeur(int pinA, int pinB,int pinC, int pinD);
     void init();
-    int readEncoderA();
-    int readEncoderB();
+    int readEncoderD();
+    int readEncoderG();
     void reset();
     void odometrie(float* x, float* y, float* theta);
 };

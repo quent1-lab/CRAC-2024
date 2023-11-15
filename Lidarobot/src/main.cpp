@@ -2,7 +2,7 @@
 #include <Wire.h>
 #include "Bouton.h"
 #include "Moteur.h"
-#include <Encoder.h>
+#include <Encodeur.h>
 #include "esp32/rom/rtc.h"
 
 /*-------------------------------- DEFINE --------------------------------------*/
@@ -26,6 +26,7 @@ void read_bt(int nb_bt);
 
 // Fonction test
 void testEncodeur(void);
+void testMoteur(void);
 
 /*---------------------- Variable des pins de sortis ---------------------------*/
 // Aucune des pins ne sont bien définies, il faut les définir en fonction des branchements
@@ -69,7 +70,7 @@ Bouton bt[3]; // création d'un tableau de 3 boutons.
 Moteur moteurGauche(pinMotGaucheSens, pinMotGauchePWM);
 Moteur moteurDroit(pinMotDroitSens, pinMotDroitPWM);
 
-Encoder encoder;
+Encodeur encodeur;
 
 void setup()
 {
@@ -84,7 +85,7 @@ void setup()
   moteurDroit.init();
 
   // Initialisation des encodeurs
-  encoder.init(pinEncodeurDroitA, pinEncodeurDroitB, pinEncodeurGaucheA, pinEncodeurGaucheB,rayon);
+  encodeur.init(pinEncodeurDroitA, pinEncodeurDroitB, pinEncodeurGaucheA, pinEncodeurGaucheB,rayon);
 
   // initialisation des boutons
   setup_bt(3);
@@ -149,4 +150,10 @@ void testEncodeur()
 {
   encodeur.odometrie();
   encodeur.print();
+}
+
+void testMoteur()
+{
+  static int etat = 0;
+  static unsigned long t0 = millis();
 }

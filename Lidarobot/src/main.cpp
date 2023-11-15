@@ -47,7 +47,7 @@ const int button_pin[3] = {pinBoutonJaune, pinBoutonBleu, pinBoutonVert};
 
 /*----------------------------- Variables systèmes ------------------------------*/
 // Machine à état
-int etat_sys = 10;
+int etat_sys = 0;
 
 // Temps de délai pour les boutons
 int t_delay_click = 140;
@@ -67,8 +67,8 @@ float theta = 0;
 Bouton bt[3]; // création d'un tableau de 3 boutons.
 
 // Déclaration des moteurs et encodeurs en tant qu'instances des classes Moteur et Encodeur
-Moteur moteurGauche(pinMotGaucheSens, pinMotGauchePWM);
-Moteur moteurDroit(pinMotDroitSens, pinMotDroitPWM);
+Moteur moteurGauche(pinMotGaucheSens, pinMotGauchePWM, 0);
+Moteur moteurDroit(pinMotDroitSens, pinMotDroitPWM, 1);
 
 Encodeur encodeur;
 
@@ -85,7 +85,7 @@ void setup()
   moteurDroit.init();
 
   // Initialisation des encodeurs
-  encodeur.init(pinEncodeurDroitA, pinEncodeurDroitB, pinEncodeurGaucheA, pinEncodeurGaucheB,rayon);
+  encodeur.init(x, y, theta, rayon);
 
   // initialisation des boutons
   setup_bt(3);
@@ -107,7 +107,7 @@ void loop()
     break;
   case 1:
     // Etat 1 : Test des moteurs
-
+    testMoteur();
     break;
   default:
 
@@ -156,4 +156,57 @@ void testMoteur()
 {
   static int etat = 0;
   static unsigned long t0 = millis();
+
+  switch (etat)
+  {
+  case 0:
+    // Etat 0 : Avancer
+    moteurGauche.setVitesse(100);
+    moteurDroit.setVitesse(100);
+    if (millis() - t0 > 1000)
+    {
+      etat = 1;
+      t0 = millis();
+    }
+    break;
+  case 1:
+    // Etat 1 : Reculer
+    moteurGauche.setVitesse(-100);
+    moteurDroit.setVitesse(-100);
+    if (millis() - t0 > 1000)
+    {
+      etat = 2;
+      t0 = millis();
+    }
+    break;
+  case 2:
+    // Etat 2 : Tourner à gauche
+    moteurGauche.setVitesse(-100);
+    moteurDroit.setVitesse(100);
+    if (millis() - t0 > 1000)
+    {
+      etat = 3;
+      t0 = millis();
+    }
+    break;
+  case 3:
+    // Etat 3 : Tourner à droite
+    moteurGauche.setVitesse(100);
+    moteurDroit.setVitesse(-100);
+    if (millis() - t0 > 1000)
+    {
+      etat = 0;
+      t0 = millis();
+    }
+    break;
+  default:
+    break;
+  }
+}
+
+/*---------------------- Fonction moteur ---------------------------*/
+void moteur()
+{
+  moteurGauche.moteur();
+  moteurDroit.moteur();
 }

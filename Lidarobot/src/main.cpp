@@ -248,3 +248,23 @@ String formatage_JSON()
   message += "}";
   return message;
 }
+
+void envoie_JSON()
+{
+  //Envoie les données du robot en JSON toutes les 100ms
+  static unsigned long t0 = millis();
+  if (millis() - t0 > 100)
+  {
+    mise_a_jour_donnees();
+    t0 = millis();
+    envoie(formatage_JSON());
+  }
+}
+
+void mise_a_jour_donnees(){
+  //Met à jour les données du robot
+  encodeur.odometrie();
+  x = encodeur.getX();
+  y = encodeur.getY();
+  theta = encodeur.getTheta();
+}

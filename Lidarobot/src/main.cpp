@@ -152,16 +152,7 @@ void read_bt(int nb_bt)
 void testEncodeur()
 {
   encodeur.odometrie();
-  Serial.print("EncodeurD : ");
-  Serial.print(encodeur.readEncoderD());
-  Serial.print(" EncodeurG : ");
-  Serial.print(encodeur.readEncoderG());
-  Serial.print(" x : ");
-  Serial.print(encodeur.get_x());
-  Serial.print(" y : ");
-  Serial.print(encodeur.get_y());
-  Serial.print(" theta : ");
-  Serial.println(encodeur.get_theta());
+  encodeur.print();
 }
 
 void testMoteur()
@@ -221,4 +212,39 @@ void moteur()
 {
   moteurGauche.moteur();
   moteurDroit.moteur();
+}
+
+/*---------------------- Fonction de communication ---------------------------*/
+
+void envoie(String message)
+{
+  //Envoie un message sur le port série
+  Serial.print(message);
+}
+
+String reception()
+{
+  //Reçoit un message sur le port série
+  String message = "";
+  while (Serial.available())
+  {
+    message += char(Serial.read());
+  }
+  return message;
+}
+
+String formatage_JSON()
+{
+  //Formate les données du robot en JSON
+  String message = "{";
+  message += "\"x\":";
+  message += x;
+  message += ",";
+  message += "\"y\":";
+  message += y;
+  message += ",";
+  message += "\"theta\":";
+  message += theta;
+  message += "}";
+  return message;
 }

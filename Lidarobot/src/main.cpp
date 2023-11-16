@@ -24,6 +24,8 @@ const int pinEncodeurDroitB = 16;
 void setup_bt(int nb_bt);
 void read_bt(int nb_bt);
 
+void moteur();
+
 // Fonction test
 void testEncodeur(void);
 void testMoteur(void);
@@ -55,7 +57,7 @@ int t_delay_press = 1500;
 int t_delay_bounce = 120;
 
 // Variables pour les compteurs des encodeurs
-float rayon = 0.022;
+float rayon = 2.2;
 
 /*----------------------------- Variables pour l'odométrie ------------------------------*/
 float x = 0;
@@ -70,7 +72,7 @@ Bouton bt[3]; // création d'un tableau de 3 boutons.
 Moteur moteurGauche(pinMotGaucheSens, pinMotGauchePWM, 0);
 Moteur moteurDroit(pinMotDroitSens, pinMotDroitPWM, 1);
 
-Encodeur encodeur;
+Encodeur encodeur(pinEncodeurDroitA, pinEncodeurDroitB, pinEncodeurGaucheA, pinEncodeurGaucheB);
 
 void setup()
 {
@@ -107,6 +109,7 @@ void loop()
     break;
   case 1:
     // Etat 1 : Test des moteurs
+    digitalWrite(pinLed, HIGH);
     testMoteur();
     break;
   default:
@@ -114,7 +117,7 @@ void loop()
     break;
   }
 
-  // moteur();
+  moteur();
 }
 
 /*---------------------------------- Fonction Setup BT ------------------------------------*/
@@ -149,7 +152,16 @@ void read_bt(int nb_bt)
 void testEncodeur()
 {
   encodeur.odometrie();
-  encodeur.print();
+  Serial.print("EncodeurD : ");
+  Serial.print(encodeur.readEncoderD());
+  Serial.print(" EncodeurG : ");
+  Serial.print(encodeur.readEncoderG());
+  Serial.print(" x : ");
+  Serial.print(encodeur.get_x());
+  Serial.print(" y : ");
+  Serial.print(encodeur.get_y());
+  Serial.print(" theta : ");
+  Serial.println(encodeur.get_theta());
 }
 
 void testMoteur()

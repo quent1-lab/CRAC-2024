@@ -153,6 +153,7 @@ void testEncodeur()
 {
   encodeur.odometrie();
   encodeur.print();
+  envoie_JSON();
 }
 
 void testMoteur()

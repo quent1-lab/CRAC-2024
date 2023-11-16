@@ -75,6 +75,7 @@ class LidarScanner:
         self.ROBOT_ANGLE = 0
         self.BLACK = (0, 0, 0)
         self.WHITE = (255, 255, 255)
+        self.LIGHT_GREY = (200, 200, 200)
         self.FIELD_SIZE = (3000, 2000)
         self.WINDOW_SIZE = (1100, 800)
         self.BORDER_DISTANCE = 200
@@ -83,6 +84,8 @@ class LidarScanner:
         self.X_ROBOT = self.FIELD_SIZE[0] / 2
         self.Y_ROBOT = self.FIELD_SIZE[1] / 2
         self.POINT_COLOR = (255, 0, 0)
+        self.BACKGROUND_COLOR = self.LIGHT_GREY
+        self.FONT_COLOR = self.BLACK
 
         self.path_picture = "Lidar/Terrain_Jeu.png"
 
@@ -91,9 +94,11 @@ class LidarScanner:
 
         pygame.init()
         self.lcd = pygame.display.set_mode(self.WINDOW_SIZE)
+        pygame.font.init()
+        self.font = pygame.font.SysFont("Arial", 20)
         pygame.mouse.set_visible(True)
         pygame.display.set_caption('LiDAR Scan')
-        self.lcd.fill(self.BLACK)
+        self.lcd.fill(self.BACKGROUND_COLOR)
         pygame.display.update()
 
         self.port = self.choix_du_port()
@@ -120,16 +125,24 @@ class LidarScanner:
         self.lcd.blit(image, (self.BORDER_DISTANCE * self.X_RATIO, self.BORDER_DISTANCE * self.Y_RATIO))
 
     def draw_background(self):
-        self.lcd.fill(self.WHITE)
+        self.lcd.fill(self.BACKGROUND_COLOR)
         self.draw_image(self.path_picture)
         self.draw_field()
+        self.draw_data()
         #Afficher l'image en fond d'écran, dans l'emplacement du terrain de jeu
-        
+    
+    def draw_text(self, text, x, y):
+        """Draws text to the pygame screen, on up left corner"""
+        text = self.font.render(text, True, pygame.Color(self.FONT_COLOR), pygame.Color(self.BACKGROUND_COLOR))
+        self.lcd.blit(text, (x, y))
 
-    def draw_data(self, data):
-        """Draws data to the pygame screen, on up left corner"""
-        text = self.font.render(data, True, pygame.Color(255, 255, 255), pygame.Color(0, 0, 0))
-        self.lcd.blit(text, (0, 0))
+    def draw_data(self):
+        """Draws data to the pygame screen, on up left corner.For x, y and theta"""
+        """Data is x, y and theta"""
+        self.draw_text("x: " + str(self.X_ROBOT), 10, 5)
+        self.draw_text("y: " + str(self.Y_ROBOT), 10, 25)
+        self.draw_text("theta: " + str(self.ROBOT_ANGLE), 100, 15)
+                
 
     def draw_field(self):
         pygame.draw.rect(self.lcd, pygame.Color(100, 100, 100),
@@ -144,7 +157,7 @@ class LidarScanner:
         x = self.X_ROBOT + int(distance * math.cos(new_angle * math.pi / 180))
         y = self.Y_ROBOT + int(distance * math.sin(new_angle * math.pi / 180))
 
-        self.POINT_COLOR = (255, 0, 0)
+        self.POINT_COLOR = (200, 200, 200)
 
         if x > self.FIELD_SIZE[0] - self.BORDER_DISTANCE:
             x = self.FIELD_SIZE[0] - self.BORDER_DISTANCE

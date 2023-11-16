@@ -5,6 +5,7 @@ import math
 import random
 import time
 import serial.tools.list_ports
+import json
 
 class ComESP32:
     def __init__(self, port, baudrate):
@@ -40,13 +41,28 @@ class ComESP32:
             logging.error(f"Failed to receive data from ESP32: {e}")
             raise
 
+    def load_json(self, data):
+        try:
+            return json.loads(data)
+        except Exception as e:
+            logging.error(f"Failed to unload JSON: {e}")
+            raise
+
     def run(self):
         try:
             self.connect()
             while True:
-                self.send(b'1')
-                print(self.receive())
-                time.sleep(1)
+                data = self.receive()
+                data = self.load_json(data)
+                print(data)
+                if data["type"] == "x":
+                    print(data["x"])
+                elif data["type"] == "y":
+                    print(data["x"])
+                elif data["type"] == "theta":
+                    print(data["theta"])
+                else:
+                    print("error")
         except KeyboardInterrupt:
             self.disconnect()
             pass

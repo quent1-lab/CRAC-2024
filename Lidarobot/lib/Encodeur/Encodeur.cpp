@@ -4,8 +4,8 @@ Encodeur::Encodeur(int pinD_A, int pinD_B,int pinG_A, int pinG_B)
 {
     encoderD.attachHalfQuad(pinD_A, pinD_B);
     encoderG.attachHalfQuad(pinG_A, pinG_B);
-    this->oldPositionD = -999;
-    this->oldPositionG = -999;
+    this->oldPositionD = 0;
+    this->oldPositionG = 0;
 }
 
 void Encodeur::init()
@@ -67,21 +67,20 @@ void Encodeur::odometrie()
 
     // Variables locales
     float deltaD, deltaG, deltaT, deltaS;
-    float x0, y0, vitesse0;
 
     // Lecture des encodeurs
     deltaD = readEncoderD() - oldPositionD;
     deltaG = readEncoderG() - oldPositionG;
 
     // Calcul de la distance parcourue par chaque roue
-    deltaD = deltaD * 2 * PI * rayon / 360;
-    deltaG = deltaG * 2 * PI * rayon / 360;
+    deltaD = deltaD * 2 * PI * rayon / 360.0;
+    deltaG = deltaG * 2 * PI * rayon / 360.0;
 
     // Calcul de la distance parcourue par le robot
-    deltaS = (deltaD + deltaG) / 2;
+    deltaS = (deltaD + deltaG) / 2.0;
 
     // Calcul de la variation d'angle en fonction de l'entraxe
-    deltaT = (deltaD - deltaG) / 90;
+    deltaT = (deltaD - deltaG) / 90.0;
 
     // Calcul de la nouvelle position
     this->x += deltaS * cos(theta + deltaT / 2);

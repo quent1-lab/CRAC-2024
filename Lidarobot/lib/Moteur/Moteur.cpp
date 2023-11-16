@@ -46,8 +46,8 @@ void Moteur::setVitesse(int vitesse)
         sens_actuel = false;
     }
 
-    //smoothMoteur();
-    vitesse_actuelle = vitesse * 1/100 * 1020;
+    smoothMoteur();
+    vitesse_consigne = vitesse * 1/100 * 1020;
 }
 
 void Moteur::setSens(bool sens)
@@ -63,11 +63,11 @@ void Moteur::smoothMoteur()
         {
             if (vitesse_actuelle < vitesse_consigne)
             {
-                vitesse_actuelle += 2;
+                vitesse_actuelle += 5;
             }
             else if (vitesse_actuelle > vitesse_consigne)
             {
-                vitesse_actuelle -= 2;
+                vitesse_actuelle -= 5;
             }
             temps_mot = millis();
         }

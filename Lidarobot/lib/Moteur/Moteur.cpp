@@ -46,8 +46,8 @@ void Moteur::setVitesse(int vitesse)
         sens_actuel = false;
     }
 
-    smoothMoteur();
-    vitesse_consigne = vitesse;
+    //smoothMoteur();
+    vitesse_actuelle = vitesse * 1/100 * 1020;
 }
 
 void Moteur::setSens(bool sens)

@@ -106,12 +106,11 @@ class LidarScanner:
         logging.basicConfig(filename='lidar_scan.log', level=logging.INFO,datefmt='%d/%m/%Y %H:%M:%S',format='%(asctime)s - %(levelname)s - %(message)s')
 
     def draw_robot(self, x, y, angle):
-        pygame.draw.circle(self.lcd, pygame.Color(0, 0, 250), (x * self.X_RATIO, y * self.Y_RATIO), 10)
+        pygame.draw.circle(self.lcd, pygame.Color(self.WHITE), (x * self.X_RATIO, y * self.Y_RATIO), 20)
         pygame.draw.line(
-            self.lcd, pygame.Color(0, 0, 250),
+            self.lcd, pygame.Color(self.WHITE),
             (x * self.X_RATIO, y * self.Y_RATIO),
-            ((x + 50 * math.cos(angle)) * self.X_RATIO, (y + 50 * math.sin(angle)) * self.Y_RATIO), 3
-        )
+            ((x + 100 * math.cos(math.radians(angle))) * self.X_RATIO, (y + 100 * math.sin(math.radians(angle))) * self.Y_RATIO), 5)
     
     def draw_image(self,image_path):
         # Charge l'image à partir du chemin du fichier
@@ -141,8 +140,7 @@ class LidarScanner:
         """Data is x, y and theta"""
         self.draw_text("x: " + str(self.X_ROBOT), 10, 5)
         self.draw_text("y: " + str(self.Y_ROBOT), 10, 25)
-        self.draw_text("theta: " + str(self.ROBOT_ANGLE), 100, 15)
-                
+        self.draw_text("theta: " + str(self.ROBOT_ANGLE), 100, 15)                
 
     def draw_field(self):
         pygame.draw.rect(self.lcd, pygame.Color(100, 100, 100),
@@ -306,7 +304,7 @@ class LidarScanner:
 
             pygame.display.update()
             self.lcd.fill(self.WHITE)
-            self.ROBOT_ANGLE += 1
+            self.ROBOT_ANGLE += 5
             time.sleep(0.1)
     
     def stop(self):

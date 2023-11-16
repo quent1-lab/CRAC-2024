@@ -76,18 +76,18 @@ class LidarScanner:
         self.BLACK = (0, 0, 0)
         self.WHITE = (255, 255, 255)
         self.FIELD_SIZE = (3000, 2000)
-        self.WINDOW_SIZE = (900, 600)
-        self.BORDER_DISTANCE = 100
+        self.WINDOW_SIZE = (1100, 800)
+        self.BORDER_DISTANCE = 200
         self.X_RATIO = self.WINDOW_SIZE[0] / self.FIELD_SIZE[0]
         self.Y_RATIO = self.WINDOW_SIZE[1] / self.FIELD_SIZE[1]
         self.X_ROBOT = self.FIELD_SIZE[0] / 2
         self.Y_ROBOT = self.FIELD_SIZE[1] / 2
         self.POINT_COLOR = (255, 0, 0)
 
+        self.path_picture = "Lidar/Terrain_Jeu.png"
+
         self.nb_scan = 0
         self.tab_scan = []
-
-        
 
         pygame.init()
         self.lcd = pygame.display.set_mode(self.WINDOW_SIZE)
@@ -107,6 +107,29 @@ class LidarScanner:
             (x * self.X_RATIO, y * self.Y_RATIO),
             ((x + 50 * math.cos(angle)) * self.X_RATIO, (y + 50 * math.sin(angle)) * self.Y_RATIO), 3
         )
+    
+    def draw_image(self,image_path):
+        # Charge l'image à partir du chemin du fichier
+        image = pygame.image.load(image_path)
+
+        # Redimensionne l'image
+        image = pygame.transform.scale(image, ( (self.FIELD_SIZE[0] - 2 * self.BORDER_DISTANCE) * self.X_RATIO,
+                                                (self.FIELD_SIZE[1] - 2 * self.BORDER_DISTANCE) * self.Y_RATIO))
+
+        # Dessine l'image à la position (x, y)
+        self.lcd.blit(image, (self.BORDER_DISTANCE * self.X_RATIO, self.BORDER_DISTANCE * self.Y_RATIO))
+
+    def draw_background(self):
+        self.lcd.fill(self.WHITE)
+        self.draw_image(self.path_picture)
+        self.draw_field()
+        #Afficher l'image en fond d'écran, dans l'emplacement du terrain de jeu
+        
+
+    def draw_data(self, data):
+        """Draws data to the pygame screen, on up left corner"""
+        text = self.font.render(data, True, pygame.Color(255, 255, 255), pygame.Color(0, 0, 0))
+        self.lcd.blit(text, (0, 0))
 
     def draw_field(self):
         pygame.draw.rect(self.lcd, pygame.Color(100, 100, 100),
@@ -138,7 +161,7 @@ class LidarScanner:
             self.POINT_COLOR = (0, 255, 0)
 
         try:
-            pygame.draw.circle(self.lcd, pygame.Color(self.POINT_COLOR), (x * self.X_RATIO, y * self.Y_RATIO), 2)
+            pygame.draw.circle(self.lcd, pygame.Color(self.POINT_COLOR), (x * self.X_RATIO, y * self.Y_RATIO), 3)
         except pygame.error as e:
             print("Failed to draw circle")
             logging.error(f"Failed to draw circle: {e}")
@@ -234,7 +257,7 @@ class LidarScanner:
 
     def valeur_de_test(self):
         scan = []
-        for i in range(350):
+        for i in range(0,350,):
             angle = i + self.ROBOT_ANGLE
             if angle > 360:
                 angle -= 360
@@ -262,7 +285,7 @@ class LidarScanner:
 
             scan = self.valeur_de_test()
             zone_objet = self.detect_object(scan)
-            self.draw_field()
+            self.draw_background()
             self.draw_robot(self.X_ROBOT, self.Y_ROBOT, self.ROBOT_ANGLE)
             self.draw_object(zone_objet)
             for point in scan:
@@ -322,9 +345,9 @@ class LidarScanner:
                             if event.key == pygame.K_ESCAPE or event.key == pygame.K_SPACE:
                                 self.stop()
                                 pass
-
+                    
+                    self.draw_background()
                     self.draw_robot(self.X_ROBOT, self.Y_ROBOT, self.ROBOT_ANGLE)
-                    self.draw_field()
                     self.draw_object(self.detect_object(scan))
 
                     for (_, angle, distance) in scan:

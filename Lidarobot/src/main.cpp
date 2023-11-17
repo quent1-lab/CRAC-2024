@@ -288,8 +288,16 @@ void test_ligne_droite(){
     if (millis() - t0 > 1000)
     {
       etat = 1;
-      vitesseMotDroit = encodeur.readEncoderD() / 1000;
-      vitesseMotGauche = encodeur.readEncoderG() / 1000;
+      vitesseMotDroit = encodeur.readEncoderD() / 1000.0;
+      vitesseMotGauche = encodeur.readEncoderG() / 1000.0;
+      if(vitesseMotDroit < 0){
+        vitesseMotDroit = -vitesseMotDroit;
+        Serial.println("le moteur droit tourne à l'envers\n");
+      }
+      if(vitesseMotGauche < 0){
+        vitesseMotGauche = -vitesseMotGauche;
+        Serial.println("le moteur gauche tourne à l'envers\n");
+      }
       t0 = millis();
     }
     break;

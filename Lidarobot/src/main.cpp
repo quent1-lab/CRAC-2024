@@ -265,7 +265,7 @@ void envoie_JSON()
 void mise_a_jour_donnees(){
   //Met à jour les données du robot
   encodeur.odometrie();
-  x = encodeur.getX();
-  y = encodeur.getY();
-  theta = encodeur.getTheta();
+  x = encodeur.get_x();
+  y = encodeur.get_y();
+  theta = encodeur.get_theta();
 }

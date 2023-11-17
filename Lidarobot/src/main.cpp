@@ -348,6 +348,8 @@ void test_ligne_droite(){
         printf("Le robot n'avance pas droit\n");
       }
       etat_sys = 0;
+      etat = 0;
     }
     break;
   }
+}

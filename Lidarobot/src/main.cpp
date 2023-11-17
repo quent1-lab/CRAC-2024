@@ -269,3 +269,77 @@ void mise_a_jour_donnees(){
   y = encodeur.get_y();
   theta = encodeur.get_theta();
 }
+
+void test_ligne_droite(){
+  //Fait avancer le robot en ligne droite afin de vérifier si le robot avance droit
+  //Et trouve le coefficient de proportionnalité pour que les roues tournent à la même vitesse
+  static int etat = 0;
+  static unsigned long t0 = millis();
+  static float vitesse = 0;
+  static float coefficient = 0;
+  float vitesseMotDroit, vitesseMotGauche;
+
+  switch (etat)
+  {
+  case 0:
+    // Etat 0 : Avancer
+    moteurGauche.setVitesse(vitesse);
+    moteurDroit.setVitesse(vitesse);
+    if (millis() - t0 > 1000)
+    {
+      etat = 1;
+      vitesseMotDroit = encodeur.readEncoderD() / 1000;
+      vitesseMotGauche = encodeur.readEncoderG() / 1000;
+      t0 = millis();
+    }
+    break;
+  case 1:
+    // Etat 1 : Arrêt
+    moteurGauche.setVitesse(0);
+    moteurDroit.setVitesse(0);
+    if (millis() - t0 > 1000)
+    {
+      etat = 2;
+      t0 = millis();
+    }
+    break;
+  case 2:
+    // Etat 2 : Caclul du coefficient
+    // Calcul de la vitessse en fonction du temps
+    coefficient = (vitesseMotDroit - vitesseMotGauche) / (vitesseMotDroit + vitesseMotGauche);
+    printf("coefficient : %f\n", coefficient);
+    encodeur.reset();
+    etat = 3;
+    break;
+  case 3:
+    // Etat 3 : Avancer
+    moteurGauche.setVitesse(vitesse);
+    moteurDroit.setVitesse(vitesse * coefficient);
+    if (millis() - t0 > 1000)
+    {
+      etat = 4;
+      vitesseMotDroit = encodeur.readEncoderD() / 1000;
+      vitesseMotGauche = encodeur.readEncoderG() / 1000;
+      t0 = millis();
+    }
+    break;
+  case 4:
+    // Etat 4 : Arrêt
+    moteurGauche.setVitesse(0);
+    moteurDroit.setVitesse(0);
+    if (millis() - t0 > 1000)
+    {
+      etat = 5;
+      t0 = millis();   
+      float new_coefficient = (vitesseMotDroit - vitesseMotGauche) / (vitesseMotDroit + vitesseMotGauche);
+      printf("new_coefficient : %f\n", new_coefficient);
+      if(coefficient - new_coefficient < 0.1){
+        printf("Le robot avance droit\n");
+      }
+      else{
+        printf("Le robot n'avance pas droit\n");
+      }
+      etat_sys = 0;
+    }
+    break;
+  }

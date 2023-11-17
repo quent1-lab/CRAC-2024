@@ -71,7 +71,7 @@ void Encodeur::odometrie()
     // Lecture des encodeurs
     deltaD = readEncoderD() - oldPositionD;
     deltaG = readEncoderG() - oldPositionG;
-
+    
     // Calcul de la distance parcourue par chaque roue
     deltaD = deltaD * 2 * PI * rayon / 360.0;
     deltaG = deltaG * 2 * PI * rayon / 360.0;

@@ -26,9 +26,17 @@ void read_bt(int nb_bt);
 
 void moteur();
 
+// Fonction de communication
+void envoie(String message);
+String reception();
+String formatage_JSON();
+void envoie_JSON();
+void mise_a_jour_donnees();
+
 // Fonction test
 void testEncodeur(void);
 void testMoteur(void);
+void test_ligne_droite(void);
 
 /*---------------------- Variable des pins de sortis ---------------------------*/
 // Aucune des pins ne sont bien définies, il faut les définir en fonction des branchements
@@ -104,7 +112,11 @@ void loop()
 
     if (bt[NOIR].click())
     {
-      etat_sys = 1;
+      etat_sys = 2;
+    }
+    if (bt[BLEU].click())
+    {
+      etat_sys = 2;
     }
     break;
   case 1:
@@ -112,6 +124,9 @@ void loop()
     digitalWrite(pinLed, HIGH);
     testMoteur();
     break;
+  case 2:
+    // Etat 2 : Test de la ligne droite
+    test_ligne_droite();
   default:
 
     break;
@@ -275,7 +290,7 @@ void test_ligne_droite(){
   //Et trouve le coefficient de proportionnalité pour que les roues tournent à la même vitesse
   static int etat = 0;
   static unsigned long t0 = millis();
-  static float vitesse = 0;
+  static float vitesse = 100;
   static float coefficient = 0;
   float vitesseMotDroit, vitesseMotGauche;
 

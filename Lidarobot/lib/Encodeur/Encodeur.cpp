@@ -68,28 +68,31 @@ void Encodeur::odometrie()
     // Variables locales
     float deltaD, deltaG, deltaT, deltaS;
 
+    int countD = readEncoderD();
+    int countG = readEncoderG();
+
     // Lecture des encodeurs
-    deltaD = readEncoderD() - oldPositionD;
-    deltaG = readEncoderG() - oldPositionG;
+    deltaD = countD - oldPositionD;
+    deltaG = countG - oldPositionG;
     
     // Calcul de la distance parcourue par chaque roue
-    deltaD = deltaD * 2 * PI * rayon / 360.0;
-    deltaG = deltaG * 2 * PI * rayon / 360.0;
+    deltaD = deltaD * 2 * PI * rayon / 24.0;//
+    deltaG = deltaG * 2 * PI * rayon / 24.0;//
 
     // Calcul de la distance parcourue par le robot
     deltaS = (deltaD + deltaG) / 2.0;
 
     // Calcul de la variation d'angle en fonction de l'entraxe
-    deltaT = (deltaD - deltaG) / 90.0;
+    deltaT = (deltaD - deltaG) / 9.0;
 
     // Calcul de la nouvelle position
     this->x += deltaS * cos(theta + deltaT / 2);
     this->y += deltaS * sin(theta + deltaT / 2);
-    this->theta += deltaT;
+    this->theta += deltaT;//a 2 pi pres
 
     // Mise à jour des variables
-    this->oldPositionD = readEncoderD();
-    this->oldPositionG = readEncoderG();
+    this->oldPositionD = countD;
+    this->oldPositionG = countG;
 }
 
 float Encodeur::get_x()

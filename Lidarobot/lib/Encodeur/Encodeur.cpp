@@ -86,9 +86,13 @@ void Encodeur::odometrie()
     deltaT = (deltaD - deltaG) / 9.0;
 
     // Calcul de la nouvelle position
-    this->x += deltaS * cos((theta + deltaT) / 2);
-    this->y += deltaS * sin((theta + deltaT) / 2);
     this->theta += deltaT;//a 2 pi pres
+    if(this->theta > 2*PI)
+        this->theta -= 2*PI;
+    if(this->theta < 0)
+        this->theta += 2*PI;
+    this->x += deltaS * cos(this->theta);
+    this->y += deltaS * sin(this->theta);
 
     // Mise à jour des variables
     this->oldPositionD = countD;
@@ -108,4 +112,8 @@ float Encodeur::get_y()
 float Encodeur::get_theta()
 {
     return this->theta;
+}
+
+float Encodeur::get_theta_deg(){
+    return this->theta*180/PI;
 }

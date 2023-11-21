@@ -231,6 +231,10 @@ class LidarScanner:
 
         #Affichage des ports détectés
         for port in ports:
+            #Si le port contient AMA, on le supprime de la liste
+            if "AMA" in port.device:
+                ports.remove(port)
+                continue
             print(port.device)
         
         #Si un seul port est détecté, on le retourne

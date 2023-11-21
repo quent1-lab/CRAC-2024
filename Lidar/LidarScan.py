@@ -6,6 +6,7 @@ import random
 import time
 import serial.tools.list_ports
 import json
+import threading
 
 class ComESP32:
     def __init__(self, port, baudrate):
@@ -69,6 +70,7 @@ class ComESP32:
 
 class LidarScanner:
     def __init__(self, port=None):
+        self.stop_thread = False
         self.port = port
         self.lidar = None
         self.lcd = None
@@ -308,6 +310,7 @@ class LidarScanner:
             time.sleep(0.1)
     
     def stop(self):
+        self.stop_thread = True
         logging.info("Stopping LiDAR motor")
         print("Arrêt du moteur LiDAR")
         self.lidar.stop()
@@ -328,6 +331,24 @@ class LidarScanner:
             moyenne_scan[i] = (0, moyenne_scan[i][1] / len(tab_scan), moyenne_scan[i][2] / len(tab_scan))
         return moyenne_scan
 
+    def process_scans(self):
+        try:
+            for scan in self.lidar.iter_scans(8000):
+                if self.stop_thread:
+                    break
+                self.draw_background()
+                self.draw_robot(self.X_ROBOT, self.Y_ROBOT, self.ROBOT_ANGLE)
+                self.draw_object(self.detect_object(scan))
+
+                for (_, angle, distance) in scan:
+                    self.draw_point(self.X_ROBOT, self.Y_ROBOT, angle, distance)
+                pygame.display.update()
+                self.lcd.fill(self.WHITE)
+        
+        except Exception as e:
+            logging.error(f"Failed to process scans: {e}")
+            raise
+
     def run(self):
         try:
             self.lidar = RPLidar(self.port)
@@ -343,31 +364,29 @@ class LidarScanner:
 
             #ComESP32(port="COM3", baudrate=115200).run()
 
+            scan_thread = threading.Thread(target=self.process_scans)
+            scan_thread.start()
+
             running = True  # Ajoutez une variable de contrôle pour gérer la fermeture de la fenêtre
 
             while running:
-
-                for scan in self.lidar.iter_scans(8000):
-                    for event in pygame.event.get():
-                        if event.type == pygame.QUIT:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        self.stop()
+                        scan_thread.join()
+                        pass
+                    elif event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_ESCAPE or event.key == pygame.K_SPACE:
                             self.stop()
+                            scan_thread.join()
                             pass
-                        elif event.type == pygame.KEYDOWN:
-                            if event.key == pygame.K_ESCAPE or event.key == pygame.K_SPACE:
-                                self.stop()
-                                pass
-                    
-                    self.draw_background()
-                    self.draw_robot(self.X_ROBOT, self.Y_ROBOT, self.ROBOT_ANGLE)
-                    self.draw_object(self.detect_object(scan))
-
-                    for (_, angle, distance) in scan:
-                        self.draw_point(self.X_ROBOT, self.Y_ROBOT, angle, distance)
-                    pygame.display.update()
-                    self.lcd.fill(self.WHITE)
+                
+                if not scan_thread.is_alive():
+                    running = False
 
         except KeyboardInterrupt:
             self.stop()
+            scan_thread.join()
             pass
 
 if __name__ == '__main__':

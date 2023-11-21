@@ -86,8 +86,8 @@ void Encodeur::odometrie()
     deltaT = (deltaD - deltaG) / 9.0;
 
     // Calcul de la nouvelle position
-    this->x += deltaS * cos(theta + deltaT / 2);
-    this->y += deltaS * sin(theta + deltaT / 2);
+    this->x += deltaS * cos((theta + deltaT) / 2);
+    this->y += deltaS * sin((theta + deltaT) / 2);
     this->theta += deltaT;//a 2 pi pres
 
     // Mise à jour des variables

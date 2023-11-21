@@ -28,6 +28,7 @@ class Encodeur {
     float get_x();
     float get_y();
     float get_theta();
+    float get_theta_deg();
 };
 
 #endif

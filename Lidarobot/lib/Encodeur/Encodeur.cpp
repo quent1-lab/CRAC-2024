@@ -40,18 +40,18 @@ void Encodeur::reset()
     encoderG.setCount(0);
 }
 
-void Encodeur::print()
+void Encodeur::print(int countD,int countG)
 {
     Serial.print("EncodeurD : ");
-    Serial.print(readEncoderD());
+    Serial.print(countD);
     Serial.print(" EncodeurG : ");
-    Serial.print(readEncoderG());
+    Serial.print(countG);
     Serial.print(" x : ");
     Serial.print(this->x);
     Serial.print(" y : ");
     Serial.print(this->y);
     Serial.print(" theta : ");
-    Serial.println(this->theta);
+    Serial.println(this->theta*180/PI);
 }
 
 void Encodeur::change_position(float x, float y, float theta)
@@ -94,6 +94,8 @@ void Encodeur::odometrie()
     this->x += deltaS * cos(this->theta);
     this->y += deltaS * sin(this->theta);
 
+    print(countD,countG);
+    
     // Mise à jour des variables
     this->oldPositionD = countD;
     this->oldPositionG = countG;

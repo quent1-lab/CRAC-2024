@@ -80,12 +80,11 @@ Bouton bt[3]; // création d'un tableau de 3 boutons.
 Moteur moteurGauche(pinMotGaucheSens, pinMotGauchePWM, 0);
 Moteur moteurDroit(pinMotDroitSens, pinMotDroitPWM, 1);
 
-Encodeur encodeur(pinEncodeurDroitA, pinEncodeurDroitB, pinEncodeurGaucheA, pinEncodeurGaucheB);
+Encodeur encodeur(pinEncodeurDroitB, pinEncodeurDroitA, pinEncodeurGaucheA, pinEncodeurGaucheB);
 
 void setup()
 {
-  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);
-
+  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);// disable brownout detector
   // put your setup code here, to run once:
   Serial.begin(115200);
   pinMode(pinLed, OUTPUT);
@@ -167,8 +166,8 @@ void read_bt(int nb_bt)
 void testEncodeur()
 {
   encodeur.odometrie();
-  encodeur.print();
-  envoie_JSON();
+  //encodeur.print();
+  //envoie_JSON();
 }
 
 void testMoteur()

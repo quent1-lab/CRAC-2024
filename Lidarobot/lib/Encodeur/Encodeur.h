@@ -24,7 +24,7 @@ class Encodeur {
     int readEncoderG();
     void reset();
     void odometrie();
-    void print();
+    void print(int countD,int countG);
     float get_x();
     float get_y();
     float get_theta();

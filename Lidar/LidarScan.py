@@ -7,6 +7,7 @@ import time
 import serial.tools.list_ports
 import json
 import threading
+import queue
 
 class ComESP32:
     def __init__(self, port, baudrate):
@@ -71,6 +72,9 @@ class ComESP32:
 class LidarScanner:
     def __init__(self, port=None):
         self.stop_thread = False
+        self.lidar_data = queue.Queue()
+        self.process_thread = threading.Thread(target=self.process_scans)
+        self.process_thread.start()
         self.port = port
         self.lidar = None
         self.lcd = None
@@ -335,23 +339,21 @@ class LidarScanner:
             moyenne_scan[i] = (0, moyenne_scan[i][1] / len(tab_scan), moyenne_scan[i][2] / len(tab_scan))
         return moyenne_scan
 
-    def process_scans(self):
-        try:
-            for scan in self.lidar.iter_scans(8000):
-                if self.stop_thread:
-                    break
-                self.draw_background()
-                self.draw_robot(self.X_ROBOT, self.Y_ROBOT, self.ROBOT_ANGLE)
-                self.draw_object(self.detect_object(scan))
+    def read_scans(self):
+        for scan in self.lidar.iter_scans(5000):
+            self.lidar_data.put(scan)
 
-                for (_, angle, distance) in scan:
-                    self.draw_point(self.X_ROBOT, self.Y_ROBOT, angle, distance)
-                pygame.display.update()
-                self.lcd.fill(self.WHITE)
-        
-        except Exception as e:
-            logging.error(f"Failed to process scans: {e}")
-            raise
+    def process_scans(self):
+        while True:
+            scan = self.lidar_data.get()
+            self.draw_background()
+            self.draw_robot(self.X_ROBOT, self.Y_ROBOT, self.ROBOT_ANGLE)
+            self.draw_object(self.detect_object(scan))
+
+            for (_, angle, distance) in scan:
+                self.draw_point(self.X_ROBOT, self.Y_ROBOT, angle, distance)
+            pygame.display.update()
+            self.lcd.fill(self.WHITE)
 
     def run(self):
         try:
@@ -368,8 +370,7 @@ class LidarScanner:
 
             #ComESP32(port="COM3", baudrate=115200).run()
 
-            scan_thread = threading.Thread(target=self.process_scans)
-            scan_thread.start()
+            self.process_thread.start()
 
             running = True  # Ajoutez une variable de contrôle pour gérer la fermeture de la fenêtre
 
@@ -377,20 +378,20 @@ class LidarScanner:
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         self.stop()
-                        scan_thread.join()
+                        self.process_thread.join()
                         pass
                     elif event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_ESCAPE or event.key == pygame.K_SPACE:
                             self.stop()
-                            scan_thread.join()
+                            self.process_thread.join()
                             pass
                 
-                if not scan_thread.is_alive():
+                if not self.process_thread.is_alive():
                     running = False
 
         except KeyboardInterrupt:
             self.stop()
-            scan_thread.join()
+            self.process_thread.join()
             pass
 
 if __name__ == '__main__':

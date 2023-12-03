@@ -111,28 +111,13 @@ class ComCAN:
             logging.error(f"Failed to receive data from CAN: {e}")
             raise
 
-    def load_json(self, data):
-        try:
-            return json.loads(data)
-        except Exception as e:
-            logging.error(f"Failed to unload JSON: {e}")
-            raise
-
     def run(self):
         try:
             self.connect()
             while True:
                 data = self.receive()
-                data = self.load_json(data)
                 print(data)
-                if data["type"] == "x":
-                    print(data["x"])
-                elif data["type"] == "y":
-                    print(data["x"])
-                elif data["type"] == "theta":
-                    print(data["theta"])
-                else:
-                    print("error")
+                
         except KeyboardInterrupt:
             self.disconnect()
             pass

@@ -6,6 +6,8 @@ import random
 import time
 import serial.tools.list_ports
 import json
+import os
+import can
 
 class ComESP32:
     def __init__(self, port, baudrate):
@@ -39,6 +41,74 @@ class ComESP32:
             return self.esp32.readline()
         except Exception as e:
             logging.error(f"Failed to receive data from ESP32: {e}")
+            raise
+
+    def load_json(self, data):
+        try:
+            return json.loads(data)
+        except Exception as e:
+            logging.error(f"Failed to unload JSON: {e}")
+            raise
+
+    def run(self):
+        try:
+            self.connect()
+            while True:
+                data = self.receive()
+                data = self.load_json(data)
+                print(data)
+                if data["type"] == "x":
+                    print(data["x"])
+                elif data["type"] == "y":
+                    print(data["x"])
+                elif data["type"] == "theta":
+                    print(data["theta"])
+                else:
+                    print("error")
+        except KeyboardInterrupt:
+            self.disconnect()
+            pass
+
+class ComCAN:
+    def __init__(self, channel, bustype):
+        self.channel = channel
+        self.bustype = bustype
+        self.can = None
+
+    def connect(self):
+        #Vérifie si le système d'exploitation est Linux
+        #Si oui, on lance les commandes pour configurer le CAN
+        try:
+            if os.name == "posix":
+                os.system('sudo ip link set can0 type can bitrate 1000000')
+                os.system('sudo ifconfig can0 up')
+                self.can = can.interface.Bus(channel = self.channel, bustype = self.bustype)
+            else:
+                logging.error("OS not supported")
+                raise OSError("OS not supported")       
+        except Exception as e:
+            logging.error(f"Failed to connect to CAN: {e}")
+            raise
+
+    def disconnect(self):
+        try:
+            self.can.shutdown()
+        except Exception as e:
+            logging.error(f"Failed to disconnect from CAN: {e}")
+            raise
+
+    def send(self, data):
+        try:
+            self.can.send(data)
+        except Exception as e:
+            logging.error(f"Failed to send data to CAN: {e}")
+            raise
+
+    def receive(self):
+        try:
+            return self.can.recv(10.0)
+        except Exception as e:
+            logging.error(f"Failed to receive data from CAN: {e}")
             raise
 
     def load_json(self, data):
@@ -216,14 +286,6 @@ class LidarScanner:
 
         return (x, y, taille)
 
-    def tracking_object(self, zone_objet, zone_objet_precedente):
-        if zone_objet > zone_objet_precedente:
-            return "avance"
-        elif zone_objet < zone_objet_precedente:
-            return "recule"
-        else:
-            return "stable"
-        
     def choix_du_port(self):
         ports = serial.tools.list_ports.comports()
 
@@ -318,19 +380,6 @@ class LidarScanner:
         time.sleep(1)
         self.lidar.disconnect()
         exit(0)
-
-    def moyenne_scan(self, tab_scan):
-        #moyenne des points sur N scan
-        moyenne_scan = []
-        for i in range(len(tab_scan[0])):
-            moyenne_scan.append((0, 0, 0))
-        for scan in tab_scan:
-            for i in range(len(scan)):
-                if i < len(moyenne_scan):  # Vérifiez si l'index est dans les limites
-                    moyenne_scan[i] = (0, moyenne_scan[i][1] + scan[i][1], moyenne_scan[i][2] + scan[i][2])
-        for i in range(len(moyenne_scan)):
-            moyenne_scan[i] = (0, moyenne_scan[i][1] / len(tab_scan), moyenne_scan[i][2] / len(tab_scan))
-        return moyenne_scan
 
     def run(self):
         try:

@@ -16,13 +16,19 @@ void Encodeur::init()
     this->rayon = 0.022;
 }
 
-void Encodeur::init(float x, float y, float theta, float rayon)
+void Encodeur::init(float x, float y, float theta, float rayon, int reduction, int resolution)
 {
     this->x = x;
     this->y = y;
     this->theta = theta;
     this->rayon = rayon;
-}   
+    this->reduction = reduction;
+    this->resolution = resolution;
+    this->encoderD.setCount(0);
+    this->encoderG.setCount(0);
+    this->oldPositionD = 0;
+    this->oldPositionG = 0;
+}
 
 int Encodeur::readEncoderD()
 {
@@ -76,8 +82,8 @@ void Encodeur::odometrie()
     deltaG = countG - oldPositionG;
     
     // Calcul de la distance parcourue par chaque roue
-    deltaD = deltaD * 2 * PI * rayon / 24.0;//
-    deltaG = deltaG * 2 * PI * rayon / 24.0;//
+    deltaD = deltaD * 2.0 * PI * rayon / (this->resolution*this->reduction);//
+    deltaG = deltaG * 2.0 * PI * rayon / (this->resolution*this->reduction);//
 
     // Calcul de la distance parcourue par le robot
     deltaS = (deltaD + deltaG) / 2.0;

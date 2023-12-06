@@ -14,11 +14,14 @@ class Encodeur {
     float y;
     float theta;
     float rayon;
+    int reduction;
+    int resolution;
 
   public:
     Encodeur(int pinD_A, int pinD_B,int pinG_A, int pinG_B);
     void init();
     void init(float x, float y, float theta, float rayon);
+    void init(float x, float y, float theta, float rayon, int reduction, int resolution);
     void change_position(float x, float y, float theta);
     int readEncoderD();
     int readEncoderG();

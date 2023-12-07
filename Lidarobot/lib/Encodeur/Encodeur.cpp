@@ -13,7 +13,19 @@ void Encodeur::init()
     this->x = 0;
     this->y = 0;
     this->theta = 0;
-    this->rayon = 0.022;
+    this->rayon = 2.2;
+}
+
+void Encodeur::init(float x, float y, float theta, float rayon)
+{
+    this->x = x;
+    this->y = y;
+    this->theta = theta;
+    this->rayon = rayon;
+    this->encoderD.setCount(0);
+    this->encoderG.setCount(0);
+    this->oldPositionD = 0;
+    this->oldPositionG = 0;
 }
 
 void Encodeur::init(float x, float y, float theta, float rayon, int reduction, int resolution)
@@ -124,4 +136,113 @@ float Encodeur::get_theta()
 
 float Encodeur::get_theta_deg(){
     return this->theta*180/PI;
+}
+
+void Encodeur::go_to(float x, float y, float theta)
+{
+    // Cette fonction permet de faire avancer le robot jusqu'à une position donnée
+    // Elle utilise la fonction odometrie() pour se déplacer
+
+    // Variables locales
+    float distance, angle;
+    float x0, y0, theta0;
+
+    // Lecture de la position initiale
+    x0 = this->x;
+    y0 = this->y;
+    theta0 = this->theta;
+
+    // Calcul de la distance à parcourir
+    distance = sqrt(pow(x - x0, 2) + pow(y - y0, 2));
+
+    // Calcul de l'angle à parcourir
+    angle = atan2(y - y0, x - x0);
+
+    // Rotation du robot
+    turn_to(angle);
+
+    // Avance du robot
+    moteurGauche.setVitesse(100);
+    moteurDroit.setVitesse(100);
+    while (sqrt(pow(this->x - x0, 2) + pow(this->y - y0, 2)) < distance)
+    {
+        odometrie();
+    }
+    moteurGauche.setVitesse(0);
+    moteurDroit.setVitesse(0);
+
+    // Rotation du robot
+    turn_to(theta);
+
+    // Mise à jour de la position
+    this->x = x;
+    this->y = y;
+    this->theta = theta;
+}
+
+void Encodeur::go_to(float x, float y)
+{
+    // Cette fonction permet de faire avancer le robot jusqu'à une position donnée
+    // Elle utilise la fonction odometrie() pour se déplacer
+
+    // Variables locales
+    float distance, angle;
+    float x0, y0, theta0;
+
+    // Lecture de la position initiale
+    x0 = this->x;
+    y0 = this->y;
+    theta0 = this->theta;
+
+    // Calcul de la distance à parcourir
+    distance = sqrt(pow(x - x0, 2) + pow(y - y0, 2));
+
+    // Calcul de l'angle à parcourir
+    angle = atan2(y - y0, x - x0);
+
+    // Rotation du robot
+    turn_to(angle);
+
+    // Avance du robot
+    moteurGauche.setVitesse(100);
+    moteurDroit.setVitesse(100);
+    while (sqrt(pow(this->x - x0, 2) + pow(this->y - y0, 2)) < distance)
+    {
+        odometrie();
+    }
+    moteurGauche.setVitesse(0);
+    moteurDroit.setVitesse(0);
+
+    // Mise à jour de la position
+    this->x = x;
+    this->y = y;
+}
+
+void Encodeur::turn_to(float theta)
+{
+    // Cette fonction permet de faire tourner le robot jusqu'à un angle donné
+    // Elle utilise la fonction odometrie() pour se déplacer
+
+    // Variables locales
+    float angle;
+    float theta0;
+
+    // Lecture de la position initiale
+    theta0 = this->theta;
+
+    // Calcul de l'angle à parcourir
+    angle = theta - theta0;
+
+    // Rotation du robot
+    moteurGauche.setVitesse(100);
+    moteurDroit.setVitesse(-100);
+    while (this->theta - theta0 < angle)
+    {
+        odometrie();
+    }
+    moteurGauche.setVitesse(0);
+    moteurDroit.setVitesse(0);
+
+    // Mise à jour de la position
+    this->theta = theta;
 }

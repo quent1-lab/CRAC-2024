@@ -32,9 +32,6 @@ class Encodeur {
     float get_y();
     float get_theta();
     float get_theta_deg();
-    void go_to(float x, float y, float theta);
-    void go_to(float x, float y);
-    void turn_to(float theta);
 };
 
 #endif

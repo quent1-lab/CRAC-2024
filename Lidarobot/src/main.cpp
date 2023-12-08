@@ -38,10 +38,10 @@ void testEncodeur(void);
 void testMoteur(void);
 
 // Fonction de déplacement
-bool avancer(float distance);
-bool tourner(float angle);
-bool aller_a(float x, float y);
-bool aller_a(float x, float y, float theta);
+void avancer(float distance);
+void tourner(float angle);
+void aller_a(float x, float y);
+void aller_a(float x, float y, float theta);
 
 /*---------------------- Variable des pins de sortis ---------------------------*/
 // Aucune des pins ne sont bien définies, il faut les définir en fonction des branchements
@@ -301,185 +301,11 @@ void mise_a_jour_donnees(){
 }
 
 
-bool avancer(float distance){
+void avancer(float distance){
   /*
     Input : distance : distance à parcourir en cm (float)
     Output : none
     Description:  Cette fonction permet de faire avancer le robot d'une certaine distance
                   Un asservissement en position est utilisé pour que le robot avance droit
   */
-
-  // Variables locales
-  float new_x, new_y; // Nouvelle position du robot
-  float distance_parcourue; // Distance parcourue par le robot
-  float distance_restante; // Distance restante à parcourir
-  float vitesse = 100.0; // Vitesse du robot
-
-  encodeur.reset();
-  theta = 0;
-  y = 0;
-  x = 0;
-  // Initialisation des variables
-  new_x = x + distance * cos(theta);
-  new_y = y + distance * sin(theta);
-
-  // Calcul de la distance restante à parcourir
-  distance_restante = sqrt(pow(new_x - x, 2) + pow(new_y - y, 2));
-
-  // Asservissement en position
-  while(distance_restante > 0.1){
-    // Calcul de la distance parcourue
-    distance_parcourue = sqrt(pow(x - new_x, 2) + pow(y - new_y, 2));
-
-    // Calcul de la distance restante à parcourir
-    distance_restante = sqrt(pow(new_x - x, 2) + pow(new_y - y, 2));
-
-    Serial.println(distance_restante);
-    //encodeur.odometrie();
-    // Calcul de la vitesse du robot
-    vitesse = 100;
-
-    // Asservissement en vitesse
-    moteurGauche.setVitesse(vitesse);
-    moteurDroit.setVitesse(vitesse);
-
-    moteur();
-    // Mise à jour des données
-    mise_a_jour_donnees();
-  }
-  moteurGauche.setVitesse(0);
-  moteurDroit.setVitesse(0);
-  moteur();
-  delay(5000);
-
-  return true;
-}
-
-bool tourner(float angle){
-  /*
-    Input : angle : angle à tourner en radian (float)
-    Output : none
-    Description:  Cette fonction permet de faire tourner le robot d'un certain angle
-                  Un asservissement en position est utilisé pour que le robot tourne droit
-  */
-
-  // Variables locales
-  float new_theta; // Nouvelle orientation du robot
-  float angle_parcouru; // Angle parcouru par le robot
-  float angle_restant; // Angle restant à parcourir
-  float vitesse; // Vitesse du robot
-
-  // Initialisation des variables
-  new_theta = theta + angle;
-
-  // Calcul de l'angle restant à parcourir
-  angle_restant = new_theta - theta;
-
-  // Asservissement en position
-  while(angle_restant > 0.1){
-    // Calcul de l'angle parcouru
-    angle_parcouru = new_theta - theta;
-
-    // Calcul de l'angle restant à parcourir
-    angle_restant = new_theta - theta;
-
-    // Calcul de la vitesse du robot
-    vitesse = 100 * angle_restant / angle_parcouru;
-
-    // Asservissement en vitesse
-    moteurGauche.setVitesse(vitesse);
-    moteurDroit.setVitesse(-vitesse);
-
-    // Mise à jour des données
-    mise_a_jour_donnees();
-  }
-  return true;
-}
-
-bool aller_a(float x, float y){
-  /*
-    Input : x : position en x à atteindre (float)
-            y : position en y à atteindre (float)
-    Output : none
-    Description:  Cette fonction permet de faire aller le robot à une certaine position
-                  Un asservissement en position est utilisé pour que le robot aille droit
-  */
-
-  // Variables locales
-  float distance_parcourue; // Distance parcourue par le robot
-  float distance_restante; // Distance restante à parcourir
-  float vitesse; // Vitesse du robot
-
-  // Calcul de la distance restante à parcourir
-  distance_restante = sqrt(pow(x - x, 2) + pow(y - y, 2));
-
-  // Asservissement en position
-  while(distance_restante > 0.1){
-    // Calcul de la distance parcourue
-    distance_parcourue = sqrt(pow(x - x, 2) + pow(y - y, 2));
-
-    // Calcul de la distance restante à parcourir
-    distance_restante = sqrt(pow(x - x, 2) + pow(y - y, 2));
-
-    // Calcul de la vitesse du robot
-    vitesse = 100 * distance_restante / distance_parcourue;
-
-    // Asservissement en vitesse
-    moteurGauche.setVitesse(vitesse);
-    moteurDroit.setVitesse(vitesse);
-
-    // Mise à jour des données
-    mise_a_jour_donnees();
-  }
-  return true;
-}
-
-bool aller_a(float x, float y, float theta){
-  /*
-    Input : x : position en x à atteindre (float)
-            y : position en y à atteindre (float)
-            theta : orientation à atteindre (float)
-    Output : none
-    Description:  Cette fonction permet de faire aller le robot à une certaine position
-                  Un asservissement en position est utilisé pour que le robot aille droit
-  */
-
-  // Variables locales
-  float distance_parcourue; // Distance parcourue par le robot
-  float distance_restante; // Distance restante à parcourir
-  float vitesse; // Vitesse du robot
-  float angle_parcouru; // Angle parcouru par le robot
-  float angle_restant; // Angle restant à parcourir
-
-  // Calcul de la distance restante à parcourir
-  distance_restante = sqrt(pow(x - x, 2) + pow(y - y, 2));
-
-  // Calcul de l'angle restant à parcourir
-  angle_restant = theta - theta;
-
-  // Asservissement en position
-  while(distance_restante > 0.1 || angle_restant > 0.1){
-    // Calcul de la distance parcourue
-    distance_parcourue = sqrt(pow(x - x, 2) + pow(y - y, 2));
-
-    // Calcul de la distance restante à parcourir
-    distance_restante = sqrt(pow(x - x, 2) + pow(y - y, 2));
-
-    // Calcul de l'angle parcouru
-    angle_parcouru = theta - theta;
-
-    // Calcul de l'angle restant à parcourir
-    angle_restant = theta - theta;
-
-    // Calcul de la vitesse du robot
-    vitesse = 100 * distance_restante / distance_parcourue;
-
-    // Asservissement en vitesse
-    moteurGauche.setVitesse(vitesse);
-    moteurDroit.setVitesse(vitesse);
-
-    // Mise à jour des données
-    mise_a_jour_donnees();
-  }
-  return true;
 }

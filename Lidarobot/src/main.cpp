@@ -286,6 +286,17 @@ void avancer(float distance){
     Input : distance : distance à parcourir en cm (float)
     Output : none
     Description:  Cette fonction permet de faire avancer le robot d'une certaine distance
-                  Un asservissement en position est utilisé pour que le robot avance droit
+                  Un asservissement en pas est utilisé pour avancer droit
   */
+
+  float new_x = x + distance*cos(theta);
+  float new_y = y + distance*sin(theta);
+  float new_theta = theta;
+
+  //Calcul de la distance totale à parcourir par chaque roue
+  float nbr_pas_a_parcourir = distance / (2*PI*rayon) * encodeur.get_resolution() * encodeur.get_reduction();
+
+
+  
+
 }

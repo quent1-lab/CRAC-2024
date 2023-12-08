@@ -137,3 +137,35 @@ float Encodeur::get_theta()
 float Encodeur::get_theta_deg(){
     return this->theta*180/PI;
 }
+
+int Encodeur::x_to_step(float x)
+{
+    /*
+    Cette fonction permet de convertir une distance en nombre de pas moteur
+    x : distance en cm
+    output : nombre de pas moteur
+    */
+    return x * this->resolution * this->reduction / (2.0 * PI * this->rayon);
+}
+
+int Encodeur::y_to_step(float y)
+{
+    /*
+    Cette fonction permet de convertir une distance en nombre de pas moteur
+    y : distance en cm
+    output : nombre de pas moteur
+    */
+    return y * this->resolution * this->reduction / (2.0 * PI * this->rayon);
+}
+
+int Encodeur::theta_to_step(float theta)
+{
+    /*
+    Cette fonction permet de convertir un angle en nombre de pas moteur
+    theta : angle en radian
+    output : nombre de pas moteur
+    */
+    return theta * 9.0 * this->resolution * this->reduction / (2.0 * PI);
+}
+
+

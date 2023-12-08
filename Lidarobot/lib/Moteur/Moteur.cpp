@@ -14,7 +14,7 @@ Moteur::Moteur(int pinSens, int pinPWM, int ledc_channel)
 void Moteur::init()
 {
     pinMode(pinSens, OUTPUT);
-    ledcSetup(ledc_channel, 40000, 8);
+    ledcSetup(ledc_channel, 40000, 10);
     ledcAttachPin(pinPWM, ledc_channel);
     ledcWrite(ledc_channel, 0);
     this->vitesse_max = 100;
@@ -24,7 +24,7 @@ void Moteur::init()
 void Moteur::init(int vitesse_max)
 {
     pinMode(pinSens, OUTPUT);
-    ledcSetup(ledc_channel, 40000, 8);
+    ledcSetup(ledc_channel, 40000, 10);
     ledcAttachPin(pinPWM, ledc_channel);
     ledcWrite(ledc_channel, 0);
     this->vitesse_max = vitesse_max;
@@ -34,7 +34,7 @@ void Moteur::init(int vitesse_max)
 void Moteur::init(int vitesse_max, float coefficient)
 {
     pinMode(pinSens, OUTPUT);
-    ledcSetup(ledc_channel, 40000, 8);
+    ledcSetup(ledc_channel, 40000, 10);
     ledcAttachPin(pinPWM, ledc_channel);
     ledcWrite(ledc_channel, 0);
     this->vitesse_max = vitesse_max;
@@ -50,26 +50,20 @@ void Moteur::setVitesse(int vitesse)
      *             La vitesse est comprise entre -100 et 100.
      */
 
-    if (vitesse > 100)
-    {
+    if (vitesse > 100){
         vitesse = 100;
     }
-    else if (vitesse < -100)
-    {
+    else if (vitesse < -100){
         vitesse = -100;
     }
-    if (vitesse < 0)
-    {
+    if (vitesse < 0){
         sens_actuel = true;
         vitesse = -vitesse;
-    }
-    else
-    {
+    }else{
         sens_actuel = false;
     }
 
-    //smoothMoteur();
-    vitesse_actuelle = vitesse * 1/100.0 * 255.0;
+    vitesse_actuelle = (vitesse * 1/100.0) * (1023*vitesse_max/100.0) * coefficient;
 }
 
 void Moteur::setSens(bool sens)

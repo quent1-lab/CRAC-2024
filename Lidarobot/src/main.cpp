@@ -108,37 +108,17 @@ void setup()
 void loop()
 {
   read_bt(3);
-  delay(1000);
-  moteurGauche.setVitesse(100);
-  moteurDroit.setVitesse(96);
-  moteur();
-  delay(1000);
-  testEncodeur();
-  moteurGauche.setVitesse(0);
-  moteurDroit.setVitesse(0);
-  moteur();
-  delay(5000);
-  encodeur.reset();
   switch (etat_sys)
   {
   case 0:
     // Etat 0 : Attente du départ
-    //avancer(20);
     if (bt[NOIR].click())
     {
       etat_sys = 2;
-      Serial.println("Etat 0");
-    }
-    if (bt[BLEU].click())
-    {
-      etat_sys = 2;
-      Serial.println("Etat 0");
     }
     break;
   case 1:
     // Etat 1 : Test des moteurs
-    digitalWrite(pinLed, HIGH);
-    testMoteur();
     break;
   case 2:
     // Etat 2 : Test de la ligne droite
@@ -292,6 +272,7 @@ void envoie_JSON()
   }
 }
 
+
 void mise_a_jour_donnees(){
   //Met à jour les données du robot
   encodeur.odometrie();
@@ -299,7 +280,6 @@ void mise_a_jour_donnees(){
   y = encodeur.get_y();
   theta = encodeur.get_theta();
 }
-
 
 void avancer(float distance){
   /*

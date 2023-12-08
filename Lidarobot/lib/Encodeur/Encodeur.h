@@ -28,10 +28,14 @@ class Encodeur {
     void reset();
     void odometrie();
     void print(int countD,int countG);
+    
     float get_x();
     float get_y();
     float get_theta();
     float get_theta_deg();
+    int get_resolution();
+    int get_reduction();
+
     int x_to_step(float x);
     int y_to_step(float y);
     int theta_to_step(float theta);

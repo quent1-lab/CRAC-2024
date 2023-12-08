@@ -249,4 +249,16 @@ int Encodeur::theta_to_step(float theta)
     return theta * 9.0 * this->resolution * this->reduction / (2.0 * PI);
 }
 
+/**
+ * @brief Retourne la résolution des encodeurs
+*/
+int Encodeur::get_resolution(){
+    return this->resolution;
+}
 
+/**
+ * @brief Retourne le rapport de réduction des moteurs
+*/
+int Encodeur::get_reduction(){
+    return this->reduction;
+}

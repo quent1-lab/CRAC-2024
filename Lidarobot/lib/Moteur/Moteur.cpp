@@ -14,7 +14,7 @@ Moteur::Moteur(int pinSens, int pinPWM, int ledc_channel)
 void Moteur::init()
 {
     pinMode(pinSens, OUTPUT);
-    ledcSetup(ledc_channel, 20000, 10);
+    ledcSetup(ledc_channel, 40000, 8);
     ledcAttachPin(pinPWM, ledc_channel);
     ledcWrite(ledc_channel, 0);
 }
@@ -47,7 +47,7 @@ void Moteur::setVitesse(int vitesse)
     }
 
     //smoothMoteur();
-    vitesse_actuelle = vitesse * 1/100 * 1020;
+    vitesse_actuelle = vitesse * 1/100.0 * 255.0;
 }
 
 void Moteur::setSens(bool sens)

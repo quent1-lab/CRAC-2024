@@ -36,7 +36,6 @@ void mise_a_jour_donnees();
 // Fonction test
 void testEncodeur(void);
 void testMoteur(void);
-void test_ligne_droite(void);
 
 // Fonction de déplacement
 bool avancer(float distance);
@@ -84,7 +83,7 @@ Bouton bt[3]; // création d'un tableau de 3 boutons.
 
 // Déclaration des moteurs et encodeurs en tant qu'instances des classes Moteur et Encodeur
 Moteur moteurGauche(pinMotGaucheSens, pinMotGauchePWM, 0);
-Moteur moteurDroit(pinMotDroitSens, pinMotDroitPWM, 1);
+Moteur moteurDroit(pinMotDroitSens, pinMotDroitPWM, 2);
 
 Encodeur encodeur(pinEncodeurDroitB, pinEncodeurDroitA, pinEncodeurGaucheA, pinEncodeurGaucheB);
 
@@ -109,19 +108,31 @@ void setup()
 void loop()
 {
   read_bt(3);
+  delay(1000);
+  moteurGauche.setVitesse(100);
+  moteurDroit.setVitesse(96);
+  moteur();
+  delay(1000);
   testEncodeur();
+  moteurGauche.setVitesse(0);
+  moteurDroit.setVitesse(0);
+  moteur();
+  delay(5000);
+  encodeur.reset();
   switch (etat_sys)
   {
   case 0:
     // Etat 0 : Attente du départ
-
+    //avancer(20);
     if (bt[NOIR].click())
     {
       etat_sys = 2;
+      Serial.println("Etat 0");
     }
     if (bt[BLEU].click())
     {
       etat_sys = 2;
+      Serial.println("Etat 0");
     }
     break;
   case 1:
@@ -131,9 +142,8 @@ void loop()
     break;
   case 2:
     // Etat 2 : Test de la ligne droite
-    test_ligne_droite();
+    break;
   default:
-
     break;
   }
 
@@ -290,89 +300,6 @@ void mise_a_jour_donnees(){
   theta = encodeur.get_theta();
 }
 
-void test_ligne_droite(){
-  //Fait avancer le robot en ligne droite afin de vérifier si le robot avance droit
-  //Et trouve le coefficient de proportionnalité pour que les roues tournent à la même vitesse
-  static int etat = 0;
-  static unsigned long t0 = millis();
-  static float vitesse = 100;
-  static float coefficient = 0;
-  float vitesseMotDroit, vitesseMotGauche;
-
-  switch (etat)
-  {
-  case 0:
-    // Etat 0 : Avancer
-    moteurGauche.setVitesse(vitesse);
-    moteurDroit.setVitesse(vitesse);
-    if (millis() - t0 > 1000)
-    {
-      etat = 1;
-      vitesseMotDroit = encodeur.readEncoderD() / 1000.0;
-      vitesseMotGauche = encodeur.readEncoderG() / 1000.0;
-      if(vitesseMotDroit < 0){
-        vitesseMotDroit = -vitesseMotDroit;
-        Serial.println("le moteur droit tourne à l'envers\n");
-      }
-      if(vitesseMotGauche < 0){
-        vitesseMotGauche = -vitesseMotGauche;
-        Serial.println("le moteur gauche tourne à l'envers\n");
-      }
-      t0 = millis();
-    }
-    break;
-  case 1:
-    // Etat 1 : Arrêt
-    moteurGauche.setVitesse(0);
-    moteurDroit.setVitesse(0);
-    if (millis() - t0 > 1000)
-    {
-      etat = 2;
-      t0 = millis();
-    }
-    break;
-  case 2:
-    // Etat 2 : Caclul du coefficient
-    // Calcul de la vitessse en fonction du temps
-    coefficient = (vitesseMotDroit - vitesseMotGauche) / (vitesseMotDroit + vitesseMotGauche);
-    printf("coefficient : %f\n", coefficient);
-    encodeur.reset();
-    etat = 3;
-    break;
-  case 3:
-    // Etat 3 : Avancer
-    moteurGauche.setVitesse(vitesse);
-    moteurDroit.setVitesse(vitesse * coefficient);
-    if (millis() - t0 > 1000)
-    {
-      etat = 4;
-      vitesseMotDroit = encodeur.readEncoderD() / 1000;
-      vitesseMotGauche = encodeur.readEncoderG() / 1000;
-      t0 = millis();
-    }
-    break;
-  case 4:
-    // Etat 4 : Arrêt
-    moteurGauche.setVitesse(0);
-    moteurDroit.setVitesse(0);
-    if (millis() - t0 > 1000)
-    {
-      etat = 5;
-      t0 = millis();   
-      float new_coefficient = (vitesseMotDroit - vitesseMotGauche) / (vitesseMotDroit + vitesseMotGauche);
-      printf("new_coefficient : %f\n", new_coefficient);
-      if(coefficient - new_coefficient < 0.1){
-        printf("Le robot avance droit\n");
-      }
-      else{
-        printf("Le robot n'avance pas droit\n");
-      }
-      etat_sys = 0;
-      etat = 0;
-    }
-    break;
-  }
-}
 
 bool avancer(float distance){
   /*
@@ -386,8 +313,12 @@ bool avancer(float distance){
   float new_x, new_y; // Nouvelle position du robot
   float distance_parcourue; // Distance parcourue par le robot
   float distance_restante; // Distance restante à parcourir
-  float vitesse; // Vitesse du robot
+  float vitesse = 100.0; // Vitesse du robot
 
+  encodeur.reset();
+  theta = 0;
+  y = 0;
+  x = 0;
   // Initialisation des variables
   new_x = x + distance * cos(theta);
   new_y = y + distance * sin(theta);
@@ -403,16 +334,24 @@ bool avancer(float distance){
     // Calcul de la distance restante à parcourir
     distance_restante = sqrt(pow(new_x - x, 2) + pow(new_y - y, 2));
 
+    Serial.println(distance_restante);
+    //encodeur.odometrie();
     // Calcul de la vitesse du robot
-    vitesse = 100 * distance_restante / distance_parcourue;
+    vitesse = 100;
 
     // Asservissement en vitesse
     moteurGauche.setVitesse(vitesse);
     moteurDroit.setVitesse(vitesse);
 
+    moteur();
     // Mise à jour des données
     mise_a_jour_donnees();
   }
+  moteurGauche.setVitesse(0);
+  moteurDroit.setVitesse(0);
+  moteur();
+  delay(5000);
+
   return true;
 }
 

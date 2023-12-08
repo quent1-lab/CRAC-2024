@@ -1,5 +1,13 @@
 #include "Encodeur.h"
 
+/**
+ * @brief Constructeur de la classe Encodeur
+ * 
+ * @param pinD_A Pin A de l'encodeur droit
+ * @param pinD_B Pin B de l'encodeur droit
+ * @param pinG_A Pin A de l'encodeur gauche
+ * @param pinG_B Pin B de l'encodeur gauche
+ */
 Encodeur::Encodeur(int pinD_A, int pinD_B,int pinG_A, int pinG_B)
 {
     encoderD.attachHalfQuad(pinD_A, pinD_B);
@@ -8,6 +16,9 @@ Encodeur::Encodeur(int pinD_A, int pinD_B,int pinG_A, int pinG_B)
     this->oldPositionG = 0;
 }
 
+/**
+ * @brief Initialise les variables de la classe Encodeur
+ */
 void Encodeur::init()
 {
     this->x = 0;
@@ -16,6 +27,14 @@ void Encodeur::init()
     this->rayon = 2.2;
 }
 
+/**
+ * @brief Initialise les variables de la classe Encodeur
+ * 
+ * @param x Position en x du robot
+ * @param y Position en y du robot
+ * @param theta Angle du robot
+ * @param rayon Rayon des roues du robot
+*/
 void Encodeur::init(float x, float y, float theta, float rayon)
 {
     this->x = x;
@@ -28,6 +47,16 @@ void Encodeur::init(float x, float y, float theta, float rayon)
     this->oldPositionG = 0;
 }
 
+/**
+ * @brief Initialise les variables de la classe Encodeur
+ * 
+ * @param x Position en x du robot
+ * @param y Position en y du robot
+ * @param theta Angle du robot
+ * @param rayon Rayon des roues du robot
+ * @param reduction Rapport de réduction des moteurs
+ * @param resolution Résolution des encodeurs
+*/
 void Encodeur::init(float x, float y, float theta, float rayon, int reduction, int resolution)
 {
     this->x = x;
@@ -42,22 +71,37 @@ void Encodeur::init(float x, float y, float theta, float rayon, int reduction, i
     this->oldPositionG = 0;
 }
 
+/**
+ * @brief Lit la valeur de l'encodeur droit
+*/
 int Encodeur::readEncoderD()
 {
     return encoderD.getCount();
 }
 
+/**
+ * @brief Lit la valeur de l'encodeur gauche
+*/
 int Encodeur::readEncoderG()
 {
     return encoderG.getCount();
 }
 
+/**
+ * @brief Remet à zéro les encodeurs
+*/
 void Encodeur::reset()
 {
     encoderD.setCount(0);
     encoderG.setCount(0);
 }
 
+/**
+ * @brief Affiche les valeurs des encodeurs et de la position du robot
+ * 
+ * @param countD Valeur de l'encodeur droit
+ * @param countG Valeur de l'encodeur gauche
+*/
 void Encodeur::print(int countD,int countG)
 {
     Serial.print("EncodeurD : ");
@@ -72,6 +116,13 @@ void Encodeur::print(int countD,int countG)
     Serial.println(this->theta*180/PI);
 }
 
+/**
+ * @brief Change la position du robot
+ * 
+ * @param x Position en x du robot
+ * @param y Position en y du robot
+ * @param theta Angle du robot
+*/
 void Encodeur::change_position(float x, float y, float theta)
 {
     this->x = x;
@@ -79,6 +130,9 @@ void Encodeur::change_position(float x, float y, float theta)
     this->theta = theta;
 }
 
+/**
+ * @brief Calcule la position du robot en fonction des encodeurs
+*/
 void Encodeur::odometrie()
 {
     // Cette fonction permet de calculer la position du robot en fonction des encodeurs
@@ -119,25 +173,42 @@ void Encodeur::odometrie()
     this->oldPositionG = countG;
 }
 
+/**
+ * @brief Retourne la position en x du robot
+*/
 float Encodeur::get_x()
 {
     return this->x;
 }
 
+/**
+ * @brief Retourne la position en y du robot
+*/
 float Encodeur::get_y()
 {
     return this->y;
 }
 
+/**
+ * @brief Retourne l'angle du robot
+*/
 float Encodeur::get_theta()
 {
     return this->theta;
 }
 
+/**
+ * @brief Retourne l'angle du robot en degrés
+*/
 float Encodeur::get_theta_deg(){
     return this->theta*180/PI;
 }
 
+/**
+ * @brief Convertit une distance en nombre de pas moteur
+ * 
+ * @param x Distance en cm
+*/
 int Encodeur::x_to_step(float x)
 {
     /*
@@ -148,6 +219,11 @@ int Encodeur::x_to_step(float x)
     return x * this->resolution * this->reduction / (2.0 * PI * this->rayon);
 }
 
+/**
+ * @brief Convertit une distance en nombre de pas moteur
+ * 
+ * @param y Distance en cm
+*/
 int Encodeur::y_to_step(float y)
 {
     /*
@@ -158,6 +234,11 @@ int Encodeur::y_to_step(float y)
     return y * this->resolution * this->reduction / (2.0 * PI * this->rayon);
 }
 
+/**
+ * @brief Convertit un angle en nombre de pas moteur
+ * 
+ * @param theta Angle en radian
+*/
 int Encodeur::theta_to_step(float theta)
 {
     /*

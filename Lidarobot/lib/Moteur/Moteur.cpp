@@ -17,6 +17,28 @@ void Moteur::init()
     ledcSetup(ledc_channel, 40000, 8);
     ledcAttachPin(pinPWM, ledc_channel);
     ledcWrite(ledc_channel, 0);
+    this->vitesse_max = 100;
+    this->coefficient = 1;
+}
+
+void Moteur::init(int vitesse_max)
+{
+    pinMode(pinSens, OUTPUT);
+    ledcSetup(ledc_channel, 40000, 8);
+    ledcAttachPin(pinPWM, ledc_channel);
+    ledcWrite(ledc_channel, 0);
+    this->vitesse_max = vitesse_max;
+    this->coefficient = 1;
+}
+
+void Moteur::init(int vitesse_max, float coefficient)
+{
+    pinMode(pinSens, OUTPUT);
+    ledcSetup(ledc_channel, 40000, 8);
+    ledcAttachPin(pinPWM, ledc_channel);
+    ledcWrite(ledc_channel, 0);
+    this->vitesse_max = vitesse_max;
+    this->coefficient = coefficient;
 }
 
 void Moteur::setVitesse(int vitesse)

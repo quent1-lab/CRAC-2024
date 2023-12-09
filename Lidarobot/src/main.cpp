@@ -327,3 +327,56 @@ void avancer(float distance){
     aller_a(new_x, new_y, new_theta);
   }
 }
+
+void tourner(float angle){
+  /*
+    Input : angle : angle à parcourir en rad (float)
+    Output : none
+    Description:  Cette fonction permet de faire tourner le robot d'un certain angle
+                  Un asservissement en pas est utilisé pour tourner droit
+  */
+
+  float new_x = x;
+  float new_y = y;
+  float new_theta = theta + angle;
+  if(new_theta > 2*PI){
+    new_theta -= 2*PI;
+  }else if(new_theta < 0){
+    new_theta += 2*PI;
+  }
+
+  //Calcul de la distance totale à parcourir par chaque roue pour tourner d'un certain angle
+  float nbr_pas_a_parcourir = angle / (2*PI*rayon) * encodeur.get_resolution() * encodeur.get_reduction();
+
+  //Asservissement en pas pour chaque roue
+  int pas_gauche = encodeur.readEncoderG() + nbr_pas_a_parcourir;
+  int pas_droit = encodeur.readEncoderD() - nbr_pas_a_parcourir;
+
+  //Asservissement en pas pour chaque roue
+  while(encodeur.readEncoderG() < pas_gauche && encodeur.readEncoderD() > pas_droit){
+    //Adapter la vitesse des moteurs en fonction de l'erreur
+    float erreurG = pas_gauche - encodeur.readEncoderG();
+    float erreurD = pas_droit - encodeur.readEncoderD();
+
+    //Vitesse des moteurs (Démarrage rapide et freinage adaptatif)
+    float vitesseG = 0;
+    float vitesseD = 0;
+    if(erreurG < 298 * 6){
+      vitesseG = erreurG / (298 * 6) * 100;
+    }
+    if(erreurD < 298 * 6){
+      vitesseD = erreurD / (298 * 6) * 100;
+    }
+  }
+
+  //Vérification de la position
+  encodeur.odometrie();
+  float erreur_x = new_x - encodeur.get_x();
+  float erreur_y = new_y - encodeur.get_y();
+  float erreur_theta = new_theta - encodeur.get_theta();
+
+  if(abs(erreur_x) > 0.5 || abs(erreur_y) > 0.5 || abs(erreur_theta) > 0.1){
+    //Si la position n'est pas bonne, on corrige
+    aller_a(new_x, new_y, new_theta);
+  }
+}

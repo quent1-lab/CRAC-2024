@@ -346,7 +346,7 @@ void tourner(float angle){
   }
 
   //Calcul de la distance totale à parcourir par chaque roue pour tourner d'un certain angle
-  float nbr_pas_a_parcourir = angle / (2*PI*rayon) * encodeur.get_resolution() * encodeur.get_reduction();
+  float nbr_pas_a_parcourir = angle / (2*PI*rayon) * encodeur.get_resolution() * encodeur.get_reduction(); //Possible erreur ici
 
   //Asservissement en pas pour chaque roue
   int pas_gauche = encodeur.readEncoderG() + nbr_pas_a_parcourir;
@@ -368,6 +368,89 @@ void tourner(float angle){
       vitesseD = erreurD / (298 * 6) * 100;
     }
   }
+
+  //Vérification de la position
+  encodeur.odometrie();
+  float erreur_x = new_x - encodeur.get_x();
+  float erreur_y = new_y - encodeur.get_y();
+  float erreur_theta = new_theta - encodeur.get_theta();
+
+  if(abs(erreur_x) > 0.5 || abs(erreur_y) > 0.5 || abs(erreur_theta) > 0.1){
+    //Si la position n'est pas bonne, on corrige
+    aller_a(new_x, new_y, new_theta);
+  }
+}
+
+void aller_a(float X, float Y){
+  /*
+    Input : x : position en x du robot (float)
+            y : position en y du robot (float)
+    Output : none
+    Description:  Cette fonction permet de faire aller le robot à une certaine position
+                  Un asservissement en pas est utilisé pour aller droit
+  */
+
+  float new_x = X;
+  float new_y = Y;
+  float new_theta = theta;
+
+  //Calcul de la distance à parcourir par chaque roue
+  float distance = sqrt(pow(new_x - x, 2) + pow(new_y - y, 2));
+
+  //calcul de l'angle à parcourir
+  float angle = atan2(new_y - y, new_x - x) - theta;
+  if(angle > 2*PI){
+    angle -= 2*PI;
+  }else if(angle < 0){
+    angle += 2*PI;
+  }
+
+
+
+  //Asservissement en pas pour chaque roue
+  tourner(angle);
+  avancer(distance);
+
+  //Vérification de la position
+  encodeur.odometrie();
+  float erreur_x = new_x - encodeur.get_x();
+  float erreur_y = new_y - encodeur.get_y();
+
+  if(abs(erreur_x) > 0.5 || abs(erreur_y) > 0.5){
+    //Si la position n'est pas bonne, on corrige
+    aller_a(new_x, new_y, new_theta);
+  }
+}
+
+void aller_a(float X, float Y, float Theta){
+  /*
+    Input : x : position en x du robot (float)
+            y : position en y du robot (float)
+            theta : angle du robot (float)
+    Output : none
+    Description:  Cette fonction permet de faire aller le robot à une certaine position
+                  Un asservissement en pas est utilisé pour aller droit
+  */
+
+  float new_x = X;
+  float new_y = Y;
+  float new_theta = Theta;
+
+  //Calcul de la distance à parcourir par chaque roue
+  float distance = sqrt(pow(new_x - x, 2) + pow(new_y - y, 2));
+
+  //calcul de l'angle à parcourir
+  float angle = atan2(new_y - y, new_x - x) - theta;
+  if(angle > 2*PI){
+    angle -= 2*PI;
+  }else if(angle < 0){
+    angle += 2*PI;
+  }
+
+  //Asservissement en pas pour chaque roue
+  tourner(angle);
+  avancer(distance);
+  tourner(Theta)
 
   //Vérification de la position
   encodeur.odometrie();

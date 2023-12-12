@@ -115,7 +115,6 @@ void loop()
     if (bt[NOIR].click())
     {
       etat_sys = 2;
-      Serial.println("Etat 2");
     }
     break;
   case 1:
@@ -123,9 +122,7 @@ void loop()
     break;
   case 2:
     // Etat 2 : Test de la ligne droite
-    Serial.println("Etat 2");
     avancer(20);
-    Serial.println("Fin Etat 2");
     etat_sys = 0;
     break;
   default:
@@ -167,8 +164,6 @@ void read_bt(int nb_bt)
 void testEncodeur()
 {
   encodeur.odometrie();
-  //encodeur.print();
-  //envoie_JSON();
 }
 
 void testMoteur()
@@ -311,20 +306,15 @@ void avancer(float distance){
     float erreurG = pas_gauche - encodeur.readEncoderG();
     float erreurD = pas_droit - encodeur.readEncoderD();
 
-    Serial.print("erreurG : ");
-    Serial.println(erreurG);
-    Serial.print("erreurD : ");
-    Serial.println(erreurD);
-
     //Vitesse des moteurs (Démarrage rapide et freinage adaptatif)
     float vitesseG = 100;
     float vitesseD = 100;
     if(erreurG < 298 * 6){
       //Adapter la vitesse en fonction de l'erreur entre 100 et 30 (30 = vitesse minimale)
-      vitesseG = 30 + (100 - 30) * ((298 * 6 - erreurG) / (298 * 6));
+      vitesseG = 30 + (100 - 30) * (1 - (298 * 6 - erreurG) / (298 * 6));
     }
     if(erreurD < 298 * 6){
-      vitesseD = 30 + (100 - 30) * ((298 * 6 + erreurD) / (298 * 6));
+      vitesseD = 30 + (100 - 30) * (1 - (298 * 6 - erreurD) / (298 * 6));
     }
 
     moteurGauche.setVitesse(vitesseG);

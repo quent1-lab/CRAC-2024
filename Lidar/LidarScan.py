@@ -122,6 +122,12 @@ class ComCAN:
             self.disconnect()
             pass
 
+class Objet:
+    def __init__(self, id, x, y, taille):
+        self.id = id
+        self.x = x
+        self.y = y
+        self.taille = taille
 class LidarScanner:
     def __init__(self, port=None):
         self.port = port
@@ -269,7 +275,24 @@ class LidarScanner:
         x = self.X_ROBOT + int(x / len(points_autour_objet))
         y = self.Y_ROBOT + int(y / len(points_autour_objet))
 
-        return (x, y, taille)
+        # Vérifier si l'objet est déjà suivi
+        for objet in self.objets:
+            distance = math.sqrt((x - objet.x)**2 + (y - objet.y)**2)
+            if distance < SEUIL:
+                # Si l'objet est déjà suivi, mettre à jour ses coordonnées
+                objet.x = x
+                objet.y = y
+                objet.taille = taille
+                return objet
+
+        # Si l'objet n'est pas déjà suivi, créer un nouvel objet
+        nouvel_objet = Objet(self.id_compteur, x, y, taille)
+        self.objets.append(nouvel_objet)
+
+        # Incrémenter le compteur d'identifiants
+        self.id_compteur += 1
+
+        return nouvel_objet
 
     def choix_du_port(self):
         ports = serial.tools.list_ports.comports()

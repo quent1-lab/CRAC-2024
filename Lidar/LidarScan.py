@@ -274,6 +274,14 @@ class LidarScanner:
         # Affichage des coordonnées de l'objet et de son ID
         self.draw_text("ID: " + str(objet.id), objet.x * self.X_RATIO + 20, objet.y * self.Y_RATIO - 30)
 
+        # Affichage de la direction et de la vitesse de l'objet avec un vecteur
+        direction, vitesse = objet.get_direction_vitesse()
+        pygame.draw.line(
+            self.lcd, pygame.Color(255, 255, 0),
+            (objet.x * self.X_RATIO, objet.y * self.Y_RATIO),
+            ((objet.x + vitesse * math.cos(direction)) * self.X_RATIO, (objet.y + vitesse * math.sin(direction)) * self.Y_RATIO), 3)
+
+
     def detect_object(self, scan):
         objet = min(scan, key=lambda x: x[2])
         angle_objet = objet[1]

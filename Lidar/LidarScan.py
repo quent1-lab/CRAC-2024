@@ -1,3 +1,4 @@
+from collections.abc import Iterable
 import logging
 from rplidar import RPLidar
 import pygame
@@ -128,6 +129,31 @@ class Objet:
         self.x = x
         self.y = y
         self.taille = taille
+        self.positions_precedentes = [(x, y)]  # Liste pour stocker les positions précédentes
+
+    def update_position(self, x, y):
+        # Mettre à jour la position de l'objet et ajouter la position précédente à la liste
+        self.positions_precedentes.append((self.x, self.y))
+        self.x = x
+        self.y = y
+
+    def get_direction_vitesse(self):
+        # Calculer le vecteur de déplacement entre la position actuelle et la position précédente
+        dx = self.x - self.positions_precedentes[-1][0]
+        dy = self.y - self.positions_precedentes[-1][1]
+
+        # La direction est l'angle du vecteur de déplacement
+        direction = math.atan2(dy, dx)
+
+        # La vitesse est la magnitude du vecteur de déplacement
+        vitesse = math.sqrt(dx**2 + dy**2)
+
+        return direction, vitesse
+
+    def __str__(self):
+        return f"Objet {self.id} : x = {self.x} y = {self.y} taille = {self.taille}"
+    
+    
 class LidarScanner:
     def __init__(self, port=None):
         self.port = port
@@ -290,8 +316,7 @@ class LidarScanner:
             distance = math.sqrt((x - objet.x)**2 + (y - objet.y)**2)
             if distance < SEUIL:
                 # Si l'objet est déjà suivi, mettre à jour ses coordonnées
-                objet.x = x
-                objet.y = y
+                objet.update_position(x, y)
                 objet.taille = taille
                 return objet
 

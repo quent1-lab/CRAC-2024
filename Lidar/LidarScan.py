@@ -153,6 +153,9 @@ class LidarScanner:
         self.nb_scan = 0
         self.tab_scan = []
 
+        self.id_compteur = 0  # Compteur pour les identifiants d'objet
+        self.objets = []  # Liste pour stocker les objets détectés
+
         pygame.init()
         self.lcd = pygame.display.set_mode(self.WINDOW_SIZE)
         pygame.font.init()
@@ -239,8 +242,11 @@ class LidarScanner:
             logging.error(f"Failed to draw circle: {e}")
 
     def draw_object(self, objet):
-        pygame.draw.circle(self.lcd, pygame.Color(255, 255, 0), (objet[0] * self.X_RATIO, objet[1] * self.Y_RATIO), 10)
-        pygame.draw.circle(self.lcd, pygame.Color(50, 50, 200), (objet[0] * self.X_RATIO, objet[1] * self.Y_RATIO), int(objet[2] / 2 * self.X_RATIO), 3)
+        pygame.draw.circle(self.lcd, pygame.Color(255, 255, 0), (objet.x * self.X_RATIO, objet.y * self.Y_RATIO), 10)
+        pygame.draw.circle(self.lcd, pygame.Color(50, 50, 200), (objet.x * self.X_RATIO, objet.y * self.Y_RATIO), int(objet.taille / 2 * self.X_RATIO), 3)
+
+        # Affichage des coordonnées de l'objet et de son ID
+        self.draw_text("ID: " + str(objet.id), objet.x * self.X_RATIO + 20, objet.y * self.Y_RATIO - 30)
 
     def detect_object(self, scan):
         objet = min(scan, key=lambda x: x[2])
@@ -275,6 +281,10 @@ class LidarScanner:
         x = self.X_ROBOT + int(x / len(points_autour_objet))
         y = self.Y_ROBOT + int(y / len(points_autour_objet))
 
+        # Seuil de détection d'un objet en mm
+        SEUIL = 100 # en mm (distance que peut parcourir le robot entre deux scans)
+        #Valeur à affiner
+
         # Vérifier si l'objet est déjà suivi
         for objet in self.objets:
             distance = math.sqrt((x - objet.x)**2 + (y - objet.y)**2)
@@ -285,12 +295,12 @@ class LidarScanner:
                 objet.taille = taille
                 return objet
 
+        # Incrémenter le compteur d'identifiants
+        self.id_compteur += 1
+
         # Si l'objet n'est pas déjà suivi, créer un nouvel objet
         nouvel_objet = Objet(self.id_compteur, x, y, taille)
         self.objets.append(nouvel_objet)
-
-        # Incrémenter le compteur d'identifiants
-        self.id_compteur += 1
 
         return nouvel_objet
 
@@ -420,7 +430,9 @@ class LidarScanner:
                     
                     self.draw_background()
                     self.draw_robot(self.X_ROBOT, self.Y_ROBOT, self.ROBOT_ANGLE)
-                    self.draw_object(self.detect_object(scan))
+                    zone_objet = self.detect_object(scan)
+                    for objet in self.objets:
+                        self.draw_object(objet)
 
                     for (_, angle, distance) in scan:
                         self.draw_point(self.X_ROBOT, self.Y_ROBOT, angle, distance)

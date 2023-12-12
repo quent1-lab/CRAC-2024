@@ -115,6 +115,7 @@ void loop()
     if (bt[NOIR].click())
     {
       etat_sys = 2;
+      Serial.println("Etat 2");
     }
     break;
   case 1:
@@ -122,6 +123,10 @@ void loop()
     break;
   case 2:
     // Etat 2 : Test de la ligne droite
+    Serial.println("Etat 2");
+    avancer(20);
+    Serial.println("Fin Etat 2");
+    etat_sys = 0;
     break;
   default:
     break;
@@ -295,7 +300,7 @@ void avancer(float distance){
 
   //Calcul de la distance totale à parcourir par chaque roue
   float nbr_pas_a_parcourir = distance / (2*PI*rayon) * encodeur.get_resolution() * encodeur.get_reduction();
-
+  Serial.println(nbr_pas_a_parcourir);
   //Asservissement en pas pour chaque roue
   int pas_gauche = encodeur.readEncoderG() + nbr_pas_a_parcourir;
   int pas_droit = encodeur.readEncoderD() + nbr_pas_a_parcourir;
@@ -306,15 +311,26 @@ void avancer(float distance){
     float erreurG = pas_gauche - encodeur.readEncoderG();
     float erreurD = pas_droit - encodeur.readEncoderD();
 
+    Serial.print("erreurG : ");
+    Serial.println(erreurG);
+    Serial.print("erreurD : ");
+    Serial.println(erreurD);
+
     //Vitesse des moteurs (Démarrage rapide et freinage adaptatif)
-    float vitesseG = 0;
-    float vitesseD = 0;
+    float vitesseG = 100;
+    float vitesseD = 100;
     if(erreurG < 298 * 6){
-      vitesseG = erreurG / (298 * 6) * 100;
+      //Adapter la vitesse en fonction de l'erreur entre 100 et 30 (30 = vitesse minimale)
+      vitesseG = 30 + (100 - 30) * ((298 * 6 - erreurG) / (298 * 6));
     }
     if(erreurD < 298 * 6){
-      vitesseD = erreurD / (298 * 6) * 100;
+      vitesseD = 30 + (100 - 30) * ((298 * 6 - erreurD) / (298 * 6));
     }
+
+    moteurGauche.setVitesse(vitesseG);
+    moteurDroit.setVitesse(vitesseD);
+
+    moteur();
   }
 
   //Vérification de la position
@@ -450,7 +466,7 @@ void aller_a(float X, float Y, float Theta){
   //Asservissement en pas pour chaque roue
   tourner(angle);
   avancer(distance);
-  tourner(Theta)
+  tourner(Theta);
 
   //Vérification de la position
   encodeur.odometrie();

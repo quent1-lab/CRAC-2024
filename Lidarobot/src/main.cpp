@@ -324,7 +324,7 @@ void avancer(float distance){
       vitesseG = 30 + (100 - 30) * ((298 * 6 - erreurG) / (298 * 6));
     }
     if(erreurD < 298 * 6){
-      vitesseD = 30 + (100 - 30) * ((298 * 6 - erreurD) / (298 * 6));
+      vitesseD = 30 + (100 - 30) * ((298 * 6 + erreurD) / (298 * 6));
     }
 
     moteurGauche.setVitesse(vitesseG);
@@ -332,7 +332,9 @@ void avancer(float distance){
 
     moteur();
   }
-
+  moteurGauche.setVitesse(0);
+  moteurDroit.setVitesse(0);
+  moteur();
   //Vérification de la position
   encodeur.odometrie();
   float erreur_x = new_x - encodeur.get_x();

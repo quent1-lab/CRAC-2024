@@ -373,7 +373,7 @@ void tourner(float angle){
 
     //Vitesse des moteurs (Démarrage rapide et freinage adaptatif)
     float vitesseG = 100;
-    float vitesseD = 100;
+    float vitesseD = -100;
     if(erreurG < 298 * 6){
       //Adapter la vitesse en fonction de l'erreur entre 100 et 30 (30 = vitesse minimale)
       vitesseG = 30 + (100 - 30) * (1 - (298 * 6 - erreurG) / (298 * 6));
@@ -383,7 +383,7 @@ void tourner(float angle){
     }
 
     moteurGauche.setVitesse(vitesseG);
-    moteurDroit.setVitesse(vitesseD);
+    moteurDroit.setVitesse(-vitesseD);
 
     moteur();
   }

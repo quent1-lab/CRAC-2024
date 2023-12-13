@@ -438,15 +438,15 @@ class LidarScanner:
             #Déplacement du robot virtuel avec des touches du clavier
             keys = pygame.key.get_pressed()
             if keys[pygame.K_LEFT]:
-                self.X_ROBOT -= 5
+                self.X_ROBOT -= 10
             if keys[pygame.K_RIGHT]:
-                self.X_ROBOT += 5
+                self.X_ROBOT += 10
             if keys[pygame.K_UP]:
-                self.Y_ROBOT -= 5
+                self.Y_ROBOT -= 10
             if keys[pygame.K_DOWN]:
-                self.Y_ROBOT += 5
+                self.Y_ROBOT += 10
 
-            time.sleep(0.05)
+            time.sleep(0.01)
     
     def stop(self):
         logging.info("Stopping LiDAR motor")

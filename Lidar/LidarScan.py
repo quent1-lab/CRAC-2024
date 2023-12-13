@@ -130,6 +130,8 @@ class Objet:
         self.y = y
         self.taille = taille
         self.positions_precedentes = [(x, y)]  # Liste pour stocker les positions précédentes
+        self.direction = 0
+        self.vitesse = 0
 
     def update_position(self, x, y):
         # Mettre à jour la position de l'objet et ajouter la position précédente à la liste
@@ -143,12 +145,24 @@ class Objet:
         dy = self.y - self.positions_precedentes[-1][1]
 
         # La direction est l'angle du vecteur de déplacement
-        direction = math.atan2(dy, dx)
+        self.direction = math.atan2(dy, dx)
 
         # La vitesse est la magnitude du vecteur de déplacement
-        vitesse = math.sqrt(dx**2 + dy**2)
+        self.vitesse = math.sqrt(dx**2 + dy**2)
 
-        return direction, vitesse
+        return self.direction, self.vitesse
+
+    def calculer_position(self, direction, vitesse, temps):
+        # Convertir la direction en radians
+        direction_rad = math.radians(direction)
+
+        # Calculer le déplacement en x et y
+        dx = vitesse * math.cos(direction_rad) * temps
+        dy = vitesse * math.sin(direction_rad) * temps
+
+        # Mettre à jour la position de l'objet
+        self.x += dx
+        self.y += dy
 
     def __str__(self):
         return f"Objet {self.id} : x = {self.x} y = {self.y} taille = {self.taille}"

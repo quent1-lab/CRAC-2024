@@ -122,6 +122,11 @@ void loop()
     break;
   case 2:
     // Etat 2 : Test de la ligne droite
+    Serial.println("Avancer");
+    avancer(20);
+    Serial.println("Tourner");
+    tourner(PI);
+    Serial.println("Avancer");
     avancer(20);
     etat_sys = 0;
     break;
@@ -367,15 +372,24 @@ void tourner(float angle){
     float erreurD = pas_droit - encodeur.readEncoderD();
 
     //Vitesse des moteurs (Démarrage rapide et freinage adaptatif)
-    float vitesseG = 0;
-    float vitesseD = 0;
+    float vitesseG = 100;
+    float vitesseD = 100;
     if(erreurG < 298 * 6){
-      vitesseG = erreurG / (298 * 6) * 100;
+      //Adapter la vitesse en fonction de l'erreur entre 100 et 30 (30 = vitesse minimale)
+      vitesseG = 30 + (100 - 30) * (1 - (298 * 6 - erreurG) / (298 * 6));
     }
     if(erreurD < 298 * 6){
-      vitesseD = erreurD / (298 * 6) * 100;
+      vitesseD = 30 + (100 - 30) * (1 - (298 * 6 - erreurD) / (298 * 6));
     }
+
+    moteurGauche.setVitesse(vitesseG);
+    moteurDroit.setVitesse(vitesseD);
+
+    moteur();
   }
+  moteurGauche.setVitesse(0);
+  moteurDroit.setVitesse(0);
+  moteur();
 
   //Vérification de la position
   encodeur.odometrie();

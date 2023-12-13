@@ -327,8 +327,8 @@ void avancer(float distance){
 
     moteur();
   }
-  moteurGauche.setVitesse(0);
-  moteurDroit.setVitesse(0);
+  moteurGauche.setVitesse(2);
+  moteurDroit.setVitesse(2);
   moteur();
   //Vérification de la position
   encodeur.odometrie();
@@ -387,8 +387,8 @@ void tourner(float angle){
 
     moteur();
   }
-  moteurGauche.setVitesse(0);
-  moteurDroit.setVitesse(0);
+  moteurGauche.setVitesse(2);
+  moteurDroit.setVitesse(2);
   moteur();
 
   //Vérification de la position

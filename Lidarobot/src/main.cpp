@@ -125,9 +125,10 @@ void loop()
     Serial.println("Avancer");
     avancer(20);
     Serial.println("Tourner");
-    tourner(PI);
+    tourner(PI/2);
     Serial.println("Avancer");
     avancer(20);
+    tourner(PI);
     etat_sys = 0;
     break;
   default:
@@ -330,7 +331,7 @@ void avancer(float distance){
   moteurGauche.setVitesse(2);
   moteurDroit.setVitesse(2);
   moteur();
-  //Vérification de la position
+  /*//Vérification de la position
   encodeur.odometrie();
   float erreur_x = new_x - encodeur.get_x();
   float erreur_y = new_y - encodeur.get_y();
@@ -338,7 +339,7 @@ void avancer(float distance){
   if(abs(erreur_x) > 0.5 || abs(erreur_y) > 0.5){
     //Si la position n'est pas bonne, on corrige
     aller_a(new_x, new_y, new_theta);
-  }
+  }*/
 }
 
 void tourner(float angle){
@@ -359,7 +360,7 @@ void tourner(float angle){
   }
 
   //Calcul de la distance totale à parcourir par chaque roue pour tourner d'un certain angle
-  float nbr_pas_a_parcourir = angle / (2*PI*rayon) * encodeur.get_resolution() * encodeur.get_reduction(); //Possible erreur ici
+  float nbr_pas_a_parcourir = (angle*9.0) / (2*2*PI*rayon) * encodeur.get_resolution() * encodeur.get_reduction(); //Possible erreur ici
 
   //Asservissement en pas pour chaque roue
   int pas_gauche = encodeur.readEncoderG() + nbr_pas_a_parcourir;
@@ -373,7 +374,7 @@ void tourner(float angle){
 
     //Vitesse des moteurs (Démarrage rapide et freinage adaptatif)
     float vitesseG = 100;
-    float vitesseD = -100;
+    float vitesseD = 100;
     if(erreurG < 298 * 6){
       //Adapter la vitesse en fonction de l'erreur entre 100 et 30 (30 = vitesse minimale)
       vitesseG = 30 + (100 - 30) * (1 - (298 * 6 - erreurG) / (298 * 6));
@@ -383,7 +384,7 @@ void tourner(float angle){
     }
 
     moteurGauche.setVitesse(vitesseG);
-    moteurDroit.setVitesse(-vitesseD);
+    moteurDroit.setVitesse(vitesseD);
 
     moteur();
   }
@@ -391,7 +392,7 @@ void tourner(float angle){
   moteurDroit.setVitesse(2);
   moteur();
 
-  //Vérification de la position
+  /*//Vérification de la position
   encodeur.odometrie();
   float erreur_x = new_x - encodeur.get_x();
   float erreur_y = new_y - encodeur.get_y();
@@ -400,7 +401,7 @@ void tourner(float angle){
   if(abs(erreur_x) > 0.5 || abs(erreur_y) > 0.5 || abs(erreur_theta) > 0.1){
     //Si la position n'est pas bonne, on corrige
     aller_a(new_x, new_y, new_theta);
-  }
+  }*/
 }
 
 void aller_a(float X, float Y){

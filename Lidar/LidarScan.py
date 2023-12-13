@@ -153,7 +153,6 @@ class Objet:
     def __str__(self):
         return f"Objet {self.id} : x = {self.x} y = {self.y} taille = {self.taille}"
     
-    
 class LidarScanner:
     def __init__(self, port=None):
         self.port = port
@@ -280,7 +279,6 @@ class LidarScanner:
             self.lcd, pygame.Color(255, 255, 0),
             (objet.x * self.X_RATIO, objet.y * self.Y_RATIO),
             ((objet.x + vitesse * math.cos(direction)) * self.X_RATIO, (objet.y + vitesse * math.sin(direction)) * self.Y_RATIO), 3)
-
 
     def detect_object(self, scan):
         objet = min(scan, key=lambda x: x[2])
@@ -422,7 +420,19 @@ class LidarScanner:
             pygame.display.update()
             self.lcd.fill(self.WHITE)
             self.ROBOT_ANGLE += 5
-            time.sleep(0.1)
+            
+            #Déplacement du robot virtuel avec des touches du clavier
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_LEFT]:
+                self.X_ROBOT -= 5
+            if keys[pygame.K_RIGHT]:
+                self.X_ROBOT += 5
+            if keys[pygame.K_UP]:
+                self.Y_ROBOT -= 5
+            if keys[pygame.K_DOWN]:
+                self.Y_ROBOT += 5
+
+            time.sleep(0.05)
     
     def stop(self):
         logging.info("Stopping LiDAR motor")

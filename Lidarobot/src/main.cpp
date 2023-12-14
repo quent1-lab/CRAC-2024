@@ -352,7 +352,7 @@ void tourner(float angle){
   */
 
   //Calcul de la distance totale à parcourir par chaque roue pour tourner d'un certain angle
-  float nbr_pas_a_parcourir = (angle*8.9) / (2*2*PI*rayon) * encodeur.get_resolution() * encodeur.get_reduction(); //Possible erreur ici
+  float nbr_pas_a_parcourir = abs((angle*8.9) / (2*2*PI*rayon) * encodeur.get_resolution() * encodeur.get_reduction()); //8.9 entraxe
 
   //Asservissement en pas pour chaque roue
   int pas_gauche, pas_droit,sens;

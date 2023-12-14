@@ -122,11 +122,12 @@ void loop()
     break;
   case 2:
     // Etat 2 : Test de la ligne droite
-    Serial.println("Avancer");
     avancer(20);
-    Serial.println("Tourner");
     tourner(PI/2);
-    Serial.println("Avancer");
+    avancer(10);
+    tourner(PI);
+    avancer(10);
+    tourner(-PI/2);
     avancer(20);
     tourner(PI);
     etat_sys = 0;
@@ -315,7 +316,7 @@ void avancer(float distance){
     //Vitesse des moteurs (Démarrage rapide et freinage adaptatif)
     float vitesseG = 100;
     float vitesseD = 100;
-    if(erreurG < 298 * 6){
+    if(erreurG < (298 * 6)){
       //Adapter la vitesse en fonction de l'erreur entre 100 et 30 (30 = vitesse minimale)
       vitesseG = 30 + (100 - 30) * (1 - (298 * 6 - erreurG) / (298 * 6));
     }
@@ -350,38 +351,29 @@ void tourner(float angle){
                   Un asservissement en pas est utilisé pour tourner droit
   */
 
-  float new_x = x;
-  float new_y = y;
-  float new_theta = theta + angle;
-  if(new_theta > 2*PI){
-    new_theta -= 2*PI;
-  }else if(new_theta < 0){
-    new_theta += 2*PI;
-  }
-
   //Calcul de la distance totale à parcourir par chaque roue pour tourner d'un certain angle
-  float nbr_pas_a_parcourir = (angle*9.0) / (2*2*PI*rayon) * encodeur.get_resolution() * encodeur.get_reduction(); //Possible erreur ici
+  float nbr_pas_a_parcourir = (angle*8.9) / (2*2*PI*rayon) * encodeur.get_resolution() * encodeur.get_reduction(); //Possible erreur ici
 
   //Asservissement en pas pour chaque roue
-  int pas_gauche = encodeur.readEncoderG() + nbr_pas_a_parcourir;
-  int pas_droit = encodeur.readEncoderD() - nbr_pas_a_parcourir;
-
+  int pas_gauche, pas_droit,sens;
+  if (angle >= 0) {
+    pas_gauche = encodeur.readEncoderG() + nbr_pas_a_parcourir;
+    pas_droit = encodeur.readEncoderD() - nbr_pas_a_parcourir;
+    sens = 1; 
+  } else {
+    pas_gauche = encodeur.readEncoderG() - nbr_pas_a_parcourir;
+    pas_droit = encodeur.readEncoderD() + nbr_pas_a_parcourir;
+    sens = -1;
+  }
   //Asservissement en pas pour chaque roue
-  while(encodeur.readEncoderG() < pas_gauche && encodeur.readEncoderD() > pas_droit){
+  while(sens == 1 ? (encodeur.readEncoderG() < pas_gauche && encodeur.readEncoderD() > pas_droit) : (encodeur.readEncoderG() > pas_gauche && encodeur.readEncoderD() < pas_droit)){
     //Adapter la vitesse des moteurs en fonction de l'erreur
     float erreurG = pas_gauche - encodeur.readEncoderG();
     float erreurD = pas_droit - encodeur.readEncoderD();
 
     //Vitesse des moteurs (Démarrage rapide et freinage adaptatif)
-    float vitesseG = 100;
-    float vitesseD = 100;
-    if(erreurG < 298 * 6){
-      //Adapter la vitesse en fonction de l'erreur entre 100 et 30 (30 = vitesse minimale)
-      vitesseG = 30 + (100 - 30) * (1 - (298 * 6 - erreurG) / (298 * 6));
-    }
-    if(erreurD < 298 * 6){
-      vitesseD = 30 + (100 - 30) * (1 - (298 * 6 - erreurD) / (298 * 6));
-    }
+    float vitesseG = 100 * sens;
+    float vitesseD = 100 * -sens;
 
     moteurGauche.setVitesse(vitesseG);
     moteurDroit.setVitesse(vitesseD);
@@ -391,17 +383,6 @@ void tourner(float angle){
   moteurGauche.setVitesse(2);
   moteurDroit.setVitesse(2);
   moteur();
-
-  /*//Vérification de la position
-  encodeur.odometrie();
-  float erreur_x = new_x - encodeur.get_x();
-  float erreur_y = new_y - encodeur.get_y();
-  float erreur_theta = new_theta - encodeur.get_theta();
-
-  if(abs(erreur_x) > 0.5 || abs(erreur_y) > 0.5 || abs(erreur_theta) > 0.1){
-    //Si la position n'est pas bonne, on corrige
-    aller_a(new_x, new_y, new_theta);
-  }*/
 }
 
 void aller_a(float X, float Y){

@@ -34,13 +34,15 @@ void Encodeur::init()
  * @param y Position en y du robot
  * @param theta Angle du robot
  * @param rayon Rayon des roues du robot
+ * @param entraxe Entraxe des roues du robot
 */
-void Encodeur::init(float x, float y, float theta, float rayon)
+void Encodeur::init(float x, float y, float theta, float rayon, float entraxe)
 {
     this->x = x;
     this->y = y;
     this->theta = theta;
     this->rayon = rayon;
+    this->entraxe = entraxe;
     this->encoderD.setCount(0);
     this->encoderG.setCount(0);
     this->oldPositionD = 0;
@@ -54,15 +56,17 @@ void Encodeur::init(float x, float y, float theta, float rayon)
  * @param y Position en y du robot
  * @param theta Angle du robot
  * @param rayon Rayon des roues du robot
+ * @param entraxe Entraxe des roues du robot
  * @param reduction Rapport de réduction des moteurs
  * @param resolution Résolution des encodeurs
 */
-void Encodeur::init(float x, float y, float theta, float rayon, int reduction, int resolution)
+void Encodeur::init(float x, float y, float theta, float rayon,float entraxe, int reduction, int resolution)
 {
     this->x = x;
     this->y = y;
     this->theta = theta;
     this->rayon = rayon;
+    this->entraxe = entraxe;
     this->reduction = reduction;
     this->resolution = resolution;
     this->encoderD.setCount(0);
@@ -155,7 +159,7 @@ void Encodeur::odometrie()
     deltaS = (deltaD + deltaG) / 2.0;
 
     // Calcul de la variation d'angle en fonction de l'entraxe
-    deltaT = (deltaD - deltaG) / 9.0;
+    deltaT = (deltaD - deltaG) / this->entraxe;
 
     // Calcul de la nouvelle position
     this->theta += deltaT;//a 2 pi pres

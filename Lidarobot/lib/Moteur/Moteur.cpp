@@ -50,7 +50,7 @@ void Moteur::init(int vitesse_max)
  * @brief Initialise le moteur avec une vitesse maximale et un coefficient spécifiés
  * 
  * @param vitesse_max Vitesse maximale du moteur (int)
- * @param coefficient Coefficient pour le calcul de la vitesse (float)
+ * @param coefficient Coefficient pour la vitesse du moteur (float)
  */
 void Moteur::init(int vitesse_max, float coefficient)
 {

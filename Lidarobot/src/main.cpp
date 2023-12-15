@@ -126,14 +126,21 @@ void taskCommuniquer(void *pvParameters) {
     }
 }
 
+void taskMoteur(void *pvParameters) {
+    while (1) {
+        // Appeler la fonction moteur ici
+        moteur();
+        vTaskDelay(pdMS_TO_TICKS(100));  // Delay de 100ms
+    }
+}
+
 
 void setup()
 {
   WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);// disable brownout detector
 
-  xTaskCreatePinnedToCore(taskAvancer, "taskAvancer", 4096, NULL, 2, NULL, 0);  // Tâche avec priorité 1
-  xTaskCreatePinnedToCore(taskTourner, "taskTourner", 4096, NULL, 2, NULL, 0);
   xTaskCreatePinnedToCore(taskCommuniquer, "taskCommuniquer", 4096, NULL, 1, NULL, 0);
+  xTaskCreatePinnedToCore(taskMoteur, "taskMoteur", 4096, NULL, 1, NULL, 0);
 
   // put your setup code here, to run once:
   Serial.begin(115200);

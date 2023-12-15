@@ -250,7 +250,7 @@ int Encodeur::theta_to_step(float theta)
     theta : angle en radian
     output : nombre de pas moteur
     */
-    return theta * 9.0 * this->resolution * this->reduction / (2.0 * PI);
+    return theta * this->entraxe * this->resolution * this->reduction / (2.0 * 2 * PI * this->rayon);
 }
 
 /**

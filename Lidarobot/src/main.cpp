@@ -17,6 +17,9 @@
 #include "Moteur.h"
 #include <Encodeur.h>
 #include "esp32/rom/rtc.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "freertos/queue.h"
 
 /*-------------------------------- DEFINE --------------------------------------*/
 
@@ -87,7 +90,7 @@ float x = 0;
 float y = 0;
 float theta = 0;
 
-/*---------------------- Constructeur Bibliothèque -----------------------------*/
+/*----------------------------- Constructeur Bibliothèque ------------------------------*/
 
 Bouton bt[3]; // création d'un tableau de 3 boutons.
 
@@ -97,9 +100,41 @@ Moteur moteurDroit(pinMotDroitSens, pinMotDroitPWM, 2);
 
 Encodeur encodeur(pinEncodeurDroitB, pinEncodeurDroitA, pinEncodeurGaucheA, pinEncodeurGaucheB);
 
+/*----------------------------- Fonction OS temps réel ----------------------------------*/
+
+void taskAvancer(void *pvParameters) {
+    while (1) {
+        // Appeler la fonction avancer ici
+        avancer(10);
+        vTaskDelay(pdMS_TO_TICKS(100));  // Delay de 100ms
+    }
+}
+
+void taskTourner(void *pvParameters) {
+    while (1) {
+        // Appeler la fonction tourner ici
+        tourner(PI/2);
+        vTaskDelay(pdMS_TO_TICKS(100));  // Delay de 100ms
+    }
+}
+
+void taskCommuniquer(void *pvParameters) {
+    while (1) {
+        // Appeler la fonction de communication ici
+        envoie_JSON();
+        vTaskDelay(pdMS_TO_TICKS(100));  // Delay de 100ms
+    }
+}
+
+
 void setup()
 {
   WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);// disable brownout detector
+
+  xTaskCreatePinnedToCore(taskAvancer, "taskAvancer", 4096, NULL, 2, NULL, 0);  // Tâche avec priorité 1
+  xTaskCreatePinnedToCore(taskTourner, "taskTourner", 4096, NULL, 2, NULL, 0);
+  xTaskCreatePinnedToCore(taskCommuniquer, "taskCommuniquer", 4096, NULL, 1, NULL, 0);
+
   // put your setup code here, to run once:
   Serial.begin(115200);
   pinMode(pinLed, OUTPUT);

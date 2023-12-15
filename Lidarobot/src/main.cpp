@@ -122,6 +122,7 @@ void taskCommuniquer(void *pvParameters) {
     while (1) {
         // Appeler la fonction de communication ici
         envoie_JSON();
+        reception();
         vTaskDelay(pdMS_TO_TICKS(100));  // Delay de 100ms
     }
 }
@@ -130,10 +131,9 @@ void taskMoteur(void *pvParameters) {
     while (1) {
         // Appeler la fonction moteur ici
         moteur();
-        vTaskDelay(pdMS_TO_TICKS(100));  // Delay de 100ms
+        vTaskDelay(pdMS_TO_TICKS(20));  // Delay de 20ms
     }
 }
-
 
 void setup()
 {

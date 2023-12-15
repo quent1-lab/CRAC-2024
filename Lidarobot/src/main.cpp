@@ -148,7 +148,7 @@ void setup()
   moteurDroit.init();
 
   // Initialisation des encodeurs
-  encodeur.init(x, y, theta, rayon, entraxe, 298, 6);
+  encodeur.init(x, y, theta, rayon, entraxe, reduction, resolution);
 
   // initialisation des boutons
   setup_bt(3);

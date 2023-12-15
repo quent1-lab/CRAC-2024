@@ -46,10 +46,6 @@ String formatage_JSON();
 void envoie_JSON();
 void mise_a_jour_donnees();
 
-// Fonction test
-void testEncodeur(void);
-void testMoteur(void);
-
 // Fonction de déplacement
 void avancer(float distance);
 void tourner(float angle);
@@ -84,6 +80,7 @@ int t_delay_bounce = 120;
 
 // Variables pour les compteurs des encodeurs
 float rayon = 2.2;
+float entraxe = 8.8;
 
 /*----------------------------- Variables pour l'odométrie ------------------------------*/
 float x = 0;
@@ -112,7 +109,7 @@ void setup()
   moteurDroit.init();
 
   // Initialisation des encodeurs
-  encodeur.init(x, y, theta, rayon, 298, 6);
+  encodeur.init(x, y, theta, rayon, entraxe, 298, 6);
 
   // initialisation des boutons
   setup_bt(3);
@@ -152,7 +149,7 @@ void loop()
   moteur();
 }
 
-/*---------------------------------- Fonction Setup BT ------------------------------------*/
+/*---------------------------------- Fonction setup bouton ------------------------------------*/
 void setup_bt(int nb_bt)
 {
   /*
@@ -179,73 +176,14 @@ void read_bt(int nb_bt)
   }
 }
 
-/*---------------------- Fonction de test ---------------------------*/
-// Fonction de test des encodeurs
-void testEncodeur()
-{
-  encodeur.odometrie();
-}
-
-void testMoteur()
-{
-  static int etat = 0;
-  static unsigned long t0 = millis();
-
-  switch (etat)
-  {
-  case 0:
-    // Etat 0 : Avancer
-    moteurGauche.setVitesse(100);
-    moteurDroit.setVitesse(100);
-    if (millis() - t0 > 1000)
-    {
-      etat = 1;
-      t0 = millis();
-    }
-    break;
-  case 1:
-    // Etat 1 : Reculer
-    moteurGauche.setVitesse(-100);
-    moteurDroit.setVitesse(-100);
-    if (millis() - t0 > 1000)
-    {
-      etat = 2;
-      t0 = millis();
-    }
-    break;
-  case 2:
-    // Etat 2 : Tourner à gauche
-    moteurGauche.setVitesse(-100);
-    moteurDroit.setVitesse(100);
-    if (millis() - t0 > 1000)
-    {
-      etat = 3;
-      t0 = millis();
-    }
-    break;
-  case 3:
-    // Etat 3 : Tourner à droite
-    moteurGauche.setVitesse(100);
-    moteurDroit.setVitesse(-100);
-    if (millis() - t0 > 1000)
-    {
-      etat = 0;
-      t0 = millis();
-    }
-    break;
-  default:
-    break;
-  }
-}
-
-/*---------------------- Fonction moteur ---------------------------*/
+/*------------------------------------ Fonction moteur ---------------------------------------*/
 void moteur()
 {
   moteurGauche.moteur();
   moteurDroit.moteur();
 }
 
-/*---------------------- Fonction de communication ---------------------------*/
+/*-------------------------------- Fonction de communication ---------------------------------*/
 
 void envoie(String message)
 {
@@ -292,7 +230,6 @@ void envoie_JSON()
   }
 }
 
-
 void mise_a_jour_donnees(){
   //Met à jour les données du robot
   encodeur.odometrie();
@@ -300,6 +237,8 @@ void mise_a_jour_donnees(){
   y = encodeur.get_y();
   theta = encodeur.get_theta();
 }
+
+/*-------------------------------- Fonction de déplacement -----------------------------------*/
 
 void avancer(float distance){
   /*
@@ -356,7 +295,7 @@ void tourner(float angle){
   */
 
   //Calcul de la distance totale à parcourir par chaque roue pour tourner d'un certain angle
-  float nbr_pas_a_parcourir = abs((angle*8.9) / (2*2*PI*rayon) * encodeur.get_resolution() * encodeur.get_reduction()); //8.9 entraxe
+  float nbr_pas_a_parcourir = abs((angle*entraxe) / (2*2*PI*rayon) * encodeur.get_resolution() * encodeur.get_reduction()); 
 
   //Asservissement en pas pour chaque roue
   int pas_gauche, pas_droit,sens;

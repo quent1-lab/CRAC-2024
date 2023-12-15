@@ -89,6 +89,10 @@ float entraxe = 8.8;
 float x = 0;
 float y = 0;
 float theta = 0;
+int resolution = 298;
+int reduction = 6;
+int countD = 0;
+int countG = 0;
 
 /*----------------------------- Constructeur Bibliothèque ------------------------------*/
 
@@ -102,27 +106,11 @@ Encodeur encodeur(pinEncodeurDroitB, pinEncodeurDroitA, pinEncodeurGaucheA, pinE
 
 /*----------------------------- Fonction OS temps réel ----------------------------------*/
 
-void taskAvancer(void *pvParameters) {
-    while (1) {
-        // Appeler la fonction avancer ici
-        avancer(10);
-        vTaskDelay(pdMS_TO_TICKS(100));  // Delay de 100ms
-    }
-}
-
-void taskTourner(void *pvParameters) {
-    while (1) {
-        // Appeler la fonction tourner ici
-        tourner(PI/2);
-        vTaskDelay(pdMS_TO_TICKS(100));  // Delay de 100ms
-    }
-}
-
 void taskCommuniquer(void *pvParameters) {
     while (1) {
         // Appeler la fonction de communication ici
-        envoie_JSON();
-        reception();
+        //envoie_JSON();
+        //reception();
         vTaskDelay(pdMS_TO_TICKS(100));  // Delay de 100ms
     }
 }
@@ -135,12 +123,21 @@ void taskMoteur(void *pvParameters) {
     }
 }
 
+void taskMiseAJourDonnees(void *pvParameters) {
+    while (1) {
+        // Appeler la fonction de mise à jour des données ici
+        mise_a_jour_donnees();
+        vTaskDelay(pdMS_TO_TICKS(20));  // Delay de 20ms
+    }
+}
+
 void setup()
 {
   WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);// disable brownout detector
 
-  xTaskCreatePinnedToCore(taskCommuniquer, "taskCommuniquer", 4096, NULL, 1, NULL, 0);
+  xTaskCreatePinnedToCore(taskCommuniquer, "taskCommuniquer", 4096, NULL, 2, NULL, 0);
   xTaskCreatePinnedToCore(taskMoteur, "taskMoteur", 4096, NULL, 1, NULL, 0);
+  xTaskCreatePinnedToCore(taskMiseAJourDonnees, "taskMiseAJourDonnees", 4096, NULL, 1, NULL, 0);
 
   // put your setup code here, to run once:
   Serial.begin(115200);
@@ -264,7 +261,6 @@ void envoie_JSON()
   static unsigned long t0 = millis();
   if (millis() - t0 > 100)
   {
-    mise_a_jour_donnees();
     t0 = millis();
     envoie(formatage_JSON());
   }
@@ -276,7 +272,8 @@ void mise_a_jour_donnees(){
   x = encodeur.get_x();
   y = encodeur.get_y();
   theta = encodeur.get_theta();
-  
+  countD = encodeur.get_countD();
+  countG = encodeur.get_countG();
 }
 
 /*-------------------------------- Fonction de déplacement -----------------------------------*/
@@ -289,39 +286,32 @@ void avancer(float distance){
                   Un asservissement en pas est utilisé pour avancer droit
   */
 
-  float new_x = x + distance*cos(theta);
-  float new_y = y + distance*sin(theta);
-  float new_theta = theta;
-
   //Calcul de la distance totale à parcourir par chaque roue
   float nbr_pas_a_parcourir = distance / (2*PI*rayon) * encodeur.get_resolution() * encodeur.get_reduction();
-  Serial.println(nbr_pas_a_parcourir);
-  //Asservissement en pas pour chaque roue
-  int pas_gauche = encodeur.readEncoderG() + nbr_pas_a_parcourir;
-  int pas_droit = encodeur.readEncoderD() + nbr_pas_a_parcourir;
 
   //Asservissement en pas pour chaque roue
-  while(encodeur.readEncoderG() < pas_gauche && encodeur.readEncoderD() < pas_droit){
+  int pas_gauche = countG + nbr_pas_a_parcourir;
+  int pas_droit = countD + nbr_pas_a_parcourir;
+
+  //Asservissement en pas pour chaque roue
+  while(countG < pas_gauche && countD < pas_droit){
     //Adapter la vitesse des moteurs en fonction de l'erreur
-    float erreurG = pas_gauche - encodeur.readEncoderG();
-    float erreurD = pas_droit - encodeur.readEncoderD();
+    float erreurG = pas_gauche - countG;
+    float erreurD = pas_droit - countD;
 
     //Vitesse des moteurs (Démarrage rapide et freinage adaptatif)
     float vitesseG = 100;
     float vitesseD = 100;
-    if(erreurG < (298 * 6)){
-      //Adapter la vitesse en fonction de l'erreur entre 100 et 30 (30 = vitesse minimale)
-      vitesseG = 30 + (100 - 30) * (1 - (298 * 6 - erreurG) / (298 * 6));
+    if(erreurG <= 0){
+      vitesseG = 2; //Valeur non nulle pour bloquer le moteur
     }
-    if(erreurD < 298 * 6){
-      vitesseD = 30 + (100 - 30) * (1 - (298 * 6 - erreurD) / (298 * 6));
+    if(erreurD <= 0){
+      vitesseD = 2;
     }
 
     moteurGauche.setVitesse(vitesseG);
     moteurDroit.setVitesse(vitesseD);
   }
-  moteurGauche.setVitesse(2);
-  moteurDroit.setVitesse(2);
 }
 
 void tourner(float angle){
@@ -338,30 +328,35 @@ void tourner(float angle){
   //Asservissement en pas pour chaque roue
   int pas_gauche, pas_droit,sens;
   if (angle >= 0) {
-    pas_gauche = encodeur.readEncoderG() + nbr_pas_a_parcourir;
-    pas_droit = encodeur.readEncoderD() - nbr_pas_a_parcourir;
+    pas_gauche = countG + nbr_pas_a_parcourir;
+    pas_droit = countD - nbr_pas_a_parcourir;
     sens = 1; 
   } else {
-    pas_gauche = encodeur.readEncoderG() - nbr_pas_a_parcourir;
-    pas_droit = encodeur.readEncoderD() + nbr_pas_a_parcourir;
+    pas_gauche = countG - nbr_pas_a_parcourir;
+    pas_droit = countD + nbr_pas_a_parcourir;
     sens = -1;
   }
   //Asservissement en pas pour chaque roue
-  while(sens == 1 ? (encodeur.readEncoderG() < pas_gauche && encodeur.readEncoderD() > pas_droit) : (encodeur.readEncoderG() > pas_gauche && encodeur.readEncoderD() < pas_droit)){
+  while(sens == 1 ? (countG < pas_gauche && countD > pas_droit) : (countG > pas_gauche && countD < pas_droit)){
     //Adapter la vitesse des moteurs en fonction de l'erreur
-    float erreurG = pas_gauche - encodeur.readEncoderG();
-    float erreurD = pas_droit - encodeur.readEncoderD();
+    float erreurG = pas_gauche - countG;
+    float erreurD = pas_droit - countD;
 
     //Vitesse des moteurs (Démarrage rapide et freinage adaptatif)
     float vitesseG = 100 * sens;
     float vitesseD = 100 * -sens;
 
+    if(erreurG <= 0){
+      vitesseG = 2; //Valeur non nulle pour bloquer le moteur
+    }
+    if(erreurD <= 0){
+      vitesseD = 2;
+    }
+
     moteurGauche.setVitesse(vitesseG);
     moteurDroit.setVitesse(vitesseD);
 
   }
-  moteurGauche.setVitesse(2);
-  moteurDroit.setVitesse(2);
 }
 
 void aller_a(float X, float Y){
@@ -395,7 +390,6 @@ void aller_a(float X, float Y){
   avancer(distance);
 
   //Vérification de la position
-  encodeur.odometrie();
   float erreur_x = new_x - encodeur.get_x();
   float erreur_y = new_y - encodeur.get_y();
 
@@ -436,7 +430,6 @@ void aller_a(float X, float Y, float Theta){
   tourner(Theta);
 
   //Vérification de la position
-  encodeur.odometrie();
   float erreur_x = new_x - encodeur.get_x();
   float erreur_y = new_y - encodeur.get_y();
   float erreur_theta = new_theta - encodeur.get_theta();

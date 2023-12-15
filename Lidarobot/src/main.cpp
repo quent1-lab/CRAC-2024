@@ -86,8 +86,12 @@ float entraxe = 8.8;
 float x = 0;
 float y = 0;
 float theta = 0;
+int resolution = 298;
+int reduction = 6;
+int countD = 0;
+int countG = 0;
 
-/*---------------------- Constructeur Bibliothèque -----------------------------*/
+/*----------------------------- Constructeur Bibliothèque ------------------------------*/
 
 Bouton bt[3]; // création d'un tableau de 3 boutons.
 
@@ -109,7 +113,7 @@ void setup()
   moteurDroit.init();
 
   // Initialisation des encodeurs
-  encodeur.init(x, y, theta, rayon, entraxe, 298, 6);
+  encodeur.init(x, y, theta, rayon, entraxe, reduction, resolution);
 
   // initialisation des boutons
   setup_bt(3);
@@ -125,6 +129,7 @@ void loop()
     if (bt[NOIR].click())
     {
       etat_sys = 2;
+      encodeur.reset();
     }
     break;
   case 1:
@@ -145,7 +150,6 @@ void loop()
   default:
     break;
   }
-
   moteur();
 }
 
@@ -236,6 +240,8 @@ void mise_a_jour_donnees(){
   x = encodeur.get_x();
   y = encodeur.get_y();
   theta = encodeur.get_theta();
+  countD = encodeur.get_countD();
+  countG = encodeur.get_countG();
 }
 
 /*-------------------------------- Fonction de déplacement -----------------------------------*/
@@ -252,20 +258,22 @@ void avancer(float distance){
   float nbr_pas_a_parcourir = distance / (2*PI*rayon) * encodeur.get_resolution() * encodeur.get_reduction();
 
   //Asservissement en pas pour chaque roue
-  int pas_gauche = encodeur.readEncoderG() + nbr_pas_a_parcourir;
-  int pas_droit = encodeur.readEncoderD() + nbr_pas_a_parcourir;
+  int pas_gauche = countG + nbr_pas_a_parcourir;
+  int pas_droit = countD + nbr_pas_a_parcourir;
 
   //Asservissement en pas pour chaque roue
-  while(encodeur.readEncoderG() < pas_gauche && encodeur.readEncoderD() < pas_droit){
+  while(countG < pas_gauche && countD < pas_droit){
+    mise_a_jour_donnees();
+
     //Adapter la vitesse des moteurs en fonction de l'erreur
-    float erreurG = pas_gauche - encodeur.readEncoderG();
-    float erreurD = pas_droit - encodeur.readEncoderD();
+    float erreurG = pas_gauche - countG;
+    float erreurD = pas_droit - countD;
 
     //Vitesse des moteurs (Démarrage rapide et freinage adaptatif)
     float vitesseG = 100;
     float vitesseD = 100;
     if(erreurG <= 0){
-      vitesseG = 2; //Valeur non nulle pour bloquer les moteurs
+      vitesseG = 2; //Valeur non nulle pour bloquer le moteur
     }
     if(erreurD <= 0){
       vitesseD = 2;
@@ -276,9 +284,9 @@ void avancer(float distance){
 
     moteur();
   }
-  moteurGauche.setVitesse(2);
-  moteurDroit.setVitesse(2);
-  moteur();
+    moteurGauche.setVitesse(2);
+    moteurDroit.setVitesse(2);
+    moteur();
 }
 
 void tourner(float angle){
@@ -295,26 +303,28 @@ void tourner(float angle){
   //Asservissement en pas pour chaque roue
   int pas_gauche, pas_droit,sens;
   if (angle >= 0) {
-    pas_gauche = encodeur.readEncoderG() + nbr_pas_a_parcourir;
-    pas_droit = encodeur.readEncoderD() - nbr_pas_a_parcourir;
+    pas_gauche = countG + nbr_pas_a_parcourir;
+    pas_droit = countD - nbr_pas_a_parcourir;
     sens = 1; 
   } else {
-    pas_gauche = encodeur.readEncoderG() - nbr_pas_a_parcourir;
-    pas_droit = encodeur.readEncoderD() + nbr_pas_a_parcourir;
+    pas_gauche = countG - nbr_pas_a_parcourir;
+    pas_droit = countD + nbr_pas_a_parcourir;
     sens = -1;
   }
   //Asservissement en pas pour chaque roue
-  while(sens == 1 ? (encodeur.readEncoderG() < pas_gauche && encodeur.readEncoderD() > pas_droit) : (encodeur.readEncoderG() > pas_gauche && encodeur.readEncoderD() < pas_droit)){
+  while(sens == 1 ? (countG < pas_gauche && countD > pas_droit) : (countG > pas_gauche && countD < pas_droit)){
+    mise_a_jour_donnees();
+
     //Adapter la vitesse des moteurs en fonction de l'erreur
-    float erreurG = pas_gauche - encodeur.readEncoderG();
-    float erreurD = pas_droit - encodeur.readEncoderD();
+    float erreurG = pas_gauche - countG;
+    float erreurD = pas_droit - countD;
 
     //Vitesse des moteurs (Démarrage rapide et freinage adaptatif)
     float vitesseG = 100 * sens;
     float vitesseD = 100 * -sens;
 
     if(erreurG <= 0){
-      vitesseG = 2;
+      vitesseG = 2; //Valeur non nulle pour bloquer le moteur
     }
     if(erreurD <= 0){
       vitesseD = 2;
@@ -324,6 +334,7 @@ void tourner(float angle){
     moteurDroit.setVitesse(vitesseD);
 
     moteur();
+
   }
   moteurGauche.setVitesse(2);
   moteurDroit.setVitesse(2);
@@ -361,7 +372,6 @@ void aller_a(float X, float Y){
   avancer(distance);
 
   //Vérification de la position
-  encodeur.odometrie();
   float erreur_x = new_x - encodeur.get_x();
   float erreur_y = new_y - encodeur.get_y();
 
@@ -402,7 +412,6 @@ void aller_a(float X, float Y, float Theta){
   tourner(Theta);
 
   //Vérification de la position
-  encodeur.odometrie();
   float erreur_x = new_x - encodeur.get_x();
   float erreur_y = new_y - encodeur.get_y();
   float erreur_theta = new_theta - encodeur.get_theta();

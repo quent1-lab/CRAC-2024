@@ -2,7 +2,7 @@
  * Nom de la bibliothèque : Encodeur
  * Auteur : Quent1-lab
  * Date : 15/12/2023
- * Version : 1.0.0
+ * Version : 1.0.1
  * 
  * Description : Bibliothèque pour la gestion des encodeurs pour un ESP32.
  * 
@@ -50,6 +50,8 @@ class Encodeur {
     float get_theta_deg();
     int get_resolution();
     int get_reduction();
+    int get_countD();
+    int get_countG();
 
     int x_to_step(float x);
     int y_to_step(float y);

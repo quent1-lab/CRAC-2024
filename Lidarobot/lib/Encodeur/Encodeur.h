@@ -31,6 +31,8 @@ class Encodeur {
     float entraxe;
     int reduction;
     int resolution;
+    int countD;
+    int countG;
 
   public:
     Encodeur(int pinD_A, int pinD_B,int pinG_A, int pinG_B);

@@ -271,12 +271,12 @@ int Encodeur::get_reduction(){
  * @brief Retourne la valeur de l'encodeur droit
 */
 int Encodeur::get_countD(){
-    return this->encoderD.getCount();
+    return this->countD;
 }
 
 /**
  * @brief Retourne la valeur de l'encodeur gauche
 */
 int Encodeur::get_countG(){
-    return this->encoderG.getCount();
+    return this->countG;
 }

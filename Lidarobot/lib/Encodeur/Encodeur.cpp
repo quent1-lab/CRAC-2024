@@ -144,12 +144,12 @@ void Encodeur::odometrie()
     // Variables locales
     float deltaD, deltaG, deltaT, deltaS;
 
-    int countD = readEncoderD();
-    int countG = readEncoderG();
+    this->countD = readEncoderD();
+    this->countG = readEncoderG();
 
     // Lecture des encodeurs
-    deltaD = countD - oldPositionD;
-    deltaG = countG - oldPositionG;
+    deltaD = this->countD - oldPositionD;
+    deltaG = this->countG - oldPositionG;
     
     // Calcul de la distance parcourue par chaque roue
     deltaD = deltaD * 2.0 * PI * rayon / (this->resolution*this->reduction);//
@@ -170,11 +170,11 @@ void Encodeur::odometrie()
     this->x += deltaS * cos(this->theta);
     this->y += deltaS * sin(this->theta);
 
-    print(countD,countG);
+    print(this->countD,this->countG);
     
     // Mise à jour des variables
-    this->oldPositionD = countD;
-    this->oldPositionG = countG;
+    this->oldPositionD = this->countD;
+    this->oldPositionG = this->countG;
 }
 
 /**
@@ -265,4 +265,18 @@ int Encodeur::get_resolution(){
 */
 int Encodeur::get_reduction(){
     return this->reduction;
+}
+
+/**
+ * @brief Retourne la valeur de l'encodeur droit
+*/
+int Encodeur::get_countD(){
+    return this->encoderD.getCount();
+}
+
+/**
+ * @brief Retourne la valeur de l'encodeur gauche
+*/
+int Encodeur::get_countG(){
+    return this->encoderG.getCount();
 }

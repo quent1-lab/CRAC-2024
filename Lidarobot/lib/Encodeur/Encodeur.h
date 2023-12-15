@@ -31,6 +31,8 @@ class Encodeur {
     float entraxe;
     int reduction;
     int resolution;
+    int countD;
+    int countG;
 
   public:
     Encodeur(int pinD_A, int pinD_B,int pinG_A, int pinG_B);
@@ -50,6 +52,8 @@ class Encodeur {
     float get_theta_deg();
     int get_resolution();
     int get_reduction();
+    int get_countD();
+    int get_countG();
 
     int x_to_step(float x);
     int y_to_step(float y);

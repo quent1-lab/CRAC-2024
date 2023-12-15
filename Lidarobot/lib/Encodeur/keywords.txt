@@ -1,0 +1,29 @@
+#######################################
+# Syntax Coloring Map For Encodeur
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+Encodeur	KEYWORD1
+encodeur	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+init	KEYWORD2
+change_position	KEYWORD2
+readEncoderD	KEYWORD2
+readEncoderG	KEYWORD2
+reset	KEYWORD2
+odometrie	KEYWORD2
+print	KEYWORD2
+get_x	KEYWORD2
+get_y	KEYWORD2
+get_theta	KEYWORD2
+get_theta_deg	KEYWORD2
+get_resolution	KEYWORD2
+get_reduction	KEYWORD2
+x_to_step	KEYWORD2
+y_to_step	KEYWORD2
+theta_to_step	KEYWORD2

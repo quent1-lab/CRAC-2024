@@ -248,13 +248,9 @@ void avancer(float distance){
                   Un asservissement en pas est utilisé pour avancer droit
   */
 
-  float new_x = x + distance*cos(theta);
-  float new_y = y + distance*sin(theta);
-  float new_theta = theta;
-
   //Calcul de la distance totale à parcourir par chaque roue
   float nbr_pas_a_parcourir = distance / (2*PI*rayon) * encodeur.get_resolution() * encodeur.get_reduction();
-  Serial.println(nbr_pas_a_parcourir);
+
   //Asservissement en pas pour chaque roue
   int pas_gauche = encodeur.readEncoderG() + nbr_pas_a_parcourir;
   int pas_droit = encodeur.readEncoderD() + nbr_pas_a_parcourir;
@@ -268,12 +264,11 @@ void avancer(float distance){
     //Vitesse des moteurs (Démarrage rapide et freinage adaptatif)
     float vitesseG = 100;
     float vitesseD = 100;
-    if(erreurG < (298 * 6)){
-      //Adapter la vitesse en fonction de l'erreur entre 100 et 30 (30 = vitesse minimale)
-      vitesseG = 30 + (100 - 30) * (1 - (298 * 6 - erreurG) / (298 * 6));
+    if(erreurG <= 0){
+      vitesseG = 2; //Valeur non nulle pour bloquer les moteurs
     }
-    if(erreurD < 298 * 6){
-      vitesseD = 30 + (100 - 30) * (1 - (298 * 6 - erreurD) / (298 * 6));
+    if(erreurD <= 0){
+      vitesseD = 2;
     }
 
     moteurGauche.setVitesse(vitesseG);
@@ -317,6 +312,13 @@ void tourner(float angle){
     //Vitesse des moteurs (Démarrage rapide et freinage adaptatif)
     float vitesseG = 100 * sens;
     float vitesseD = 100 * -sens;
+
+    if(erreurG <= 0){
+      vitesseG = 2;
+    }
+    if(erreurD <= 0){
+      vitesseD = 2;
+    }
 
     moteurGauche.setVitesse(vitesseG);
     moteurDroit.setVitesse(vitesseD);

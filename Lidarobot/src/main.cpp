@@ -187,8 +187,6 @@ void loop()
   default:
     break;
   }
-
-  moteur();
 }
 
 /*---------------------------------- Fonction setup bouton ------------------------------------*/
@@ -320,12 +318,9 @@ void avancer(float distance){
 
     moteurGauche.setVitesse(vitesseG);
     moteurDroit.setVitesse(vitesseD);
-
-    moteur();
   }
   moteurGauche.setVitesse(2);
   moteurDroit.setVitesse(2);
-  moteur();
 }
 
 void tourner(float angle){
@@ -363,11 +358,9 @@ void tourner(float angle){
     moteurGauche.setVitesse(vitesseG);
     moteurDroit.setVitesse(vitesseD);
 
-    moteur();
   }
   moteurGauche.setVitesse(2);
   moteurDroit.setVitesse(2);
-  moteur();
 }
 
 void aller_a(float X, float Y){

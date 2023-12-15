@@ -240,8 +240,8 @@ void mise_a_jour_donnees(){
   x = encodeur.get_x();
   y = encodeur.get_y();
   theta = encodeur.get_theta();
-  countD = encodeur.get_countD();
-  countG = encodeur.get_countG();
+  countD = encodeur.readEncoderD();
+  countG = encodeur.readEncoderG();
 }
 
 /*-------------------------------- Fonction de déplacement -----------------------------------*/
@@ -254,8 +254,10 @@ void avancer(float distance){
                   Un asservissement en pas est utilisé pour avancer droit
   */
 
+  mise_a_jour_donnees();
+
   //Calcul de la distance totale à parcourir par chaque roue
-  float nbr_pas_a_parcourir = distance / (2*PI*rayon) * encodeur.get_resolution() * encodeur.get_reduction();
+  float nbr_pas_a_parcourir = distance / (2*PI*rayon) * resolution * reduction;
 
   //Asservissement en pas pour chaque roue
   int pas_gauche = countG + nbr_pas_a_parcourir;
@@ -297,8 +299,10 @@ void tourner(float angle){
                   Un asservissement en pas est utilisé pour tourner droit
   */
 
+  mise_a_jour_donnees();
+
   //Calcul de la distance totale à parcourir par chaque roue pour tourner d'un certain angle
-  float nbr_pas_a_parcourir = abs((angle*entraxe) / (2*2*PI*rayon) * encodeur.get_resolution() * encodeur.get_reduction()); 
+  float nbr_pas_a_parcourir = abs((angle*entraxe) / (2*2*PI*rayon) * resolution * reduction); 
 
   //Asservissement en pas pour chaque roue
   int pas_gauche, pas_droit,sens;

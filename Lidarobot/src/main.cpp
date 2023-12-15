@@ -349,12 +349,12 @@ void tourner(float angle){
     float vitesseG = 100 * sens;
     float vitesseD = 100 * -sens;
 
-    if(erreurG <= 0){
+    /*if(erreurG <= 0){
       vitesseG = 2; //Valeur non nulle pour bloquer le moteur
     }
     if(erreurD <= 0){
       vitesseD = 2;
-    }
+    }*/
 
     moteurGauche.setVitesse(vitesseG);
     moteurDroit.setVitesse(vitesseD);

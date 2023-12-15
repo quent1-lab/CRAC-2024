@@ -266,3 +266,17 @@ int Encodeur::get_resolution(){
 int Encodeur::get_reduction(){
     return this->reduction;
 }
+
+/**
+ * @brief Retourne la valeur de l'encodeur droit
+*/
+int Encodeur::get_countD(){
+    return this->encoderD.getCount();
+}
+
+/**
+ * @brief Retourne la valeur de l'encodeur gauche
+*/
+int Encodeur::get_countG(){
+    return this->encoderG.getCount();
+}

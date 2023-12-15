@@ -471,8 +471,19 @@ class LidarScanner:
 
             #ComESP32(port="COM3", baudrate=115200).run()
 
-            running = True  # Ajoutez une variable de contrôle pour gérer la fermeture de la fenêtre
+            self.draw_background()
+            self.draw_robot(self.X_ROBOT, self.Y_ROBOT, self.ROBOT_ANGLE)
+            pygame.display.update()
+            print("Appuyez sur espace pour continuer")
+            running = False
+            while(running == False):
 
+                for event in pygame.event.get():
+                        if  event.type == pygame.KEYDOWN:
+                            if event.key == pygame.K_ESCAPE or event.key == pygame.K_SPACE:
+                                running = True
+                                print("Début du scan")
+                                break
             while running:
 
                 for scan in self.lidar.iter_scans(8000):

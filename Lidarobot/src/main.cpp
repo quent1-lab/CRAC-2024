@@ -276,6 +276,7 @@ void mise_a_jour_donnees(){
   x = encodeur.get_x();
   y = encodeur.get_y();
   theta = encodeur.get_theta();
+  
 }
 
 /*-------------------------------- Fonction de déplacement -----------------------------------*/

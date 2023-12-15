@@ -1,3 +1,16 @@
+/*
+ * Nom de la bibliothèque : Bouton
+ * Auteur : Quent1-lab
+ * Date : 22/10/2022
+ * Version : 1.0.3
+ * 
+ * Description : Bibliothèque pour la gestion des boutons.
+ * 
+ * Cette bibliothèque est un logiciel libre ; vous pouvez la redistribuer et/ou
+ * la modifier selon les termes de la Licence Publique Générale GNU telle que publiée
+ * par la Free Software Foundation ; soit la version 2 de la Licence, ou
+ * (à votre discrétion) toute version ultérieure.
+ */
 
 
 

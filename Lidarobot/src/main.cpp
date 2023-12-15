@@ -1,3 +1,16 @@
+/*
+*  Projet : Lidarobot
+*  Description : Projet de robot autonome avec un lidar
+*  Auteur : Quent1-lab
+*  Date : 15/12/2023
+*  Version : 1.0.0
+*
+*  Cette bibliothèque est un logiciel libre ; vous pouvez la redistribuer et/ou
+*  la modifier selon les termes de la Licence Publique Générale GNU telle que publiée
+*  par la Free Software Foundation ; soit la version 2 de la Licence, ou
+*  (à votre discrétion) toute version ultérieure.
+*/
+
 #include <Arduino.h>
 #include <Wire.h>
 #include "Bouton.h"
@@ -332,15 +345,6 @@ void avancer(float distance){
   moteurGauche.setVitesse(2);
   moteurDroit.setVitesse(2);
   moteur();
-  /*//Vérification de la position
-  encodeur.odometrie();
-  float erreur_x = new_x - encodeur.get_x();
-  float erreur_y = new_y - encodeur.get_y();
-
-  if(abs(erreur_x) > 0.5 || abs(erreur_y) > 0.5){
-    //Si la position n'est pas bonne, on corrige
-    aller_a(new_x, new_y, new_theta);
-  }*/
 }
 
 void tourner(float angle){

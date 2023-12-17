@@ -259,7 +259,7 @@ class LidarScanner:
             self.draw_text("ID: " + str(self.objets[0].id), 800, 5)
             self.draw_text("x: " + str(self.objets[0].x), 800, 25)
             self.draw_text("y: " + str(self.objets[0].y), 800, 45)
-            self.draw_text("speed: " + "{:.2f}".format(self.objets[0].vitesse), 900, 20)
+            self.draw_text("speed: " + "{:.2f}".format(self.objets[0].vitesse) + " cm/s", 900, 20)
             self.draw_text("direction: " + "{:.2f}".format(self.objets[0].direction), 900, 40)          
 
     def draw_field(self):

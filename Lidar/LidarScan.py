@@ -448,7 +448,7 @@ class LidarScanner:
             zone_objet = self.detect_object(scan)
             self.draw_background()
             self.draw_robot(self.X_ROBOT, self.Y_ROBOT, self.ROBOT_ANGLE)
-            self.draw_object(zone_objet)
+            self.draw_object(self.objets[0])
             for point in scan:
                 self.draw_point(self.X_ROBOT, self.Y_ROBOT, point[1], point[2])
 

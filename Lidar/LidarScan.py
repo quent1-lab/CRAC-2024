@@ -9,6 +9,7 @@ import serial.tools.list_ports
 import json
 import os
 import can
+import time
 
 class ComESP32:
     def __init__(self, port, baudrate):
@@ -129,13 +130,14 @@ class Objet:
         self.x = x
         self.y = y
         self.taille = taille
-        self.positions_precedentes = [(x, y)]  # Liste pour stocker les positions précédentes
+        self.positions_precedentes = [(x, y, time.time())]  # Ajout du temps actuel
         self.direction = 0
         self.vitesse = 0
+        self.vitesse_ms = 0
 
     def update_position(self, x, y):
         # Mettre à jour la position de l'objet et ajouter la position précédente à la liste
-        self.positions_precedentes.append((self.x, self.y))
+        self.positions_precedentes.append((self.x, self.y, time.monotonic_ns()))  # Ajout du temps actuel
         self.x = x
         self.y = y
 
@@ -144,11 +146,18 @@ class Objet:
         dx = self.x - self.positions_precedentes[-1][0]
         dy = self.y - self.positions_precedentes[-1][1]
 
+        # Calculer le temps écoulé entre la position actuelle et la position précédente
+        dt = (time.monotonic_ns() - self.positions_precedentes[-1][2])/1000 # Division par 1000 pour convertir en ms
+
         # La direction est l'angle du vecteur de déplacement
         self.direction = math.atan2(dy, dx)
 
-        # La vitesse est la magnitude du vecteur de déplacement
-        self.vitesse = math.sqrt(dx**2 + dy**2)
+        # La vitesse est la magnitude du vecteur de déplacement divisée par le temps écoulé
+        # Division par 1000 pour convertir en m/ms, puis multiplication par 100 pour convertir en cm/s
+        self.vitesse = math.sqrt(dx**2 + dy**2) / dt * 100 
+
+        # Convertir la vitesse en m/s
+        self.vitesse_ms = self.vitesse / 100
 
         return self.direction, self.vitesse
 
@@ -243,7 +252,15 @@ class LidarScanner:
         """Data is x, y and theta"""
         self.draw_text("x: " + str(self.X_ROBOT), 10, 5)
         self.draw_text("y: " + str(self.Y_ROBOT), 10, 25)
-        self.draw_text("theta: " + str(self.ROBOT_ANGLE), 100, 15)                
+        self.draw_text("theta: " + str(self.ROBOT_ANGLE), 100, 15)
+
+        if(len(self.objets) > 0):
+            '''Draws data, on up right corner.For x, y, speed and direction'''
+            self.draw_text("ID: " + str(self.objets[0].id), 800, 5)
+            self.draw_text("x: " + str(self.objets[0].x), 800, 25)
+            self.draw_text("y: " + str(self.objets[0].y), 800, 45)
+            self.draw_text("speed: " + "{:.2f}".format(self.objets[0].vitesse), 900, 20)
+            self.draw_text("direction: " + "{:.2f}".format(self.objets[0].direction), 900, 40)          
 
     def draw_field(self):
         pygame.draw.rect(self.lcd, pygame.Color(100, 100, 100),
@@ -339,15 +356,19 @@ class LidarScanner:
                 objet.update_position(x, y)
                 objet.taille = taille
                 return objet
+            else:
+                # Si l'objet n'est pas déjà suivi, créer un nouvel objet
+                #nouvel_objet = Objet(self.id_compteur, x, y, taille)
+                #self.objets.append(nouvel_objet)
+                return objet
+            
+        if(len(self.objets) < 1):
+            # Incrémenter le compteur d'identifiants
+            self.id_compteur += 1
 
-        # Incrémenter le compteur d'identifiants
-        self.id_compteur += 1
-
-        # Si l'objet n'est pas déjà suivi, créer un nouvel objet
-        nouvel_objet = Objet(self.id_compteur, x, y, taille)
-        self.objets.append(nouvel_objet)
-
-        return nouvel_objet
+            # Si l'objet n'est pas déjà suivi, créer un nouvel objet
+            nouvel_objet = Objet(self.id_compteur, x, y, taille)
+            self.objets.append(nouvel_objet)
 
     def choix_du_port(self):
         ports = serial.tools.list_ports.comports()

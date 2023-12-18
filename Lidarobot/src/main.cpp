@@ -119,7 +119,7 @@ void taskMoteur(void *pvParameters) {
     while (1) {
         // Appeler la fonction moteur ici
         moteur();
-        vTaskDelay(pdMS_TO_TICKS(20));  // Delay de 20ms
+        vTaskDelay(pdMS_TO_TICKS(10));  // Delay de 10ms
     }
 }
 
@@ -127,7 +127,7 @@ void taskMiseAJourDonnees(void *pvParameters) {
     while (1) {
         // Appeler la fonction de mise à jour des données ici
         mise_a_jour_donnees();
-        vTaskDelay(pdMS_TO_TICKS(1));  // Delay de 20ms
+        vTaskDelay(pdMS_TO_TICKS(10));  // Delay de 10ms
     }
 }
 
@@ -136,8 +136,8 @@ void setup()
   WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);// disable brownout detector
 
   //xTaskCreatePinnedToCore(taskCommuniquer, "taskCommuniquer", 4096, NULL, 2, NULL, 0);
-  xTaskCreatePinnedToCore(taskMoteur, "taskMoteur", 4096, NULL, 2, NULL, 0);
-  xTaskCreatePinnedToCore(taskMiseAJourDonnees, "taskMiseAJourDonnees", 4096, NULL, 1, NULL, 0);
+  xTaskCreatePinnedToCore(taskMoteur, "taskMoteur", 4096, NULL, 1, NULL, 0);
+  xTaskCreatePinnedToCore(taskMiseAJourDonnees, "taskMiseAJourDonnees", 4096, NULL, 2, NULL, 0);
 
   // put your setup code here, to run once:
   Serial.begin(115200);

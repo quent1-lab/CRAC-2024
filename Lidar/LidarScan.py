@@ -186,17 +186,17 @@ class LidarScanner:
         self.WHITE = (255, 255, 255)
         self.LIGHT_GREY = (200, 200, 200)
         self.FIELD_SIZE = (3000, 2000)
-        self.WINDOW_SIZE = (1100, 800)
         self.BORDER_DISTANCE = 200
-        self.X_RATIO = self.WINDOW_SIZE[0] / self.FIELD_SIZE[0]
-        self.Y_RATIO = self.WINDOW_SIZE[1] / self.FIELD_SIZE[1]
         self.X_ROBOT = self.FIELD_SIZE[0] / 2
         self.Y_ROBOT = self.FIELD_SIZE[1] / 2
         self.POINT_COLOR = (255, 0, 0)
         self.BACKGROUND_COLOR = self.LIGHT_GREY
         self.FONT_COLOR = self.BLACK
 
-        self.path_picture = "Lidar/Terrain_Jeu.png"
+        if os.name == 'nt':  # Windows
+            self.path_picture = "Lidar/Terrain_Jeu.png"
+        else:  # Linux et autres
+            self.path_picture = "Documents/CRAC-2024/Lidar/Terrain_Jeu.png"
 
         self.nb_scan = 0
         self.tab_scan = []
@@ -204,7 +204,16 @@ class LidarScanner:
         self.id_compteur = 0  # Compteur pour les identifiants d'objet
         self.objets = []  # Liste pour stocker les objets détectés
 
+        # Initialisation de Pygame et ajustement de la taille de la fenêtre
         pygame.init()
+        info_object = pygame.display.Info()
+        screen_width, screen_height = info_object.current_w, info_object.current_h - 100
+        target_ratio = 3/2
+        target_width = min(screen_width, int(screen_height * target_ratio))
+        target_height = min(screen_height, int(screen_width / target_ratio))
+        self.WINDOW_SIZE = (target_width, target_height)
+        self.X_RATIO = self.WINDOW_SIZE[0] / self.FIELD_SIZE[0]
+        self.Y_RATIO = self.WINDOW_SIZE[1] / self.FIELD_SIZE[1]
         self.lcd = pygame.display.set_mode(self.WINDOW_SIZE)
         pygame.font.init()
         self.font = pygame.font.SysFont("Arial", 20)
@@ -213,9 +222,12 @@ class LidarScanner:
         self.lcd.fill(self.BACKGROUND_COLOR)
         pygame.display.update()
 
-        self.port = self.choix_du_port()
-
         logging.basicConfig(filename='lidar_scan.log', level=logging.INFO,datefmt='%d/%m/%Y %H:%M:%S',format='%(asctime)s - %(levelname)s - %(message)s')
+        
+        #Choix du port si aucun port n'est spécifié
+        if self.port == None:
+            self.port = self.choix_du_port()
+
 
     def draw_robot(self, x, y, angle):
         pygame.draw.circle(self.lcd, pygame.Color(self.WHITE), (x * self.X_RATIO, y * self.Y_RATIO), 20)

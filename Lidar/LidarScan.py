@@ -198,9 +198,6 @@ class LidarScanner:
         else:  # Linux et autres
             self.path_picture = "Documents/CRAC-2024/Lidar/Terrain_Jeu.png"
 
-        self.nb_scan = 0
-        self.tab_scan = []
-
         self.id_compteur = 0  # Compteur pour les identifiants d'objet
         self.objets = []  # Liste pour stocker les objets détectés
 
@@ -215,6 +212,7 @@ class LidarScanner:
         self.X_RATIO = self.WINDOW_SIZE[0] / self.FIELD_SIZE[0]
         self.Y_RATIO = self.WINDOW_SIZE[1] / self.FIELD_SIZE[1]
         self.lcd = pygame.display.set_mode(self.WINDOW_SIZE)
+        
         pygame.font.init()
         self.font = pygame.font.SysFont("Arial", 20)
         pygame.mouse.set_visible(True)
@@ -227,7 +225,6 @@ class LidarScanner:
         #Choix du port si aucun port n'est spécifié
         if self.port == None:
             self.port = self.choix_du_port()
-
 
     def draw_robot(self, x, y, angle):
         pygame.draw.circle(self.lcd, pygame.Color(self.WHITE), (x * self.X_RATIO, y * self.Y_RATIO), 20)

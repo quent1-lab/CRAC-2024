@@ -141,37 +141,45 @@ class Objet:
         self.x = x
         self.y = y
 
-    def get_direction_vitesse(self):
+    def get_direction_speed(self):
         # Calculer le vecteur de déplacement entre la position actuelle et la position précédente
         dx = self.x - self.positions_precedentes[-1][0]
         dy = self.y - self.positions_precedentes[-1][1]
 
         # Calculer le temps écoulé entre la position actuelle et la position précédente
-        dt = (time.monotonic_ns() - self.positions_precedentes[-1][2])/1000 # Division par 1000 pour convertir en ms
+        dt = (time.monotonic_ns() - self.positions_precedentes[-1][2])
 
         # La direction est l'angle du vecteur de déplacement
         self.direction = math.atan2(dy, dx)
 
         # La vitesse est la magnitude du vecteur de déplacement divisée par le temps écoulé
-        # Division par 1000 pour convertir en m/ms, puis multiplication par 100 pour convertir en cm/s
-        self.vitesse = math.sqrt(dx**2 + dy**2) / dt * 100 
+        self.vitesse = math.sqrt(dx**2 + dy**2) / dt * 1000000000 # Conversion en mm/s
 
         # Convertir la vitesse en m/s
-        self.vitesse_ms = self.vitesse / 100
+        self.vitesse_ms = self.vitesse /1000
 
         return self.direction, self.vitesse
 
-    def calculer_position(self, direction, vitesse, temps):
+    def simulate_movement(self, direction, vitesse, temps):
         # Convertir la direction en radians
-        direction_rad = math.radians(direction)
 
         # Calculer le déplacement en x et y
-        dx = vitesse * math.cos(direction_rad) * temps
-        dy = vitesse * math.sin(direction_rad) * temps
+        dx = vitesse * 10 * math.cos(direction) * temps
+        dy = vitesse * 10 * math.sin(direction) * temps
 
         # Mettre à jour la position de l'objet
         self.x += dx
         self.y += dy
+
+    def calculate_dx_dy(self, direction, vitesse, temps):
+        # Assurez-vous que la direction est entre 0 et 2π
+        direction = direction % (2 * math.pi)
+
+        # Calculer le déplacement en x et y
+        dx = vitesse  * math.cos(direction) * temps
+        dy = vitesse  * math.sin(direction) * temps
+
+        return dx, dy
 
     def __str__(self):
         return f"Objet {self.id} : x = {self.x} y = {self.y} taille = {self.taille}"
@@ -187,11 +195,12 @@ class LidarScanner:
         self.LIGHT_GREY = (200, 200, 200)
         self.FIELD_SIZE = (3000, 2000)
         self.BORDER_DISTANCE = 200
-        self.X_ROBOT = self.FIELD_SIZE[0] / 2
-        self.Y_ROBOT = self.FIELD_SIZE[1] / 2
         self.POINT_COLOR = (255, 0, 0)
         self.BACKGROUND_COLOR = self.LIGHT_GREY
         self.FONT_COLOR = self.BLACK
+
+        # Initialisation du robot virtuel
+        self.ROBOT = Objet(0, 1500, 1000, 20)
 
         if os.name == 'nt':  # Windows
             self.path_picture = "Lidar/Terrain_Jeu.png"
@@ -259,16 +268,18 @@ class LidarScanner:
     def draw_data(self):
         """Draws data to the pygame screen, on up left corner.For x, y and theta"""
         """Data is x, y and theta"""
-        self.draw_text("x: " + str(self.X_ROBOT), 10, 5)
-        self.draw_text("y: " + str(self.Y_ROBOT), 10, 25)
-        self.draw_text("theta: " + str(self.ROBOT_ANGLE), 100, 15)
+        self.draw_text("x: " + "{:.2f}".format(self.ROBOT.x), 10, 5)
+        self.draw_text("y: " + "{:.2f}".format(self.ROBOT.y), 10, 25)
+        self.draw_text("theta: " + "{:.2f}".format(self.ROBOT_ANGLE), 100, 15)
+        self.draw_text("speed: " + "{:.2f}".format(self.ROBOT.vitesse/10) + " cm/s", 200, 5)
+        self.draw_text("direction: " + "{:.2f}".format(self.ROBOT.direction), 200, 25)
 
         if(len(self.objets) > 0):
             '''Draws data, on up right corner.For x, y, speed and direction'''
-            self.draw_text("ID: " + str(self.objets[0].id), 800, 5)
-            self.draw_text("x: " + str(self.objets[0].x), 800, 25)
-            self.draw_text("y: " + str(self.objets[0].y), 800, 45)
-            self.draw_text("speed: " + "{:.2f}".format(self.objets[0].vitesse) + " cm/s", 900, 20)
+            self.draw_text("ID: " + "{:.2f}".format(self.objets[0].id), 800, 5)
+            self.draw_text("x: " + "{:.2f}".format(self.objets[0].x), 800, 25)
+            self.draw_text("y: " + "{:.2f}".format(self.objets[0].y), 800, 45)
+            self.draw_text("speed: " + "{:.2f}".format(self.objets[0].vitesse/10) + " cm/s", 900, 20)
             self.draw_text("direction: " + "{:.2f}".format(self.objets[0].direction), 900, 40)          
 
     def draw_field(self):
@@ -281,8 +292,8 @@ class LidarScanner:
         new_angle = angle - self.ROBOT_ANGLE
         if new_angle < 0:
             new_angle += 360
-        x = self.X_ROBOT + int(distance * math.cos(new_angle * math.pi / 180))
-        y = self.Y_ROBOT + int(distance * math.sin(new_angle * math.pi / 180))
+        x +=int(distance * math.cos(new_angle * math.pi / 180))
+        y += int(distance * math.sin(new_angle * math.pi / 180))
 
         self.POINT_COLOR = (200, 200, 200)
 
@@ -314,7 +325,7 @@ class LidarScanner:
         self.draw_text("ID: " + str(objet.id), objet.x * self.X_RATIO + 20, objet.y * self.Y_RATIO - 30)
 
         # Affichage de la direction et de la vitesse de l'objet avec un vecteur
-        direction, vitesse = objet.get_direction_vitesse()
+        direction, vitesse = objet.get_direction_speed()
         pygame.draw.line(
             self.lcd, pygame.Color(255, 255, 0),
             (objet.x * self.X_RATIO, objet.y * self.Y_RATIO),
@@ -350,8 +361,8 @@ class LidarScanner:
             angle_min[1] * math.pi / 180)) ** 2 + (distance_max[2] * math.sin(angle_max[1] * math.pi / 180) - distance_min[2] * math.sin(
             angle_min[1] * math.pi / 180)) ** 2)
 
-        x = self.X_ROBOT + int(x / len(points_autour_objet))
-        y = self.Y_ROBOT + int(y / len(points_autour_objet))
+        x = self.ROBOT.x + int(x / len(points_autour_objet))
+        y = self.ROBOT.y + int(y / len(points_autour_objet))
 
         # Seuil de détection d'un objet en mm
         SEUIL = 100 # en mm (distance que peut parcourir le robot entre deux scans)
@@ -412,6 +423,13 @@ class LidarScanner:
         while True:
             try:
                 numero = int(input("Entrez le port du LiDAR : " + port))
+
+                if(numero >= 9):
+                    print("Port invalide (COM9 ou plus)")
+                    logging.error("Invalid port (COM9 or more)")
+                    self.programme_test()
+                    exit(0)
+
                 #Vérification de l'existence du port
                 for port_ in ports:
                     if port_.device == port + str(numero):
@@ -456,28 +474,153 @@ class LidarScanner:
             scan = self.valeur_de_test()
             zone_objet = self.detect_object(scan)
             self.draw_background()
-            self.draw_robot(self.X_ROBOT, self.Y_ROBOT, self.ROBOT_ANGLE)
+            self.draw_robot(self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)
             self.draw_object(self.objets[0])
+            self.dessiner_trajectoires_anticipation(self.ROBOT, self.objets[0],4)
+
             for point in scan:
-                self.draw_point(self.X_ROBOT, self.Y_ROBOT, point[1], point[2])
+                self.draw_point(self.ROBOT.x, self.ROBOT.y, point[1], point[2])
 
             pygame.display.update()
             self.lcd.fill(self.WHITE)
-            self.ROBOT_ANGLE += 5
+            self.ROBOT_ANGLE += 1
             
             #Déplacement du robot virtuel avec des touches du clavier
+            x = self.ROBOT.x
+            y = self.ROBOT.y
             keys = pygame.key.get_pressed()
             if keys[pygame.K_LEFT]:
-                self.X_ROBOT -= 10
+                x -= 10
             if keys[pygame.K_RIGHT]:
-                self.X_ROBOT += 10
+                x += 10
             if keys[pygame.K_UP]:
-                self.Y_ROBOT -= 10
+                 y -= 10
             if keys[pygame.K_DOWN]:
-                self.Y_ROBOT += 10
+                 y += 10
+            self.ROBOT.update_position(x, y)
 
             time.sleep(0.01)
     
+    def anticiper_collision(robot_actuel, robot_adverse, duree_anticipation=1.0, pas_temps=0.1, distance_securite=50):
+        """
+        Anticipe les collisions entre le robot actuel et le robot adverse.
+
+        :param robot_actuel: Objet représentant le robot actuel
+        :param robot_adverse: Objet représentant le robot adverse
+        :param duree_anticipation: Durée d'anticipation en secondes
+        :param pas_temps: Pas de temps pour la simulation en secondes
+        :param distance_securite: Distance de sécurité minimale entre les robots
+        :return: True si une collision est anticipée, False sinon, et le chemin d'évitement proposé
+        """
+        # Copie des positions actuelles des robots
+        x_actuel, y_actuel = robot_actuel.x, robot_actuel.y
+        x_adverse, y_adverse = robot_adverse.x, robot_adverse.y
+
+        # Copie des vitesses actuelles des robots
+        vitesse_actuel, _ = robot_actuel.get_direction_speed()
+        vitesse_adverse, _ = robot_adverse.get_direction_speed()
+
+        # Simulation de mouvement pour anticiper la trajectoire future des robots
+        temps_total = duree_anticipation
+        for temps in range(int(duree_anticipation / pas_temps)):
+            # Calcul des nouvelles positions des robots
+            robot_actuel.calculate_dx_dy(robot_actuel.direction, vitesse_actuel, pas_temps)
+            robot_adverse.calculate_dx_dy(robot_adverse.direction, vitesse_adverse, pas_temps)
+
+            # Calcul de la distance entre les robots
+            distance_entre_robots = math.sqrt((robot_actuel.x - robot_adverse.x)**2 + (robot_actuel.y - robot_adverse.y)**2)
+
+            # Vérification de la collision anticipée
+            if distance_entre_robots < distance_securite:
+                # Collision anticipée, proposer un chemin d'évitement
+                chemin_evitement = [(x_actuel, y_actuel)]
+                for temps_evitement in range(int(duree_anticipation / pas_temps)):
+                    # Simulation de mouvement pour l'évitement
+                    robot_actuel.calculate_dx_dy(robot_actuel.direction, vitesse_actuel, pas_temps)
+
+                    chemin_evitement.append((robot_actuel.x, robot_actuel.y))
+
+                return True, chemin_evitement
+
+        # Pas de collision anticipée
+        return False, []
+
+    def dessiner_trajectoires_anticipation(self, robot_actuel, robot_adverse, duree_anticipation=1.0, pas_temps=0.1, distance_securite=50):
+        """
+        Dessine les futures trajectoires des robots et la trajectoire d'évitement anticipée.
+
+        :param robot_actuel: Objet représentant le robot actuel
+        :param robot_adverse: Objet représentant le robot adverse
+        :param duree_anticipation: Durée d'anticipation en secondes
+        :param pas_temps: Pas de temps pour la simulation en secondes
+        :param distance_securite: Distance de sécurité minimale entre les robots
+        """
+        # Copie des positions actuelles des robots
+        x_actuel, y_actuel = robot_actuel.x, robot_actuel.y
+        x_adverse, y_adverse = robot_adverse.x, robot_adverse.y
+
+        # Copie des vitesses actuelles des robots
+        _, vitesse_actuel = robot_actuel.get_direction_speed()
+        _, vitesse_adverse = robot_adverse.get_direction_speed()
+
+        # Liste pour stocker les points des trajectoires
+        trajectoire_actuel = [(x_actuel, y_actuel)]
+        trajectoire_adverse = [(x_adverse, y_adverse)]
+        trajectoire_evitement = []
+
+        # Simulation de mouvement pour anticiper la trajectoire future des robots
+        temps_total = duree_anticipation
+        for temps in range(int(duree_anticipation / pas_temps)):
+            # Calcul des nouvelles positions des robots
+            new_x_R, new_y_R = robot_actuel.calculate_dx_dy(robot_actuel.direction, vitesse_actuel, pas_temps)
+            new_x_A, new_y_A = robot_adverse.calculate_dx_dy(robot_adverse.direction, vitesse_adverse, pas_temps)
+
+            new_x_R += trajectoire_actuel[-1][0]
+            new_y_R += trajectoire_actuel[-1][1]
+            new_x_A += trajectoire_adverse[-1][0]
+            new_y_A += trajectoire_adverse[-1][1]
+
+            # Ajout des points aux trajectoires
+            trajectoire_actuel.append((new_x_R, new_y_R))
+            trajectoire_adverse.append((new_x_A, new_y_A))
+            
+            # Calcul de la distance entre les robots
+            distance_entre_robots = math.sqrt((new_x_R - new_x_A)**2 + (new_y_R - new_y_A)**2)
+            
+            # Vérification de la collision anticipée
+            if distance_entre_robots < distance_securite:
+                # Proposer un chemin d'évitement
+                trajectoire_evitement = [(x_actuel, y_actuel)]
+                for temps_evitement in range(int(duree_anticipation / pas_temps)):
+                    # Choisir une direction d'évitement
+                    direction_evitement = (robot_actuel.direction + math.pi) % (2 * math.pi)
+
+                    # Simulation de mouvement pour l'évitement
+                    new_x_E, new_y_E = robot_actuel.calculate_dx_dy(direction_evitement, vitesse_actuel, pas_temps)
+
+                    new_x_E += trajectoire_evitement[-1][0]
+                    new_y_E += trajectoire_evitement[-1][1]
+
+                    # Ajout des points à la trajectoire d'évitement
+                    trajectoire_evitement.append((new_x_E, new_y_E))
+
+                break
+
+        # Dessin des trajectoires
+        self.draw_trajectoire(trajectoire_actuel, color=(255, 0, 0))  # Rouge pour le robot actuel
+        self.draw_trajectoire(trajectoire_adverse, color=(0, 0, 255))  # Bleu pour le robot adverse
+        self.draw_trajectoire(trajectoire_evitement, color=(0, 255, 0))  # Vert pour la trajectoire d'évitement
+
+    def draw_trajectoire(self, trajectoire, color=(255, 255, 255)):
+        """
+        Dessine une trajectoire sur l'écran.
+
+        :param trajectoire: Liste de points (x, y) représentant la trajectoire
+        :param color: Couleur de la trajectoire (RGB)
+        """
+        for point in trajectoire:
+            pygame.draw.circle(self.lcd, pygame.Color(color), (int(point[0] * self.X_RATIO), int(point[1] * self.Y_RATIO)), 2)
+
     def stop(self):
         logging.info("Stopping LiDAR motor")
         print("Arrêt du moteur LiDAR")
@@ -502,18 +645,18 @@ class LidarScanner:
             #ComESP32(port="COM3", baudrate=115200).run()
 
             self.draw_background()
-            self.draw_robot(self.X_ROBOT, self.Y_ROBOT, self.ROBOT_ANGLE)
+            self.draw_robot(self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)
             pygame.display.update()
             print("Appuyez sur espace pour continuer")
             running = False
             while(running == False):
-
                 for event in pygame.event.get():
                         if  event.type == pygame.KEYDOWN:
                             if event.key == pygame.K_ESCAPE or event.key == pygame.K_SPACE:
                                 running = True
                                 print("Début du scan")
                                 break
+
             while running:
 
                 for scan in self.lidar.iter_scans(8000):
@@ -527,12 +670,13 @@ class LidarScanner:
                                 pass
                     
                     self.draw_background()
-                    self.draw_robot(self.X_ROBOT, self.Y_ROBOT, self.ROBOT_ANGLE)
+                    self.draw_robot(self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)
                     zone_objet = self.detect_object(scan)
                     self.draw_object(self.objets[0])
+                    self.dessiner_trajectoires_anticipation(self.ROBOT, self.objets[0])
 
                     for (_, angle, distance) in scan:
-                        self.draw_point(self.X_ROBOT, self.Y_ROBOT, angle, distance)
+                        self.draw_point(self.ROBOT.x, self.ROBOT.y, angle, distance)
                     pygame.display.update()
                     self.lcd.fill(self.WHITE)
 

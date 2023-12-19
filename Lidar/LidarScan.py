@@ -233,7 +233,7 @@ class LidarScanner:
         
         #Choix du port si aucun port n'est spécifié
         if self.port == None:
-            self.port = self.choix_du_port()
+            self.port = self.interface_choix_port()
 
     def draw_robot(self, x, y, angle):
         pygame.draw.circle(self.lcd, pygame.Color(self.WHITE), (x * self.X_RATIO, y * self.Y_RATIO), 20)
@@ -260,9 +260,9 @@ class LidarScanner:
         self.draw_data()
         #Afficher l'image en fond d'écran, dans l'emplacement du terrain de jeu
     
-    def draw_text(self, text, x, y):
+    def draw_text(self, text, x, y, color=(0, 0, 0)):
         """Draws text to the pygame screen, on up left corner"""
-        text = self.font.render(text, True, pygame.Color(self.FONT_COLOR), pygame.Color(self.BACKGROUND_COLOR))
+        text = self.font.render(text, True, color, pygame.Color(self.BACKGROUND_COLOR))
         self.lcd.blit(text, (x, y))
 
     def draw_data(self):
@@ -442,6 +442,46 @@ class LidarScanner:
                 continue
             except KeyboardInterrupt:
                 exit(0)
+
+    def interface_choix_port(self):
+        # Obtenir la liste des ports
+        ports = [port.device for port in serial.tools.list_ports.comports() if "AMA" not in port.device]
+
+        # Si aucun port n'est détecté, lancer le programme de test
+        if len(ports) == 0:
+            logging.error("No port detected")
+            self.programme_test()
+            exit(0)
+
+        # Index du port actuellement sélectionné
+        selected_port_index = 0
+
+        # Boucle principale
+        running = True
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_UP:
+                        selected_port_index = (selected_port_index - 1) % len(ports)
+                    elif event.key == pygame.K_DOWN:
+                        selected_port_index = (selected_port_index + 1) % len(ports)
+                    elif event.key == pygame.K_RETURN:
+                        logging.info(f"Port detected: {ports[selected_port_index]}")
+                        print("Port détecté: " + ports[selected_port_index])
+                        return ports[selected_port_index]
+
+            # Effacer l'écran
+            self.lcd.fill(self.LIGHT_GREY)
+
+            # Dessiner la liste des ports
+            for i, port in enumerate(ports):
+                color = (255, 255, 255) if i == selected_port_index else (100, 100, 100)
+                self.draw_text(port, 10, 10 + i * 30, color)
+
+            # Mettre à jour l'écran
+            pygame.display.flip()
 
     def valeur_de_test(self):
         scan = []

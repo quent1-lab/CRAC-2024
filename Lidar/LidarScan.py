@@ -2,6 +2,7 @@ from collections.abc import Iterable
 import logging
 from rplidar import RPLidar
 import pygame
+from pygame.locals import *
 import math
 import random
 import time
@@ -193,6 +194,7 @@ class LidarScanner:
         self.BLACK = (0, 0, 0)
         self.WHITE = (255, 255, 255)
         self.LIGHT_GREY = (200, 200, 200)
+        self.GREEN = (0, 255, 0)
         self.FIELD_SIZE = (3000, 2000)
         self.BORDER_DISTANCE = 200
         self.POINT_COLOR = (255, 0, 0)
@@ -264,6 +266,11 @@ class LidarScanner:
         """Draws text to the pygame screen, on up left corner"""
         text = self.font.render(text, True, color, pygame.Color(self.BACKGROUND_COLOR))
         self.lcd.blit(text, (x, y))
+
+    def draw_text_center(self, text, x, y, color=(0, 0, 0)):
+        text_surface = self.font.render(text, True, color, pygame.Color(self.BACKGROUND_COLOR))
+        text_rect = text_surface.get_rect(center=(x, y))
+        self.lcd.blit(text_surface, text_rect)
 
     def draw_data(self):
         """Draws data to the pygame screen, on up left corner.For x, y and theta"""
@@ -466,24 +473,51 @@ class LidarScanner:
         while running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    running = False
+                    exit(0)
                 elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_UP:
+                    if event.key == pygame.K_SPACE:
+                        exit(0)
+                    elif event.key == pygame.K_UP:
                         selected_port_index = (selected_port_index - 1) % len(ports)
                     elif event.key == pygame.K_DOWN:
                         selected_port_index = (selected_port_index + 1) % len(ports)
                     elif event.key == pygame.K_RETURN:
                         logging.info(f"Port detected: {ports[selected_port_index]}")
                         print("Port détecté: " + ports[selected_port_index])
+                        self.draw_text_center("Port choisi: " + ports[selected_port_index], self.WINDOW_SIZE[0] / 2, self.WINDOW_SIZE[1] / 2)
+                        self.draw_text_center("En connexion...", self.WINDOW_SIZE[0] / 2, self.WINDOW_SIZE[1] / 2 + 30)
+                        pygame.display.update()
+                        running = False
                         return ports[selected_port_index]
+                elif event.type == MOUSEBUTTONDOWN:
+                    mouse_x, mouse_y = pygame.mouse.get_pos()
+                    for i in range(len(ports)):
+                        if 90 + i * 40 <= mouse_y <= 110 + i * 40:  # Vérifier si le clic est sur le texte
+                            logging.info(f"Port detected: {ports[i]}")
+                            print("Port détecté: " + ports[i])
+                            self.draw_text_center("Port choisi: " + ports[i], self.WINDOW_SIZE[0] / 2, self.WINDOW_SIZE[1] / 2)
+                            self.draw_text_center("En connexion...", self.WINDOW_SIZE[0] / 2, self.WINDOW_SIZE[1] / 2 + 30)
+                            pygame.display.update()
+                            running = False
+                            return ports[i]
 
             # Effacer l'écran
             self.lcd.fill(self.LIGHT_GREY)
 
-            # Dessiner la liste des ports
-            for i, port in enumerate(ports):
-                color = (255, 255, 255) if i == selected_port_index else (100, 100, 100)
-                self.draw_text(port, 10, 10 + i * 30, color)
+            # Dessiner le texte centré sur l'écran
+            self.draw_text_center("Choix du port", self.WINDOW_SIZE[0] / 2, 20)
+            self.draw_text_center("Appuyez sur Entrée pour sélectionner le port", self.WINDOW_SIZE[0] / 2, 50)
+
+            # Dessiner la liste des ports avec des carrés pour indiquer le port sélectionné
+            for i in range(len(ports)):
+                text = ports[i]
+                text_surface = self.font.render(text, True, self.BLACK)
+                text_rect = text_surface.get_rect(center=(self.WINDOW_SIZE[0] / 2, 100 + i * 40))
+
+                if i == selected_port_index:
+                    pygame.draw.rect(self.lcd, pygame.Color(self.GREEN), text_rect.inflate(20, 10), 2)
+
+                self.lcd.blit(text_surface, text_rect)
 
             # Mettre à jour l'écran
             pygame.display.update()
@@ -679,6 +713,7 @@ class LidarScanner:
             self.lidar = RPLidar(self.port)
         except Exception as e:
             logging.error(f"Failed to create an instance of RPLidar: {e}")
+            print("Erreur lors de la création de l'instance du LiDAR")
             self.programme_test()
             raise
 

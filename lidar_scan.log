@@ -563,3 +563,20 @@ INFO:rplidar:Stoping scanning
 19/12/2023 14:07:43 - INFO - Test program
 19/12/2023 14:08:08 - ERROR - No port detected
 19/12/2023 14:08:08 - INFO - Test program
+19/12/2023 15:18:00 - ERROR - No port detected
+19/12/2023 15:18:00 - INFO - Test program
+19/12/2023 15:22:52 - INFO - Port detected: COM14
+19/12/2023 15:22:52 - INFO - Starting motor
+19/12/2023 15:22:52 - INFO - Lidar connected
+19/12/2023 15:23:05 - INFO - Stopping LiDAR motor
+19/12/2023 15:23:05 - INFO - Stoping scanning
+19/12/2023 15:24:22 - INFO - Port detected: COM8
+19/12/2023 15:24:22 - INFO - Starting motor
+19/12/2023 15:24:22 - INFO - Lidar connected
+19/12/2023 15:24:47 - INFO - Stopping LiDAR motor
+19/12/2023 15:24:47 - INFO - Stoping scanning
+19/12/2023 15:25:18 - INFO - Port detected: COM8
+19/12/2023 15:25:18 - INFO - Starting motor
+19/12/2023 15:25:18 - INFO - Lidar connected
+19/12/2023 15:25:39 - INFO - Stopping LiDAR motor
+19/12/2023 15:25:39 - INFO - Stoping scanning

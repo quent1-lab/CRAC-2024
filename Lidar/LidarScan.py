@@ -464,12 +464,13 @@ class LidarScanner:
         print("Programme de test")
         logging.info("Test program")
         while True:
+            keys = pygame.key.get_pressed()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     exit(0)
-                elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE or event.key == pygame.K_SPACE:
-                        exit(0)
+            
+            if keys[pygame.K_ESCAPE] or keys[pygame.K_SPACE]:
+                exit(0)
 
             scan = self.valeur_de_test()
             zone_objet = self.detect_object(scan)
@@ -488,7 +489,7 @@ class LidarScanner:
             #Déplacement du robot virtuel avec des touches du clavier
             x = self.ROBOT.x
             y = self.ROBOT.y
-            keys = pygame.key.get_pressed()
+            
             if keys[pygame.K_LEFT]:
                 x -= 10
             if keys[pygame.K_RIGHT]:

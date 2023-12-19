@@ -522,6 +522,58 @@ class LidarScanner:
             # Mettre à jour l'écran
             pygame.display.update()
 
+    def display_lidar_status(self):
+        # Obtenir l'état du lidar
+        try:
+            health = self.lidar.get_health()
+            status = health[0]
+            if status == 'Good':
+                status_color = self.GREEN
+            else:
+                status_color = self.RED
+        except:
+            status = 'Not connected'
+            status_color = self.RED
+
+        # Créer le texte de l'état
+        status_text = self.font.render('Lidar status: ' + status, True, status_color)
+
+        # Dessiner le texte de l'état
+        status_rect = status_text.get_rect(center=(self.WINDOW_SIZE[0] / 2, self.WINDOW_SIZE[1] - 30))
+        self.lcd.blit(status_text, status_rect)
+
+        # Mettre à jour l'écran
+        pygame.display.update()
+        time.sleep(3)
+    
+    def connexion_lidar(self):
+        # Connexion au lidar
+        try:
+            # Afficher l'état de connexion du lidar
+            self.lcd.fill(self.LIGHT_GREY)
+            self.draw_text_center("Connexion au LiDAR...", self.WINDOW_SIZE[0] / 2, self.WINDOW_SIZE[1] / 2)
+            pygame.display.update()
+            self.lidar = RPLidar(self.port)
+            self.lidar.connect()
+            logging.info("Lidar connected")
+            print("LiDAR connecté")
+            self.lcd.fill(self.LIGHT_GREY)
+            self.draw_text_center("LiDAR connecté", self.WINDOW_SIZE[0] / 2, self.WINDOW_SIZE[1] / 2)
+            pygame.display.update()
+
+            # Afficher le statut du lidar
+            self.display_lidar_status()
+        except Exception as e:
+            logging.error(f"Failed to create an instance of RPLidar: {e}")
+            print("Erreur lors de la création de l'instance du LiDAR")
+
+            self.lcd.fill(self.LIGHT_GREY)
+            self.draw_text_center("LiDAR non connecté", self.WINDOW_SIZE[0] / 2, self.WINDOW_SIZE[1] / 2)
+            pygame.display.update()
+            time.sleep(3)
+            self.programme_test()
+            raise
+        
     def valeur_de_test(self):
         scan = []
         for i in range(0,350,):
@@ -579,50 +631,6 @@ class LidarScanner:
             self.ROBOT.update_position(x, y)
 
             time.sleep(0.01)
-    
-    def anticiper_collision(robot_actuel, robot_adverse, duree_anticipation=1.0, pas_temps=0.1, distance_securite=50):
-        """
-        Anticipe les collisions entre le robot actuel et le robot adverse.
-
-        :param robot_actuel: Objet représentant le robot actuel
-        :param robot_adverse: Objet représentant le robot adverse
-        :param duree_anticipation: Durée d'anticipation en secondes
-        :param pas_temps: Pas de temps pour la simulation en secondes
-        :param distance_securite: Distance de sécurité minimale entre les robots
-        :return: True si une collision est anticipée, False sinon, et le chemin d'évitement proposé
-        """
-        # Copie des positions actuelles des robots
-        x_actuel, y_actuel = robot_actuel.x, robot_actuel.y
-        x_adverse, y_adverse = robot_adverse.x, robot_adverse.y
-
-        # Copie des vitesses actuelles des robots
-        vitesse_actuel, _ = robot_actuel.get_direction_speed()
-        vitesse_adverse, _ = robot_adverse.get_direction_speed()
-
-        # Simulation de mouvement pour anticiper la trajectoire future des robots
-        temps_total = duree_anticipation
-        for temps in range(int(duree_anticipation / pas_temps)):
-            # Calcul des nouvelles positions des robots
-            robot_actuel.calculate_dx_dy(robot_actuel.direction, vitesse_actuel, pas_temps)
-            robot_adverse.calculate_dx_dy(robot_adverse.direction, vitesse_adverse, pas_temps)
-
-            # Calcul de la distance entre les robots
-            distance_entre_robots = math.sqrt((robot_actuel.x - robot_adverse.x)**2 + (robot_actuel.y - robot_adverse.y)**2)
-
-            # Vérification de la collision anticipée
-            if distance_entre_robots < distance_securite:
-                # Collision anticipée, proposer un chemin d'évitement
-                chemin_evitement = [(x_actuel, y_actuel)]
-                for temps_evitement in range(int(duree_anticipation / pas_temps)):
-                    # Simulation de mouvement pour l'évitement
-                    robot_actuel.calculate_dx_dy(robot_actuel.direction, vitesse_actuel, pas_temps)
-
-                    chemin_evitement.append((robot_actuel.x, robot_actuel.y))
-
-                return True, chemin_evitement
-
-        # Pas de collision anticipée
-        return False, []
 
     def dessiner_trajectoires_anticipation(self, robot_actuel, robot_adverse, duree_anticipation=1.0, pas_temps=0.1, distance_securite=50):
         """
@@ -709,20 +717,9 @@ class LidarScanner:
         exit(0)
 
     def run(self):
+        
         try:
-            self.lidar = RPLidar(self.port)
-        except Exception as e:
-            logging.error(f"Failed to create an instance of RPLidar: {e}")
-            print("Erreur lors de la création de l'instance du LiDAR")
-            self.programme_test()
-            raise
-
-        try:
-            self.lidar.connect()
-            logging.info("Lidar connected")
-            print("LiDAR connecté")
-
-            #ComESP32(port="COM3", baudrate=115200).run()
+            self.connexion_lidar()
 
             self.draw_background()
             self.draw_robot(self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)
@@ -730,7 +727,6 @@ class LidarScanner:
 
             running = False
             while(running == False):
-                print("Appuyez sur espace pour commencer le scan")
                 keys = pygame.key.get_pressed()            
                 if keys[pygame.K_SPACE]:
                     running = True

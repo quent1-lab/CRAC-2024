@@ -232,10 +232,6 @@ class LidarScanner:
         pygame.display.update()
 
         logging.basicConfig(filename='lidar_scan.log', level=logging.INFO,datefmt='%d/%m/%Y %H:%M:%S',format='%(asctime)s - %(levelname)s - %(message)s')
-        
-        #Choix du port si aucun port n'est spécifié
-        if self.port == None:
-            self.port = self.interface_choix_port()
 
     def draw_robot(self, x, y, angle):
         pygame.draw.circle(self.lcd, pygame.Color(self.WHITE), (x * self.X_RATIO, y * self.Y_RATIO), 20)
@@ -553,10 +549,15 @@ class LidarScanner:
             self.lcd.fill(self.LIGHT_GREY)
             self.draw_text_center("Connexion au LiDAR...", self.WINDOW_SIZE[0] / 2, self.WINDOW_SIZE[1] / 2)
             pygame.display.update()
+
+            if self.port == None:
+                self.port = self.interface_choix_port()
+
             self.lidar = RPLidar(self.port)
             self.lidar.connect()
             logging.info("Lidar connected")
             print("LiDAR connecté")
+
             self.lcd.fill(self.LIGHT_GREY)
             self.draw_text_center("LiDAR connecté", self.WINDOW_SIZE[0] / 2, self.WINDOW_SIZE[1] / 2)
             pygame.display.update()

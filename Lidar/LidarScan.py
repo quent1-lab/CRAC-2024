@@ -452,6 +452,11 @@ class LidarScanner:
             logging.error("No port detected")
             self.programme_test()
             exit(0)
+        
+        # Si un seul port est détecté, le retourner
+        if len(ports) == 1:
+            logging.info(f"Port detected: {ports[0]}")
+            return ports[0]
 
         # Index du port actuellement sélectionné
         selected_port_index = 0
@@ -481,7 +486,7 @@ class LidarScanner:
                 self.draw_text(port, 10, 10 + i * 30, color)
 
             # Mettre à jour l'écran
-            pygame.display.flip()
+            pygame.display.update()
 
     def valeur_de_test(self):
         scan = []
@@ -690,12 +695,14 @@ class LidarScanner:
 
             running = False
             while(running == False):
+                print("Appuyez sur espace pour commencer le scan")
                 keys = pygame.key.get_pressed()            
                 if keys[pygame.K_SPACE]:
                     running = True
                     print("Début du scan")
                     logging.info("Starting scan")
                     break
+                pygame.display.update()
 
             while running:
 

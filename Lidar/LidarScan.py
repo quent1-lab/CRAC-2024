@@ -465,10 +465,9 @@ class LidarScanner:
         logging.info("Test program")
         while True:
             keys = pygame.key.get_pressed()
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    exit(0)
-            
+            quit = pygame.event.get(pygame.QUIT)
+            if quit:
+                exit(0)                            
             if keys[pygame.K_ESCAPE] or keys[pygame.K_SPACE]:
                 exit(0)
 
@@ -640,35 +639,33 @@ class LidarScanner:
 
         try:
             self.lidar.connect()
-            logging.info("Starting LiDAR motor")
-            print("Démarrage du moteur LiDAR")
+            logging.info("Lidar connected")
+            print("LiDAR connecté")
 
             #ComESP32(port="COM3", baudrate=115200).run()
 
             self.draw_background()
             self.draw_robot(self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)
             pygame.display.update()
-            print("Appuyez sur espace pour continuer")
+
             running = False
             while(running == False):
-                for event in pygame.event.get():
-                        if  event.type == pygame.KEYDOWN:
-                            if event.key == pygame.K_ESCAPE or event.key == pygame.K_SPACE:
-                                running = True
-                                print("Début du scan")
-                                break
+                keys = pygame.key.get_pressed()            
+                if keys[pygame.K_SPACE]:
+                    running = True
+                    print("Début du scan")
+                    logging.info("Starting scan")
+                    break
 
             while running:
 
-                for scan in self.lidar.iter_scans(8000):
-                    for event in pygame.event.get():
-                        if event.type == pygame.QUIT:
-                            self.stop()
-                            pass
-                        elif event.type == pygame.KEYDOWN:
-                            if event.key == pygame.K_ESCAPE or event.key == pygame.K_SPACE:
-                                self.stop()
-                                pass
+                for scan in self.lidar.iter_scans(4000):
+                    keys = pygame.key.get_pressed()
+                    quit = pygame.event.get(pygame.QUIT)
+                    if quit:
+                        self.stop()                    
+                    if keys[pygame.K_ESCAPE] or keys[pygame.K_SPACE]:
+                        self.stop()
                     
                     self.draw_background()
                     self.draw_robot(self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)

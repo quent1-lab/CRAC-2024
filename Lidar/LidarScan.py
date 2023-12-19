@@ -268,19 +268,19 @@ class LidarScanner:
     def draw_data(self):
         """Draws data to the pygame screen, on up left corner.For x, y and theta"""
         """Data is x, y and theta"""
-        self.draw_text("x: " + "{:.2f}".format(self.ROBOT.x), 10, 5)
-        self.draw_text("y: " + "{:.2f}".format(self.ROBOT.y), 10, 25)
-        self.draw_text("theta: " + "{:.2f}".format(self.ROBOT_ANGLE), 100, 15)
-        self.draw_text("speed: " + "{:.2f}".format(self.ROBOT.vitesse/10) + " cm/s", 200, 5)
-        self.draw_text("direction: " + "{:.2f}".format(self.ROBOT.direction), 200, 25)
+        window_width, window_height = pygame.display.get_surface().get_size()
+        self.draw_text("x: " + "{:.2f}".format(self.ROBOT.x), window_width * 0.01, window_height * 0.01)
+        self.draw_text("y: " + "{:.2f}".format(self.ROBOT.y), window_width * 0.01, window_height * 0.05)
+        self.draw_text("theta: " + "{:.2f}".format(self.ROBOT_ANGLE), window_width * 0.1, window_height * 0.03)
+        self.draw_text("speed: " + "{:.2f}".format(self.ROBOT.vitesse/10) + " cm/s", window_width * 0.2, window_height * 0.01)
+        self.draw_text("direction: " + "{:.2f}".format(self.ROBOT.direction), window_width * 0.2, window_height * 0.05)
 
         if(len(self.objets) > 0):
             '''Draws data, on up right corner.For x, y, speed and direction'''
-            self.draw_text("ID: " + "{:.2f}".format(self.objets[0].id), 800, 5)
-            self.draw_text("x: " + "{:.2f}".format(self.objets[0].x), 800, 25)
-            self.draw_text("y: " + "{:.2f}".format(self.objets[0].y), 800, 45)
-            self.draw_text("speed: " + "{:.2f}".format(self.objets[0].vitesse/10) + " cm/s", 900, 20)
-            self.draw_text("direction: " + "{:.2f}".format(self.objets[0].direction), 900, 40)          
+            self.draw_text("x: " + "{:.2f}".format(self.objets[0].x), window_width * 0.76, window_height * 0.01)
+            self.draw_text("y: " + "{:.2f}".format(self.objets[0].y), window_width * 0.76, window_height * 0.05)
+            self.draw_text("speed: " + "{:.2f}".format(self.objets[0].vitesse/10) + " cm/s", window_width * 0.86, window_height * 0.01)
+            self.draw_text("direction: " + "{:.2f}".format(self.objets[0].direction), window_width * 0.86, window_height * 0.05)      
 
     def draw_field(self):
         pygame.draw.rect(self.lcd, pygame.Color(100, 100, 100),

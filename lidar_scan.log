@@ -545,3 +545,7 @@ INFO:rplidar:Stoping scanning
 18/12/2023 23:51:46 - INFO - Test program
 19/12/2023 00:00:39 - ERROR - Invalid port (COM9 or more)
 19/12/2023 00:00:39 - INFO - Test program
+19/12/2023 10:34:28 - ERROR - No port detected
+19/12/2023 10:34:28 - INFO - Test program
+19/12/2023 10:38:17 - ERROR - No port detected
+19/12/2023 10:38:17 - INFO - Test program

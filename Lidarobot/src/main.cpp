@@ -135,10 +135,6 @@ void setup()
 {
   WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);// disable brownout detector
 
-  //xTaskCreatePinnedToCore(taskCommuniquer, "taskCommuniquer", 4096, NULL, 2, NULL, 0);
-  xTaskCreatePinnedToCore(taskMoteur, "taskMoteur", 4096, NULL, 1, NULL, 0);
-  xTaskCreatePinnedToCore(taskMiseAJourDonnees, "taskMiseAJourDonnees", 4096, NULL, 2, NULL, 0);
-
   // put your setup code here, to run once:
   Serial.begin(115200);
   pinMode(pinLed, OUTPUT);
@@ -152,6 +148,10 @@ void setup()
 
   // initialisation des boutons
   setup_bt(3);
+
+  //xTaskCreatePinnedToCore(taskCommuniquer, "taskCommuniquer", 4096, NULL, 2, NULL, 0);
+  xTaskCreatePinnedToCore(taskMoteur, "taskMoteur", 4096, NULL, 1, NULL, 0);
+  xTaskCreatePinnedToCore(taskMiseAJourDonnees, "taskMiseAJourDonnees", 4096, NULL, 2, NULL, 0);
 }
 
 void loop()

@@ -597,7 +597,7 @@ class LidarScanner:
         logging.info("Test program")
         
         try:
-            esp32 = ComESP32(port=self.interface_choix_port(), baudrate=115200)
+            esp32 = ComESP32(port=self.choix_du_port(), baudrate=115200)
             esp32.connect()
         except Exception as e:
             logging.error(f"Failed to connect to ESP32: {e}")

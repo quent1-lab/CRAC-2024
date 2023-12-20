@@ -612,7 +612,7 @@ class LidarScanner:
             if keys[pygame.K_ESCAPE] or keys[pygame.K_SPACE]:
                 exit(0)
 
-            print(esp32.receive())
+            print(esp32.load_json(esp32.receive()))
 
             scan = self.valeur_de_test()
             zone_objet = self.detect_object(scan)

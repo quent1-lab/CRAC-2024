@@ -170,7 +170,7 @@ void Encodeur::odometrie()
     this->x += deltaS * cos(this->theta);
     this->y += deltaS * sin(this->theta);
 
-    print(this->countD,this->countG);
+    //print(this->countD,this->countG);
     
     // Mise à jour des variables
     this->oldPositionD = this->countD;

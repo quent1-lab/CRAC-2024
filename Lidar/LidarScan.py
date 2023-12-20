@@ -17,17 +17,23 @@ class ComESP32:
         self.port = port
         self.baudrate = baudrate
         self.esp32 = None
+        self.connected = False
 
     def connect(self):
         try:
             self.esp32 = serial.Serial(self.port, self.baudrate)
+            self.connected = True
         except Exception as e:
             logging.error(f"Failed to connect to ESP32: {e}")
             raise
+    
+    def get_status(self):
+        return self.connected
 
     def disconnect(self):
         try:
             self.esp32.close()
+            self.connected = False
         except Exception as e:
             logging.error(f"Failed to disconnect from ESP32: {e}")
             raise
@@ -41,9 +47,11 @@ class ComESP32:
 
     def receive(self):
         try:
-            return self.esp32.readline()
+            #Renvoie les données reçues par l'ESP32 en enlevant les deux premiers caractères et le dernier
+            return self.esp32.readline().decode()[2:-1]
         except Exception as e:
             logging.error(f"Failed to receive data from ESP32: {e}")
+            print("Failed to receive data from ESP32")
             raise
 
     def load_json(self, data):
@@ -51,6 +59,7 @@ class ComESP32:
             return json.loads(data)
         except Exception as e:
             logging.error(f"Failed to unload JSON: {e}")
+            print("Failed to unload JSON")
             raise
 
     def run(self):

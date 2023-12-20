@@ -508,6 +508,15 @@ class LidarScanner:
     def programme_test(self):
         print("Programme de test")
         logging.info("Test program")
+        
+        try:
+            esp32 = ComESP32(port=self.interface_choix_port(), baudrate=115200)
+            esp32.connect()
+        except Exception as e:
+            logging.error(f"Failed to connect to ESP32: {e}")
+            print("Erreur de connexion à l'ESP32")
+            raise
+        
         while True:
             keys = pygame.key.get_pressed()
             quit = pygame.event.get(pygame.QUIT)
@@ -515,6 +524,8 @@ class LidarScanner:
                 exit(0)                            
             if keys[pygame.K_ESCAPE] or keys[pygame.K_SPACE]:
                 exit(0)
+
+            print(esp32.receive())
 
             scan = self.valeur_de_test()
             zone_objet = self.detect_object(scan)

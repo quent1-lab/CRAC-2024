@@ -109,7 +109,7 @@ Encodeur encodeur(pinEncodeurDroitB, pinEncodeurDroitA, pinEncodeurGaucheA, pinE
 void taskCommuniquer(void *pvParameters) {
     while (1) {
         // Appeler la fonction de communication ici
-        //envoie_JSON();
+        envoie_JSON();
         //reception();
         vTaskDelay(pdMS_TO_TICKS(100));  // Delay de 100ms
     }
@@ -149,7 +149,7 @@ void setup()
   // initialisation des boutons
   setup_bt(3);
 
-  //xTaskCreatePinnedToCore(taskCommuniquer, "taskCommuniquer", 4096, NULL, 2, NULL, 0);
+  xTaskCreatePinnedToCore(taskCommuniquer, "taskCommuniquer", 4096, NULL, 2, NULL, 0);
   xTaskCreatePinnedToCore(taskMoteur, "taskMoteur", 4096, NULL, 1, NULL, 0);
   xTaskCreatePinnedToCore(taskMiseAJourDonnees, "taskMiseAJourDonnees", 4096, NULL, 2, NULL, 0);
 }
@@ -259,12 +259,7 @@ String formatage_JSON()
 void envoie_JSON()
 {
   //Envoie les données du robot en JSON toutes les 100ms
-  static unsigned long t0 = millis();
-  if (millis() - t0 > 100)
-  {
-    t0 = millis();
-    envoie(formatage_JSON());
-  }
+  envoie(formatage_JSON());
 }
 
 void mise_a_jour_donnees(){

@@ -595,3 +595,65 @@ INFO:rplidar:Stoping scanning
 19/12/2023 15:28:33 - INFO - Lidar connected
 19/12/2023 15:28:43 - INFO - Stopping LiDAR motor
 19/12/2023 15:28:43 - INFO - Stoping scanning
+19/12/2023 18:26:19 - INFO - Port detected: COM10
+19/12/2023 18:26:24 - ERROR - Failed to create an instance of RPLidar: Failed to connect to the sensor due to: could not open port 'COM10': OSError(22, 'Le délai de temporisation de sémaphore a expiré.', None, 121)
+19/12/2023 18:26:24 - INFO - Test program
+19/12/2023 18:29:23 - INFO - Port detected: COM10
+19/12/2023 18:29:28 - ERROR - Failed to create an instance of RPLidar: Failed to connect to the sensor due to: could not open port 'COM10': OSError(22, 'Le délai de temporisation de sémaphore a expiré.', None, 121)
+19/12/2023 18:29:28 - INFO - Test program
+19/12/2023 18:31:01 - INFO - Port detected: COM9
+19/12/2023 18:31:01 - INFO - Starting motor
+19/12/2023 18:46:18 - INFO - Port detected: COM10
+19/12/2023 18:46:23 - ERROR - Failed to create an instance of RPLidar: Failed to connect to the sensor due to: could not open port 'COM10': OSError(22, 'Le délai de temporisation de sémaphore a expiré.', None, 121)
+19/12/2023 18:46:23 - INFO - Test program
+19/12/2023 18:49:46 - INFO - Starting motor
+19/12/2023 18:49:46 - ERROR - Failed to create an instance of RPLidar: Attempting to use a port that is not open
+19/12/2023 18:49:46 - INFO - Test program
+19/12/2023 18:50:23 - INFO - Starting motor
+19/12/2023 18:50:23 - ERROR - Failed to create an instance of RPLidar: Attempting to use a port that is not open
+19/12/2023 18:50:23 - INFO - Test program
+19/12/2023 18:51:47 - INFO - Starting motor
+19/12/2023 18:51:47 - ERROR - Failed to create an instance of RPLidar: Attempting to use a port that is not open
+19/12/2023 18:51:47 - INFO - Test program
+19/12/2023 18:52:34 - INFO - Starting motor
+19/12/2023 18:52:34 - ERROR - Failed to create an instance of RPLidar: Attempting to use a port that is not open
+19/12/2023 18:52:34 - INFO - Test program
+19/12/2023 18:53:35 - INFO - Starting motor
+19/12/2023 18:53:35 - ERROR - Failed to create an instance of RPLidar: Attempting to use a port that is not open
+19/12/2023 18:53:35 - INFO - Test program
+19/12/2023 19:02:48 - INFO - Port detected: M
+19/12/2023 19:02:48 - ERROR - Failed to create an instance of RPLidar: Failed to connect to the sensor due to: could not open port 'M': FileNotFoundError(2, 'Le fichier spécifié est introuvable.', None, 2)
+19/12/2023 19:02:48 - INFO - Test program
+19/12/2023 19:03:27 - INFO - Port detected: 9
+19/12/2023 19:03:27 - ERROR - Failed to create an instance of RPLidar: Failed to connect to the sensor due to: could not open port '9': FileNotFoundError(2, 'Le fichier spécifié est introuvable.', None, 2)
+19/12/2023 19:03:27 - INFO - Test program
+19/12/2023 19:03:55 - INFO - Port detected: C
+19/12/2023 19:03:55 - ERROR - Failed to create an instance of RPLidar: Failed to connect to the sensor due to: could not open port 'C': FileNotFoundError(2, 'Le fichier spécifié est introuvable.', None, 2)
+19/12/2023 19:03:55 - INFO - Test program
+19/12/2023 19:05:34 - INFO - Port detected: COM10
+19/12/2023 19:05:40 - ERROR - Failed to create an instance of RPLidar: Failed to connect to the sensor due to: could not open port 'COM10': OSError(22, 'Le délai de temporisation de sémaphore a expiré.', None, 121)
+19/12/2023 19:05:40 - INFO - Test program
+19/12/2023 19:06:21 - INFO - Port detected: COM9
+19/12/2023 19:06:21 - INFO - Starting motor
+19/12/2023 19:11:38 - INFO - Port detected: COM10
+19/12/2023 19:11:59 - INFO - Port detected: COM10
+19/12/2023 19:12:17 - INFO - Port detected: COM10
+19/12/2023 19:12:22 - ERROR - Failed to create an instance of RPLidar: Failed to connect to the sensor due to: could not open port 'COM10': OSError(22, 'Le délai de temporisation de sémaphore a expiré.', None, 121)
+19/12/2023 19:12:22 - INFO - Test program
+19/12/2023 19:12:57 - INFO - Port detected: COM10
+19/12/2023 19:13:02 - ERROR - Failed to create an instance of RPLidar: Failed to connect to the sensor due to: could not open port 'COM10': OSError(22, 'Le délai de temporisation de sémaphore a expiré.', None, 121)
+19/12/2023 19:13:02 - INFO - Test program
+19/12/2023 19:13:23 - INFO - Port detected: COM10
+19/12/2023 19:13:29 - ERROR - Failed to create an instance of RPLidar: Failed to connect to the sensor due to: could not open port 'COM10': OSError(22, 'Le délai de temporisation de sémaphore a expiré.', None, 121)
+19/12/2023 19:13:29 - INFO - Test program
+19/12/2023 19:14:14 - INFO - Port detected: COM10
+19/12/2023 19:14:20 - ERROR - Failed to create an instance of RPLidar: Failed to connect to the sensor due to: could not open port 'COM10': OSError(22, 'Le délai de temporisation de sémaphore a expiré.', None, 121)
+19/12/2023 19:14:20 - INFO - Test program
+19/12/2023 19:14:33 - INFO - Port detected: COM10
+19/12/2023 19:14:38 - ERROR - Failed to create an instance of RPLidar: Failed to connect to the sensor due to: could not open port 'COM10': OSError(22, 'Le délai de temporisation de sémaphore a expiré.', None, 121)
+19/12/2023 19:14:38 - INFO - Test program
+19/12/2023 20:29:08 - INFO - Port detected: COM10
+19/12/2023 20:29:21 - INFO - Stopping LiDAR motor
+19/12/2023 20:30:00 - INFO - Port detected: COM10
+19/12/2023 20:30:05 - ERROR - Failed to create an instance of RPLidar: Failed to connect to the sensor due to: could not open port 'COM10': OSError(22, 'Le délai de temporisation de sémaphore a expiré.', None, 121)
+19/12/2023 20:30:10 - INFO - Test program

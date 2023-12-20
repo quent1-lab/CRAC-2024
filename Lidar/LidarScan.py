@@ -2,6 +2,7 @@ from collections.abc import Iterable
 import logging
 from rplidar import RPLidar
 import pygame
+from pygame.locals import *
 import math
 import random
 import time
@@ -193,6 +194,7 @@ class LidarScanner:
         self.BLACK = (0, 0, 0)
         self.WHITE = (255, 255, 255)
         self.LIGHT_GREY = (200, 200, 200)
+        self.GREEN = (0, 255, 0)
         self.FIELD_SIZE = (3000, 2000)
         self.BORDER_DISTANCE = 200
         self.POINT_COLOR = (255, 0, 0)
@@ -230,10 +232,6 @@ class LidarScanner:
         pygame.display.update()
 
         logging.basicConfig(filename='lidar_scan.log', level=logging.INFO,datefmt='%d/%m/%Y %H:%M:%S',format='%(asctime)s - %(levelname)s - %(message)s')
-        
-        #Choix du port si aucun port n'est spécifié
-        if self.port == None:
-            self.port = self.interface_choix_port()
 
     def draw_robot(self, x, y, angle):
         pygame.draw.circle(self.lcd, pygame.Color(self.WHITE), (x * self.X_RATIO, y * self.Y_RATIO), 20)
@@ -264,6 +262,11 @@ class LidarScanner:
         """Draws text to the pygame screen, on up left corner"""
         text = self.font.render(text, True, color, pygame.Color(self.BACKGROUND_COLOR))
         self.lcd.blit(text, (x, y))
+
+    def draw_text_center(self, text, x, y, color=(0, 0, 0)):
+        text_surface = self.font.render(text, True, color, pygame.Color(self.BACKGROUND_COLOR))
+        text_rect = text_surface.get_rect(center=(x, y))
+        self.lcd.blit(text_surface, text_rect)
 
     def draw_data(self):
         """Draws data to the pygame screen, on up left corner.For x, y and theta"""
@@ -466,28 +469,112 @@ class LidarScanner:
         while running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    running = False
+                    exit(0)
                 elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_UP:
+                    if event.key == pygame.K_SPACE:
+                        exit(0)
+                    elif event.key == pygame.K_UP:
                         selected_port_index = (selected_port_index - 1) % len(ports)
                     elif event.key == pygame.K_DOWN:
                         selected_port_index = (selected_port_index + 1) % len(ports)
                     elif event.key == pygame.K_RETURN:
                         logging.info(f"Port detected: {ports[selected_port_index]}")
                         print("Port détecté: " + ports[selected_port_index])
+                        self.draw_text_center("Port choisi: " + ports[selected_port_index], self.WINDOW_SIZE[0] / 2, self.WINDOW_SIZE[1] / 2)
+                        self.draw_text_center("En connexion...", self.WINDOW_SIZE[0] / 2, self.WINDOW_SIZE[1] / 2 + 30)
+                        pygame.display.update()
+                        running = False
                         return ports[selected_port_index]
+                elif event.type == MOUSEBUTTONDOWN:
+                    mouse_x, mouse_y = pygame.mouse.get_pos()
+                    for i in range(len(ports)):
+                        if 90 + i * 40 <= mouse_y <= 110 + i * 40:  # Vérifier si le clic est sur le texte
+                            logging.info(f"Port detected: {ports[i]}")
+                            print("Port détecté: " + ports[i])
+                            self.draw_text_center("Port choisi: " + ports[i], self.WINDOW_SIZE[0] / 2, self.WINDOW_SIZE[1] / 2)
+                            self.draw_text_center("En connexion...", self.WINDOW_SIZE[0] / 2, self.WINDOW_SIZE[1] / 2 + 30)
+                            pygame.display.update()
+                            running = False
+                            return ports[i]
 
             # Effacer l'écran
             self.lcd.fill(self.LIGHT_GREY)
 
-            # Dessiner la liste des ports
-            for i, port in enumerate(ports):
-                color = (255, 255, 255) if i == selected_port_index else (100, 100, 100)
-                self.draw_text(port, 10, 10 + i * 30, color)
+            # Dessiner le texte centré sur l'écran
+            self.draw_text_center("Choix du port", self.WINDOW_SIZE[0] / 2, 20)
+            self.draw_text_center("Appuyez sur Entrée pour sélectionner le port", self.WINDOW_SIZE[0] / 2, 50)
+
+            # Dessiner la liste des ports avec des carrés pour indiquer le port sélectionné
+            for i in range(len(ports)):
+                text = ports[i]
+                text_surface = self.font.render(text, True, self.BLACK)
+                text_rect = text_surface.get_rect(center=(self.WINDOW_SIZE[0] / 2, 100 + i * 40))
+
+                if i == selected_port_index:
+                    pygame.draw.rect(self.lcd, pygame.Color(self.GREEN), text_rect.inflate(20, 10), 2)
+
+                self.lcd.blit(text_surface, text_rect)
 
             # Mettre à jour l'écran
             pygame.display.update()
 
+    def display_lidar_status(self):
+        # Obtenir l'état du lidar
+        try:
+            health = self.lidar.get_health()
+            status = health[0]
+            if status == 'Good':
+                status_color = self.GREEN
+            else:
+                status_color = self.RED
+        except:
+            status = 'Not connected'
+            status_color = self.RED
+
+        # Créer le texte de l'état
+        status_text = self.font.render('Lidar status: ' + status, True, status_color)
+
+        # Dessiner le texte de l'état
+        status_rect = status_text.get_rect(center=(self.WINDOW_SIZE[0] / 2, self.WINDOW_SIZE[1] - 30))
+        self.lcd.blit(status_text, status_rect)
+
+        # Mettre à jour l'écran
+        pygame.display.update()
+        time.sleep(3)
+    
+    def connexion_lidar(self):
+        # Connexion au lidar
+        try:
+            # Afficher l'état de connexion du lidar
+            self.lcd.fill(self.LIGHT_GREY)
+            self.draw_text_center("Connexion au LiDAR...", self.WINDOW_SIZE[0] / 2, self.WINDOW_SIZE[1] / 2)
+            pygame.display.update()
+
+            if self.port == None:
+                self.port = self.interface_choix_port()
+
+            self.lidar = RPLidar(self.port)
+            self.lidar.connect()
+            logging.info("Lidar connected")
+            print("LiDAR connecté")
+
+            self.lcd.fill(self.LIGHT_GREY)
+            self.draw_text_center("LiDAR connecté", self.WINDOW_SIZE[0] / 2, self.WINDOW_SIZE[1] / 2)
+            pygame.display.update()
+
+            # Afficher le statut du lidar
+            self.display_lidar_status()
+        except Exception as e:
+            logging.error(f"Failed to create an instance of RPLidar: {e}")
+            print("Erreur lors de la création de l'instance du LiDAR")
+
+            self.lcd.fill(self.LIGHT_GREY)
+            self.draw_text_center("LiDAR non connecté", self.WINDOW_SIZE[0] / 2, self.WINDOW_SIZE[1] / 2)
+            pygame.display.update()
+            time.sleep(3)
+            self.programme_test()
+            raise
+        
     def valeur_de_test(self):
         scan = []
         for i in range(0,350,):
@@ -556,50 +643,6 @@ class LidarScanner:
             self.ROBOT.update_position(x, y)
 
             time.sleep(0.01)
-    
-    def anticiper_collision(robot_actuel, robot_adverse, duree_anticipation=1.0, pas_temps=0.1, distance_securite=50):
-        """
-        Anticipe les collisions entre le robot actuel et le robot adverse.
-
-        :param robot_actuel: Objet représentant le robot actuel
-        :param robot_adverse: Objet représentant le robot adverse
-        :param duree_anticipation: Durée d'anticipation en secondes
-        :param pas_temps: Pas de temps pour la simulation en secondes
-        :param distance_securite: Distance de sécurité minimale entre les robots
-        :return: True si une collision est anticipée, False sinon, et le chemin d'évitement proposé
-        """
-        # Copie des positions actuelles des robots
-        x_actuel, y_actuel = robot_actuel.x, robot_actuel.y
-        x_adverse, y_adverse = robot_adverse.x, robot_adverse.y
-
-        # Copie des vitesses actuelles des robots
-        vitesse_actuel, _ = robot_actuel.get_direction_speed()
-        vitesse_adverse, _ = robot_adverse.get_direction_speed()
-
-        # Simulation de mouvement pour anticiper la trajectoire future des robots
-        temps_total = duree_anticipation
-        for temps in range(int(duree_anticipation / pas_temps)):
-            # Calcul des nouvelles positions des robots
-            robot_actuel.calculate_dx_dy(robot_actuel.direction, vitesse_actuel, pas_temps)
-            robot_adverse.calculate_dx_dy(robot_adverse.direction, vitesse_adverse, pas_temps)
-
-            # Calcul de la distance entre les robots
-            distance_entre_robots = math.sqrt((robot_actuel.x - robot_adverse.x)**2 + (robot_actuel.y - robot_adverse.y)**2)
-
-            # Vérification de la collision anticipée
-            if distance_entre_robots < distance_securite:
-                # Collision anticipée, proposer un chemin d'évitement
-                chemin_evitement = [(x_actuel, y_actuel)]
-                for temps_evitement in range(int(duree_anticipation / pas_temps)):
-                    # Simulation de mouvement pour l'évitement
-                    robot_actuel.calculate_dx_dy(robot_actuel.direction, vitesse_actuel, pas_temps)
-
-                    chemin_evitement.append((robot_actuel.x, robot_actuel.y))
-
-                return True, chemin_evitement
-
-        # Pas de collision anticipée
-        return False, []
 
     def dessiner_trajectoires_anticipation(self, robot_actuel, robot_adverse, duree_anticipation=1.0, pas_temps=0.1, distance_securite=50):
         """
@@ -686,19 +729,9 @@ class LidarScanner:
         exit(0)
 
     def run(self):
+        
         try:
-            self.lidar = RPLidar(self.port)
-        except Exception as e:
-            logging.error(f"Failed to create an instance of RPLidar: {e}")
-            self.programme_test()
-            raise
-
-        try:
-            self.lidar.connect()
-            logging.info("Lidar connected")
-            print("LiDAR connecté")
-
-            #ComESP32(port="COM3", baudrate=115200).run()
+            self.connexion_lidar()
 
             self.draw_background()
             self.draw_robot(self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)
@@ -706,7 +739,6 @@ class LidarScanner:
 
             running = False
             while(running == False):
-                print("Appuyez sur espace pour commencer le scan")
                 keys = pygame.key.get_pressed()            
                 if keys[pygame.K_SPACE]:
                     running = True

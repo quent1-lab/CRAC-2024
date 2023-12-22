@@ -819,7 +819,7 @@ class LidarScanner:
                         self.stop()
                     
                     if esp32.get_status():
-                        print(esp32.load_json(esp32.receive()))
+                        print(esp32.receive())
                     
                     self.draw_background()
                     self.draw_robot(self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)

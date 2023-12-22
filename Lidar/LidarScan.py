@@ -785,6 +785,7 @@ class LidarScanner:
         try:
             esp32 = ComESP32(port="/dev/ttyUSB0", baudrate=115200)
             esp32.connect()
+            print("esp32 connected")
         except Exception as e:
             logging.error(f"Failed to connect to ESP32: {e}")
             print("Erreur de connexion à l'ESP32")

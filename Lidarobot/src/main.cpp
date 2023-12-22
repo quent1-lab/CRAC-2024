@@ -127,7 +127,7 @@ void taskMiseAJourDonnees(void *pvParameters) {
     while (1) {
         // Appeler la fonction de mise à jour des données ici
         mise_a_jour_donnees();
-        vTaskDelay(pdMS_TO_TICKS(10));  // Delay de 10ms
+        vTaskDelay(pdMS_TO_TICKS(20));  // Delay de 20ms
     }
 }
 

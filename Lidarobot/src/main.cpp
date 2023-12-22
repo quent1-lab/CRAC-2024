@@ -217,6 +217,8 @@ void read_bt(int nb_bt)
 /*------------------------------------ Fonction moteur ---------------------------------------*/
 void moteur()
 {
+  countD = encodeur.get_countD();
+  countG = encodeur.get_countG();
   moteurGauche.moteur();
   moteurDroit.moteur();
 }
@@ -264,12 +266,12 @@ void envoie_JSON()
 
 void mise_a_jour_donnees(){
   //Met à jour les données du robot
+  countD = encodeur.get_countD();
+  countG = encodeur.get_countG();
   encodeur.odometrie();
   x = encodeur.get_x();
   y = encodeur.get_y();
   theta = encodeur.get_theta();
-  countD = encodeur.get_countD();
-  countG = encodeur.get_countG();
 }
 
 /*-------------------------------- Fonction de déplacement -----------------------------------*/

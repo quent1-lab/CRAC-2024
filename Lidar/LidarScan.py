@@ -17,17 +17,23 @@ class ComESP32:
         self.port = port
         self.baudrate = baudrate
         self.esp32 = None
+        self.connected = False
 
     def connect(self):
         try:
             self.esp32 = serial.Serial(self.port, self.baudrate)
+            self.connected = True
         except Exception as e:
             logging.error(f"Failed to connect to ESP32: {e}")
             raise
+    
+    def get_status(self):
+        return self.connected
 
     def disconnect(self):
         try:
             self.esp32.close()
+            self.connected = False
         except Exception as e:
             logging.error(f"Failed to disconnect from ESP32: {e}")
             raise
@@ -41,9 +47,11 @@ class ComESP32:
 
     def receive(self):
         try:
-            return self.esp32.readline()
+            #Renvoie les données reçues par l'ESP32 en enlevant les deux premiers caractères et le dernier
+            return self.esp32.readline().decode()[2:-1]
         except Exception as e:
             logging.error(f"Failed to receive data from ESP32: {e}")
+            print("Failed to receive data from ESP32")
             raise
 
     def load_json(self, data):
@@ -51,6 +59,7 @@ class ComESP32:
             return json.loads(data)
         except Exception as e:
             logging.error(f"Failed to unload JSON: {e}")
+            print("Failed to unload JSON")
             raise
 
     def run(self):
@@ -393,6 +402,48 @@ class LidarScanner:
             nouvel_objet = Objet(self.id_compteur, x, y, taille)
             self.objets.append(nouvel_objet)
 
+    def detect_objects(self, scan, taille_min=0, taille_max=100):
+        objets_detectes = []
+
+        for point in scan:
+            distance = point[2]
+            angle = point[1]
+
+            # Calcul des coordonnées du point dans le repère absolu
+            x = self.X_ROBOT + distance * math.cos(math.radians(angle))
+            y = self.Y_ROBOT + distance * math.sin(math.radians(angle))
+
+            # Filtrer les points en fonction de la taille
+            if taille_min <= point[2] <= taille_max:
+                objets_detectes.append((x, y, point[2]))
+
+        # Traiter les objets détectés
+        for objet in objets_detectes:
+            x, y, taille = objet
+
+            # Vérifier si l'objet est déjà suivi
+            objet_existant = self.trouver_objet_existants(x, y, taille)
+
+            if objet_existant:
+                # Si l'objet est déjà suivi, mettre à jour ses coordonnées
+                objet_existant.update_position(x, y)
+            else:
+                # Si l'objet n'est pas déjà suivi, créer un nouvel objet
+                self.id_compteur += 1
+                nouvel_objet = Objet(self.id_compteur, x, y, taille)
+                self.objets.append(nouvel_objet)
+
+        return self.objets
+
+    def trouver_objet_existants(self, x, y, taille, seuil_distance=100):
+        # Vérifier si l'objet est déjà suivi
+        for objet in self.objets:
+            distance = math.sqrt((x - objet.x)**2 + (y - objet.y)**2)
+            if distance < seuil_distance:
+                return objet
+        return None
+
+
     def choix_du_port(self):
         ports = serial.tools.list_ports.comports()
 
@@ -612,7 +663,8 @@ class LidarScanner:
             if keys[pygame.K_ESCAPE] or keys[pygame.K_SPACE]:
                 exit(0)
 
-            print(esp32.load_json(esp32.receive()))
+            if esp32.get_status():
+                print(esp32.load_json(esp32.receive()))
 
             scan = self.valeur_de_test()
             zone_objet = self.detect_object(scan)

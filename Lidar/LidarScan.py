@@ -609,6 +609,8 @@ class LidarScanner:
             logging.info("Lidar connected")
             print("LiDAR connecté")
 
+            self.lidar.start_motor()
+
             self.lcd.fill(self.LIGHT_GREY)
             self.draw_text_center("LiDAR connecté", self.WINDOW_SIZE[0] / 2, self.WINDOW_SIZE[1] / 2)
             pygame.display.update()

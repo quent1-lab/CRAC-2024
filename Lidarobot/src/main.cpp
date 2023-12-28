@@ -20,6 +20,7 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "freertos/queue.h"
+#include <ArduinoJson.h>
 
 /*-------------------------------- DEFINE --------------------------------------*/
 
@@ -110,7 +111,7 @@ void taskCommuniquer(void *pvParameters) {
     while (1) {
         // Appeler la fonction de communication ici
         envoie_JSON();
-        //reception();
+        String message = reception();
         vTaskDelay(pdMS_TO_TICKS(100));  // Delay de 100ms
     }
 }
@@ -239,7 +240,25 @@ String reception()
   {
     message += char(Serial.read());
   }
-  return message;
+  if(message == ""){
+    return "";
+  }
+  //supprimer les caractères inutiles du message
+  message.replace("b", "");
+  message.replace("'", "");
+  //Charger le message dans un JSON
+  DynamicJsonDocument json(1024);
+  DeserializationError error = deserializeJson(json, message);
+  if (error)
+  {
+    Serial.print(F("deserializeJson() failed: "));
+    Serial.println(error.f_str());
+    return "";
+  }
+  //Récupérer les données du JSON
+  x = json["x"];
+  y = json["y"];
+  return "";
 }
 
 String formatage_JSON()

@@ -7401,3 +7401,1286 @@ INFO:rplidar:Stoping scanning
 29/12/2023 00:07:06 - ERROR - Failed to unload JSON: Extra data: line 1 column 34 (char 33)
 29/12/2023 00:07:06 - INFO - Stopping LiDAR motor
 29/12/2023 00:07:06 - INFO - Stoping scanning
+29/12/2023 00:12:42 - INFO - Port detected: COM3
+29/12/2023 00:12:42 - INFO - Lidar connected
+29/12/2023 00:12:44 - INFO - Starting motor
+29/12/2023 00:12:46 - ERROR - Failed to receive data from ESP32: 'utf-8' codec can't decode byte 0xf8 in position 0: invalid start byte
+29/12/2023 00:13:35 - INFO - Port detected: COM3
+29/12/2023 00:13:35 - INFO - Lidar connected
+29/12/2023 00:13:37 - INFO - Stoping scanning
+29/12/2023 00:13:38 - INFO - Starting motor
+29/12/2023 00:13:40 - ERROR - Failed to unload JSON: Extra data: line 1 column 34 (char 33)
+29/12/2023 00:13:40 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:13:40 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:13:40 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:13:58 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:13:58 - ERROR - Failed to unload JSON: Extra data: line 1 column 34 (char 33)
+29/12/2023 00:13:58 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:13:58 - ERROR - Failed to unload JSON: Extra data: line 1 column 34 (char 33)
+29/12/2023 00:14:00 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:14:09 - ERROR - Failed to unload JSON: Extra data: line 1 column 34 (char 33)
+29/12/2023 00:14:09 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:14:44 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:14:47 - ERROR - Failed to unload JSON: Extra data: line 1 column 34 (char 33)
+29/12/2023 00:14:48 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:14:49 - ERROR - Failed to unload JSON: Extra data: line 1 column 34 (char 33)
+29/12/2023 00:14:49 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:14:49 - ERROR - Failed to unload JSON: Extra data: line 1 column 34 (char 33)
+29/12/2023 00:14:50 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:14:50 - ERROR - Failed to unload JSON: Extra data: line 1 column 34 (char 33)
+29/12/2023 00:14:50 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:14:50 - ERROR - Failed to unload JSON: Extra data: line 1 column 34 (char 33)
+29/12/2023 00:14:50 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:14:57 - ERROR - Failed to unload JSON: Extra data: line 1 column 35 (char 34)
+29/12/2023 00:14:59 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:00 - ERROR - Failed to unload JSON: Extra data: line 1 column 35 (char 34)
+29/12/2023 00:15:02 - INFO - Stopping LiDAR motor
+29/12/2023 00:15:02 - INFO - Stoping scanning
+29/12/2023 00:15:16 - INFO - Port detected: COM3
+29/12/2023 00:15:16 - INFO - Lidar connected
+29/12/2023 00:15:18 - INFO - Starting motor
+29/12/2023 00:15:20 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 00:15:20 - ERROR - Failed to unload JSON: Expecting value: line 2 column 1 (char 2)
+29/12/2023 00:15:20 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 00:15:20 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 00:15:20 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 00:15:20 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 00:15:20 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 00:15:20 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 00:15:20 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 00:15:20 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 00:15:21 - ERROR - Failed to unload JSON: Extra data: line 1 column 33 (char 32)
+29/12/2023 00:15:35 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:35 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:35 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:35 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:35 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:35 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:35 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:35 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:35 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:35 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:35 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:35 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:35 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:35 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:36 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:36 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:36 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:36 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:36 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:36 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:36 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:36 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:36 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:36 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:36 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:36 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:36 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:36 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:36 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:36 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:36 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:36 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:36 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:36 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:37 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:37 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:37 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:37 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:37 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:37 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:37 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:37 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:37 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:37 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:37 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:37 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:37 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:37 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:37 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:37 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:37 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:37 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:37 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:37 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:38 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:38 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:38 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:38 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:38 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:38 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:38 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:38 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:38 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:38 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:38 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:38 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:38 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:38 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:38 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:38 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:38 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:38 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:38 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:38 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:39 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:39 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:39 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:39 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:39 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:39 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:39 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:39 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:39 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:39 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:39 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:39 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:39 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:39 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:39 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:39 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:39 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:39 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:39 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:39 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:40 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:40 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:40 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:40 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:40 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:40 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:40 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:40 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:40 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:40 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:40 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:40 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:40 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:40 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:40 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:40 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:40 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:40 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:40 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:40 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:41 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:41 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:41 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:41 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:41 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:41 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:41 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:41 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:41 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:41 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:41 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:41 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:41 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:41 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:41 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:41 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:41 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:41 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:41 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:41 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:42 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:42 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:42 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:42 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:42 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:42 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:42 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:42 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:42 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:42 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:42 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:42 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:42 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:42 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:42 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:42 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:42 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:42 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:42 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:42 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:43 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:43 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:43 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:43 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:43 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:43 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:43 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:43 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:43 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:43 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:43 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:43 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:43 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:43 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:43 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:43 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:43 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:43 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:43 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:43 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:44 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:44 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:44 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:44 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:44 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:44 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:44 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:44 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:44 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:44 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:44 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:44 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:44 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:44 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:44 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:44 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:44 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:44 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:44 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:44 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:45 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:45 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:45 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:45 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:45 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:45 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:45 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:45 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:45 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:45 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:45 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:45 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:45 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:45 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:45 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:45 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:45 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:45 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:45 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:45 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:46 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:46 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:46 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:46 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:46 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:46 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:46 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:46 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:46 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:46 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:46 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:46 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:46 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:46 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:46 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:46 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:46 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:46 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:46 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:46 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:47 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:47 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:47 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:47 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:47 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:47 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:47 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:47 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:47 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:47 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:47 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:47 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:47 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:47 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:47 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:47 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:47 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:47 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:47 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:47 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:48 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:48 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:48 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:48 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:48 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:48 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:48 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:48 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:48 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:48 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:48 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:48 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:48 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:48 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:48 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:48 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:48 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:48 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:48 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:48 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:49 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:49 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:49 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:49 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:49 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:49 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:49 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:49 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:49 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:49 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:49 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:49 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:49 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:49 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:49 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:49 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:49 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:49 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:49 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:49 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:50 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:50 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:50 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:50 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:50 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:50 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:50 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:50 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:50 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:50 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:50 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:50 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:50 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:50 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:50 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:50 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:50 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:50 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:50 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:50 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:51 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:51 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:51 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:51 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:51 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:51 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:51 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:51 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:51 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:51 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:51 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:51 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:51 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:51 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:51 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:51 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:51 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:51 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:51 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:51 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:52 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:52 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:52 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:52 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:52 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:52 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:52 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:52 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:52 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:52 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:52 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:52 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:52 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:52 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:52 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:52 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:52 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:52 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:52 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:52 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:53 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:53 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:53 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:53 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:53 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:53 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:53 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:53 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:53 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:53 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:53 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:53 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:53 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:53 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:53 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:53 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:53 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:53 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:53 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:53 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:54 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:54 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:54 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:54 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:54 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:54 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:54 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:54 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:54 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:54 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:54 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:54 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:54 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:54 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:54 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:54 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:54 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:54 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:54 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:54 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:55 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:55 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:55 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:55 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:55 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:55 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:55 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:55 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:55 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:55 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:55 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:55 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:55 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:55 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:55 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:55 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:55 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:55 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:55 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:55 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:56 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:56 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:56 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:56 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:56 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:56 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:56 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:56 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:56 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:56 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:56 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:56 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:56 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:56 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:56 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:56 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:56 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:56 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:56 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:56 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:57 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:57 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:57 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:57 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:57 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:57 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:57 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:57 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:57 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:57 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:57 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:57 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:57 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:57 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:57 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:57 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:57 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:57 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:57 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:57 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:58 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:58 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:58 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:58 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:58 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:58 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:58 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:58 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:58 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:58 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:58 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:58 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:58 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:58 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:58 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:58 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:58 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:58 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:58 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:58 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:58 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:58 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:59 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:59 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:59 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:59 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:59 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:59 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:59 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:59 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:59 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:59 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:59 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:59 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:59 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:59 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:59 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:59 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:59 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:59 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:15:59 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:15:59 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:16:00 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:16:00 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:16:00 - INFO - Stopping LiDAR motor
+29/12/2023 00:16:00 - INFO - Stoping scanning
+29/12/2023 00:16:33 - INFO - Port detected: COM3
+29/12/2023 00:16:33 - INFO - Lidar connected
+29/12/2023 00:16:35 - INFO - Starting motor
+29/12/2023 00:16:37 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 00:16:37 - ERROR - Failed to unload JSON: Expecting value: line 2 column 1 (char 2)
+29/12/2023 00:16:37 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 00:16:37 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 00:16:37 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 00:16:37 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 00:16:37 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 00:16:37 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 00:16:37 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 00:16:37 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 00:16:38 - ERROR - Failed to unload JSON: Extra data: line 1 column 33 (char 32)
+29/12/2023 00:16:38 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:16:38 - ERROR - Failed to unload JSON: Extra data: line 1 column 34 (char 33)
+29/12/2023 00:16:39 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:16:48 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:16:48 - ERROR - Failed to unload JSON: Extra data: line 1 column 34 (char 33)
+29/12/2023 00:16:48 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:16:50 - ERROR - Failed to unload JSON: Extra data: line 1 column 34 (char 33)
+29/12/2023 00:16:57 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:16:57 - ERROR - Failed to unload JSON: Extra data: line 1 column 34 (char 33)
+29/12/2023 00:16:57 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:16:57 - ERROR - Failed to unload JSON: Extra data: line 1 column 34 (char 33)
+29/12/2023 00:16:57 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:16:58 - ERROR - Failed to unload JSON: Extra data: line 1 column 34 (char 33)
+29/12/2023 00:16:58 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:16:58 - ERROR - Failed to unload JSON: Extra data: line 1 column 34 (char 33)
+29/12/2023 00:16:59 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:16:59 - ERROR - Failed to unload JSON: Extra data: line 1 column 34 (char 33)
+29/12/2023 00:16:59 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:17:00 - ERROR - Failed to unload JSON: Extra data: line 1 column 34 (char 33)
+29/12/2023 00:17:00 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:17:00 - ERROR - Failed to unload JSON: Extra data: line 1 column 34 (char 33)
+29/12/2023 00:17:01 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:17:01 - ERROR - Failed to unload JSON: Extra data: line 1 column 34 (char 33)
+29/12/2023 00:17:01 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:17:01 - ERROR - Failed to unload JSON: Extra data: line 1 column 34 (char 33)
+29/12/2023 00:17:02 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:17:02 - ERROR - Failed to unload JSON: Extra data: line 1 column 34 (char 33)
+29/12/2023 00:17:02 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:17:03 - ERROR - Failed to unload JSON: Extra data: line 1 column 34 (char 33)
+29/12/2023 00:17:03 - INFO - Stopping LiDAR motor
+29/12/2023 00:17:03 - INFO - Stoping scanning
+29/12/2023 00:18:45 - INFO - Port detected: COM3
+29/12/2023 00:18:45 - INFO - Lidar connected
+29/12/2023 00:18:46 - INFO - Starting motor
+29/12/2023 00:18:48 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 00:18:48 - ERROR - Failed to unload JSON: Expecting value: line 2 column 1 (char 2)
+29/12/2023 00:18:49 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 00:18:49 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 00:18:49 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 00:18:49 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 00:18:49 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 00:18:49 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 00:18:49 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 00:18:49 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 00:18:49 - ERROR - Failed to unload JSON: Extra data: line 1 column 33 (char 32)
+29/12/2023 00:18:49 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:18:49 - ERROR - Failed to unload JSON: Extra data: line 1 column 33 (char 32)
+29/12/2023 00:18:51 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:07 - ERROR - Failed to unload JSON: Extra data: line 1 column 34 (char 33)
+29/12/2023 00:19:07 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:08 - ERROR - Failed to unload JSON: Extra data: line 1 column 34 (char 33)
+29/12/2023 00:19:09 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:09 - ERROR - Failed to unload JSON: Extra data: line 1 column 34 (char 33)
+29/12/2023 00:19:09 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:09 - ERROR - Failed to unload JSON: Extra data: line 1 column 34 (char 33)
+29/12/2023 00:19:09 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:13 - ERROR - Failed to unload JSON: Extra data: line 1 column 36 (char 35)
+29/12/2023 00:19:13 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:13 - ERROR - Failed to unload JSON: Extra data: line 1 column 36 (char 35)
+29/12/2023 00:19:13 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:14 - ERROR - Failed to unload JSON: Extra data: line 1 column 36 (char 35)
+29/12/2023 00:19:14 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:14 - ERROR - Failed to unload JSON: Extra data: line 1 column 36 (char 35)
+29/12/2023 00:19:14 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:31 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:31 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:31 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:31 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:31 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:31 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:31 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:31 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:31 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:31 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:31 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:31 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:31 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:31 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:31 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:31 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:31 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:31 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:31 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:31 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:32 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:32 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:32 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:32 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:32 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:32 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:32 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:32 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:32 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:32 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:32 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:32 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:32 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:32 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:32 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:32 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:32 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:32 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:32 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:32 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:33 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:33 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:33 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:33 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:33 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:33 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:33 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:33 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:33 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:33 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:33 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:33 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:33 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:33 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:33 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:33 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:33 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:33 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:33 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:33 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:34 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:34 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:34 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:34 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:34 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:34 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:34 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:34 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:34 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:34 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:34 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:34 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:34 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:34 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:34 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:34 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:34 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:34 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:34 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:34 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:35 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:35 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:35 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:35 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:35 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:35 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:35 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:35 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:35 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:35 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:35 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:35 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:35 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:35 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:35 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:35 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:35 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:35 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:35 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:35 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:36 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:36 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:36 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:36 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:36 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:36 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:36 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:36 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:36 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:36 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:36 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:36 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:36 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:36 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:36 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:36 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:36 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:36 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:36 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:36 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:37 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:37 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:37 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:37 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:37 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:37 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:37 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:37 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:37 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:37 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:37 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:37 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:37 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:37 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:37 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:37 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:37 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:37 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:37 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:37 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:38 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:38 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:38 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:38 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:38 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:38 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:38 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:38 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:38 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:38 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:38 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:38 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:38 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:38 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:38 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:38 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:38 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:38 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:38 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:38 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:39 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:39 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:39 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:39 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:39 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:39 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:39 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:39 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:39 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:39 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:39 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:39 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:39 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:39 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:39 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:39 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:39 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:39 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:39 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:39 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:40 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:40 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:40 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:40 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:40 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:40 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:40 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:40 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:40 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:40 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:40 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:40 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:40 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:40 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:40 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:40 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:40 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:40 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:40 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:40 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:41 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:41 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:41 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:41 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:41 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:41 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:41 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:41 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:41 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:41 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:41 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:41 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:41 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:41 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:41 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:41 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:41 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:41 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:41 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:41 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:42 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:42 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:42 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:42 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:42 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:42 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:42 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:42 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:42 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:42 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:42 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:42 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:42 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:42 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:42 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:42 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:42 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:42 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:42 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:42 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:43 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:43 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:43 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:43 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:43 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:43 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:43 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:43 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:43 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:43 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:43 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:43 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:43 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:43 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:43 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:43 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:43 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:43 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:43 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:43 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:44 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:44 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:44 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:44 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:44 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:44 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:44 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:44 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:44 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:44 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:44 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:44 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:44 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:44 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:44 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:44 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:44 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:44 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:44 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:44 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:45 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:45 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:45 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:45 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:45 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:45 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:45 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:45 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:45 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:45 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:45 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:45 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:45 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:45 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:45 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:45 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:45 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:45 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:45 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:45 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:46 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:46 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:46 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:46 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:46 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:46 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:46 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:46 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:46 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:46 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:46 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:46 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:46 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:46 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:46 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:46 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:46 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:46 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:46 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:46 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:47 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:47 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:47 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:47 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:47 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:47 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:47 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:47 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:47 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:47 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:47 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:47 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:47 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:47 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:47 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:47 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:47 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:47 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:47 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:47 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:48 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:48 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:48 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:48 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:48 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:48 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:48 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:48 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:48 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:48 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:48 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:48 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:48 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:48 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:48 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:48 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:48 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:48 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:48 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:48 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:49 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:49 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:49 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:49 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:49 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:49 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:49 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:49 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:49 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:49 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:49 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:49 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:49 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:49 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:49 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:49 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:49 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:49 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:49 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:49 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:50 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:50 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:50 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:50 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:50 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:50 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:50 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:50 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:50 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:50 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:50 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:50 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:50 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:50 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:50 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:50 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:50 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:50 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:50 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:50 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:51 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:51 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:51 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:51 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:51 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:51 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:51 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:51 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:51 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:51 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:51 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:51 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:51 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:51 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:51 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:51 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:51 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:51 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:51 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:51 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:52 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:52 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:52 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:52 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:52 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:52 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:52 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:52 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:52 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:52 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:52 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:52 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:52 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:52 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:52 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:52 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:52 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:52 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:52 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:52 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:53 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:53 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:53 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:53 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:53 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:53 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:53 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:53 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:53 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:53 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:53 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:53 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:53 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:53 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:53 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:53 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:53 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:53 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:53 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:53 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:54 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:54 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:54 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:54 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:54 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:54 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:54 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:54 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:54 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:54 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:54 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:54 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:54 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:54 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:54 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:54 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:54 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:54 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:54 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:54 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:55 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:55 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:55 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:55 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:55 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:55 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:55 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:55 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:55 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:55 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:55 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:55 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:55 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:55 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:55 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:55 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:55 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:55 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:55 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:55 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:56 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:56 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:56 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:56 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:56 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:56 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:56 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:56 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:56 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:56 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:56 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:56 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:56 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:56 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:56 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:56 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:56 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:56 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:56 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:56 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:57 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:57 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:57 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:57 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:57 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:57 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:57 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:57 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:57 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:57 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:57 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:57 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:57 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:57 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:57 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:57 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:57 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:57 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:57 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:57 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:58 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:58 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:58 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:58 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:58 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:58 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:58 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:58 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:58 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:58 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:58 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:58 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:58 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:58 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:58 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:58 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:58 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:58 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:58 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:58 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:59 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:59 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:59 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:59 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:59 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:59 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:59 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:59 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:59 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:59 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:59 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:59 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:59 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:59 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:59 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:59 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:59 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:59 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:19:59 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:19:59 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:20:00 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:20:00 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:20:00 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:20:00 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:20:00 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:20:00 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:20:00 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:20:00 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:20:00 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:20:00 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:20:00 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:20:00 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:20:00 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:20:00 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:20:00 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:20:00 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:20:00 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:20:00 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:20:00 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:20:00 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:20:01 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:20:01 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:20:01 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:20:01 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:20:01 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:20:01 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:20:01 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:20:01 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:20:01 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:20:01 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:20:01 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:20:01 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:20:01 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:20:01 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:20:01 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:20:01 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:20:01 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:20:01 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:20:01 - ERROR - Failed to receive data from ESP32: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+29/12/2023 00:20:01 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:20:02 - INFO - Stopping LiDAR motor
+29/12/2023 00:20:02 - INFO - Stoping scanning
+29/12/2023 00:22:01 - INFO - Port detected: COM3
+29/12/2023 00:22:01 - INFO - Lidar connected
+29/12/2023 00:22:03 - INFO - Starting motor
+29/12/2023 00:22:05 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 00:22:05 - ERROR - Failed to unload JSON: Expecting value: line 2 column 1 (char 2)
+29/12/2023 00:22:05 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 00:22:05 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 00:22:05 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 00:22:05 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 00:22:05 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 00:22:05 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 00:22:06 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 00:22:06 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 00:22:06 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 00:22:06 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:22:32 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 00:22:48 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:22:49 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 00:28:36 - INFO - Port detected: COM3
+29/12/2023 00:28:36 - ERROR - Failed to create an instance of RPLidar: list index out of range
+29/12/2023 00:28:39 - INFO - Test program
+29/12/2023 00:28:39 - INFO - Port detected: COM3
+29/12/2023 00:28:39 - ERROR - Failed to connect to ESP32: could not open port 'COM3': PermissionError(13, 'Accès refusé.', None, 5)
+29/12/2023 00:28:47 - INFO - Port detected: COM3
+29/12/2023 00:28:47 - INFO - Lidar connected
+29/12/2023 00:28:48 - INFO - Starting motor
+29/12/2023 00:28:50 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 00:28:50 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:28:50 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:28:50 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:28:58 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:29:40 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 00:29:46 - INFO - Stopping LiDAR motor
+29/12/2023 00:29:46 - INFO - Stoping scanning

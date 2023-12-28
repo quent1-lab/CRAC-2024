@@ -666,3 +666,167 @@ INFO:rplidar:Stoping scanning
 28/12/2023 18:58:37 - INFO - Port detected: COM5
 28/12/2023 18:58:37 - ERROR - Failed to connect to ESP32: could not open port 'COM5': PermissionError(13, 'Accès refusé.', None, 5)
 28/12/2023 18:58:37 - ERROR - Failed to connect to ESP32: could not open port 'COM5': PermissionError(13, 'Accès refusé.', None, 5)
+28/12/2023 18:59:13 - ERROR - Failed to connect to ESP32: could not open port '/dev/ttyUSB0': FileNotFoundError(2, 'Le chemin d’accès spécifié est introuvable.', None, 3)
+28/12/2023 18:59:13 - ERROR - Failed to connect to ESP32: could not open port '/dev/ttyUSB0': FileNotFoundError(2, 'Le chemin d’accès spécifié est introuvable.', None, 3)
+28/12/2023 18:59:18 - ERROR - Failed to connect to ESP32: could not open port '/dev/ttyUSB0': FileNotFoundError(2, 'Le chemin d’accès spécifié est introuvable.', None, 3)
+28/12/2023 18:59:18 - ERROR - Failed to connect to ESP32: could not open port '/dev/ttyUSB0': FileNotFoundError(2, 'Le chemin d’accès spécifié est introuvable.', None, 3)
+28/12/2023 19:00:10 - INFO - Port detected: COM5
+28/12/2023 19:00:10 - INFO - Port detected: COM5
+28/12/2023 19:00:10 - ERROR - Failed to create an instance of RPLidar: Failed to connect to the sensor due to: could not open port 'COM5': PermissionError(13, 'Accès refusé.', None, 5)
+28/12/2023 19:00:13 - INFO - Test program
+28/12/2023 19:00:13 - INFO - Port detected: COM5
+28/12/2023 19:00:13 - ERROR - Failed to connect to ESP32: could not open port 'COM5': PermissionError(13, 'Accès refusé.', None, 5)
+28/12/2023 19:00:13 - ERROR - Failed to connect to ESP32: could not open port 'COM5': PermissionError(13, 'Accès refusé.', None, 5)
+28/12/2023 19:01:53 - INFO - Port detected: COM5
+28/12/2023 19:01:55 - INFO - Port detected: COM5
+28/12/2023 19:01:55 - ERROR - Failed to create an instance of RPLidar: Failed to connect to the sensor due to: could not open port 'COM5': PermissionError(13, 'Accès refusé.', None, 5)
+28/12/2023 19:01:58 - INFO - Test program
+28/12/2023 19:01:58 - INFO - Port detected: COM5
+28/12/2023 19:01:58 - ERROR - Failed to connect to ESP32: could not open port 'COM5': PermissionError(13, 'Accès refusé.', None, 5)
+28/12/2023 19:01:58 - ERROR - Failed to connect to ESP32: could not open port 'COM5': PermissionError(13, 'Accès refusé.', None, 5)
+28/12/2023 19:03:12 - INFO - Port detected: COM5
+28/12/2023 19:03:12 - INFO - Starting motor
+28/12/2023 19:03:13 - INFO - Lidar connected
+28/12/2023 19:03:13 - INFO - Starting motor
+28/12/2023 19:03:14 - ERROR - Failed to create an instance of RPLidar: 'LidarScanner' object has no attribute 'RED'
+28/12/2023 19:03:17 - INFO - Test program
+28/12/2023 19:03:17 - INFO - Port detected: COM5
+28/12/2023 19:03:17 - ERROR - Failed to connect to ESP32: could not open port 'COM5': PermissionError(13, 'Accès refusé.', None, 5)
+28/12/2023 19:03:17 - ERROR - Failed to connect to ESP32: could not open port 'COM5': PermissionError(13, 'Accès refusé.', None, 5)
+28/12/2023 19:05:13 - INFO - Port detected: COM5
+28/12/2023 19:05:13 - INFO - Starting motor
+28/12/2023 19:05:14 - INFO - Lidar connected
+28/12/2023 19:05:14 - INFO - Starting motor
+28/12/2023 19:05:18 - INFO - Starting motor
+28/12/2023 19:06:53 - INFO - Port detected: COM5
+28/12/2023 19:06:53 - INFO - Starting motor
+28/12/2023 19:06:55 - INFO - Lidar connected
+28/12/2023 19:06:55 - INFO - Starting motor
+28/12/2023 19:07:00 - INFO - Starting motor
+28/12/2023 19:07:44 - INFO - Port detected: COM5
+28/12/2023 19:07:44 - INFO - Starting motor
+28/12/2023 19:07:46 - INFO - Lidar connected
+28/12/2023 19:07:49 - INFO - Starting motor
+28/12/2023 19:08:05 - INFO - Port detected: COM5
+28/12/2023 19:08:05 - INFO - Starting motor
+28/12/2023 19:08:07 - INFO - Lidar connected
+28/12/2023 19:08:10 - INFO - Starting motor
+28/12/2023 19:09:14 - INFO - Port detected: COM5
+28/12/2023 19:09:14 - INFO - Starting motor
+28/12/2023 19:09:16 - INFO - Lidar connected
+28/12/2023 19:10:08 - INFO - Stopping LiDAR motor
+28/12/2023 19:10:08 - INFO - Stoping scanning
+28/12/2023 19:12:11 - INFO - Port detected: COM5
+28/12/2023 19:12:11 - INFO - Starting motor
+28/12/2023 19:12:13 - INFO - Lidar connected
+28/12/2023 19:13:12 - INFO - Port detected: COM5
+28/12/2023 19:13:12 - INFO - Lidar connected
+28/12/2023 19:13:23 - INFO - Stopping LiDAR motor
+28/12/2023 19:13:23 - INFO - Stoping scanning
+28/12/2023 19:13:36 - INFO - Port detected: COM5
+28/12/2023 19:13:36 - INFO - Lidar connected
+28/12/2023 19:13:39 - INFO - Starting motor
+28/12/2023 19:13:53 - INFO - Port detected: COM5
+28/12/2023 19:13:53 - INFO - Lidar connected
+28/12/2023 19:13:56 - INFO - Starting motor
+28/12/2023 19:17:23 - INFO - Port detected: COM5
+28/12/2023 19:17:23 - INFO - Lidar connected
+28/12/2023 19:17:26 - INFO - Starting motor
+28/12/2023 19:17:28 - ERROR - Failed to receive data from ESP32: Attempting to use a port that is not open
+28/12/2023 19:19:03 - ERROR - Failed to connect to ESP32: could not open port '2': FileNotFoundError(2, 'Le fichier spécifié est introuvable.', None, 2)
+28/12/2023 19:19:03 - ERROR - Failed to connect to ESP32: could not open port '2': FileNotFoundError(2, 'Le fichier spécifié est introuvable.', None, 2)
+28/12/2023 19:20:02 - ERROR - Failed to connect to ESP32: No port selected
+28/12/2023 19:20:19 - ERROR - Failed to connect to ESP32: name 'error' is not defined
+28/12/2023 19:20:55 - ERROR - Failed to connect to ESP32: No port selected
+28/12/2023 19:20:55 - ERROR - Failed to connect to ESP32: No port selected
+28/12/2023 19:21:28 - ERROR - Failed to connect to ESP32: No active exception to reraise
+28/12/2023 19:21:28 - ERROR - Failed to connect to ESP32: No active exception to reraise
+28/12/2023 19:22:01 - INFO - Port detected: COM5
+28/12/2023 19:22:01 - INFO - Lidar connected
+28/12/2023 19:22:12 - INFO - Port detected: COM5
+28/12/2023 19:22:12 - INFO - Lidar connected
+28/12/2023 19:22:15 - INFO - Starting motor
+28/12/2023 19:22:17 - ERROR - Failed to receive data from ESP32: Attempting to use a port that is not open
+28/12/2023 19:24:28 - INFO - Port detected: COM5
+28/12/2023 19:24:28 - INFO - Lidar connected
+28/12/2023 19:24:51 - ERROR - No port detected
+28/12/2023 19:24:55 - INFO - Port detected: COM5
+28/12/2023 19:24:55 - INFO - Lidar connected
+28/12/2023 19:24:58 - INFO - Starting motor
+28/12/2023 19:26:08 - ERROR - No port detected
+28/12/2023 19:26:11 - INFO - Port detected: COM5
+28/12/2023 19:26:11 - INFO - Lidar connected
+28/12/2023 19:26:17 - ERROR - No port detected
+28/12/2023 19:26:20 - INFO - Port detected: COM5
+28/12/2023 19:26:20 - INFO - Lidar connected
+28/12/2023 19:26:23 - INFO - Starting motor
+28/12/2023 19:26:59 - ERROR - No port detected
+28/12/2023 19:27:01 - INFO - Port detected: COM5
+28/12/2023 19:27:01 - INFO - Lidar connected
+28/12/2023 19:27:08 - ERROR - No port detected
+28/12/2023 19:27:09 - INFO - Port detected: COM5
+28/12/2023 19:27:09 - INFO - Lidar connected
+28/12/2023 19:27:12 - INFO - Starting motor
+28/12/2023 19:27:28 - ERROR - No port detected
+28/12/2023 19:27:30 - INFO - Port detected: COM5
+28/12/2023 19:27:30 - INFO - Lidar connected
+28/12/2023 19:27:37 - ERROR - No port detected
+28/12/2023 19:27:38 - INFO - Port detected: COM5
+28/12/2023 19:27:38 - INFO - Lidar connected
+28/12/2023 19:27:41 - INFO - Starting motor
+28/12/2023 19:32:32 - ERROR - No port detected
+28/12/2023 19:32:33 - INFO - Port detected: COM5
+28/12/2023 19:32:33 - INFO - Lidar connected
+28/12/2023 19:32:39 - ERROR - No port detected
+28/12/2023 19:32:40 - INFO - Port detected: COM5
+28/12/2023 19:32:40 - INFO - Lidar connected
+28/12/2023 19:32:43 - INFO - Starting motor
+28/12/2023 19:34:19 - ERROR - No port detected
+28/12/2023 19:34:20 - INFO - Port detected: COM5
+28/12/2023 19:34:20 - INFO - Lidar connected
+28/12/2023 19:34:26 - ERROR - No port detected
+28/12/2023 19:34:27 - INFO - Port detected: COM5
+28/12/2023 19:34:27 - INFO - Lidar connected
+28/12/2023 19:34:30 - INFO - Starting motor
+28/12/2023 19:35:47 - ERROR - No port detected
+28/12/2023 19:35:49 - INFO - Port detected: COM5
+28/12/2023 19:35:49 - INFO - Lidar connected
+28/12/2023 19:36:05 - ERROR - No port detected
+28/12/2023 19:36:05 - INFO - Port detected: COM5
+28/12/2023 19:36:05 - INFO - Lidar connected
+28/12/2023 19:36:08 - INFO - Starting motor
+28/12/2023 19:36:30 - ERROR - No port detected
+28/12/2023 19:36:30 - INFO - Port detected: COM5
+28/12/2023 19:36:30 - INFO - Lidar connected
+28/12/2023 19:36:35 - ERROR - No port detected
+28/12/2023 19:36:35 - INFO - Port detected: COM5
+28/12/2023 19:36:35 - INFO - Lidar connected
+28/12/2023 19:36:38 - INFO - Starting motor
+28/12/2023 19:38:16 - ERROR - No port detected
+28/12/2023 19:38:16 - INFO - Port detected: COM5
+28/12/2023 19:38:16 - INFO - Lidar connected
+28/12/2023 19:38:24 - ERROR - No port detected
+28/12/2023 19:38:24 - INFO - Port detected: COM5
+28/12/2023 19:38:24 - INFO - Lidar connected
+28/12/2023 19:38:27 - INFO - Starting motor
+28/12/2023 19:39:13 - ERROR - No port detected
+28/12/2023 19:39:13 - INFO - Port detected: COM5
+28/12/2023 19:39:13 - INFO - Lidar connected
+28/12/2023 19:39:19 - ERROR - No port detected
+28/12/2023 19:39:19 - INFO - Port detected: COM5
+28/12/2023 19:39:19 - INFO - Lidar connected
+28/12/2023 19:39:22 - INFO - Starting motor
+28/12/2023 19:40:06 - INFO - Stopping LiDAR motor
+28/12/2023 19:40:06 - INFO - Stoping scanning
+28/12/2023 19:40:34 - ERROR - No port detected
+28/12/2023 19:40:34 - INFO - Port detected: COM5
+28/12/2023 19:40:35 - INFO - Lidar connected
+28/12/2023 19:40:38 - INFO - Starting motor
+28/12/2023 19:40:40 - INFO - Stopping LiDAR motor
+28/12/2023 19:40:40 - INFO - Stoping scanning
+28/12/2023 19:42:57 - ERROR - No port detected
+28/12/2023 19:42:57 - INFO - Port detected: COM5
+28/12/2023 19:42:57 - INFO - Lidar connected
+28/12/2023 19:43:00 - INFO - Starting motor
+28/12/2023 19:43:49 - INFO - Stopping LiDAR motor
+28/12/2023 19:43:49 - INFO - Stoping scanning

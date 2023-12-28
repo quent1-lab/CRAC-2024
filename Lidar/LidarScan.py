@@ -32,6 +32,8 @@ class ComESP32:
             logging.error(f"Failed to connect to ESP32: {e}")
             raise
         self.connected = True
+        #Envoie x et y du robot a ESP32 en bytes et JSON
+        self.send(json.dumps({"x": 500, "y" : 500}).encode())
     
     def get_status(self):
         return self.connected
@@ -46,6 +48,7 @@ class ComESP32:
 
     def send(self, data):
         try:
+            print(f"Sending data to ESP32: {data}")
             self.esp32.write(data)
         except Exception as e:
             logging.error(f"Failed to send data to ESP32: {e}")
@@ -63,10 +66,12 @@ class ComESP32:
 
     def load_json(self, data):
         try:
+            # Ne récupère que les données comprises entre les deux crochets
+            #data = data[data.index("{"):data.index("}") + 1]
             return json.loads(data)
         except Exception as e:
             logging.error(f"Failed to unload JSON: {e}")
-            print("Failed to unload JSON")
+            print(f"Failed to unload JSON : {data}")
             return None
 
     def run(self):

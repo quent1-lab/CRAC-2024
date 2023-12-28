@@ -657,3 +657,12 @@ INFO:rplidar:Stoping scanning
 19/12/2023 20:30:00 - INFO - Port detected: COM10
 19/12/2023 20:30:05 - ERROR - Failed to create an instance of RPLidar: Failed to connect to the sensor due to: could not open port 'COM10': OSError(22, 'Le délai de temporisation de sémaphore a expiré.', None, 121)
 19/12/2023 20:30:10 - INFO - Test program
+28/12/2023 18:58:32 - INFO - Port detected: COM5
+28/12/2023 18:58:32 - INFO - Starting motor
+28/12/2023 18:58:33 - INFO - Lidar connected
+28/12/2023 18:58:33 - INFO - Starting motor
+28/12/2023 18:58:34 - ERROR - Failed to create an instance of RPLidar: 'LidarScanner' object has no attribute 'RED'
+28/12/2023 18:58:37 - INFO - Test program
+28/12/2023 18:58:37 - INFO - Port detected: COM5
+28/12/2023 18:58:37 - ERROR - Failed to connect to ESP32: could not open port 'COM5': PermissionError(13, 'Accès refusé.', None, 5)
+28/12/2023 18:58:37 - ERROR - Failed to connect to ESP32: could not open port 'COM5': PermissionError(13, 'Accès refusé.', None, 5)

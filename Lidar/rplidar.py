@@ -145,12 +145,9 @@ class RPLidar(object):
     def start_motor(self):
         '''Starts sensor motor'''
         self.logger.info('Starting motor')
-        # For A1
-        self._serial_port.setDTR(False)
-
-        # For A2
-        self.set_pwm(DEFAULT_MOTOR_PWM)
-        self.motor_running = True
+        cmd = SCAN_BYTE
+        self._send_cmd(cmd)
+        time.sleep(1)
 
     def stop_motor(self):
         '''Stops sensor motor'''
@@ -314,9 +311,9 @@ class RPLidar(object):
         elif status == _HEALTH_STATUSES[1]:
             self.logger.warning('Warning sensor status detected! '
                                 'Error code: %d', error_code)
-        cmd = SCAN_BYTE
+        """cmd = SCAN_BYTE
         self._send_cmd(cmd)
-        time.sleep(2)
+        time.sleep(2)"""
         dsize, is_single, dtype = self._read_descriptor()
         if dsize != 5:
             raise RPLidarException('Wrong get_info reply length')

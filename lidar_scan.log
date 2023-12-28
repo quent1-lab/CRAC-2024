@@ -2148,3 +2148,37 @@ INFO:rplidar:Stoping scanning
 28/12/2023 22:45:53 - INFO - Lidar connected
 28/12/2023 22:45:55 - INFO - Starting motor
 28/12/2023 22:45:57 - ERROR - Failed to unload JSON: Extra data: line 1 column 34 (char 33)
+28/12/2023 22:50:45 - ERROR - No port detected
+28/12/2023 22:50:45 - INFO - Test program
+28/12/2023 22:50:45 - INFO - Port detected: COM5
+28/12/2023 22:50:45 - ERROR - Failed to receive data from ESP32: 'utf-8' codec can't decode byte 0xc3 in position 0: invalid continuation byte
+28/12/2023 22:50:45 - ERROR - Failed to connect to ESP32: 'utf-8' codec can't decode byte 0xc3 in position 0: invalid continuation byte
+28/12/2023 22:51:01 - INFO - Port detected: COM3
+28/12/2023 22:51:01 - INFO - Lidar connected
+28/12/2023 22:51:03 - INFO - Stoping scanning
+28/12/2023 22:51:04 - INFO - Starting motor
+28/12/2023 22:51:06 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+28/12/2023 22:51:06 - ERROR - Failed to unload JSON: Expecting value: line 2 column 1 (char 2)
+28/12/2023 22:51:06 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+28/12/2023 22:51:06 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+28/12/2023 22:51:06 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+28/12/2023 22:51:06 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+28/12/2023 22:51:06 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+28/12/2023 22:51:06 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+28/12/2023 22:51:06 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+28/12/2023 22:51:06 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+28/12/2023 22:51:07 - ERROR - Failed to unload JSON: Extra data: line 1 column 33 (char 32)
+28/12/2023 22:51:17 - ERROR - Failed to unload JSON: Extra data: line 1 column 34 (char 33)
+28/12/2023 22:51:39 - INFO - Stopping LiDAR motor
+28/12/2023 22:51:39 - INFO - Stoping scanning
+28/12/2023 22:51:58 - INFO - Port detected: COM3
+28/12/2023 22:51:59 - INFO - Lidar connected
+28/12/2023 22:52:00 - INFO - Starting motor
+28/12/2023 22:52:02 - ERROR - Failed to unload JSON: Extra data: line 1 column 34 (char 33)
+28/12/2023 22:52:02 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+28/12/2023 22:52:02 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+28/12/2023 22:52:02 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+28/12/2023 22:52:03 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+28/12/2023 22:52:07 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+28/12/2023 22:52:33 - INFO - Stopping LiDAR motor
+28/12/2023 22:52:33 - INFO - Stoping scanning

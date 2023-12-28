@@ -115,7 +115,7 @@ class RPLidar(object):
             logger = logging.getLogger('rplidar')
         self.logger = logger
         self.connect()
-        self.start_motor()
+        #self.start_motor()
 
     def connect(self):
         '''Connects to the serial port with the name `self.port`. If it was
@@ -147,7 +147,7 @@ class RPLidar(object):
         self.logger.info('Starting motor')
         cmd = SCAN_BYTE
         self._send_cmd(cmd)
-        time.sleep(1)
+        time.sleep(2)
 
     def stop_motor(self):
         '''Stops sensor motor'''
@@ -296,7 +296,7 @@ class RPLidar(object):
             Measured object distance related to the sensor's rotation center.
             In millimeter unit. Set to 0 when measurment is invalid.
         '''
-        self.start_motor()
+        
 
         status, error_code = self.get_health()
         self.logger.debug('Health status: %s [%d]', status, error_code)
@@ -311,9 +311,7 @@ class RPLidar(object):
         elif status == _HEALTH_STATUSES[1]:
             self.logger.warning('Warning sensor status detected! '
                                 'Error code: %d', error_code)
-        """cmd = SCAN_BYTE
-        self._send_cmd(cmd)
-        time.sleep(2)"""
+        self.start_motor()
         dsize, is_single, dtype = self._read_descriptor()
         if dsize != 5:
             raise RPLidarException('Wrong get_info reply length')

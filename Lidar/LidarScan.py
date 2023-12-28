@@ -830,7 +830,10 @@ class LidarScanner:
                         self.stop()
                     
                     if esp32.get_status():
-                        print(esp32.load_json(esp32.receive()))
+                        data = esp32.load_json(esp32.receive())
+                        if data != None:
+                            self.ROBOT_ANGLE = data["theta"]
+                            self.ROBOT.update_position(1500+data["x"], 1000+data["y"])
                     
                     self.draw_background()
                     self.draw_robot(self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)

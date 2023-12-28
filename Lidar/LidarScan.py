@@ -33,7 +33,7 @@ class ComESP32:
             raise
         self.connected = True
         #Envoie x et y du robot a ESP32 en bytes et JSON
-        self.send(json.dumps({"x": 500, "y" : 500}).encode())
+        #self.send(json.dumps({"x": 500, "y" : 500}).encode())
     
     def get_status(self):
         return self.connected
@@ -62,7 +62,6 @@ class ComESP32:
         except Exception as e:
             logging.error(f"Failed to receive data from ESP32: {e}")
             print("Failed to receive data from ESP32")
-            raise
 
     def load_json(self, data):
         try:
@@ -319,7 +318,9 @@ class LidarScanner:
         new_angle = angle - self.ROBOT_ANGLE
         if new_angle < 0:
             new_angle += 360
-        x +=int(distance * math.cos(new_angle * math.pi / 180))
+        else:
+            new_angle %= 360
+        x += int(distance * math.cos(new_angle * math.pi / 180))
         y += int(distance * math.sin(new_angle * math.pi / 180))
 
         self.POINT_COLOR = (200, 200, 200)
@@ -837,7 +838,7 @@ class LidarScanner:
                         data = esp32.load_json(esp32.receive())
                         if data != None:
                             self.ROBOT_ANGLE = math.degrees(data["theta"])
-                            self.ROBOT.update_position(1500+data["x"], 1000+data["y"])
+                            self.ROBOT.update_position(data["x"], data["y"])
                     
                     self.draw_background()
                     self.draw_robot(self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)

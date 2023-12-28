@@ -513,7 +513,7 @@ class LidarScanner:
         # Si aucun port n'est détecté, lancer le programme de test
         if len(ports) == 0:
             logging.error("No port detected")
-            self.programme_test()
+            self.programme_test(1)
             exit(0)
 
         if len(ports) == 1:
@@ -657,28 +657,28 @@ class LidarScanner:
 
         return scan
 
-    def programme_test(self):
+    def programme_test(self, mode=0):
         print("Programme de test")
         logging.info("Test program")
         
-        try:
-            esp32 = ComESP32(port=self.choix_du_port(), baudrate=115200)
+        if mode == 0:
+            try:
+                esp32 = ComESP32(port=self.interface_choix_port(), baudrate=115200)   
+            except Exception as e:
+                logging.error(f"Failed to connect to ESP32: {e}")
+                print("Erreur de connexion à l'ESP32")
+                raise
+
             esp32.connect()
-        except Exception as e:
-            logging.error(f"Failed to connect to ESP32: {e}")
-            print("Erreur de connexion à l'ESP32")
-            raise
-        
+
         while True:
             keys = pygame.key.get_pressed()
-            quit = pygame.event.get(pygame.QUIT)
-            if quit:
-                exit(0)                            
-            if keys[pygame.K_ESCAPE] or keys[pygame.K_SPACE]:
+            quit = pygame.event.get(pygame.QUIT)                     
+            if quit or keys[pygame.K_ESCAPE] or keys[pygame.K_SPACE]:
                 exit(0)
-
-            if esp32.get_status():
-                print(esp32.load_json(esp32.receive()))
+            if mode == 0:
+                if esp32.get_status():
+                    print(esp32.load_json(esp32.receive()))
 
             scan = self.valeur_de_test()
             zone_objet = self.detect_object(scan)
@@ -793,12 +793,13 @@ class LidarScanner:
 
             pygame.draw.circle(self.lcd, color, (x, y), 2)
 
-    def stop(self):
+    def stop(self,esp):
         logging.info("Stopping LiDAR motor")
         print("Arrêt du moteur LiDAR")
         self.lidar.stop()
         time.sleep(1)
         self.lidar.disconnect()
+        esp.disconnect()
         exit(0)
 
     def run(self):
@@ -823,16 +824,14 @@ class LidarScanner:
 
                 for scan in self.lidar.iter_scans(4000):
                     keys = pygame.key.get_pressed()
-                    quit = pygame.event.get(pygame.QUIT)
-                    if quit:
-                        self.stop()                    
-                    if keys[pygame.K_ESCAPE] or keys[pygame.K_SPACE]:
-                        self.stop()
+                    quit = pygame.event.get(pygame.QUIT)              
+                    if quit or keys[pygame.K_ESCAPE] or keys[pygame.K_SPACE]:
+                        self.stop(esp32)
                     
                     if esp32.get_status():
                         data = esp32.load_json(esp32.receive())
                         if data != None:
-                            self.ROBOT_ANGLE = data["theta"]
+                            self.ROBOT_ANGLE = math.degrees(data["theta"])
                             self.ROBOT.update_position(1500+data["x"], 1000+data["y"])
                     
                     self.draw_background()

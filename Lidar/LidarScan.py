@@ -785,13 +785,22 @@ class LidarScanner:
     def run(self):
         
         try:
+            esp32 = ComESP32(port="/dev/ttyUSB0", baudrate=115200)
+            esp32.connect()
+            print("esp32 connected")
+        except Exception as e:
+            logging.error(f"Failed to connect to ESP32: {e}")
+            print("Erreur de connexion à l'ESP32")
+            raise
+
+        try:
             self.connexion_lidar()
 
             self.draw_background()
             self.draw_robot(self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)
             pygame.display.update()
 
-            running = False
+            running = True
             while(running == False):
                 keys = pygame.key.get_pressed()            
                 if keys[pygame.K_SPACE]:
@@ -810,6 +819,9 @@ class LidarScanner:
                         self.stop()                    
                     if keys[pygame.K_ESCAPE] or keys[pygame.K_SPACE]:
                         self.stop()
+                    
+                    if esp32.get_status():
+                        print(esp32.receive())
                     
                     self.draw_background()
                     self.draw_robot(self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)

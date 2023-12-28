@@ -13,9 +13,10 @@ import can
 import time
 
 class ComESP32:
-    def __init__(self, port, baudrate):
+    def __init__(self, port, baudrate ,timeout = 0):
         self.port = port
         self.baudrate = baudrate
+        self.timeout = timeout
         self.esp32 = None
         self.connected = False
 
@@ -26,7 +27,7 @@ class ComESP32:
             return
         
         try:
-            self.esp32 = serial.Serial(self.port, self.baudrate)
+            self.esp32 = serial.Serial(self.port, self.baudrate, timeout=self.timeout)
         except Exception as e:
             logging.error(f"Failed to connect to ESP32: {e}")
             raise
@@ -52,8 +53,9 @@ class ComESP32:
 
     def receive(self):
         try:
-            #Renvoie les données reçues par l'ESP32 en enlevant les deux premiers caractères et le dernier
-            return self.esp32.readline().decode()[2:-1]
+            if self.esp32.in_waiting > 0:
+                # Renvoie les données reçues par l'ESP32 en enlevant les deux premiers caractères et le dernier
+                return self.esp32.readline().decode()
         except Exception as e:
             logging.error(f"Failed to receive data from ESP32: {e}")
             print("Failed to receive data from ESP32")
@@ -65,7 +67,7 @@ class ComESP32:
         except Exception as e:
             logging.error(f"Failed to unload JSON: {e}")
             print("Failed to unload JSON")
-            raise
+            return None
 
     def run(self):
         try:
@@ -506,19 +508,14 @@ class LidarScanner:
 
     def interface_choix_port(self):
         # Obtenir la liste des ports
-        ports = [port.device for port in serial.tools.list_ports.comports() if "AMA" not in port.device]
+        ports = [port.device for port in serial.tools.list_ports.comports() if "AMA" not in port.device and "0001" not in port.serial_number]
 
         # Si aucun port n'est détecté, lancer le programme de test
         if len(ports) == 0:
             logging.error("No port detected")
             self.programme_test()
             exit(0)
-        port_list = list(serial.tools.list_ports.comports())
-        for port in port_list:
-            print(port)
-            if 'RPLidar' in port.description:
-                print(port.description)
-        # Si un seul port est détecté, le retourner
+
         if len(ports) == 1:
             logging.info(f"Port detected: {ports[0]}")
             
@@ -614,7 +611,7 @@ class LidarScanner:
             pygame.display.update()
 
             if self.port == None:
-                self.port = self.interface_choix_port()
+                self.port = [port.name for port in serial.tools.list_ports.comports() if "0001" in port.serial_number][0]
 
             self.lidar = RPLidar(self.port)
             self.lidar.connect()
@@ -807,7 +804,7 @@ class LidarScanner:
     def run(self):
         
         try:
-            esp32 = ComESP32(port=None, baudrate=115200)
+            esp32 = ComESP32(port=self.interface_choix_port(), baudrate=115200)
             esp32.connect()
             print("esp32 connected")
         except Exception as e:
@@ -833,7 +830,7 @@ class LidarScanner:
                         self.stop()
                     
                     if esp32.get_status():
-                        print(esp32.receive())
+                        print(esp32.load_json(esp32.receive()))
                     
                     self.draw_background()
                     self.draw_robot(self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)
@@ -850,6 +847,7 @@ class LidarScanner:
                 # Code pour gérer RPLidarException
                 print(f"Une erreur RPLidarException s'est produite dans le run : {e}")
                 self.lidar.stop()
+                time.sleep(1)
                 
             except KeyboardInterrupt:
                 self.stop()

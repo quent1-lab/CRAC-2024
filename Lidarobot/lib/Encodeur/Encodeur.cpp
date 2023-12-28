@@ -144,9 +144,6 @@ void Encodeur::odometrie()
     // Variables locales
     float deltaD, deltaG, deltaT, deltaS;
 
-    this->countD = readEncoderD();
-    this->countG = readEncoderG();
-
     // Lecture des encodeurs
     deltaD = this->countD - oldPositionD;
     deltaG = this->countG - oldPositionG;
@@ -271,6 +268,7 @@ int Encodeur::get_reduction(){
  * @brief Retourne la valeur de l'encodeur droit
 */
 int Encodeur::get_countD(){
+    this->countD = readEncoderD();
     return this->countD;
 }
 
@@ -278,5 +276,6 @@ int Encodeur::get_countD(){
  * @brief Retourne la valeur de l'encodeur gauche
 */
 int Encodeur::get_countG(){
+    this->countG = readEncoderG();
     return this->countG;
 }

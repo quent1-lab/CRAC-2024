@@ -20,12 +20,17 @@ class ComESP32:
         self.connected = False
 
     def connect(self):
+        if self.port == None:
+            logging.error("No port detected")
+            print("No port detected")
+            return
+        
         try:
             self.esp32 = serial.Serial(self.port, self.baudrate)
-            self.connected = True
         except Exception as e:
             logging.error(f"Failed to connect to ESP32: {e}")
             raise
+        self.connected = True
     
     def get_status(self):
         return self.connected
@@ -157,13 +162,13 @@ class Objet:
         dy = self.y - self.positions_precedentes[-1][1]
 
         # Calculer le temps écoulé entre la position actuelle et la position précédente
-        dt = (time.monotonic_ns() - self.positions_precedentes[-1][2])
+        dt = (time.monotonic_ns() - self.positions_precedentes[-1][2]) + 0.00001 # Ajout de 0.00001 pour éviter la division par 0
 
         # La direction est l'angle du vecteur de déplacement
         self.direction = math.atan2(dy, dx)
 
         # La vitesse est la magnitude du vecteur de déplacement divisée par le temps écoulé
-        self.vitesse = math.sqrt(dx**2 + dy**2) / dt * 1000000000 # Conversion en mm/s
+        self.vitesse = math.sqrt(dx**2 + dy**2) / dt * 1000000000  # Conversion en mm/s
 
         # Convertir la vitesse en m/s
         self.vitesse_ms = self.vitesse /1000
@@ -204,6 +209,7 @@ class LidarScanner:
         self.WHITE = (255, 255, 255)
         self.LIGHT_GREY = (200, 200, 200)
         self.GREEN = (0, 255, 0)
+        self.RED = (255, 0, 0)
         self.FIELD_SIZE = (3000, 2000)
         self.BORDER_DISTANCE = 200
         self.POINT_COLOR = (255, 0, 0)
@@ -443,7 +449,6 @@ class LidarScanner:
                 return objet
         return None
 
-
     def choix_du_port(self):
         ports = serial.tools.list_ports.comports()
 
@@ -609,7 +614,7 @@ class LidarScanner:
             logging.info("Lidar connected")
             print("LiDAR connecté")
 
-            self.lidar.start_motor()
+            #self.lidar.start_motor()
 
             self.lcd.fill(self.LIGHT_GREY)
             self.draw_text_center("LiDAR connecté", self.WINDOW_SIZE[0] / 2, self.WINDOW_SIZE[1] / 2)
@@ -772,7 +777,14 @@ class LidarScanner:
         :param color: Couleur de la trajectoire (RGB)
         """
         for point in trajectoire:
-            pygame.draw.circle(self.lcd, pygame.Color(color), (int(point[0] * self.X_RATIO), int(point[1] * self.Y_RATIO)), 2)
+            x = int(point[0] * self.X_RATIO)
+            y = int(point[1] * self.Y_RATIO)
+
+            # Vérifier si le point n'est pas un nombre infini
+            if x > 10000 or x < -10000 or y > 10000 or y < -10000:
+                continue
+
+            pygame.draw.circle(self.lcd, color, (x, y), 2)
 
     def stop(self):
         logging.info("Stopping LiDAR motor")
@@ -785,7 +797,7 @@ class LidarScanner:
     def run(self):
         
         try:
-            esp32 = ComESP32(port="/dev/ttyUSB0", baudrate=115200)
+            esp32 = ComESP32(port=None, baudrate=115200)
             esp32.connect()
             print("esp32 connected")
         except Exception as e:

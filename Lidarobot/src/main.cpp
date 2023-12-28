@@ -87,8 +87,8 @@ float rayon = 2.2;
 float entraxe = 8.8;
 
 /*----------------------------- Variables pour l'odométrie ------------------------------*/
-float x = 0;
-float y = 0;
+float x = 1500;
+float y = 1000;
 float theta = 0;
 int resolution = 298;
 int reduction = 6;
@@ -111,7 +111,7 @@ void taskCommuniquer(void *pvParameters) {
     while (1) {
         // Appeler la fonction de communication ici
         envoie_JSON();
-        String message = reception();
+        //String message = reception();
         vTaskDelay(pdMS_TO_TICKS(100));  // Delay de 100ms
     }
 }
@@ -173,14 +173,14 @@ void loop()
     break;
   case 2:
     // Etat 2 : Test de la ligne droite
-    avancer(20);
+    avancer(30);
     tourner(PI/2);
-    avancer(10);
+    /*avancer(10);
     tourner(PI);
     avancer(10);
     tourner(-PI/2);
     avancer(20);
-    tourner(PI);
+    tourner(PI);*/
     etat_sys = 0;
     break;
   default:

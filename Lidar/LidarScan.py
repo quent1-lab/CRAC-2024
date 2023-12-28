@@ -1,6 +1,6 @@
 from collections.abc import Iterable
 import logging
-from rplidar import RPLidar
+from rplidar import RPLidar,RPLidarException
 import pygame
 from pygame.locals import *
 import math
@@ -209,7 +209,9 @@ class LidarScanner:
         self.WHITE = (255, 255, 255)
         self.LIGHT_GREY = (200, 200, 200)
         self.GREEN = (0, 255, 0)
+        self.BLUE = (0, 0, 255)
         self.RED = (255, 0, 0)
+        self.DARK_GREEN = (0, 100, 0)
         self.FIELD_SIZE = (3000, 2000)
         self.BORDER_DISTANCE = 200
         self.POINT_COLOR = (255, 0, 0)
@@ -511,10 +513,15 @@ class LidarScanner:
             logging.error("No port detected")
             self.programme_test()
             exit(0)
-        
+        port_list = list(serial.tools.list_ports.comports())
+        for port in port_list:
+            print(port)
+            if 'RPLidar' in port.description:
+                print(port.description)
         # Si un seul port est détecté, le retourner
         if len(ports) == 1:
             logging.info(f"Port detected: {ports[0]}")
+            
             return ports[0]
 
         # Index du port actuellement sélectionné
@@ -580,23 +587,23 @@ class LidarScanner:
             health = self.lidar.get_health()
             status = health[0]
             if status == 'Good':
-                status_color = self.GREEN
+                status_color = self.DARK_GREEN
             else:
                 status_color = self.RED
         except:
-            status = 'Not connected'
+            status = 'Error'
             status_color = self.RED
 
         # Créer le texte de l'état
         status_text = self.font.render('Lidar status: ' + status, True, status_color)
 
         # Dessiner le texte de l'état
-        status_rect = status_text.get_rect(center=(self.WINDOW_SIZE[0] / 2, self.WINDOW_SIZE[1] - 30))
+        status_rect = status_text.get_rect(center=(self.WINDOW_SIZE[0] / 2, self.WINDOW_SIZE[1] / 2 + 50))
         self.lcd.blit(status_text, status_rect)
 
         # Mettre à jour l'écran
         pygame.display.update()
-        time.sleep(3)
+        time.sleep(1.5)
     
     def connexion_lidar(self):
         # Connexion au lidar
@@ -614,14 +621,17 @@ class LidarScanner:
             logging.info("Lidar connected")
             print("LiDAR connecté")
 
-            #self.lidar.start_motor()
-
             self.lcd.fill(self.LIGHT_GREY)
             self.draw_text_center("LiDAR connecté", self.WINDOW_SIZE[0] / 2, self.WINDOW_SIZE[1] / 2)
             pygame.display.update()
 
             # Afficher le statut du lidar
             self.display_lidar_status()
+        except RPLidarException as e:
+            # Code pour gérer RPLidarException
+            print(f"Une erreur RPLidarException s'est produite dans le connexion : {e}")
+            self.lidar.stop()
+            self.connexion_lidar()
         except Exception as e:
             logging.error(f"Failed to create an instance of RPLidar: {e}")
             print("Erreur lors de la création de l'instance du LiDAR")
@@ -804,25 +814,15 @@ class LidarScanner:
             logging.error(f"Failed to connect to ESP32: {e}")
             print("Erreur de connexion à l'ESP32")
             raise
+    
+        self.connexion_lidar()
 
-        try:
-            self.connexion_lidar()
-
-            self.draw_background()
-            self.draw_robot(self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)
-            pygame.display.update()
-
-            running = True
-            while(running == False):
-                keys = pygame.key.get_pressed()            
-                if keys[pygame.K_SPACE]:
-                    running = True
-                    print("Début du scan")
-                    logging.info("Starting scan")
-                    break
+        while True:
+            try:
+                self.draw_background()
+                self.draw_robot(self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)
+                self.draw_text_center("ATTENTE DU LANCEMENT DU LIDAR", self.WINDOW_SIZE[0] / 2, self.WINDOW_SIZE[1] / 2, self.RED)
                 pygame.display.update()
-
-            while running:
 
                 for scan in self.lidar.iter_scans(4000):
                     keys = pygame.key.get_pressed()
@@ -845,10 +845,15 @@ class LidarScanner:
                         self.draw_point(self.ROBOT.x, self.ROBOT.y, angle, distance)
                     pygame.display.update()
                     self.lcd.fill(self.WHITE)
-
-        except KeyboardInterrupt:
-            self.stop()
-            pass
+                    
+            except RPLidarException as e:
+                # Code pour gérer RPLidarException
+                print(f"Une erreur RPLidarException s'est produite dans le run : {e}")
+                self.lidar.stop()
+                
+            except KeyboardInterrupt:
+                self.stop()
+                break
 
 if __name__ == '__main__':
     scanner = LidarScanner()

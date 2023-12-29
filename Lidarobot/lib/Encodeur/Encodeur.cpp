@@ -24,7 +24,14 @@ void Encodeur::init()
     this->x = 0;
     this->y = 0;
     this->theta = 0;
-    this->rayon = 2.2;
+    this->rayon = 22;
+    this->entraxe = 88;
+    this->reduction = 1;
+    this->resolution = 1;
+    this->encoderD.setCount(0);
+    this->encoderG.setCount(0);
+    this->oldPositionD = 0;
+    this->oldPositionG = 0; 
 }
 
 /**
@@ -43,6 +50,8 @@ void Encodeur::init(float x, float y, float theta, float rayon, float entraxe)
     this->theta = theta;
     this->rayon = rayon;
     this->entraxe = entraxe;
+    this->reduction = 1;
+    this->resolution = 1;
     this->encoderD.setCount(0);
     this->encoderG.setCount(0);
     this->oldPositionD = 0;

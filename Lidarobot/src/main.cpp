@@ -317,8 +317,8 @@ void avancer(float distance){
     float erreurD = pas_droit - countD;
 
     //Vitesse des moteurs (Démarrage rapide et freinage adaptatif)
-    float vitesseG = 100;
-    float vitesseD = 100;
+    float vitesseG = 60;
+    float vitesseD = 60;
     if(erreurG <= 0){
       vitesseG = 2; //Valeur non nulle pour bloquer le moteur
     }
@@ -362,8 +362,8 @@ void tourner(float angle){
     float erreurD = pas_droit - countD;
 
     //Vitesse des moteurs (Démarrage rapide et freinage adaptatif)
-    float vitesseG = 100 * sens;
-    float vitesseD = 100 * -sens;
+    float vitesseG = 60 * sens;
+    float vitesseD = 60 * -sens;
 
     /*if(erreurG <= 0){
       vitesseG = 2; //Valeur non nulle pour bloquer le moteur

@@ -9365,3 +9365,41 @@ INFO:rplidar:Stoping scanning
 29/12/2023 19:47:49 - WARNING - Too many measurments in the input buffer: 4117/4000. Clearing buffer...
 29/12/2023 19:47:50 - INFO - Stopping LiDAR motor
 29/12/2023 19:47:50 - INFO - Stoping scanning
+29/12/2023 22:33:21 - INFO - Port detected: COM3
+29/12/2023 22:33:21 - INFO - Lidar connected
+29/12/2023 22:33:25 - INFO - Stoping scanning
+29/12/2023 22:33:27 - INFO - Stoping scanning
+29/12/2023 22:33:29 - INFO - Stoping scanning
+29/12/2023 22:33:31 - INFO - Stoping scanning
+29/12/2023 22:33:33 - INFO - Stoping scanning
+29/12/2023 22:33:35 - INFO - Stoping scanning
+29/12/2023 22:33:37 - INFO - Stoping scanning
+29/12/2023 22:33:39 - INFO - Stoping scanning
+29/12/2023 22:33:41 - INFO - Stoping scanning
+29/12/2023 22:33:42 - INFO - Starting motor
+29/12/2023 22:33:44 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 22:33:44 - ERROR - Failed to unload JSON: Expecting value: line 2 column 1 (char 2)
+29/12/2023 22:33:44 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 22:33:44 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 22:33:45 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 22:33:45 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 22:33:45 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 22:33:45 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 22:33:45 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 22:33:45 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 22:33:46 - ERROR - Failed to unload JSON: Extra data: line 1 column 40 (char 39)
+29/12/2023 22:33:46 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+29/12/2023 22:33:46 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:33:47 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:33:48 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:33:49 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:33:50 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:33:51 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:33:51 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:33:52 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:34:02 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:34:30 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+29/12/2023 22:34:30 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:34:31 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+29/12/2023 22:34:34 - INFO - Stopping LiDAR motor
+29/12/2023 22:34:34 - INFO - Stoping scanning

@@ -7,5 +7,6 @@
         "ratio": "cpp",
         "cinttypes": "cpp",
         "cstdlib": "cpp"
-    }
+    },
+    "cmake.sourceDirectory": "D:/Quentin/Documents/GEII/CRAC-2024/Lidarobot/.pio/libdeps/esp32dev/ArduinoJson"
 }

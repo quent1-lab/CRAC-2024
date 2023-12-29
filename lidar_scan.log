@@ -9403,3 +9403,298 @@ INFO:rplidar:Stoping scanning
 29/12/2023 22:34:31 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
 29/12/2023 22:34:34 - INFO - Stopping LiDAR motor
 29/12/2023 22:34:34 - INFO - Stoping scanning
+29/12/2023 22:39:39 - INFO - Port detected: COM3
+29/12/2023 22:39:39 - ERROR - Failed to create an instance of RPLidar: list index out of range
+29/12/2023 22:39:42 - INFO - Test program
+29/12/2023 22:39:42 - INFO - Port detected: COM3
+29/12/2023 22:39:42 - ERROR - Failed to connect to ESP32: could not open port 'COM3': PermissionError(13, 'Accès refusé.', None, 5)
+29/12/2023 22:40:40 - INFO - Port detected: COM3
+29/12/2023 22:40:40 - INFO - Lidar connected
+29/12/2023 22:40:42 - INFO - Starting motor
+29/12/2023 22:40:44 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+29/12/2023 22:40:45 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:40:46 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:40:47 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:40:47 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+29/12/2023 22:40:47 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:40:48 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:40:49 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:40:54 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:40:54 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+29/12/2023 22:40:54 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:40:54 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+29/12/2023 22:40:54 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:40:54 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+29/12/2023 22:40:54 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:40:55 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+29/12/2023 22:40:55 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:40:55 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+29/12/2023 22:40:55 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:40:55 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+29/12/2023 22:40:56 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:40:56 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+29/12/2023 22:40:56 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:40:56 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+29/12/2023 22:40:56 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:41:15 - INFO - Stopping LiDAR motor
+29/12/2023 22:41:15 - INFO - Stoping scanning
+29/12/2023 22:45:54 - INFO - Port detected: COM3
+29/12/2023 22:45:54 - ERROR - Failed to create an instance of RPLidar: list index out of range
+29/12/2023 22:45:57 - INFO - Test program
+29/12/2023 22:45:57 - INFO - Port detected: COM3
+29/12/2023 22:45:57 - ERROR - Failed to connect to ESP32: could not open port 'COM3': PermissionError(13, 'Accès refusé.', None, 5)
+29/12/2023 22:46:04 - INFO - Port detected: COM3
+29/12/2023 22:46:04 - INFO - Lidar connected
+29/12/2023 22:46:06 - INFO - Starting motor
+29/12/2023 22:46:08 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 22:46:09 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:46:11 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:46:11 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:46:13 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:46:15 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:46:16 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:46:16 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 22:46:17 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:46:35 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:46:41 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:46:41 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 22:46:42 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:46:42 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 22:46:42 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:46:42 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 22:46:43 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:46:43 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 22:46:43 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:46:43 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 22:46:44 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:46:44 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 22:46:44 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:47:27 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:47:27 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 22:47:27 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:47:27 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 22:47:27 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:47:27 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 22:47:28 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:47:28 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 22:47:28 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:47:29 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 22:47:29 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:47:29 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 22:47:30 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 22:47:30 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:47:30 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 22:47:31 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:47:32 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 22:47:32 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:47:32 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 22:47:33 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:47:34 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:48:35 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:48:35 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 22:48:39 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:48:39 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 22:48:39 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:48:39 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 22:48:39 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:48:39 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 22:48:40 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:48:40 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 22:48:41 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:48:41 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 22:48:41 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:48:41 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 22:48:41 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:49:52 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:49:52 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 22:49:52 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:49:53 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 22:49:53 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:49:53 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 22:49:53 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:49:53 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 22:49:54 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:49:54 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 22:49:55 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:49:56 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 22:49:56 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:49:56 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 22:49:57 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:49:57 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 22:49:57 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:49:57 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 22:49:57 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:49:57 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 22:49:57 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:49:57 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 22:49:58 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:49:59 - INFO - Stopping LiDAR motor
+29/12/2023 22:49:59 - INFO - Stoping scanning
+29/12/2023 22:56:12 - INFO - Port detected: COM3
+29/12/2023 22:56:12 - ERROR - Failed to create an instance of RPLidar: list index out of range
+29/12/2023 22:56:15 - INFO - Test program
+29/12/2023 22:56:15 - INFO - Port detected: COM3
+29/12/2023 22:56:15 - ERROR - Failed to connect to ESP32: could not open port 'COM3': PermissionError(13, 'Accès refusé.', None, 5)
+29/12/2023 22:56:21 - INFO - Port detected: COM3
+29/12/2023 22:56:21 - INFO - Lidar connected
+29/12/2023 22:56:23 - INFO - Starting motor
+29/12/2023 22:56:25 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+29/12/2023 22:56:26 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:56:26 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+29/12/2023 22:56:27 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:56:30 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:56:30 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+29/12/2023 22:56:30 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:56:32 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:56:32 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+29/12/2023 22:56:33 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:56:33 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+29/12/2023 22:56:33 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:56:35 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:56:42 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+29/12/2023 22:56:45 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+29/12/2023 22:56:48 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:56:50 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:56:52 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:56:54 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:56:54 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+29/12/2023 22:56:54 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:56:59 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:56:59 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+29/12/2023 22:56:59 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:57:00 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+29/12/2023 22:57:01 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:57:01 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+29/12/2023 22:57:01 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:57:05 - INFO - Stopping LiDAR motor
+29/12/2023 22:57:05 - INFO - Stoping scanning
+29/12/2023 22:58:41 - ERROR - No port detected
+29/12/2023 22:58:41 - INFO - Test program
+29/12/2023 22:58:54 - INFO - Port detected: COM3
+29/12/2023 22:58:54 - INFO - Lidar connected
+29/12/2023 22:58:56 - INFO - Starting motor
+29/12/2023 22:58:58 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 22:58:58 - ERROR - Failed to unload JSON: Expecting value: line 2 column 1 (char 2)
+29/12/2023 22:58:58 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 22:58:58 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 22:58:58 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 22:58:58 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 22:58:58 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 22:58:59 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 22:58:59 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 22:58:59 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 22:58:59 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 22:59:00 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:59:01 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:59:02 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:59:25 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:59:25 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 22:59:25 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 22:59:47 - INFO - Stopping LiDAR motor
+29/12/2023 22:59:47 - INFO - Stoping scanning
+29/12/2023 23:20:50 - INFO - Port detected: COM3
+29/12/2023 23:20:51 - INFO - Lidar connected
+29/12/2023 23:20:52 - INFO - Starting motor
+29/12/2023 23:20:54 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 23:20:54 - ERROR - Failed to unload JSON: Expecting value: line 2 column 1 (char 2)
+29/12/2023 23:20:54 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 23:20:55 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 23:20:55 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 23:20:55 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 23:20:55 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 23:20:55 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 23:20:55 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 23:20:55 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 23:20:56 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 23:20:56 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 23:20:58 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 23:20:59 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 23:21:00 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 23:21:00 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 23:21:00 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 23:21:02 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 23:21:02 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 23:21:02 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 23:21:02 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 23:21:02 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 23:21:03 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 23:21:03 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 23:21:04 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 23:21:46 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 23:21:47 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 23:21:47 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 23:21:47 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 23:21:47 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 23:21:48 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 23:21:48 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 23:21:48 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 23:21:49 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 23:21:50 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 23:21:50 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 23:21:51 - INFO - Stopping LiDAR motor
+29/12/2023 23:21:51 - INFO - Stoping scanning
+29/12/2023 23:23:09 - INFO - Port detected: COM3
+29/12/2023 23:23:09 - INFO - Lidar connected
+29/12/2023 23:23:11 - INFO - Starting motor
+29/12/2023 23:23:13 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 23:23:13 - ERROR - Failed to unload JSON: Expecting value: line 2 column 1 (char 2)
+29/12/2023 23:23:13 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 23:23:13 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 23:23:13 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 23:23:13 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 23:23:13 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 23:23:14 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 23:23:14 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 23:23:14 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+29/12/2023 23:23:14 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 23:23:15 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 23:23:15 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+29/12/2023 23:23:15 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 23:23:16 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 23:23:17 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 23:23:19 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 23:23:19 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+29/12/2023 23:23:19 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 23:23:21 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+29/12/2023 23:23:21 - WARNING - Too many measurments in the input buffer: 8154/4000. Clearing buffer...
+29/12/2023 23:23:29 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+29/12/2023 23:23:29 - WARNING - Too many measurments in the input buffer: 12728/4000. Clearing buffer...
+29/12/2023 23:23:29 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+29/12/2023 23:23:36 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 23:23:36 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+29/12/2023 23:23:36 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 23:23:36 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+29/12/2023 23:23:39 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 23:23:39 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+29/12/2023 23:23:40 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 23:23:40 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+29/12/2023 23:23:41 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 23:23:42 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+29/12/2023 23:23:43 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 23:23:46 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+29/12/2023 23:23:46 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 23:23:46 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+29/12/2023 23:23:46 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+29/12/2023 23:23:58 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+29/12/2023 23:23:59 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+29/12/2023 23:23:59 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+29/12/2023 23:24:00 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+29/12/2023 23:24:00 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+29/12/2023 23:24:01 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+29/12/2023 23:24:02 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+29/12/2023 23:24:03 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+29/12/2023 23:24:04 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+29/12/2023 23:24:04 - WARNING - Too many measurments in the input buffer: 4025/4000. Clearing buffer...
+29/12/2023 23:24:05 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+29/12/2023 23:24:06 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 23:24:07 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 23:24:08 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 23:24:09 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 23:24:09 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 23:24:10 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 23:24:11 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 23:24:12 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 23:24:13 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+29/12/2023 23:24:13 - WARNING - Too many measurments in the input buffer: 4001/4000. Clearing buffer...
+29/12/2023 23:24:40 - INFO - Stopping LiDAR motor
+29/12/2023 23:24:40 - INFO - Stoping scanning

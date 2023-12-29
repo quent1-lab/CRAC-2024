@@ -89,7 +89,7 @@ float entraxe = 88;
 /*----------------------------- Variables pour l'odométrie ------------------------------*/
 float x = 1500;
 float y = 1000;
-float theta = 180;
+float theta = 0;
 int resolution = 298;
 int reduction = 6;
 int countD = 0;

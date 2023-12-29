@@ -173,7 +173,7 @@ void loop()
     break;
   case 2:
     // Etat 2 : Test de la ligne droite
-    avancer(30);
+    avancer(300);
     tourner(PI/2);
     /*avancer(10);
     tourner(PI);

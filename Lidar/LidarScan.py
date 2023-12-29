@@ -519,6 +519,7 @@ class LidarScanner:
         # Si aucun port n'est détecté, lancer le programme de test
         if len(ports) == 0:
             logging.error("No port detected")
+            print("Aucun port détecté")
             self.programme_test(1)
             exit(0)
 
@@ -809,7 +810,6 @@ class LidarScanner:
         exit(0)
 
     def run(self):
-        
         try:
             esp32 = ComESP32(port=self.interface_choix_port(), baudrate=115200)
             esp32.connect()

@@ -83,13 +83,13 @@ int t_delay_press = 1500;
 int t_delay_bounce = 120;
 
 // Variables pour les compteurs des encodeurs
-float rayon = 2.2;
-float entraxe = 8.8;
+float rayon = 22;
+float entraxe = 88;
 
 /*----------------------------- Variables pour l'odométrie ------------------------------*/
 float x = 1500;
 float y = 1000;
-float theta = 0;
+float theta = 180;
 int resolution = 298;
 int reduction = 6;
 int countD = 0;

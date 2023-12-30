@@ -860,7 +860,11 @@ class LidarScanner:
             except KeyboardInterrupt:
                 self.stop()
                 break
+                
+            finally:
+                self.stop(esp32)
 
 if __name__ == '__main__':
     scanner = LidarScanner()
     scanner.run()
+    

@@ -32,6 +32,8 @@ class ComESP32:
             logging.error(f"Failed to connect to ESP32: {e}")
             raise
         self.connected = True
+        print("esp32 connected")
+        logging.info("esp32 connected")
         #Envoie x et y du robot a ESP32 en bytes et JSON
         #self.send(json.dumps({"x": 500, "y" : 500}).encode())
     
@@ -670,7 +672,7 @@ class LidarScanner:
         
         if mode == 0:
             try:
-                esp32 = ComESP32(port=self.interface_choix_port(), baudrate=115200)   
+                esp32 = ComESP32(port=None, baudrate=115200)   
             except Exception as e:
                 logging.error(f"Failed to connect to ESP32: {e}")
                 print("Erreur de connexion à l'ESP32")
@@ -806,18 +808,15 @@ class LidarScanner:
         self.lidar.stop()
         time.sleep(1)
         self.lidar.disconnect()
-        esp.disconnect()
+        if esp.get_status():
+            esp.send("stop")
+            esp.disconnect()
         exit(0)
 
     def run(self):
-        try:
-            esp32 = ComESP32(port=self.interface_choix_port(), baudrate=115200)
-            esp32.connect()
-            print("esp32 connected")
-        except Exception as e:
-            logging.error(f"Failed to connect to ESP32: {e}")
-            print("Erreur de connexion à l'ESP32")
-            raise
+            
+        esp32 = ComESP32(port=None, baudrate=115200)
+        esp32.connect()
     
         self.connexion_lidar()
 
@@ -858,11 +857,8 @@ class LidarScanner:
                 time.sleep(1)
                 
             except KeyboardInterrupt:
-                self.stop()
+                self.stop(self.esp32)
                 break
-                
-            finally:
-                self.stop(esp32)
 
 if __name__ == '__main__':
     scanner = LidarScanner()

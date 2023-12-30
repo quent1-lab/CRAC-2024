@@ -9698,3 +9698,35 @@ INFO:rplidar:Stoping scanning
 29/12/2023 23:24:13 - WARNING - Too many measurments in the input buffer: 4001/4000. Clearing buffer...
 29/12/2023 23:24:40 - INFO - Stopping LiDAR motor
 29/12/2023 23:24:40 - INFO - Stoping scanning
+30/12/2023 20:18:12 - ERROR - No port detected
+30/12/2023 20:18:12 - INFO - Test program
+30/12/2023 20:18:43 - ERROR - No port detected
+30/12/2023 20:18:43 - INFO - Lidar connected
+30/12/2023 20:18:45 - INFO - Stoping scanning
+30/12/2023 20:18:46 - INFO - Stopping LiDAR motor
+30/12/2023 20:18:46 - INFO - Stoping scanning
+30/12/2023 20:18:47 - ERROR - Failed to disconnect from ESP32: 'NoneType' object has no attribute 'close'
+30/12/2023 20:19:25 - ERROR - No port detected
+30/12/2023 20:19:25 - INFO - Lidar connected
+30/12/2023 20:19:28 - INFO - Stoping scanning
+30/12/2023 20:19:30 - INFO - Stoping scanning
+30/12/2023 20:19:32 - INFO - Stoping scanning
+30/12/2023 20:19:34 - INFO - Stoping scanning
+30/12/2023 20:22:31 - ERROR - No port detected
+30/12/2023 20:22:31 - INFO - Lidar connected
+30/12/2023 20:22:33 - INFO - Starting motor
+30/12/2023 20:22:45 - INFO - Stopping LiDAR motor
+30/12/2023 20:22:45 - INFO - Stoping scanning
+30/12/2023 20:22:46 - ERROR - Failed to disconnect from ESP32: 'NoneType' object has no attribute 'close'
+30/12/2023 20:24:15 - ERROR - No port detected
+30/12/2023 20:24:16 - INFO - Lidar connected
+30/12/2023 20:24:17 - INFO - Starting motor
+30/12/2023 20:24:23 - INFO - Stopping LiDAR motor
+30/12/2023 20:24:23 - INFO - Stoping scanning
+30/12/2023 20:26:43 - ERROR - No port detected
+30/12/2023 20:26:43 - INFO - Lidar connected
+30/12/2023 20:26:45 - INFO - Starting motor
+30/12/2023 20:26:49 - INFO - Stopping LiDAR motor
+30/12/2023 20:26:49 - INFO - Stoping scanning
+30/12/2023 20:27:03 - ERROR - No port detected
+30/12/2023 20:27:03 - INFO - Test program

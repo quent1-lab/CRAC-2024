@@ -36,6 +36,7 @@ def process_data(data):
 scan_data = [0] * 360
 
 lidar.connect()
+print(lidar.get_info())
 
 try:
     for scan in lidar.iter_scans():

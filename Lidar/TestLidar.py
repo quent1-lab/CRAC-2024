@@ -10,7 +10,7 @@ lcd.fill((0, 0, 0))
 pygame.display.update()
 
 # Configuration du lidar
-PORT_NAME = 'COM5'  # À modifier en fonction du port utilisé
+PORT_NAME = 'COM5'  # À modifier en fonction du port utilisé ; sur linux : /dev/ttyUSBx (x = 0, 1, 2, ...)
 lidar = RPLidar(PORT_NAME)
 
 # Utilisé pour mettre à l'échelle les données pour les afficher à l'écran

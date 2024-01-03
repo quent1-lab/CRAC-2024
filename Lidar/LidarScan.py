@@ -318,10 +318,9 @@ class LidarScanner:
 
     def draw_point(self, x, y, angle, distance):
         new_angle = angle - self.ROBOT_ANGLE
+        new_angle %= 360
         if new_angle < 0:
             new_angle += 360
-        else:
-            new_angle %= 360
         x += int(distance * math.cos(new_angle * math.pi / 180))
         y += int(distance * math.sin(new_angle * math.pi / 180))
 
@@ -362,7 +361,7 @@ class LidarScanner:
             ((objet.x + vitesse * math.cos(direction)) * self.X_RATIO, (objet.y + vitesse * math.sin(direction)) * self.Y_RATIO), 3)
 
     def detect_object(self, scan):
-        objet = min(scan, key=lambda x: x[2])
+        objet = min(scan, key=lambda x: x[2]) #Sélectionne le point le plus proche du robot
         angle_objet = objet[1]
         distance_objet = objet[2]
         points_autour_objet = []
@@ -378,6 +377,7 @@ class LidarScanner:
 
         for point in points_autour_objet:
             new_angle = point[1] - self.ROBOT_ANGLE
+            new_angle %= 360
             if new_angle < 0:
                 new_angle += 360
             x += point[2] * math.cos(new_angle * math.pi / 180)

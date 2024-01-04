@@ -317,14 +317,7 @@ class LidarScanner:
                           (self.FIELD_SIZE[0] - 2 * self.BORDER_DISTANCE) * self.X_RATIO + 10,
                           (self.FIELD_SIZE[1] - 2 * self.BORDER_DISTANCE) * self.Y_RATIO + 10), 10)
 
-    def draw_point(self, x, y, angle, distance):
-        new_angle = angle - self.ROBOT_ANGLE
-        new_angle %= 360
-        if new_angle < 0:
-            new_angle += 360
-        x += int(distance * math.cos(new_angle * math.pi / 180))
-        y += int(distance * math.sin(new_angle * math.pi / 180))
-
+    def draw_point(self, x, y):
         self.POINT_COLOR = (200, 200, 200)
 
         if x > self.FIELD_SIZE[0] - self.BORDER_DISTANCE:
@@ -340,12 +333,8 @@ class LidarScanner:
         elif y < self.BORDER_DISTANCE:
             y = self.BORDER_DISTANCE
             self.POINT_COLOR = (0, 255, 0)
-
-        try:
-            pygame.draw.circle(self.lcd, pygame.Color(self.POINT_COLOR), (x * self.X_RATIO, y * self.Y_RATIO), 3)
-        except pygame.error as e:
-            print("Failed to draw circle")
-            logging.error(f"Failed to draw circle: {e}")
+        
+        pygame.draw.circle(self.lcd, pygame.Color(self.POINT_COLOR), (x * self.X_RATIO, y * self.Y_RATIO), 3)
 
     def draw_object(self, objet):
         pygame.draw.circle(self.lcd, pygame.Color(255, 255, 0), (objet.x * self.X_RATIO, objet.y * self.Y_RATIO), 10)
@@ -392,7 +381,7 @@ class LidarScanner:
         if len(ports) == 0:
             logging.error("No port detected")
             print("Aucun port détecté")
-            self.programme_test(1)
+            self.programme_simulation(1)
             exit(0)
 
         if len(ports) == 1:
@@ -481,6 +470,32 @@ class LidarScanner:
         pygame.display.update()
         time.sleep(1.5)
 
+    def transform_scan(self, scan):
+        """
+        Transforme les données du scan en coordonnées cartésiennes.
+        Retire les points en dehors du terrain de jeu.
+
+        :param scan: Liste de tuples (quality, angle, distance)
+        :return: Liste de tuples (x, y, distance)
+        """
+        points = []
+        for point in scan:
+            distance = point[2]
+            new_angle = point[1] - self.ROBOT_ANGLE
+            
+            new_angle %= 360
+            if new_angle < 0:
+                new_angle += 360
+
+            if distance != 0:
+                x = distance * math.cos(math.radians(new_angle)) + self.ROBOT.x
+                y = distance * math.sin(math.radians(new_angle)) + self.ROBOT.y
+
+                # Vérifier si le point est en dehors du terrain de jeu
+                if self.BORDER_DISTANCE < x < self.FIELD_SIZE[0] - self.BORDER_DISTANCE and self.BORDER_DISTANCE < y < self.FIELD_SIZE[1] - self.BORDER_DISTANCE:
+                    points.append((x, y, distance))
+        return points
+
     def detect_object(self, scan):
         iteration = 0
         while True:
@@ -499,13 +514,12 @@ class LidarScanner:
             # Sélectionne le point le plus proche du robot
             point_proche = min(points_non_objets, key=lambda x: x[2])
             distance_objet = point_proche[2]
-            angle_objet = point_proche[1]
+            x_objet = point_proche[0]
+            y_objet = point_proche[1]
             points_autour_objet = []
 
             # Si le point le plus proche du robot est en dehors du terrain de jeu, retourner None
-            x_min = distance_objet * math.cos(math.radians(angle_objet - self.ROBOT_ANGLE)) + self.ROBOT.x
-            y_min = distance_objet * math.sin(math.radians(angle_objet - self.ROBOT_ANGLE)) + self.ROBOT.y
-            if x_min < self.BORDER_DISTANCE or x_min > self.FIELD_SIZE[0] - self.BORDER_DISTANCE or y_min < self.BORDER_DISTANCE or y_min > self.FIELD_SIZE[1] - self.BORDER_DISTANCE:
+            if x_objet < self.BORDER_DISTANCE or x_objet > self.FIELD_SIZE[0] - self.BORDER_DISTANCE or y_objet < self.BORDER_DISTANCE or y_objet > self.FIELD_SIZE[1] - self.BORDER_DISTANCE:
                 return None
 
             # Sélectionne les points autour de l'objet en fonction de la distance des points
@@ -518,26 +532,17 @@ class LidarScanner:
                 return None
 
             # Calcul des coordonnées moyennes pondérées des points autour de l'objet
-            x = sum(p[2] * math.cos(math.radians(p[1] - self.ROBOT_ANGLE)) for p in points_autour_objet) / len(points_autour_objet)
-            y = sum(p[2] * math.sin(math.radians(p[1] - self.ROBOT_ANGLE)) for p in points_autour_objet) / len(points_autour_objet)
-
-            # Calcul des coordonnées réelles de l'objet
-            x += self.ROBOT.x
-            y += self.ROBOT.y
+            x = sum([point[0] for point in points_autour_objet]) / len(points_autour_objet)
+            y = sum([point[1] for point in points_autour_objet]) / len(points_autour_objet)
 
             iteration += 1
 
             # Calcul de la taille de l'objet
-            angles = [p[1] for p in points_autour_objet]
-            distances = [p[2] for p in points_autour_objet]
-            angle_min = min(angles)
-            angle_max = max(angles)
-            distance_min = min(distances)
-            distance_max = max(distances)
-            taille = math.sqrt((distance_max * math.cos(math.radians(angle_max - self.ROBOT_ANGLE)) -
-                                distance_min * math.cos(math.radians(angle_min - self.ROBOT_ANGLE))) ** 2 +
-                            (distance_max * math.sin(math.radians(angle_max - self.ROBOT_ANGLE)) -
-                                distance_min * math.sin(math.radians(angle_min - self.ROBOT_ANGLE))) ** 2)
+            x_min = min(points_autour_objet, key=lambda x: x[0])
+            x_max = max(points_autour_objet, key=lambda x: x[0])
+            y_min = min(points_autour_objet, key=lambda x: x[1])
+            y_max = max(points_autour_objet, key=lambda x: x[1])
+            taille = math.sqrt((x_max[0] - x_min[0])**2 + (y_max[1] - y_min[1])**2)
 
             # Seuil de détection d'un objet en mm
             SEUIL = 100  # en mm (distance que peut parcourir le robot entre deux scans)
@@ -717,7 +722,7 @@ class LidarScanner:
             self.draw_text_center("LiDAR non connecté", self.WINDOW_SIZE[0] / 2, self.WINDOW_SIZE[1] / 2)
             pygame.display.update()
             time.sleep(3)
-            self.programme_test()
+            self.programme_simulation()
             raise
         
     def valeur_de_test(self):
@@ -734,9 +739,9 @@ class LidarScanner:
             scan.append((0, angle, distance))
         return scan
 
-    def programme_test(self, mode=0):
-        print("Programme de test")
-        logging.info("Test program")
+    def programme_simulation(self, mode=0):
+        print("Programme de simulation")
+        logging.info("Starting simulation program")
         
         if mode == 0:
             try:
@@ -758,16 +763,19 @@ class LidarScanner:
                     print(esp32.load_json(esp32.receive()))
 
             scan = self.valeur_de_test()
-            self.detect_object(scan)
+            new_scan = self.transform_scan(scan)
+
+            self.detect_object(new_scan)
             self.draw_background()
+            self.draw_text_center("PROGRAMME DE SIMULATION", self.WINDOW_SIZE[0] / 2, 35, self.RED)
             self.draw_robot(self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)
             for objet in self.objets:
                 self.draw_object(objet)
-                trajectoire_actuel, trajectoire_adverse, trajectoire_evitement = self.trajectoires_anticipation(self.ROBOT, objet, 1.0, 0.1, 50)
+                trajectoire_actuel, trajectoire_adverse, trajectoire_evitement = self.trajectoires_anticipation(self.ROBOT, objet, 1.5, 0.1, 50)
                 self.draw_all_trajectoires(trajectoire_actuel, trajectoire_adverse, trajectoire_evitement)
 
-            for point in scan:
-                self.draw_point(self.ROBOT.x, self.ROBOT.y, point[1], point[2])
+            for point in new_scan:
+                self.draw_point(point[0], point[1])
 
             pygame.display.update()
             self.lcd.fill(self.WHITE)

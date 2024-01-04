@@ -9946,3 +9946,7 @@ INFO:rplidar:Stoping scanning
 04/01/2024 23:37:30 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
 04/01/2024 23:37:33 - INFO - Test program
 04/01/2024 23:37:33 - ERROR - No port detected
+04/01/2024 23:59:55 - ERROR - No port detected
+04/01/2024 23:59:55 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 23:59:58 - INFO - Test program
+04/01/2024 23:59:58 - ERROR - No port detected

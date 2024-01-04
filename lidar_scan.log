@@ -9730,3 +9730,219 @@ INFO:rplidar:Stoping scanning
 30/12/2023 20:26:49 - INFO - Stoping scanning
 30/12/2023 20:27:03 - ERROR - No port detected
 30/12/2023 20:27:03 - INFO - Test program
+04/01/2024 18:00:22 - ERROR - No port detected
+04/01/2024 18:00:22 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 18:00:26 - INFO - Test program
+04/01/2024 18:00:26 - ERROR - No port detected
+04/01/2024 18:07:48 - ERROR - No port detected
+04/01/2024 18:07:48 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 18:07:51 - INFO - Test program
+04/01/2024 18:07:51 - ERROR - No port detected
+04/01/2024 18:22:00 - ERROR - No port detected
+04/01/2024 18:22:00 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 18:22:03 - INFO - Test program
+04/01/2024 18:22:03 - ERROR - No port detected
+04/01/2024 20:40:28 - ERROR - No port detected
+04/01/2024 20:40:28 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 20:40:31 - INFO - Test program
+04/01/2024 20:40:31 - ERROR - No port detected
+04/01/2024 20:41:30 - ERROR - No port detected
+04/01/2024 20:41:30 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 20:41:33 - INFO - Test program
+04/01/2024 20:41:33 - ERROR - No port detected
+04/01/2024 20:49:21 - ERROR - No port detected
+04/01/2024 20:49:21 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 20:49:24 - INFO - Test program
+04/01/2024 20:49:24 - ERROR - No port detected
+04/01/2024 20:56:48 - ERROR - No port detected
+04/01/2024 20:56:48 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 20:56:51 - INFO - Test program
+04/01/2024 20:56:51 - ERROR - No port detected
+04/01/2024 20:58:28 - ERROR - No port detected
+04/01/2024 20:58:28 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 20:58:31 - INFO - Test program
+04/01/2024 20:58:31 - ERROR - No port detected
+04/01/2024 21:00:02 - ERROR - No port detected
+04/01/2024 21:00:02 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 21:00:05 - INFO - Test program
+04/01/2024 21:00:05 - ERROR - No port detected
+04/01/2024 21:00:47 - ERROR - No port detected
+04/01/2024 21:00:47 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 21:00:50 - INFO - Test program
+04/01/2024 21:00:50 - ERROR - No port detected
+04/01/2024 21:44:36 - ERROR - No port detected
+04/01/2024 21:44:36 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 21:44:39 - INFO - Test program
+04/01/2024 21:44:39 - ERROR - No port detected
+04/01/2024 21:46:24 - ERROR - No port detected
+04/01/2024 21:46:24 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 21:46:27 - INFO - Test program
+04/01/2024 21:46:27 - ERROR - No port detected
+04/01/2024 21:46:45 - ERROR - No port detected
+04/01/2024 21:46:45 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 21:46:48 - INFO - Test program
+04/01/2024 21:46:48 - ERROR - No port detected
+04/01/2024 21:49:39 - ERROR - No port detected
+04/01/2024 21:49:39 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 21:49:42 - INFO - Test program
+04/01/2024 21:49:42 - ERROR - No port detected
+04/01/2024 21:54:43 - ERROR - No port detected
+04/01/2024 21:54:43 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 21:54:46 - INFO - Test program
+04/01/2024 21:54:46 - ERROR - No port detected
+04/01/2024 21:55:09 - ERROR - No port detected
+04/01/2024 21:55:09 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 21:55:12 - INFO - Test program
+04/01/2024 21:55:12 - ERROR - No port detected
+04/01/2024 22:41:34 - ERROR - No port detected
+04/01/2024 22:41:34 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 22:41:37 - INFO - Test program
+04/01/2024 22:41:37 - ERROR - No port detected
+04/01/2024 22:42:24 - ERROR - No port detected
+04/01/2024 22:42:24 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 22:42:27 - INFO - Test program
+04/01/2024 22:42:27 - ERROR - No port detected
+04/01/2024 22:44:59 - ERROR - No port detected
+04/01/2024 22:44:59 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 22:45:02 - INFO - Test program
+04/01/2024 22:45:02 - ERROR - No port detected
+04/01/2024 22:47:30 - ERROR - No port detected
+04/01/2024 22:47:30 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 22:47:33 - INFO - Test program
+04/01/2024 22:47:33 - ERROR - No port detected
+04/01/2024 22:47:51 - ERROR - No port detected
+04/01/2024 22:47:51 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 22:47:54 - INFO - Test program
+04/01/2024 22:47:54 - ERROR - No port detected
+04/01/2024 22:48:39 - ERROR - No port detected
+04/01/2024 22:48:39 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 22:48:42 - INFO - Test program
+04/01/2024 22:48:42 - ERROR - No port detected
+04/01/2024 22:48:57 - ERROR - No port detected
+04/01/2024 22:48:58 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 22:49:01 - INFO - Test program
+04/01/2024 22:49:01 - ERROR - No port detected
+04/01/2024 22:49:12 - ERROR - No port detected
+04/01/2024 22:49:12 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 22:49:15 - INFO - Test program
+04/01/2024 22:49:15 - ERROR - No port detected
+04/01/2024 22:49:26 - ERROR - No port detected
+04/01/2024 22:49:26 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 22:49:29 - INFO - Test program
+04/01/2024 22:49:29 - ERROR - No port detected
+04/01/2024 22:50:20 - ERROR - No port detected
+04/01/2024 22:50:20 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 22:50:23 - INFO - Test program
+04/01/2024 22:50:23 - ERROR - No port detected
+04/01/2024 22:51:50 - ERROR - No port detected
+04/01/2024 22:51:50 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 22:51:53 - INFO - Test program
+04/01/2024 22:51:53 - ERROR - No port detected
+04/01/2024 22:52:09 - ERROR - No port detected
+04/01/2024 22:52:09 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 22:52:12 - INFO - Test program
+04/01/2024 22:52:12 - ERROR - No port detected
+04/01/2024 22:53:51 - ERROR - No port detected
+04/01/2024 22:53:52 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 22:53:55 - INFO - Test program
+04/01/2024 22:53:55 - ERROR - No port detected
+04/01/2024 22:54:33 - ERROR - No port detected
+04/01/2024 22:54:33 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 22:54:36 - INFO - Test program
+04/01/2024 22:54:36 - ERROR - No port detected
+04/01/2024 22:55:56 - ERROR - No port detected
+04/01/2024 22:55:56 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 22:55:59 - INFO - Test program
+04/01/2024 22:55:59 - ERROR - No port detected
+04/01/2024 22:59:18 - ERROR - No port detected
+04/01/2024 22:59:18 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 22:59:21 - INFO - Test program
+04/01/2024 22:59:21 - ERROR - No port detected
+04/01/2024 23:00:51 - ERROR - No port detected
+04/01/2024 23:00:51 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 23:00:54 - INFO - Test program
+04/01/2024 23:00:54 - ERROR - No port detected
+04/01/2024 23:01:48 - ERROR - No port detected
+04/01/2024 23:01:48 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 23:01:51 - INFO - Test program
+04/01/2024 23:01:51 - ERROR - No port detected
+04/01/2024 23:04:25 - ERROR - No port detected
+04/01/2024 23:04:25 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 23:04:28 - INFO - Test program
+04/01/2024 23:04:28 - ERROR - No port detected
+04/01/2024 23:05:43 - ERROR - No port detected
+04/01/2024 23:05:43 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 23:05:46 - INFO - Test program
+04/01/2024 23:05:46 - ERROR - No port detected
+04/01/2024 23:08:35 - ERROR - No port detected
+04/01/2024 23:08:35 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 23:08:38 - INFO - Test program
+04/01/2024 23:08:38 - ERROR - No port detected
+04/01/2024 23:09:24 - ERROR - No port detected
+04/01/2024 23:09:24 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 23:09:27 - INFO - Test program
+04/01/2024 23:09:27 - ERROR - No port detected
+04/01/2024 23:11:21 - ERROR - No port detected
+04/01/2024 23:11:21 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 23:11:24 - INFO - Test program
+04/01/2024 23:11:24 - ERROR - No port detected
+04/01/2024 23:12:13 - ERROR - No port detected
+04/01/2024 23:12:13 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 23:12:16 - INFO - Test program
+04/01/2024 23:12:16 - ERROR - No port detected
+04/01/2024 23:13:09 - ERROR - No port detected
+04/01/2024 23:13:09 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 23:13:12 - INFO - Test program
+04/01/2024 23:13:12 - ERROR - No port detected
+04/01/2024 23:17:28 - ERROR - No port detected
+04/01/2024 23:17:28 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 23:17:31 - INFO - Test program
+04/01/2024 23:17:31 - ERROR - No port detected
+04/01/2024 23:17:40 - ERROR - No port detected
+04/01/2024 23:17:40 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 23:17:43 - INFO - Test program
+04/01/2024 23:17:43 - ERROR - No port detected
+04/01/2024 23:17:58 - ERROR - No port detected
+04/01/2024 23:17:58 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 23:18:01 - INFO - Test program
+04/01/2024 23:18:01 - ERROR - No port detected
+04/01/2024 23:18:26 - ERROR - No port detected
+04/01/2024 23:18:26 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 23:18:29 - INFO - Test program
+04/01/2024 23:18:29 - ERROR - No port detected
+04/01/2024 23:21:47 - ERROR - No port detected
+04/01/2024 23:21:47 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 23:21:50 - INFO - Test program
+04/01/2024 23:21:50 - ERROR - No port detected
+04/01/2024 23:22:45 - ERROR - No port detected
+04/01/2024 23:22:45 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 23:22:48 - INFO - Test program
+04/01/2024 23:22:48 - ERROR - No port detected
+04/01/2024 23:23:13 - ERROR - No port detected
+04/01/2024 23:23:13 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 23:23:16 - INFO - Test program
+04/01/2024 23:23:16 - ERROR - No port detected
+04/01/2024 23:24:58 - ERROR - No port detected
+04/01/2024 23:24:58 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 23:25:01 - INFO - Test program
+04/01/2024 23:25:01 - ERROR - No port detected
+04/01/2024 23:26:59 - ERROR - No port detected
+04/01/2024 23:26:59 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 23:27:02 - INFO - Test program
+04/01/2024 23:27:02 - ERROR - No port detected
+04/01/2024 23:30:08 - ERROR - No port detected
+04/01/2024 23:30:08 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 23:30:11 - INFO - Test program
+04/01/2024 23:30:11 - ERROR - No port detected
+04/01/2024 23:33:43 - ERROR - No port detected
+04/01/2024 23:33:43 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 23:33:46 - INFO - Test program
+04/01/2024 23:33:46 - ERROR - No port detected
+04/01/2024 23:34:40 - ERROR - No port detected
+04/01/2024 23:34:40 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 23:34:43 - INFO - Test program
+04/01/2024 23:34:43 - ERROR - No port detected
+04/01/2024 23:37:30 - ERROR - No port detected
+04/01/2024 23:37:30 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+04/01/2024 23:37:33 - INFO - Test program
+04/01/2024 23:37:33 - ERROR - No port detected

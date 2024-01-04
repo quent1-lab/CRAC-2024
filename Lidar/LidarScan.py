@@ -157,6 +157,7 @@ class Objet:
         self.direction = 0
         self.vitesse = 0
         self.vitesse_ms = 0
+        self.points = []
 
     def update_position(self, x, y):
         # Mettre à jour la position de l'objet et ajouter la position précédente à la liste
@@ -205,7 +206,7 @@ class Objet:
         return dx, dy
 
     def __str__(self):
-        return f"Objet {self.id} : x = {self.x} y = {self.y} taille = {self.taille}"
+        return f"Objet {self.id} : x = {self.x} y = {self.y} taille = {self.taille} points = {len(self.points)}"
     
 class LidarScanner:
     def __init__(self, port=None):
@@ -359,8 +360,84 @@ class LidarScanner:
             self.lcd, pygame.Color(255, 255, 0),
             (objet.x * self.X_RATIO, objet.y * self.Y_RATIO),
             ((objet.x + vitesse * math.cos(direction)) * self.X_RATIO, (objet.y + vitesse * math.sin(direction)) * self.Y_RATIO), 3)
-
+    
     def detect_object(self, scan):
+        iteration = 0
+        while True:
+            # Liste des points associés aux objets déjà trouvés
+            points_objets_trouves = []
+            for k in range(iteration):
+                if k < len(self.objets):
+                    points_objets_trouves += self.objets[k].points
+
+            # Sélectionne le point le plus proche du robot en excluant les points des objets déjà trouvés
+            points_non_objets = [point for point in scan if point not in points_objets_trouves]
+            if not points_non_objets:
+                # Aucun point trouvé en dehors des objets, retourner None
+                return None
+
+            # Sélectionne le point le plus proche du robot
+            point_proche = min(points_non_objets, key=lambda x: x[2])
+            distance_objet = point_proche[2]
+            angle_objet = point_proche[1]
+            points_autour_objet = []
+
+            # Si le point le plus proche du robot est en dehors du terrain de jeu, retourner None
+            x_min = distance_objet * math.cos(math.radians(angle_objet - self.ROBOT_ANGLE)) + self.ROBOT.x
+            y_min = distance_objet * math.sin(math.radians(angle_objet - self.ROBOT_ANGLE)) + self.ROBOT.y
+            if x_min < self.BORDER_DISTANCE or x_min > self.FIELD_SIZE[0] - self.BORDER_DISTANCE or y_min < self.BORDER_DISTANCE or y_min > self.FIELD_SIZE[1] - self.BORDER_DISTANCE:
+                return None
+
+            # Sélectionne les points autour de l'objet en fonction de la distance des points
+            for point in scan:
+                if distance_objet - 50 <= point[2] <= distance_objet + 50:
+                    points_autour_objet.append(point)
+
+            if not points_autour_objet or len(points_autour_objet) < 3:
+                # Aucun point autour de l'objet ou pas assez de points, retourner None
+                return None
+
+            # Calcul des coordonnées moyennes pondérées des points autour de l'objet
+            x = sum(p[2] * math.cos(math.radians(p[1] - self.ROBOT_ANGLE)) for p in points_autour_objet) / len(points_autour_objet)
+            y = sum(p[2] * math.sin(math.radians(p[1] - self.ROBOT_ANGLE)) for p in points_autour_objet) / len(points_autour_objet)
+
+            # Calcul des coordonnées réelles de l'objet
+            x += self.ROBOT.x
+            y += self.ROBOT.y
+
+            iteration += 1
+
+            # Calcul de la taille de l'objet
+            angles = [p[1] for p in points_autour_objet]
+            distances = [p[2] for p in points_autour_objet]
+            angle_min = min(angles)
+            angle_max = max(angles)
+            distance_min = min(distances)
+            distance_max = max(distances)
+            taille = math.sqrt((distance_max * math.cos(math.radians(angle_max - self.ROBOT_ANGLE)) -
+                                distance_min * math.cos(math.radians(angle_min - self.ROBOT_ANGLE))) ** 2 +
+                            (distance_max * math.sin(math.radians(angle_max - self.ROBOT_ANGLE)) -
+                                distance_min * math.sin(math.radians(angle_min - self.ROBOT_ANGLE))) ** 2)
+
+            # Seuil de détection d'un objet en mm
+            SEUIL = 100  # en mm (distance que peut parcourir le robot entre deux scans)
+            
+            objet_existant = self.trouver_objet_existants(x, y, taille, SEUIL)
+
+            if objet_existant != None:
+                # Si l'objet est déjà suivi, mettre à jour ses coordonnées
+                self.objets[objet_existant - 1].update_position(x, y)
+                self.objets[objet_existant - 1].taille = taille
+                self.objets[objet_existant - 1].points = points_autour_objet
+            else:
+                # Si l'objet n'est pas déjà suivi, créer un nouvel objet
+                self.id_compteur += 1
+                nouvel_objet = Objet(self.id_compteur, x, y, taille)
+                nouvel_objet.points = points_autour_objet
+                self.objets.append(nouvel_objet)              
+
+
+    def detect_objectss(self, scan, taille):
         objet = min(scan, key=lambda x: x[2]) #Sélectionne le point le plus proche du robot
         angle_objet = objet[1]
         distance_objet = objet[2]
@@ -405,12 +482,7 @@ class LidarScanner:
                 # Si l'objet est déjà suivi, mettre à jour ses coordonnées
                 objet.update_position(x, y)
                 objet.taille = taille
-                return objet
-            else:
-                # Si l'objet n'est pas déjà suivi, créer un nouvel objet
-                #nouvel_objet = Objet(self.id_compteur, x, y, taille)
-                #self.objets.append(nouvel_objet)
-                return objet
+            return objet
             
         if(len(self.objets) < 1):
             # Incrémenter le compteur d'identifiants
@@ -428,8 +500,8 @@ class LidarScanner:
             angle = point[1]
 
             # Calcul des coordonnées du point dans le repère absolu
-            x = self.X_ROBOT + distance * math.cos(math.radians(angle))
-            y = self.Y_ROBOT + distance * math.sin(math.radians(angle))
+            x = self.ROBOT.x + distance * math.cos(math.radians(angle))
+            y = self.ROBOT.y + distance * math.sin(math.radians(angle))
 
             # Filtrer les points en fonction de la taille
             if taille_min <= point[2] <= taille_max:
@@ -451,14 +523,12 @@ class LidarScanner:
                 nouvel_objet = Objet(self.id_compteur, x, y, taille)
                 self.objets.append(nouvel_objet)
 
-        return self.objets
-
     def trouver_objet_existants(self, x, y, taille, seuil_distance=100):
         # Vérifier si l'objet est déjà suivi
         for objet in self.objets:
             distance = math.sqrt((x - objet.x)**2 + (y - objet.y)**2)
             if distance < seuil_distance:
-                return objet
+                return objet.id # Retourne l'ID de l'objet existant
         return None
 
     def choix_du_port(self):
@@ -651,19 +721,16 @@ class LidarScanner:
         
     def valeur_de_test(self):
         scan = []
-        for i in range(0,350,):
+        for i in range(0,360):
             angle = i + self.ROBOT_ANGLE
-            if angle > 360:
-                angle -= 360
-            distance = 3000
+            angle %= 360
+            if 170 <= i <= 185:
+                distance = random.randint(1000, 1050)
+            elif 350 <= i < 360:
+                distance = random.randint(800, 850)
+            else:
+                distance = 3050
             scan.append((0, angle, distance))
-        for i in range(350, 360):
-            angle = i + self.ROBOT_ANGLE
-            if angle > 360:
-                angle -= 360
-            distance = random.randint(800, 850)
-            scan.append((0, angle, distance))
-
         return scan
 
     def programme_test(self, mode=0):
@@ -690,11 +757,14 @@ class LidarScanner:
                     print(esp32.load_json(esp32.receive()))
 
             scan = self.valeur_de_test()
-            zone_objet = self.detect_object(scan)
+            self.detect_object(scan)
             self.draw_background()
             self.draw_robot(self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)
-            self.draw_object(self.objets[0])
-            self.dessiner_trajectoires_anticipation(self.ROBOT, self.objets[0],4)
+            for objet in self.objets:
+                print(objet)
+                self.draw_object(objet)
+                trajectoire_actuel, trajectoire_adverse, trajectoire_evitement = self.trajectoires_anticipation(self.ROBOT, objet, 1.0, 0.1, 50)
+                self.draw_all_trajectoires(trajectoire_actuel, trajectoire_adverse, trajectoire_evitement)
 
             for point in scan:
                 self.draw_point(self.ROBOT.x, self.ROBOT.y, point[1], point[2])
@@ -719,7 +789,7 @@ class LidarScanner:
 
             time.sleep(0.01)
 
-    def dessiner_trajectoires_anticipation(self, robot_actuel, robot_adverse, duree_anticipation=1.0, pas_temps=0.1, distance_securite=50):
+    def trajectoires_anticipation(self, robot_actuel, robot_adverse, duree_anticipation=1.0, pas_temps=0.1, distance_securite=50):
         """
         Dessine les futures trajectoires des robots et la trajectoire d'évitement anticipée.
 
@@ -779,7 +849,10 @@ class LidarScanner:
                     trajectoire_evitement.append((new_x_E, new_y_E))
 
                 break
-
+        
+        return trajectoire_actuel, trajectoire_adverse, trajectoire_evitement
+    
+    def draw_all_trajectoires(self, trajectoire_actuel, trajectoire_adverse, trajectoire_evitement):
         # Dessin des trajectoires
         self.draw_trajectoire(trajectoire_actuel, color=(255, 0, 0))  # Rouge pour le robot actuel
         self.draw_trajectoire(trajectoire_adverse, color=(0, 0, 255))  # Bleu pour le robot adverse
@@ -843,7 +916,8 @@ class LidarScanner:
                     self.draw_robot(self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)
                     zone_objet = self.detect_object(scan)
                     self.draw_object(self.objets[0])
-                    self.dessiner_trajectoires_anticipation(self.ROBOT, self.objets[0])
+                    trajectoire_actuel, trajectoire_adverse, trajectoire_evitement = self.trajectoires_anticipation(self.ROBOT, self.objets[0], 1.0, 0.1, 50)
+                    self.draw_all_trajectoires(trajectoire_actuel, trajectoire_adverse, trajectoire_evitement)
 
                     for (_, angle, distance) in scan:
                         self.draw_point(self.ROBOT.x, self.ROBOT.y, angle, distance)

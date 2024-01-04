@@ -1,6 +1,7 @@
 import pygame
 from math import cos, sin, pi, floor
 from rplidar import RPLidar
+import serial.tools.list_ports
 
 # Initialisation de Pygame et de l'affichage
 pygame.init()
@@ -10,6 +11,10 @@ lcd.fill((0, 0, 0))
 pygame.display.update()
 
 # Configuration du lidar
+serial_number = [port.serial_number for port in serial.tools.list_ports.comports()][0] #Récupère le numéro de série du port disponible
+print(serial_number) #Affiche le numéro de série du port disponible
+#PORT_NAME = [port.name for port in serial.tools.list_ports.comports() if serial_number in port.serial_number][0]
+
 PORT_NAME = 'COM5'  # À modifier en fonction du port utilisé ; sur linux : /dev/ttyUSBx (x = 0, 1, 2, ...)
 lidar = RPLidar(PORT_NAME)
 
@@ -50,7 +55,7 @@ try:
             raise KeyboardInterrupt  # Simuler une interruption au clavier
 
 except KeyboardInterrupt:
-    print('Arrêt.')
+    print('Arrêt !')
 
 finally:
     lidar.stop()

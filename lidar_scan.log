@@ -10157,3 +10157,22 @@ INFO:rplidar:Stoping scanning
 05/01/2024 11:07:08 - INFO - Starting motor
 05/01/2024 11:07:14 - INFO - Stopping LiDAR motor
 05/01/2024 11:07:14 - INFO - Stoping scanning
+05/01/2024 14:08:57 - ERROR - No port detected
+05/01/2024 14:08:57 - INFO - Lidar connected
+05/01/2024 14:08:59 - INFO - Starting motor
+05/01/2024 14:11:02 - ERROR - No port detected
+05/01/2024 14:11:02 - INFO - Lidar connected
+05/01/2024 14:11:03 - INFO - Starting motor
+05/01/2024 14:11:11 - INFO - Stopping LiDAR motor
+05/01/2024 14:11:11 - INFO - Stoping scanning
+05/01/2024 14:11:26 - ERROR - No port detected
+05/01/2024 14:11:26 - INFO - Lidar connected
+05/01/2024 14:11:27 - INFO - Starting motor
+05/01/2024 14:11:38 - WARNING - Too many measurments in the input buffer: 4051/4000. Clearing buffer...
+05/01/2024 14:11:47 - WARNING - Too many measurments in the input buffer: 4003/4000. Clearing buffer...
+05/01/2024 14:12:02 - WARNING - Too many measurments in the input buffer: 4036/4000. Clearing buffer...
+05/01/2024 14:12:10 - WARNING - Too many measurments in the input buffer: 4362/4000. Clearing buffer...
+05/01/2024 14:12:17 - WARNING - Too many measurments in the input buffer: 4006/4000. Clearing buffer...
+05/01/2024 14:12:20 - WARNING - Too many measurments in the input buffer: 4006/4000. Clearing buffer...
+05/01/2024 14:12:21 - INFO - Stopping LiDAR motor
+05/01/2024 14:12:21 - INFO - Stoping scanning

@@ -547,7 +547,7 @@ class LidarScanner:
                 return None
 
             # Sélectionne les points autour de l'objet en fonction des coordonnées (x, y) des points
-            points_autour_objet = self.get_points_in_zone(scan, distance_objet, angle_objet)
+            points_autour_objet = self.get_points_in_zone(points_non_objets, distance_objet, angle_objet)
 
             if not points_autour_objet or len(points_autour_objet) < 3:
                 # Aucun point autour de l'objet ou pas assez de points, retourner None
@@ -570,13 +570,13 @@ class LidarScanner:
             # Seuil de détection d'un objet en mm
             SEUIL = 100  # en mm (distance que peut parcourir le robot entre deux scans)
             
-            objet_existant = self.trouver_objet_existants(x, y, SEUIL)
+            id_objet_existant = self.trouver_id_objet_existants(x, y, SEUIL)
 
-            if objet_existant != None:
+            if id_objet_existant != None:
                 # Si l'objet est déjà suivi, mettre à jour ses coordonnées
-                self.objets[objet_existant - 1].update_position(x, y)
-                self.objets[objet_existant - 1].taille = taille
-                self.objets[objet_existant - 1].points = points_autour_objet
+                self.objets[id_objet_existant - 1].update_position(x, y)
+                self.objets[id_objet_existant - 1].taille = taille
+                self.objets[id_objet_existant - 1].points = points_autour_objet
             else:
                 # Si l'objet n'est pas déjà suivi, créer un nouvel objet
                 self.id_compteur += 1
@@ -639,7 +639,7 @@ class LidarScanner:
             nouvel_objet = Objet(self.id_compteur, x, y, taille)
             self.objets.append(nouvel_objet)
 
-    def trouver_objet_existants(self, x, y, seuil_distance=100):
+    def trouver_id_objet_existants(self, x, y, seuil_distance=100):
         # Vérifier si l'objet est déjà suivi
         for objet in self.objets:
             distance = math.sqrt((x - objet.x)**2 + (y - objet.y)**2)

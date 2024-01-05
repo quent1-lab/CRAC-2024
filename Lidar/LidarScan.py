@@ -557,6 +557,8 @@ class LidarScanner:
             y = sum([point[1] for point in points_autour_objet]) / len(points_autour_objet)
 
             iteration += 1
+            if iteration > 10:
+                return None
 
             # Calcul de la taille de l'objet
             x_min = min(points_autour_objet, key=lambda x: x[0])
@@ -716,7 +718,8 @@ class LidarScanner:
             pygame.display.update()
 
             if self.port == None:
-                self.port = [port.name for port in serial.tools.list_ports.comports() if "0001" in port.serial_number][0]
+                #self.port = [port.name for port in serial.tools.list_ports.comports() if "0001" in port.serial_number][0]
+                self.port = "COM5"
 
             self.lidar = RPLidar(self.port)
             self.lidar.connect()
@@ -741,7 +744,7 @@ class LidarScanner:
             self.lcd.fill(self.LIGHT_GREY)
             self.draw_text_center("LiDAR non connecté", self.WINDOW_SIZE[0] / 2, self.WINDOW_SIZE[1] / 2)
             pygame.display.update()
-            time.sleep(3)
+            time.sleep(1.5)
             self.programme_simulation()
             raise
         
@@ -854,26 +857,31 @@ class LidarScanner:
                             self.ROBOT_ANGLE = math.degrees(data["theta"])
                             self.ROBOT.update_position(data["x"], data["y"])
                     
+                    new_scan = self.transform_scan(scan)
+                    
+                    self.detect_object(new_scan)
                     self.draw_background()
                     self.draw_robot(self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)
-                    zone_objet = self.detect_object(scan)
-                    self.draw_object(self.objets[0])
-                    trajectoire_actuel, trajectoire_adverse, trajectoire_evitement = self.trajectoires_anticipation(self.ROBOT, self.objets[0], 1.0, 0.1, 50)
-                    self.draw_all_trajectoires(trajectoire_actuel, trajectoire_adverse, trajectoire_evitement)
+                    
+                    for objet in self.objets:
+                        self.draw_object(objet)
+                        trajectoire_actuel, trajectoire_adverse, trajectoire_evitement = self.trajectoires_anticipation(self.ROBOT, objet, 1.5, 0.1, 50)
+                        self.draw_all_trajectoires(trajectoire_actuel, trajectoire_adverse, trajectoire_evitement)
 
-                    for (_, angle, distance) in scan:
-                        self.draw_point(self.ROBOT.x, self.ROBOT.y, angle, distance)
+                    for point in new_scan:
+                        self.draw_point(point[0], point[1])
+
                     pygame.display.update()
                     self.lcd.fill(self.WHITE)
                     
             except RPLidarException as e:
                 # Code pour gérer RPLidarException
                 print(f"Une erreur RPLidarException s'est produite dans le run : {e}")
-                self.lidar.stop()
+                self.lidar.stop(esp32)
                 time.sleep(1)
                 
             except KeyboardInterrupt:
-                self.stop(self.esp32)
+                self.stop(esp32)
                 break
 
 if __name__ == '__main__':

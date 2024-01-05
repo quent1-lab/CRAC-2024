@@ -530,7 +530,6 @@ class LidarScanner:
             points_non_objets = [point for point in scan if point not in points_objets_trouves]
             if not points_non_objets:
                 # Aucun point trouvé en dehors des objets, retourner None
-                print("Aucun point trouvé en dehors des objets")
                 return None
 
             # Sélectionne le point le plus proche du robot
@@ -543,7 +542,7 @@ class LidarScanner:
 
             # Si le point le plus proche du robot est en dehors du terrain de jeu, retourner None
             if x_objet < self.BORDER_DISTANCE or x_objet > self.FIELD_SIZE[0] - self.BORDER_DISTANCE or y_objet < self.BORDER_DISTANCE or y_objet > self.FIELD_SIZE[1] - self.BORDER_DISTANCE:
-                print("Point le plus proche en dehors du terrain de jeu")
+                # Aucun point trouvé en dehors des objets, retourner None
                 return None
 
             # Sélectionne les points autour de l'objet en fonction des coordonnées (x, y) des points
@@ -551,7 +550,6 @@ class LidarScanner:
 
             if not points_autour_objet or len(points_autour_objet) < 3:
                 # Aucun point autour de l'objet ou pas assez de points, retourner None
-                print("Pas assez de points autour de l'objet")
                 return None
 
             # Calcul des coordonnées moyennes pondérées des points autour de l'objet
@@ -671,7 +669,6 @@ class LidarScanner:
         trajectoire_evitement = []
 
         # Simulation de mouvement pour anticiper la trajectoire future des robots
-        temps_total = duree_anticipation
         for temps in range(int(duree_anticipation / pas_temps)):
             # Calcul des nouvelles positions des robots
             new_x_R, new_y_R = robot_actuel.calculate_dx_dy(robot_actuel.direction, vitesse_actuel, pas_temps)

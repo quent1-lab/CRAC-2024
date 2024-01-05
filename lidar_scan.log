@@ -10070,3 +10070,71 @@ INFO:rplidar:Stoping scanning
 05/01/2024 01:22:12 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
 05/01/2024 01:22:15 - INFO - Starting simulation program
 05/01/2024 01:22:15 - ERROR - No port detected
+05/01/2024 01:24:12 - ERROR - No port detected
+05/01/2024 01:24:12 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+05/01/2024 01:24:15 - INFO - Starting simulation program
+05/01/2024 01:24:15 - ERROR - No port detected
+05/01/2024 01:35:05 - ERROR - No port detected
+05/01/2024 01:35:05 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+05/01/2024 01:35:06 - INFO - Starting simulation program
+05/01/2024 01:35:06 - ERROR - No port detected
+05/01/2024 01:35:55 - ERROR - No port detected
+05/01/2024 01:35:55 - ERROR - Failed to create an instance of RPLidar: argument of type 'NoneType' is not iterable
+05/01/2024 01:35:56 - INFO - Starting simulation program
+05/01/2024 01:35:56 - ERROR - No port detected
+05/01/2024 01:36:10 - ERROR - No port detected
+05/01/2024 01:36:11 - INFO - Lidar connected
+05/01/2024 01:36:12 - INFO - Starting motor
+05/01/2024 01:37:45 - ERROR - No port detected
+05/01/2024 01:37:45 - INFO - Lidar connected
+05/01/2024 01:38:20 - ERROR - No port detected
+05/01/2024 01:38:20 - INFO - Lidar connected
+05/01/2024 01:38:22 - INFO - Starting motor
+05/01/2024 01:38:33 - INFO - Stopping LiDAR motor
+05/01/2024 01:38:33 - INFO - Stoping scanning
+05/01/2024 01:39:08 - ERROR - No port detected
+05/01/2024 01:39:08 - INFO - Lidar connected
+05/01/2024 01:39:10 - INFO - Starting motor
+05/01/2024 01:39:15 - INFO - Stopping LiDAR motor
+05/01/2024 01:39:15 - INFO - Stoping scanning
+05/01/2024 01:39:27 - ERROR - No port detected
+05/01/2024 01:39:27 - INFO - Lidar connected
+05/01/2024 01:39:29 - INFO - Starting motor
+05/01/2024 01:39:36 - INFO - Stopping LiDAR motor
+05/01/2024 01:39:36 - INFO - Stoping scanning
+05/01/2024 01:39:45 - ERROR - No port detected
+05/01/2024 01:39:45 - INFO - Lidar connected
+05/01/2024 01:39:47 - INFO - Starting motor
+05/01/2024 01:39:53 - INFO - Stopping LiDAR motor
+05/01/2024 01:39:53 - INFO - Stoping scanning
+05/01/2024 01:40:22 - ERROR - No port detected
+05/01/2024 01:40:22 - INFO - Lidar connected
+05/01/2024 01:40:23 - INFO - Starting motor
+05/01/2024 01:41:03 - INFO - Stopping LiDAR motor
+05/01/2024 01:41:03 - INFO - Stoping scanning
+05/01/2024 01:41:16 - ERROR - No port detected
+05/01/2024 01:41:16 - INFO - Lidar connected
+05/01/2024 01:41:18 - INFO - Starting motor
+05/01/2024 01:41:35 - INFO - Stopping LiDAR motor
+05/01/2024 01:41:35 - INFO - Stoping scanning
+05/01/2024 01:42:38 - ERROR - No port detected
+05/01/2024 01:42:38 - INFO - Lidar connected
+05/01/2024 01:42:39 - INFO - Starting motor
+05/01/2024 01:43:18 - INFO - Stopping LiDAR motor
+05/01/2024 01:43:18 - INFO - Stoping scanning
+05/01/2024 01:43:23 - ERROR - No port detected
+05/01/2024 01:43:23 - INFO - Lidar connected
+05/01/2024 01:43:24 - INFO - Starting motor
+05/01/2024 01:44:54 - INFO - Stopping LiDAR motor
+05/01/2024 01:44:54 - INFO - Stoping scanning
+05/01/2024 01:45:28 - ERROR - No port detected
+05/01/2024 01:45:28 - INFO - Lidar connected
+05/01/2024 01:45:29 - INFO - Starting motor
+05/01/2024 01:45:35 - WARNING - Too many measurments in the input buffer: 4063/4000. Clearing buffer...
+05/01/2024 01:45:42 - WARNING - Too many measurments in the input buffer: 4002/4000. Clearing buffer...
+05/01/2024 01:45:49 - WARNING - Too many measurments in the input buffer: 4092/4000. Clearing buffer...
+05/01/2024 01:45:57 - WARNING - Too many measurments in the input buffer: 4027/4000. Clearing buffer...
+05/01/2024 01:46:02 - WARNING - Too many measurments in the input buffer: 4046/4000. Clearing buffer...
+05/01/2024 01:46:08 - WARNING - Too many measurments in the input buffer: 4086/4000. Clearing buffer...
+05/01/2024 01:46:09 - INFO - Stopping LiDAR motor
+05/01/2024 01:46:09 - INFO - Stoping scanning

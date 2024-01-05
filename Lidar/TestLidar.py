@@ -14,9 +14,9 @@ pygame.display.update()
 #Récupère le numéro de série du port disponible
 serial_number = [port.serial_number for port in serial.tools.list_ports.comports()][0] 
 print("Numéro de série :", serial_number) #Affiche le numéro de série du port disponible
-#PORT_NAME = [port.name for port in serial.tools.list_ports.comports() if serial_number in port.serial_number][0]
+PORT_NAME = [ports.name for ports in serial.tools.list_ports.comports() if serial_number in ports.serial_number][0]
 
-PORT_NAME = 'COM5'  # À modifier en fonction du port utilisé ; sur linux : /dev/ttyUSBx (x = 0, 1, 2, ...)
+#PORT_NAME = 'COM5'  # À modifier en fonction du port utilisé ; sur linux : /dev/ttyUSBx (x = 0, 1, 2, ...)
 lidar = RPLidar(PORT_NAME)
 
 # Utilisé pour mettre à l'échelle les données pour les afficher à l'écran

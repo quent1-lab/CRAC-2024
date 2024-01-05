@@ -493,8 +493,29 @@ class LidarScanner:
 
                 # Vérifier si le point est en dehors du terrain de jeu
                 if self.BORDER_DISTANCE < x < self.FIELD_SIZE[0] - self.BORDER_DISTANCE and self.BORDER_DISTANCE < y < self.FIELD_SIZE[1] - self.BORDER_DISTANCE:
-                    points.append((x, y, distance))
+                    points.append((x, y, distance, new_angle))
         return points
+
+    def get_points_in_zone(self, points, origin_distance, origin_angle):
+        """
+        Renvoie les points compris dans une zone spécifiée par un seuil de distance par rapport à un point d'origine et une position angulaire.
+
+        :param points: Liste de points à vérifier. Chaque point est un tuple (x, y, distance, angle).
+        :param origin_distance: Distance du point d'origine.
+        :param origin_angle: Angle du point d'origine.
+        :return: Liste des points dans la zone.
+        """
+        points_in_zone = []
+
+        for point in points:
+            distance = point[2]
+            angle = point[3]
+
+            # Vérifier si le point est dans une zone de 50 mm autour du point d'origine et d'un angle de 60 degrés
+            if origin_distance - 50 < distance < origin_distance + 50 and origin_angle - 30 < angle < origin_angle + 30:
+                points_in_zone.append(point)
+
+        return points_in_zone
 
     def detect_object(self, scan):
         iteration = 0
@@ -509,26 +530,28 @@ class LidarScanner:
             points_non_objets = [point for point in scan if point not in points_objets_trouves]
             if not points_non_objets:
                 # Aucun point trouvé en dehors des objets, retourner None
+                print("Aucun point trouvé en dehors des objets")
                 return None
 
             # Sélectionne le point le plus proche du robot
             point_proche = min(points_non_objets, key=lambda x: x[2])
             distance_objet = point_proche[2]
+            angle_objet = point_proche[3]
             x_objet = point_proche[0]
             y_objet = point_proche[1]
             points_autour_objet = []
 
             # Si le point le plus proche du robot est en dehors du terrain de jeu, retourner None
             if x_objet < self.BORDER_DISTANCE or x_objet > self.FIELD_SIZE[0] - self.BORDER_DISTANCE or y_objet < self.BORDER_DISTANCE or y_objet > self.FIELD_SIZE[1] - self.BORDER_DISTANCE:
+                print("Point le plus proche en dehors du terrain de jeu")
                 return None
 
-            # Sélectionne les points autour de l'objet en fonction de la distance des points
-            for point in scan:
-                if distance_objet - 50 <= point[2] <= distance_objet + 50:
-                    points_autour_objet.append(point)
+            # Sélectionne les points autour de l'objet en fonction des coordonnées (x, y) des points
+            points_autour_objet = self.get_points_in_zone(scan, distance_objet, angle_objet)
 
             if not points_autour_objet or len(points_autour_objet) < 3:
                 # Aucun point autour de l'objet ou pas assez de points, retourner None
+                print("Pas assez de points autour de l'objet")
                 return None
 
             # Calcul des coordonnées moyennes pondérées des points autour de l'objet

@@ -482,7 +482,7 @@ class LidarScanner:
         for point in scan:
             distance = point[2]
             new_angle = point[1] - self.ROBOT_ANGLE
-            
+
             new_angle %= 360
             if new_angle < 0:
                 new_angle += 360
@@ -540,10 +540,10 @@ class LidarScanner:
             y_objet = point_proche[1]
             points_autour_objet = []
 
-            # Si le point le plus proche du robot est en dehors du terrain de jeu, retourner None
+            """# Si le point le plus proche du robot est en dehors du terrain de jeu, retourner None
             if x_objet < self.BORDER_DISTANCE or x_objet > self.FIELD_SIZE[0] - self.BORDER_DISTANCE or y_objet < self.BORDER_DISTANCE or y_objet > self.FIELD_SIZE[1] - self.BORDER_DISTANCE:
                 # Aucun point trouvé en dehors des objets, retourner None
-                return None
+                return None"""
 
             # Sélectionne les points autour de l'objet en fonction des coordonnées (x, y) des points
             points_autour_objet = self.get_points_in_zone(points_non_objets, distance_objet, angle_objet)
@@ -718,8 +718,7 @@ class LidarScanner:
             pygame.display.update()
 
             if self.port == None:
-                #self.port = [port.name for port in serial.tools.list_ports.comports() if "0001" in port.serial_number][0]
-                self.port = "COM5"
+                self.port = [port.name for port in serial.tools.list_ports.comports() if port.serial_number and "0001" in port.serial_number][0]
 
             self.lidar = RPLidar(self.port)
             self.lidar.connect()

@@ -517,7 +517,7 @@ class LidarScanner:
 
         return points_in_zone
 
-    def detect_object(self, scan):
+    def detect_object(self, scan, max_iteration=2):
         iteration = 0
         while True:
             # Liste des points associés aux objets déjà trouvés
@@ -557,7 +557,7 @@ class LidarScanner:
             y = sum([point[1] for point in points_autour_objet]) / len(points_autour_objet)
 
             iteration += 1
-            if iteration > 10:
+            if iteration > max_iteration:
                 return None
 
             # Calcul de la taille de l'objet
@@ -876,7 +876,7 @@ class LidarScanner:
             except RPLidarException as e:
                 # Code pour gérer RPLidarException
                 print(f"Une erreur RPLidarException s'est produite dans le run : {e}")
-                self.lidar.stop(esp32)
+                self.lidar.stop()
                 time.sleep(1)
                 
             except KeyboardInterrupt:

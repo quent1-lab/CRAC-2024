@@ -536,14 +536,7 @@ class LidarScanner:
             point_proche = min(points_non_objets, key=lambda x: x[2])
             distance_objet = point_proche[2]
             angle_objet = point_proche[3]
-            x_objet = point_proche[0]
-            y_objet = point_proche[1]
             points_autour_objet = []
-
-            """# Si le point le plus proche du robot est en dehors du terrain de jeu, retourner None
-            if x_objet < self.BORDER_DISTANCE or x_objet > self.FIELD_SIZE[0] - self.BORDER_DISTANCE or y_objet < self.BORDER_DISTANCE or y_objet > self.FIELD_SIZE[1] - self.BORDER_DISTANCE:
-                # Aucun point trouvé en dehors des objets, retourner None
-                return None"""
 
             # Sélectionne les points autour de l'objet en fonction des coordonnées (x, y) des points
             points_autour_objet = self.get_points_in_zone(points_non_objets, distance_objet, angle_objet)

@@ -1,15 +1,13 @@
 import logging
 from rplidar import RPLidar,RPLidarException
 import math
-import random
 import time
 import serial.tools.list_ports
-import json
 import os
 #import can
 import time
 
-import queue
+from multiprocessing import Process, Queue
 
 """class ComCAN:
     def __init__(self, channel, bustype):
@@ -424,7 +422,7 @@ class LidarScanner:
     
         self.connexion_lidar()
 
-        lidar_queue = queue.Queue()
+        lidar_queue = Queue()
 
         while True:
             try:
@@ -438,7 +436,7 @@ class LidarScanner:
                     for objet in self.objets:
                         trajectoire_actuel, trajectoire_adverse, trajectoire_evitement = self.trajectoires_anticipation(self.ROBOT, objet, 1.5, 0.1, 50)
                         #print(objet)
-                    lidar_queue.put(self.objets)
+                        lidar_queue.put(objet)
                     
             except RPLidarException as e:
                 # Code pour gérer RPLidarException

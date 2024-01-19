@@ -456,22 +456,9 @@ class LidarScanner:
         
         self.connexion_lidar()
 
-        # Initialiser le client
-        client = Client()
-        server_address = ('192.168.36.63', 5000)
-        self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.client_socket.connect(server_address)
-
-        # Démarrer les threads de communication
-        receive_thread = threading.Thread(target=client.receive_data, args=(self.client_socket,))
-        send_thread = threading.Thread(target=client.send_data, args=(self.client_socket,))
-        receive_thread.start()
-        send_thread.start()
-
         while True:
             try:
-                send_thread.join()
-                receive_thread.join()
+                
 
                 for scan in self.lidar.iter_scans(4000):
                     
@@ -495,6 +482,29 @@ class LidarScanner:
                 break
 
 if __name__ == '__main__':
+    # Initialiser le client
+    client = Client()
     scanner = LidarScanner("/dev/ttyUSB0")
-    scanner.run()
+
+    server_address = ('192.168.36.63', 5000)
+    client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    client_socket.connect(server_address)
+
+    # Démarrer les threads de communication
+    receive_thread = threading.Thread(target=client.receive_data, args=(client_socket,))
+    send_thread = threading.Thread(target=client.send_data, args=(client_socket,))
+    lidar_handler_thread = threading.Thread(target=client.update_lidar_object, args=(scanner.objets,))
+
+    lidar_scan = threading.Thread(target=scanner.run)
+    
+    receive_thread.start()
+    send_thread.start()
+    lidar_handler_thread.start()
+    lidar_scan.start()
+
+    send_thread.join()
+    receive_thread.join()
+    lidar_handler_thread.join()
+    lidar_scan.join()
+    
     

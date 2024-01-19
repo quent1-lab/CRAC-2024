@@ -9,6 +9,16 @@ import os
 #import can
 import time
 
+import socket
+import pickle
+
+# ...
+
+# Initialiser le client
+client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server_address = ('162.168.36.63', 5000)  # Remplacez avec l'adresse IP du serveur et le port utilisé
+client_socket.connect(server_address)
+
 """class ComCAN:
     def __init__(self, channel, bustype):
         self.channel = channel
@@ -433,6 +443,8 @@ class LidarScanner:
                     
                     for objet in self.objets:
                         trajectoire_actuel, trajectoire_adverse, trajectoire_evitement = self.trajectoires_anticipation(self.ROBOT, objet, 1.5, 0.1, 50)
+                        data_to_send = pickle.dumps(objet)
+                        client_socket.sendall(data_to_send)
                         print(objet)
                     
             except RPLidarException as e:

@@ -1,6 +1,8 @@
 import socket
 import threading
 import pickle  # Pour sérialiser/désérialiser les objets Python
+import time
+import queue
 
 def handle_client(client_socket, client_address):
     print(f"Connexion établie avec {client_address}")
@@ -21,6 +23,7 @@ def handle_client(client_socket, client_address):
             # Envoie de données au client (exemple avec une chaîne)
             data_to_send = pickle.dumps("Hello, client!")
             client_socket.sendall(data_to_send)
+            time.sleep(0.1)
 
     # Créer des threads pour la réception et l'envoi de données
     receive_thread = threading.Thread(target=receive_data)

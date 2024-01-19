@@ -1,39 +1,60 @@
 import socket
 import threading
-import pickle  # Pour sérialiser/désérialiser les objets Python
+import pickle
+import queue
 
-def receive_data(sock):
-    while True:
-        data_received = sock.recv(4096)  # Choisissez une taille de tampon appropriée
-        if not data_received:
-            break  # Arrêter la boucle si la connexion est fermée par le serveur
-        else:
-            # Traitez les données reçues du serveur selon vos besoins
-            objet_recu = pickle.loads(data_received)
-            # ...
+class Client:
+    def __init__(self):
+        self.objet_lidar = None
+        self.objet_lidar_lock = threading.Lock()  # Verrou pour assurer une lecture/écriture sécurisée
+        self.lidar_queue = queue.Queue()
 
-def send_data(sock):
-    while True:
-        # Envoie de données au serveur (exemple avec une chaîne)
-        data_to_send = pickle.dumps("Hello, serveur!")
-        client_socket.sendall(data_to_send)
+    def receive_data(self, client_socket):
+        while True:
+            data_received = client_socket.recv(4096)
+            if not data_received:
+                break
+            else:
+                
+                message = pickle.loads(data_received)
+                print(message)
+
+    def send_data(self, client_socket):
+        while True:
+            with self.objet_lidar_lock:
+                # Accéder à self.objet_lidar en toute sécurité
+                objet_lidar_local = self.objet_lidar
+
+            # Faire quelque chose avec objet_lidar_local et l'envoyer au serveur
+            message_to_send = pickle.dumps(objet_lidar_local)
+            client_socket.sendall(message_to_send)
+
+    def handle_lidar_data(self):
+        while True:
+            with self.objet_lidar_lock:
+                # Accéder à self.objet_lidar en toute sécurité
+                self.objet_lidar = self.lidar_queue.get()  # Attendre que des données soient disponibles
+                # Faire quelque chose avec objet_lidar_local
+                print("Objet reçu côté client:", self.objet_lidar)
 
 # Initialiser le client
-server_address = ('192.168.36.63', 5000)  # Remplacez par l'adresse IP et le port du serveur
+client = Client()
+server_address = ('192.168.36.63', 5000)
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client_socket.connect(server_address)
 
-# Créer des threads pour la réception et l'envoi de données
-receive_thread = threading.Thread(target=receive_data, args=(client_socket,))
-send_thread = threading.Thread(target=send_data, args=(client_socket,))
+# Démarrer les threads de communication
+receive_thread = threading.Thread(target=client.receive_data, args=(client_socket,))
+send_thread = threading.Thread(target=client.send_data, args=(client_socket,))
+lidar_handler_thread = threading.Thread(target=client.handle_lidar_data)
 
-# Démarrer les threads
 receive_thread.start()
 send_thread.start()
+lidar_handler_thread.start()
 
-# Attendre la fin des threads (vous pouvez ajuster cela selon vos besoins)
 receive_thread.join()
 send_thread.join()
+lidar_handler_thread.join()
 
-# Fermer la socket
+# Fermer la connexion client
 client_socket.close()

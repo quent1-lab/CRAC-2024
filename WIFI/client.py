@@ -33,6 +33,7 @@ class Client:
                 self.objet_lidar = self.lidar_queue.get()  # Attendre que des données soient disponibles
                 print("Objet reçu côté client:", self.objet_lidar)
             else:
+                print("Aucun objet disponible")
                 time.sleep(1)
             # Faire quelque chose avec objet_lidar_local
             
@@ -47,14 +48,17 @@ client_socket.connect(server_address)
 receive_thread = threading.Thread(target=client.receive_data, args=(client_socket,))
 send_thread = threading.Thread(target=client.send_data, args=(client_socket,))
 lidar_handler_thread = threading.Thread(target=client.handle_lidar_data)
+try:
+    receive_thread.start()
+    send_thread.start()
+    lidar_handler_thread.start()
 
-receive_thread.start()
-send_thread.start()
-lidar_handler_thread.start()
+    receive_thread.join()
+    send_thread.join()
+    lidar_handler_thread.join()
+except KeyboardInterrupt:
+    print("Interruption du client")
 
-receive_thread.join()
-send_thread.join()
-lidar_handler_thread.join()
-
-# Fermer la connexion client
-client_socket.close()
+    # Fermer la connexion client
+    client_socket.close()
+    

@@ -9,16 +9,7 @@ import os
 #import can
 import time
 
-import socket
-import pickle
 import queue
-
-# ...
-
-# Initialiser le client
-client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server_address = ('162.168.36.63', 5000)  # Remplacez avec l'adresse IP du serveur et le port utilisé
-client_socket.connect(server_address)
 
 """class ComCAN:
     def __init__(self, channel, bustype):

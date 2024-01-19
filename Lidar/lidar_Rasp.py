@@ -11,6 +11,7 @@ import time
 
 import socket
 import pickle
+import queue
 
 # ...
 
@@ -432,6 +433,8 @@ class LidarScanner:
     
         self.connexion_lidar()
 
+        lidar_queue = queue.Queue()
+
         while True:
             try:
 
@@ -443,9 +446,7 @@ class LidarScanner:
                     
                     for objet in self.objets:
                         trajectoire_actuel, trajectoire_adverse, trajectoire_evitement = self.trajectoires_anticipation(self.ROBOT, objet, 1.5, 0.1, 50)
-                        data_to_send = pickle.dumps(objet)
-                        client_socket.sendall(data_to_send)
-                        print(objet)
+                        lidar_queue.put(objet)
                     
             except RPLidarException as e:
                 # Code pour gérer RPLidarException

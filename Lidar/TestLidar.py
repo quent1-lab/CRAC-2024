@@ -17,7 +17,7 @@ print("Numéro de série :", serial_number) #Affiche le numéro de série du por
 PORT_NAME = [port.name for port in serial.tools.list_ports.comports() if port.serial_number and serial_number in port.serial_number][0]
 
 #PORT_NAME = 'COM5'  # À modifier en fonction du port utilisé ; sur linux : /dev/ttyUSBx (x = 0, 1, 2, ...)
-lidar = RPLidar(PORT_NAME)
+lidar = RPLidar("/dev/ttyUSB0")
 
 # Utilisé pour mettre à l'échelle les données pour les afficher à l'écran
 max_distance = 0

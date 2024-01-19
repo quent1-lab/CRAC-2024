@@ -2,7 +2,6 @@ import socket
 import threading
 import pickle  # Pour sérialiser/désérialiser les objets Python
 import time
-import queue
 
 def handle_client(client_socket, client_address):
     print(f"Connexion établie avec {client_address}")
@@ -49,13 +48,28 @@ server_socket.listen(5)  # Accepter jusqu'à 5 connexions simultanées
 
 print("Serveur en attente de connexions...")
 
-while True:
-    try:
+try:
+    # Liste pour garder une trace de tous les threads clients
+    client_threads = []
+
+    while True:
         # Attendre une connexion et créer un nouveau thread pour chaque client
         client_socket, client_address = server_socket.accept()
         client_handler_thread = threading.Thread(target=handle_client, args=(client_socket, client_address))
         client_handler_thread.start()
-    except KeyboardInterrupt:
-        print("Interruption du serveur")
-        client_socket.close()
-        break
+
+        # Ajouter le thread à la liste des threads clients
+        client_threads.append(client_handler_thread)
+
+except KeyboardInterrupt:
+    print("Interruption du serveur")
+    print("Fermeture des connexions...", len(client_threads), "clients connectés")
+
+    # Fermer toutes les sockets clients
+    for thread in client_threads:
+        thread.join()
+
+    # Fermer la socket du serveur
+    server_socket.close()
+
+    print("Serveur fermé correctement")

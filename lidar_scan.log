@@ -10176,3 +10176,461 @@ INFO:rplidar:Stoping scanning
 05/01/2024 14:12:20 - WARNING - Too many measurments in the input buffer: 4006/4000. Clearing buffer...
 05/01/2024 14:12:21 - INFO - Stopping LiDAR motor
 05/01/2024 14:12:21 - INFO - Stoping scanning
+19/01/2024 17:30:17 - ERROR - No port detected
+19/01/2024 17:30:17 - INFO - Lidar connected
+19/01/2024 17:31:15 - ERROR - No port detected
+19/01/2024 17:31:15 - INFO - Lidar connected
+19/01/2024 17:31:17 - INFO - Starting motor
+19/01/2024 17:31:37 - INFO - Stopping LiDAR motor
+19/01/2024 17:31:37 - INFO - Stoping scanning
+19/01/2024 17:32:44 - INFO - esp32 connected
+19/01/2024 17:32:44 - INFO - Lidar connected
+19/01/2024 17:32:46 - INFO - Starting motor
+19/01/2024 17:32:48 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+19/01/2024 17:32:48 - INFO - Stoping scanning
+19/01/2024 17:32:49 - INFO - Starting motor
+19/01/2024 17:32:51 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+19/01/2024 17:32:51 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 17:32:59 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+19/01/2024 17:33:03 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 17:33:04 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+19/01/2024 17:33:09 - INFO - Stopping LiDAR motor
+19/01/2024 17:33:09 - INFO - Stoping scanning
+19/01/2024 17:33:10 - ERROR - Failed to send data to ESP32: unicode strings are not supported, please encode to bytes: 'stop'
+19/01/2024 17:34:54 - INFO - esp32 connected
+19/01/2024 17:34:54 - INFO - Lidar connected
+19/01/2024 17:34:56 - INFO - Starting motor
+19/01/2024 17:34:58 - INFO - Stoping scanning
+19/01/2024 17:34:59 - INFO - Starting motor
+19/01/2024 17:35:01 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+19/01/2024 17:35:01 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 17:35:04 - INFO - Stopping LiDAR motor
+19/01/2024 17:35:04 - INFO - Stoping scanning
+19/01/2024 17:35:05 - ERROR - Failed to send data to ESP32: unicode strings are not supported, please encode to bytes: 'stop'
+19/01/2024 17:52:35 - INFO - esp32 connected
+19/01/2024 17:52:35 - INFO - Lidar connected
+19/01/2024 17:52:36 - INFO - Stoping scanning
+19/01/2024 17:52:37 - INFO - Stoping scanning
+19/01/2024 17:52:38 - INFO - Stoping scanning
+19/01/2024 17:52:39 - INFO - Stoping scanning
+19/01/2024 17:52:40 - INFO - Stoping scanning
+19/01/2024 17:52:41 - INFO - Stoping scanning
+19/01/2024 17:52:42 - INFO - Stoping scanning
+19/01/2024 17:52:44 - INFO - Stoping scanning
+19/01/2024 17:53:07 - INFO - esp32 connected
+19/01/2024 17:53:07 - INFO - Lidar connected
+19/01/2024 17:53:10 - INFO - Stoping scanning
+19/01/2024 17:53:12 - INFO - Stoping scanning
+19/01/2024 17:53:14 - INFO - Stoping scanning
+19/01/2024 17:53:16 - INFO - Stoping scanning
+19/01/2024 17:53:23 - ERROR - Failed to connect to ESP32: [Errno 2] could not open port /dev/ttyUSB1: [Errno 2] No such file or directory: '/dev/ttyUSB1'
+19/01/2024 17:53:34 - INFO - esp32 connected
+19/01/2024 17:53:34 - INFO - Lidar connected
+19/01/2024 17:53:38 - INFO - Stoping scanning
+19/01/2024 17:53:40 - INFO - Stoping scanning
+19/01/2024 17:53:41 - INFO - Stopping LiDAR motor
+19/01/2024 17:53:41 - INFO - Stoping scanning
+19/01/2024 17:53:42 - ERROR - Failed to send data to ESP32: unicode strings are not supported, please encode to bytes: 'stop'
+19/01/2024 17:54:13 - ERROR - No port detected
+19/01/2024 17:54:13 - INFO - Lidar connected
+19/01/2024 17:54:17 - INFO - Stoping scanning
+19/01/2024 17:54:19 - INFO - Stoping scanning
+19/01/2024 17:54:34 - ERROR - No port detected
+19/01/2024 17:54:34 - INFO - Lidar connected
+19/01/2024 17:54:36 - INFO - Starting motor
+19/01/2024 17:54:38 - INFO - Stoping scanning
+19/01/2024 17:54:39 - INFO - Starting motor
+19/01/2024 17:54:41 - INFO - Stoping scanning
+19/01/2024 17:54:42 - INFO - Starting motor
+19/01/2024 17:54:49 - INFO - Stopping LiDAR motor
+19/01/2024 17:54:49 - INFO - Stoping scanning
+19/01/2024 17:55:25 - INFO - esp32 connected
+19/01/2024 17:55:25 - INFO - Lidar connected
+19/01/2024 17:55:27 - INFO - Starting motor
+19/01/2024 17:55:29 - ERROR - Failed to receive data from ESP32: 'utf-8' codec can't decode byte 0xa2 in position 2: invalid start byte
+19/01/2024 17:55:29 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 17:55:29 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 17:55:30 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+19/01/2024 17:55:38 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 17:55:39 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+19/01/2024 17:55:39 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 17:55:39 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+19/01/2024 17:55:39 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 17:55:39 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+19/01/2024 17:55:39 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 17:55:39 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+19/01/2024 17:55:39 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 17:55:39 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+19/01/2024 17:55:40 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 17:55:40 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+19/01/2024 17:55:40 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 17:55:40 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+19/01/2024 17:55:41 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 17:55:55 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+19/01/2024 17:56:21 - INFO - Stopping LiDAR motor
+19/01/2024 17:56:21 - INFO - Stoping scanning
+19/01/2024 17:56:22 - ERROR - Failed to send data to ESP32: unicode strings are not supported, please encode to bytes: 'stop'
+19/01/2024 17:56:37 - INFO - esp32 connected
+19/01/2024 17:56:37 - INFO - Lidar connected
+19/01/2024 17:56:39 - INFO - Starting motor
+19/01/2024 17:56:41 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+19/01/2024 17:56:41 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+19/01/2024 17:56:57 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 17:56:57 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+19/01/2024 17:56:59 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 17:57:53 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 17:58:02 - INFO - Stopping LiDAR motor
+19/01/2024 17:58:02 - INFO - Stoping scanning
+19/01/2024 17:58:03 - ERROR - Failed to send data to ESP32: unicode strings are not supported, please encode to bytes: 'stop'
+19/01/2024 17:58:07 - INFO - esp32 connected
+19/01/2024 17:58:07 - INFO - Lidar connected
+19/01/2024 17:58:08 - INFO - Starting motor
+19/01/2024 17:58:10 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+19/01/2024 17:58:10 - INFO - Stoping scanning
+19/01/2024 17:58:11 - INFO - Starting motor
+19/01/2024 17:58:13 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+19/01/2024 17:58:14 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+19/01/2024 17:58:14 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 17:58:43 - INFO - Stopping LiDAR motor
+19/01/2024 17:58:43 - INFO - Stoping scanning
+19/01/2024 17:58:44 - ERROR - Failed to send data to ESP32: unicode strings are not supported, please encode to bytes: 'stop'
+19/01/2024 17:58:57 - INFO - esp32 connected
+19/01/2024 17:58:57 - INFO - Lidar connected
+19/01/2024 17:58:59 - INFO - Starting motor
+19/01/2024 17:59:01 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+19/01/2024 17:59:01 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 17:59:01 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 17:59:38 - INFO - Stopping LiDAR motor
+19/01/2024 17:59:38 - INFO - Stoping scanning
+19/01/2024 17:59:39 - ERROR - Failed to send data to ESP32: unicode strings are not supported, please encode to bytes: 'stop'
+19/01/2024 18:00:10 - INFO - esp32 connected
+19/01/2024 18:00:10 - INFO - Lidar connected
+19/01/2024 18:00:11 - INFO - Starting motor
+19/01/2024 18:00:13 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+19/01/2024 18:00:13 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:14 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:14 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+19/01/2024 18:00:16 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:17 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+19/01/2024 18:00:17 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:18 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+19/01/2024 18:00:18 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:21 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+19/01/2024 18:00:21 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:53 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:53 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:53 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:53 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:53 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:53 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:53 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:53 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:53 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:53 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:54 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:54 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:54 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:54 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:54 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:54 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:54 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:54 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:54 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:54 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:54 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:54 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:54 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:54 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:54 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:54 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:54 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:54 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:54 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:54 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:55 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:55 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:55 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:55 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:55 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:55 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:55 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:55 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:55 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:55 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:55 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:55 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:55 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:55 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:55 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:55 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:55 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:55 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:55 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:55 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:56 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:56 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:56 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:56 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:56 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:56 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:56 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:56 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:56 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:56 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:56 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:56 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:56 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:56 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:56 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:56 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:56 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:56 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:56 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:56 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:57 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:57 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:57 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:57 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:57 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:57 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:57 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:57 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:57 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:57 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:57 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:57 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:57 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:57 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:57 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:57 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:57 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:57 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:57 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:57 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:58 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:58 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:58 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:58 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:58 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:58 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:58 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:58 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:58 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:58 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:58 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:58 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:58 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:58 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:58 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:58 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:58 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:58 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:58 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:58 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:59 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:59 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:59 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:59 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:59 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:59 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:59 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:59 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:59 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:59 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:59 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:59 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:59 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:59 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:59 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:59 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:59 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:59 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:00:59 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:00:59 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:00 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:00 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:00 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:00 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:00 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:00 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:00 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:00 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:00 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:00 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:00 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:00 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:00 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:00 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:00 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:00 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:00 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:00 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:01 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:01 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:01 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:01 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:01 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:01 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:01 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:01 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:01 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:01 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:01 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:01 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:01 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:01 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:01 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:01 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:01 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:01 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:02 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:02 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:02 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:02 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:02 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:02 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:02 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:02 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:02 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:02 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:02 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:02 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:02 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:02 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:02 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:02 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:02 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:02 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:02 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:02 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:03 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:03 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:03 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:03 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:03 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:03 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:03 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:03 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:03 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:03 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:03 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:03 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:03 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:03 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:03 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:03 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:03 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:03 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:03 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:03 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:04 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:04 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:04 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:04 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:04 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:04 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:04 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:04 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:04 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:04 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:04 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:04 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:04 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:04 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:04 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:04 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:04 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:04 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:04 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:04 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:05 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:05 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:05 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:05 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:05 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:05 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:05 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:05 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:05 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:05 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:05 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:05 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:05 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:05 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:05 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:05 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:05 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:05 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:05 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:05 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:06 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:06 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:06 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:06 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:06 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:06 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:06 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:06 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:06 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:06 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:06 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:06 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:06 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:06 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:06 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:06 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:06 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:06 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:06 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:06 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:07 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:07 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:07 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:07 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:07 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:07 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:07 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:07 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:07 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:07 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:07 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:07 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:07 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:07 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:07 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:07 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:07 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:07 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:07 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:07 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:08 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:08 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:08 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:08 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:08 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:08 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:08 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:08 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:08 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:08 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:08 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:08 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:08 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:08 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:08 - ERROR - Failed to receive data from ESP32: [Errno 5] Input/output error
+19/01/2024 18:01:08 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:08 - INFO - Stopping LiDAR motor
+19/01/2024 18:01:08 - INFO - Stoping scanning
+19/01/2024 18:01:09 - ERROR - Failed to send data to ESP32: unicode strings are not supported, please encode to bytes: 'stop'
+19/01/2024 18:01:28 - ERROR - Failed to connect to ESP32: [Errno 2] could not open port /dev/ttyUSB1: [Errno 2] No such file or directory: '/dev/ttyUSB1'
+19/01/2024 18:01:31 - ERROR - Failed to connect to ESP32: [Errno 2] could not open port /dev/ttyUSB1: [Errno 2] No such file or directory: '/dev/ttyUSB1'
+19/01/2024 18:01:39 - INFO - esp32 connected
+19/01/2024 18:01:39 - INFO - Lidar connected
+19/01/2024 18:01:41 - INFO - Starting motor
+19/01/2024 18:01:43 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+19/01/2024 18:01:44 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:01:45 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+19/01/2024 18:01:45 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+19/01/2024 18:02:18 - INFO - Stopping LiDAR motor
+19/01/2024 18:02:18 - INFO - Stoping scanning
+19/01/2024 18:02:19 - ERROR - Failed to send data to ESP32: unicode strings are not supported, please encode to bytes: 'stop'

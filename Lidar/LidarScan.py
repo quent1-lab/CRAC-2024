@@ -9,8 +9,23 @@ import time
 import serial.tools.list_ports
 import json
 import os
-import can
+#import can
 import time
+import socket
+import pickle  # Pour sérialiser/désérialiser les objets Python
+
+# ...
+
+# Initialiser le serveur
+server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server_socket.bind(('192.168.36.63', 5000))  # Utilisez une adresse IP appropriée et un port disponible
+server_socket.listen(1)
+
+print("Attente de la connexion du client...")
+
+# Accepter la connexion du client
+client_socket, client_address = server_socket.accept()
+print(f"Connexion établie avec {client_address}")
 
 class ComESP32:
     def __init__(self, port, baudrate ,timeout = 0):
@@ -94,7 +109,7 @@ class ComESP32:
             self.disconnect()
             pass
 
-class ComCAN:
+"""class ComCAN:
     def __init__(self, channel, bustype):
         self.channel = channel
         self.bustype = bustype
@@ -145,7 +160,7 @@ class ComCAN:
                 
         except KeyboardInterrupt:
             self.disconnect()
-            pass
+            pass"""
 
 class Objet:
     def __init__(self, id, x, y, taille):
@@ -815,6 +830,10 @@ class LidarScanner:
     def stop(self,esp):
         logging.info("Stopping LiDAR motor")
         print("Arrêt du moteur LiDAR")
+        # Fermer les sockets
+        client_socket.close()
+        server_socket.close()
+
         self.lidar.stop()
         time.sleep(1)
         self.lidar.disconnect()
@@ -827,31 +846,26 @@ class LidarScanner:
             
         esp32 = ComESP32(port=None, baudrate=115200)
         esp32.connect()
-    
-        self.connexion_lidar()
 
         while True:
             try:
-                self.draw_background()
-                self.draw_robot(self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)
-                self.draw_text_center("ATTENTE DU LANCEMENT DU LIDAR", self.WINDOW_SIZE[0] / 2, self.WINDOW_SIZE[1] / 2, self.RED)
-                pygame.display.update()
+                while True:
+                    # Recevoir des données du serveur (exemple avec un objet)
+                    data_received = client_socket.recv(4096)  # Choisissez une taille de tampon appropriée
+                    objet_reçu = pickle.loads(data_received)
+                    print("Objet reçu:", objet_reçu)
 
-                for scan in self.lidar.iter_scans(4000):
-                    keys = pygame.key.get_pressed()
-                    quit = pygame.event.get(pygame.QUIT)              
-                    if quit or keys[pygame.K_ESCAPE] or keys[pygame.K_SPACE]:
-                        self.stop(esp32)
+                keys = pygame.key.get_pressed()
+                quit = pygame.event.get(pygame.QUIT)              
+                if quit or keys[pygame.K_ESCAPE] or keys[pygame.K_SPACE]:
+                    self.stop(esp32)
+                
+                if esp32.get_status():
+                    data = esp32.load_json(esp32.receive())
+                    if data != None:
+                        self.ROBOT_ANGLE = math.degrees(data["theta"])
+                        self.ROBOT.update_position(data["x"], data["y"])
                     
-                    if esp32.get_status():
-                        data = esp32.load_json(esp32.receive())
-                        if data != None:
-                            self.ROBOT_ANGLE = math.degrees(data["theta"])
-                            self.ROBOT.update_position(data["x"], data["y"])
-                    
-                    new_scan = self.transform_scan(scan)
-                    
-                    self.detect_object(new_scan)
                     self.draw_background()
                     self.draw_robot(self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)
                     

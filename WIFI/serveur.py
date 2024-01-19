@@ -23,7 +23,7 @@ def handle_client(client_socket, client_address):
             # Envoie de données au client (exemple avec une chaîne)
             data_to_send = pickle.dumps("Hello, client!")
             client_socket.sendall(data_to_send)
-            time.sleep(10)
+            time.sleep(100)
 
     # Créer des threads pour la réception et l'envoi de données
     receive_thread = threading.Thread(target=receive_data)

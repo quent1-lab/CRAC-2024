@@ -1,14 +1,14 @@
 import socket
 import threading
 import pickle
-import queue
+from multiprocessing import Process, Queue
 import time
 
 class Client:
     def __init__(self):
         self.objet_lidar = None
         self.objet_lidar_lock = threading.Lock()  # Verrou pour assurer une lecture/écriture sécurisée
-        self.lidar_queue = queue.Queue()
+        self.lidar_queue = Queue()
 
     def receive_data(self, client_socket):
         while True:
@@ -22,22 +22,20 @@ class Client:
 
     def send_data(self, client_socket):
         while True:
-            with self.objet_lidar_lock:
-                # Accéder à self.objet_lidar en toute sécurité
-                objet_lidar_local = self.objet_lidar
-
             # Faire quelque chose avec objet_lidar_local et l'envoyer au serveur
-            message_to_send = pickle.dumps(objet_lidar_local)
+            message_to_send = pickle.dumps(self.objet_lidar)
             client_socket.sendall(message_to_send)
             time.sleep(0.1)
 
     def handle_lidar_data(self):
-        while True:
-            with self.objet_lidar_lock:
-                # Accéder à self.objet_lidar en toute sécurité
+        while True:    
+            if not self.lidar_queue.empty():
                 self.objet_lidar = self.lidar_queue.get()  # Attendre que des données soient disponibles
-                # Faire quelque chose avec objet_lidar_local
                 print("Objet reçu côté client:", self.objet_lidar)
+            else:
+                time.sleep(1)
+            # Faire quelque chose avec objet_lidar_local
+            
 
 # Initialiser le client
 client = Client()

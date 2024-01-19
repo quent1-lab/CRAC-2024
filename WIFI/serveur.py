@@ -13,6 +13,7 @@ def handle_client(client_socket, client_address):
             else:
                 # Traitez les données reçues du client selon vos besoins
                 objet_recu = pickle.loads(data_received)
+                print(objet_recu)
                 # ...
 
     def send_data():

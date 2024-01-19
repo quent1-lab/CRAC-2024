@@ -9,7 +9,7 @@ import time
 import serial.tools.list_ports
 import json
 import os
-import can
+#import can
 import time
 
 class ComESP32:
@@ -94,7 +94,7 @@ class ComESP32:
             self.disconnect()
             pass
 
-class ComCAN:
+"""class ComCAN:
     def __init__(self, channel, bustype):
         self.channel = channel
         self.bustype = bustype
@@ -145,7 +145,7 @@ class ComCAN:
                 
         except KeyboardInterrupt:
             self.disconnect()
-            pass
+            pass"""
 
 class Objet:
     def __init__(self, id, x, y, taille):
@@ -234,6 +234,8 @@ class LidarScanner:
             self.path_picture = "Lidar/Terrain_Jeu.png"
         else:  # Linux et autres
             self.path_picture = "Documents/CRAC-2024/Lidar/Terrain_Jeu.png"
+
+        self.path_picture = "Lidar/Terrain_Jeu.png"
 
         self.id_compteur = 0  # Compteur pour les identifiants d'objet
         self.objets = []  # Liste pour stocker les objets détectés
@@ -571,11 +573,12 @@ class LidarScanner:
                 self.objets[id_objet_existant - 1].taille = taille
                 self.objets[id_objet_existant - 1].points = points_autour_objet
             else:
-                # Si l'objet n'est pas déjà suivi, créer un nouvel objet
-                self.id_compteur += 1
-                nouvel_objet = Objet(self.id_compteur, x, y, taille)
-                nouvel_objet.points = points_autour_objet
-                self.objets.append(nouvel_objet)              
+                if self.id_compteur < 1:
+                    # Si l'objet n'est pas déjà suivi, créer un nouvel objet
+                    self.id_compteur += 1
+                    nouvel_objet = Objet(self.id_compteur, x, y, taille)
+                    nouvel_objet.points = points_autour_objet
+                    self.objets.append(nouvel_objet)              
 
     def detect_object_v1(self, scan):
         objet = min(scan, key=lambda x: x[2]) #Sélectionne le point le plus proche du robot
@@ -825,7 +828,7 @@ class LidarScanner:
 
     def run(self):
             
-        esp32 = ComESP32(port=None, baudrate=115200)
+        esp32 = ComESP32(port="/dev/ttyUSB1", baudrate=115200)
         esp32.connect()
     
         self.connexion_lidar()
@@ -877,6 +880,6 @@ class LidarScanner:
                 break
 
 if __name__ == '__main__':
-    scanner = LidarScanner()
+    scanner = LidarScanner("/dev/ttyUSB0")
     scanner.run()
     

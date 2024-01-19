@@ -15,8 +15,8 @@ def receive_data(sock):
 def send_data(sock):
     while True:
         # Envoie de données au serveur (exemple avec une chaîne)
-        message_to_send = "Hello, serveur!"
-        sock.sendall(message_to_send.encode())
+        data_to_send = pickle.dumps("Hello, serveur!")
+        client_socket.sendall(data_to_send)
 
 # Initialiser le client
 server_address = ('192.168.36.63', 5000)  # Remplacez par l'adresse IP et le port du serveur

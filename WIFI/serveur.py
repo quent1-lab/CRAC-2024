@@ -50,7 +50,12 @@ server_socket.listen(5)  # Accepter jusqu'à 5 connexions simultanées
 print("Serveur en attente de connexions...")
 
 while True:
-    # Attendre une connexion et créer un nouveau thread pour chaque client
-    client_socket, client_address = server_socket.accept()
-    client_handler_thread = threading.Thread(target=handle_client, args=(client_socket, client_address))
-    client_handler_thread.start()
+    try:
+        # Attendre une connexion et créer un nouveau thread pour chaque client
+        client_socket, client_address = server_socket.accept()
+        client_handler_thread = threading.Thread(target=handle_client, args=(client_socket, client_address))
+        client_handler_thread.start()
+    except KeyboardInterrupt:
+        print("Interruption du serveur")
+        client_socket.close()
+        break

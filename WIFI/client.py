@@ -19,7 +19,7 @@ def send_data(sock):
         sock.sendall(message_to_send.encode())
 
 # Initialiser le client
-server_address = ('adresse_ip_du_serveur', 5000)  # Remplacez par l'adresse IP et le port du serveur
+server_address = ('192.168.36.63', 5000)  # Remplacez par l'adresse IP et le port du serveur
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client_socket.connect(server_address)
 

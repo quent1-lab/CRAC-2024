@@ -469,7 +469,7 @@ class LidarScanner:
                     for objet in self.objets:
                         trajectoire_actuel, trajectoire_adverse, trajectoire_evitement = self.trajectoires_anticipation(self.ROBOT, objet, 1.5, 0.1, 50)
                         #print(objet)
-                        client.update_lidar_object(objet)
+                        client.update_lidar_object(str(objet))
                     
             except RPLidarException as e:
                 # Code pour gérer RPLidarException

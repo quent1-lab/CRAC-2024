@@ -1,15 +1,44 @@
 import logging
 from rplidar import RPLidar,RPLidarException
 import math
-import random
 import time
 import serial.tools.list_ports
-import json
 import os
 #import can
 import time
 
-import queue
+import socket
+import threading
+import pickle
+
+
+class Client:
+    def __init__(self):
+        self.objet_lidar = None
+        self.objet_lidar_lock = threading.Lock()  # Verrou pour assurer une lecture/écriture sécurisée
+
+    def receive_data(self, client_socket):
+        while True:
+            data_received = client_socket.recv(4096)
+            if not data_received:
+                break
+            else:
+                message = pickle.loads(data_received)
+                print(message)
+
+    def send_data(self, client_socket):
+        while True:
+            # Faire quelque chose avec objet_lidar_local et l'envoyer au serveur
+            with self.objet_lidar_lock:
+                message_to_send = pickle.dumps(self.objet_lidar)
+            client_socket.sendall(message_to_send)
+            time.sleep(0.1)
+    
+    def update_lidar_object(self, objet):
+        with self.objet_lidar_lock:
+            self.objet_lidar = objet
+            
+
 
 """class ComCAN:
     def __init__(self, channel, bustype):
@@ -154,6 +183,8 @@ class LidarScanner:
 
         self.id_compteur = 0  # Compteur pour les identifiants d'objet
         self.objets = []  # Liste pour stocker les objets détectés
+
+        self.client_socket = None
 
         logging.basicConfig(filename='lidar_scan.log', level=logging.INFO,datefmt='%d/%m/%Y %H:%M:%S',format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -418,16 +449,16 @@ class LidarScanner:
         self.lidar.stop()
         time.sleep(1)
         self.lidar.disconnect()
+        self.client_socket.close()
         exit(0)
 
     def run(self):
-    
+        
         self.connexion_lidar()
-
-        lidar_queue = queue.Queue()
 
         while True:
             try:
+                
 
                 for scan in self.lidar.iter_scans(4000):
                     
@@ -437,8 +468,8 @@ class LidarScanner:
                     
                     for objet in self.objets:
                         trajectoire_actuel, trajectoire_adverse, trajectoire_evitement = self.trajectoires_anticipation(self.ROBOT, objet, 1.5, 0.1, 50)
-                        print(objet)
-                        lidar_queue.put(objet)
+                        #print(objet)
+                        client.update_lidar_object(str(objet))
                     
             except RPLidarException as e:
                 # Code pour gérer RPLidarException
@@ -451,6 +482,29 @@ class LidarScanner:
                 break
 
 if __name__ == '__main__':
+    # Initialiser le client
+    client = Client()
     scanner = LidarScanner("/dev/ttyUSB0")
-    scanner.run()
+
+    server_address = ('192.168.36.63', 5000)
+    client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    client_socket.connect(server_address)
+
+    # Démarrer les threads de communication
+    receive_thread = threading.Thread(target=client.receive_data, args=(client_socket,))
+    send_thread = threading.Thread(target=client.send_data, args=(client_socket,))
+    lidar_handler_thread = threading.Thread(target=client.update_lidar_object, args=(scanner.objets,))
+
+    lidar_scan = threading.Thread(target=scanner.run)
+    
+    receive_thread.start()
+    send_thread.start()
+    lidar_handler_thread.start()
+    lidar_scan.start()
+
+    send_thread.join()
+    receive_thread.join()
+    lidar_handler_thread.join()
+    lidar_scan.join()
+    
     

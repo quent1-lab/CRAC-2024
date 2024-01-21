@@ -164,23 +164,20 @@ void loop()
     // Etat 0 : Attente du départ
     if (bt[NOIR].click())
     {
-      etat_sys = 2;
+      etat_sys = 1;
       encodeur.reset();
     }
     break;
   case 1:
-    // Etat 1 : Test des moteurs
-    break;
-  case 2:
-    // Etat 2 : Test de la ligne droite
+    // Etat 1:Test de la ligne droite
     avancer(300);
     tourner(PI/2);
-    /*avancer(10);
+    avancer(100);
     tourner(PI);
-    avancer(10);
+    avancer(100);
     tourner(-PI/2);
-    avancer(20);
-    tourner(PI);*/
+    avancer(300);
+    tourner(PI);
     etat_sys = 0;
     break;
   default:

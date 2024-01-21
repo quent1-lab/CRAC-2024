@@ -13,6 +13,7 @@ import os
 import time
 import socket
 import pickle  # Pour sérialiser/désérialiser les objets Python
+import re
 
 # ...
 
@@ -249,7 +250,7 @@ class LidarScanner:
             self.path_picture = "Lidar/Terrain_Jeu.png"
         else:  # Linux et autres
             self.path_picture = "Documents/CRAC-2024/Lidar/Terrain_Jeu.png"
-
+        self.path_picture = "Lidar/Terrain_Jeu.png"
         self.id_compteur = 0  # Compteur pour les identifiants d'objet
         self.objets = []  # Liste pour stocker les objets détectés
 
@@ -833,10 +834,6 @@ class LidarScanner:
         # Fermer les sockets
         client_socket.close()
         server_socket.close()
-
-        self.lidar.stop()
-        time.sleep(1)
-        self.lidar.disconnect()
         if esp.get_status():
             esp.send("stop")
             esp.disconnect()
@@ -844,8 +841,10 @@ class LidarScanner:
 
     def run(self):
             
-        esp32 = ComESP32(port=None, baudrate=115200)
+        esp32 = ComESP32(port="/dev/ttyUSB0", baudrate=115200)
         esp32.connect()
+
+        self.objets = [Objet(1,-1,-1,1)]
 
         while True:
             try:
@@ -853,32 +852,43 @@ class LidarScanner:
                     # Recevoir des données du serveur (exemple avec un objet)
                     data_received = client_socket.recv(4096)  # Choisissez une taille de tampon appropriée
                     objet_reçu = pickle.loads(data_received)
-                    print("Objet reçu:", objet_reçu)
 
-                keys = pygame.key.get_pressed()
-                quit = pygame.event.get(pygame.QUIT)              
-                if quit or keys[pygame.K_ESCAPE] or keys[pygame.K_SPACE]:
-                    self.stop(esp32)
-                
-                if esp32.get_status():
-                    data = esp32.load_json(esp32.receive())
-                    if data != None:
-                        self.ROBOT_ANGLE = math.degrees(data["theta"])
-                        self.ROBOT.update_position(data["x"], data["y"])
+                    text = objet_reçu
+                    if text is not None:
+                        if len(text) > 10:
+                            match = re.search(r"Objet (\d+) : x = ([\d\.]+) y = ([\d\.]+) taille = ([\d\.]+)", text)
+
+                            if match:
+                                id = int(match.group(1))
+                                x = float(match.group(2))
+                                y = float(match.group(3))
+                                taille = float(match.group(4))
+
+                                if id == 1:
+                                    self.objets[0].update_position(x, y)
+                                    self.objets[0].taille = taille
+
+                    keys = pygame.key.get_pressed()
+                    quit = pygame.event.get(pygame.QUIT)              
+                    if quit or keys[pygame.K_ESCAPE] or keys[pygame.K_SPACE]:
+                        self.stop(esp32)
                     
-                    self.draw_background()
-                    self.draw_robot(self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)
+                    if esp32.get_status():
+                        data = esp32.load_json(esp32.receive())
+                        if data != None:
+                            self.ROBOT_ANGLE = math.degrees(data["theta"])
+                            self.ROBOT.update_position(data["x"], data["y"])
+                        
+                        self.draw_background()
+                        self.draw_robot(self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)
                     
                     for objet in self.objets:
                         self.draw_object(objet)
                         trajectoire_actuel, trajectoire_adverse, trajectoire_evitement = self.trajectoires_anticipation(self.ROBOT, objet, 1.5, 0.1, 50)
                         self.draw_all_trajectoires(trajectoire_actuel, trajectoire_adverse, trajectoire_evitement)
 
-                    for point in new_scan:
-                        self.draw_point(point[0], point[1])
-
                     pygame.display.update()
-                    self.lcd.fill(self.WHITE)
+                    #self.lcd.fill(self.WHITE)
                     
             except RPLidarException as e:
                 # Code pour gérer RPLidarException

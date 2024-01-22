@@ -469,6 +469,7 @@ class LidarScanner:
         self.connexion_lidar()
 
         while True:
+            self.objets = []
             try:
                 
                 for scan in self.lidar.iter_scans(4000):

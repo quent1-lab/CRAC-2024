@@ -154,7 +154,8 @@ class Objet:
         return dx, dy
 
     def __str__(self):
-        return f"Objet {self.id} : x = {self.x} y = {self.y} taille = {self.taille} points = {len(self.points)}"
+        # Retourne une chaîne de caractères représentant l'objet sous format JSON
+        return f"{{\"id\": {self.id}, \"x\": {self.x}, \"y\": {self.y}, \"taille\": {self.taille}}}"
     
 class LidarScanner:
     def __init__(self, port=None):

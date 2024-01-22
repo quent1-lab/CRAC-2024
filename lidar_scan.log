@@ -10715,3 +10715,36 @@ INFO:rplidar:Stoping scanning
 22/01/2024 22:47:41 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
 22/01/2024 22:47:41 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
 22/01/2024 22:47:41 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+22/01/2024 23:07:43 - INFO - Port detected: COM3
+22/01/2024 23:07:43 - INFO - esp32 connected
+22/01/2024 23:07:43 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+22/01/2024 23:07:43 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not list
+22/01/2024 23:07:43 - ERROR - Failed to unload JSON: Expecting value: line 2 column 1 (char 2)
+22/01/2024 23:07:43 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not list
+22/01/2024 23:07:43 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+22/01/2024 23:07:43 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not list
+22/01/2024 23:07:43 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+22/01/2024 23:07:43 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not list
+22/01/2024 23:07:43 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+22/01/2024 23:07:43 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not list
+22/01/2024 23:07:43 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+22/01/2024 23:07:43 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not list
+22/01/2024 23:07:43 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+22/01/2024 23:07:44 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not list
+22/01/2024 23:07:44 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+22/01/2024 23:07:44 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+22/01/2024 23:07:44 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+22/01/2024 23:07:44 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+22/01/2024 23:07:47 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
+22/01/2024 23:07:47 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+22/01/2024 23:08:15 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+22/01/2024 23:08:15 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+22/01/2024 23:08:15 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+22/01/2024 23:08:15 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+22/01/2024 23:08:16 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+22/01/2024 23:08:16 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+22/01/2024 23:08:16 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+22/01/2024 23:08:16 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+22/01/2024 23:08:16 - ERROR - Failed to unload JSON: Extra data: line 1 column 39 (char 38)
+22/01/2024 23:08:28 - INFO - Stopping LiDAR motor
+22/01/2024 23:08:28 - ERROR - Failed to send data to ESP32: unicode strings are not supported, please encode to bytes: 'stop'

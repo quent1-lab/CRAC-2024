@@ -103,12 +103,22 @@ class Objet:
         self.vitesse = 0
         self.vitesse_ms = 0
         self.points = []
+        self.last_moved = time.time()
 
     def update_position(self, x, y):
         # Mettre à jour la position de l'objet et ajouter la position précédente à la liste
-        self.positions_precedentes.append((self.x, self.y, time.monotonic_ns()))  # Ajout du temps actuel
-        self.x = x
-        self.y = y
+        if self.x != x or self.y != y:
+            self.positions_precedentes.append((self.x, self.y, time.monotonic_ns()))
+            self.x = x
+            self.y = y
+            self.last_moved = time.time()
+
+    def reset_if_not_moved(self, delay):
+        if time.time() > self.last_moved + delay:
+            return True
+        else:
+            return False
+        
 
     def get_direction_speed(self):
         # Calculer le vecteur de déplacement entre la position actuelle et la position précédente
@@ -181,7 +191,6 @@ class LidarScanner:
         else:  # Linux et autres
             self.path_picture = "Documents/CRAC-2024/Lidar/Terrain_Jeu.png"
 
-        self.id_compteur = 0  # Compteur pour les identifiants d'objet
         self.objets = []  # Liste pour stocker les objets détectés
 
         self.client_socket = None
@@ -288,11 +297,8 @@ class LidarScanner:
                 self.objets[id_objet_existant - 1].points = points_autour_objet
             else:
                 if len(self.objets) < nb_objets_max:
-                    # Incrémenter le compteur d'identifiants
-                    self.id_compteur += 1
-
                     # Si l'objet n'est pas déjà suivi, créer un nouvel objet
-                    nouvel_objet = Objet(self.id_compteur, x, y, taille)
+                    nouvel_objet = Objet(len(self.objets)+1, x, y, taille)
                     nouvel_objet.points = points_autour_objet
                     self.objets.append(nouvel_objet)
                 else:
@@ -476,10 +482,11 @@ class LidarScanner:
                     
                     new_scan = self.transform_scan(scan)
                     
+                    for objet in self.objets:
+                        if objet.reset_if_not_moved(2):
+                            self.objets.remove(objet)
+
                     self.detect_object(new_scan)
-                    """for objet in self.objets:
-                        trajectoire_actuel, trajectoire_adverse, trajectoire_evitement = self.trajectoires_anticipation(self.ROBOT, objet, 1.5, 0.1, 50)
-                        #print(objet)"""
                     client.update_lidar_object(self.generate_JSON())
                     
             except RPLidarException as e:

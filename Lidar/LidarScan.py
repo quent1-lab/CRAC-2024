@@ -689,10 +689,10 @@ class LidarScanner:
                     print(objet_reçu)
                     text = objet_reçu
                     if text is not None:
-                        if len(text) > 10:
-                            # charge le json
-                            data = json.loads(text)
-                            
+                        # charge le json
+                        data = json.loads(text)
+
+                        if data != None:
                             if data["id"] == 1:
                                 self.objets[0].update_position(data["x"], data["y"])
                                 self.objets[0].taille = data["taille"]

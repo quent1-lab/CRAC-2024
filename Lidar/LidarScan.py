@@ -681,15 +681,14 @@ class LidarScanner:
                 self.objets[0].update_position(item["x"], item["y"])
                 self.objets[0].taille = item["taille"]
             elif item["id"] == 2:
-                self.objets[1].update_position(item["x"], item["y"])
-                self.objets[1].taille = item["taille"]
+                pass
 
     def run(self):
             
         esp32 = ComESP32(port=self.interface_choix_port(), baudrate=115200)
         esp32.connect()
 
-        self.objets = [Objet(1,-1,-1,1), Objet(2,-1,-1,1)]
+        self.objets = [Objet(1,-1,-1,1)]
 
         self.draw_background()
         self.draw_robot(self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)

@@ -235,7 +235,7 @@ class LidarScanner:
 
         return points_in_zone
 
-    def detect_object(self, scan, max_iteration=2, nb_objets_max=2):
+    def detect_object(self, scan, max_iteration=5, nb_objets_max=1):
         iteration = 0
         while iteration < max_iteration:
             iteration += 1

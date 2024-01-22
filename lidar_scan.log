@@ -10301,3 +10301,13 @@ INFO:rplidar:Stoping scanning
 19/01/2024 23:59:39 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
 20/01/2024 00:00:20 - INFO - Stopping LiDAR motor
 20/01/2024 00:00:20 - ERROR - Failed to send data to ESP32: unicode strings are not supported, please encode to bytes: 'stop'
+22/01/2024 20:58:11 - ERROR - Failed to connect to ESP32: could not open port '/dev/ttyUSB0': FileNotFoundError(2, 'Le chemin d’accès spécifié est introuvable.', None, 3)
+22/01/2024 20:59:52 - ERROR - Failed to connect to ESP32: could not open port 'COM0': FileNotFoundError(2, 'Le fichier spécifié est introuvable.', None, 2)
+22/01/2024 21:00:45 - INFO - Port detected: COM3
+22/01/2024 21:00:45 - INFO - esp32 connected
+22/01/2024 21:02:22 - INFO - Port detected: COM3
+22/01/2024 21:02:22 - INFO - esp32 connected
+22/01/2024 21:03:45 - INFO - Port detected: COM3
+22/01/2024 21:03:45 - INFO - esp32 connected
+22/01/2024 21:11:48 - INFO - Port detected: COM3
+22/01/2024 21:11:48 - INFO - esp32 connected

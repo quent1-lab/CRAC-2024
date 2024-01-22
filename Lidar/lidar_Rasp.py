@@ -118,7 +118,6 @@ class Objet:
             return True
         else:
             return False
-        
 
     def get_direction_speed(self):
         # Calculer le vecteur de déplacement entre la position actuelle et la position précédente

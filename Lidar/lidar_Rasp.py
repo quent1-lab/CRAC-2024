@@ -361,7 +361,7 @@ class LidarScanner:
             if distance < seuil_distance:
                 return objet.id # Retourne l'ID de l'objet existant
         return None
-    
+            
     def trajectoires_anticipation(self, robot_actuel, robot_adverse, duree_anticipation=1.0, pas_temps=0.1, distance_securite=50):
         """
         Dessine les futures trajectoires des robots et la trajectoire d'évitement anticipée.
@@ -467,12 +467,13 @@ class LidarScanner:
                     
                     new_scan = self.transform_scan(scan)
                     
-                    self.detect_object(new_scan)
-                    
-                    for objet in self.objets:
-                        trajectoire_actuel, trajectoire_adverse, trajectoire_evitement = self.trajectoires_anticipation(self.ROBOT, objet, 1.5, 0.1, 50)
-                        #print(objet)
-                        client.update_lidar_object(str(objet))
+                    #Démarrage du traitement des données après 2 secondes
+                    if time.monotonic() > 2:
+                        self.detect_object(new_scan)
+                        for objet in self.objets:
+                            trajectoire_actuel, trajectoire_adverse, trajectoire_evitement = self.trajectoires_anticipation(self.ROBOT, objet, 1.5, 0.1, 50)
+                            #print(objet)
+                            client.update_lidar_object(str(objet))
                     
             except RPLidarException as e:
                 # Code pour gérer RPLidarException

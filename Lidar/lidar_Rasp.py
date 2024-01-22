@@ -467,13 +467,11 @@ class LidarScanner:
                     
                     new_scan = self.transform_scan(scan)
                     
-                    #Démarrage du traitement des données après 2 secondes
-                    if time.monotonic() > 2:
-                        self.detect_object(new_scan)
-                        for objet in self.objets:
-                            trajectoire_actuel, trajectoire_adverse, trajectoire_evitement = self.trajectoires_anticipation(self.ROBOT, objet, 1.5, 0.1, 50)
-                            #print(objet)
-                            client.update_lidar_object(str(objet))
+                    self.detect_object(new_scan)
+                    for objet in self.objets:
+                        trajectoire_actuel, trajectoire_adverse, trajectoire_evitement = self.trajectoires_anticipation(self.ROBOT, objet, 1.5, 0.1, 50)
+                        #print(objet)
+                        client.update_lidar_object(str(objet))
                     
             except RPLidarException as e:
                 # Code pour gérer RPLidarException
@@ -490,7 +488,7 @@ if __name__ == '__main__':
     client = Client()
     scanner = LidarScanner("/dev/ttyUSB0")
 
-    server_address = ('192.168.36.63', 5000)
+    server_address = ('192.168.36.141', 5000)
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     client_socket.connect(server_address)
 

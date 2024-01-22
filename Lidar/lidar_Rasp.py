@@ -27,21 +27,20 @@ class Client:
                 print(message)
 
     def send_data(self, client_socket):
+        last_message = None
         while True:
             # Faire quelque chose avec objet_lidar_local et l'envoyer au serveur
             with self.objet_lidar_lock:
                 message_to_send = pickle.dumps(self.objet_lidar)
-                last_message = self.objet_lidar
             if last_message != None and message_to_send != None and last_message != message_to_send:
                 client_socket.sendall(message_to_send)
+                last_message = message_to_send
             time.sleep(0.1)
     
     def update_lidar_object(self, objet):
         with self.objet_lidar_lock:
             self.objet_lidar = objet
             
-
-
 """class ComCAN:
     def __init__(self, channel, bustype):
         self.channel = channel

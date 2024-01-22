@@ -27,14 +27,12 @@ class Client:
                 print(message)
 
     def send_data(self, client_socket):
-        last_message = None
         while True:
             # Faire quelque chose avec objet_lidar_local et l'envoyer au serveur
             with self.objet_lidar_lock:
                 message_to_send = pickle.dumps(self.objet_lidar)
-            if last_message != None and message_to_send != None and last_message != message_to_send:
+            if message_to_send != None:
                 client_socket.sendall(message_to_send)
-                last_message = message_to_send
             time.sleep(0.1)
     
     def update_lidar_object(self, objet):
@@ -154,7 +152,7 @@ class Objet:
 
     def __str__(self):
         # Retourne une chaîne de caractères représentant l'objet sous format JSON
-        return f"{{\"id\": {self.id}, \"x\": {self.x}, \"y\": {self.y}, \"taille\": {self.taille}}}"
+        return f"{{\"id\": {self.id}, \"x\": {int(self.x)}, \"y\": {int(self.y)}, \"taille\": {int(self.taille)}}}"
     
 class LidarScanner:
     def __init__(self, port=None):
@@ -240,6 +238,8 @@ class LidarScanner:
     def detect_object(self, scan, max_iteration=2, nb_objets_max=2):
         iteration = 0
         while iteration < max_iteration:
+            iteration += 1
+
             # Liste des points associés aux objets déjà trouvés
             points_objets_trouves = []
             for k in range(iteration):
@@ -456,6 +456,14 @@ class LidarScanner:
         self.client_socket.close()
         exit(0)
 
+    def generate_JSON(self):
+        # Générer une chaîne de caractères au format JSON des objets détectés en fonction des id
+        json = "["
+        for objet in self.objets:
+            json += str(objet) + ","
+        json = json[:-1] + "]"
+        return json
+
     def run(self):
         
         self.connexion_lidar()
@@ -468,10 +476,10 @@ class LidarScanner:
                     new_scan = self.transform_scan(scan)
                     
                     self.detect_object(new_scan)
-                    for objet in self.objets:
+                    """for objet in self.objets:
                         trajectoire_actuel, trajectoire_adverse, trajectoire_evitement = self.trajectoires_anticipation(self.ROBOT, objet, 1.5, 0.1, 50)
-                        #print(objet)
-                        client.update_lidar_object(str(objet))
+                        #print(objet)"""
+                    client.update_lidar_object(self.generate_JSON())
                     
             except RPLidarException as e:
                 # Code pour gérer RPLidarException

@@ -31,7 +31,9 @@ class Client:
             # Faire quelque chose avec objet_lidar_local et l'envoyer au serveur
             with self.objet_lidar_lock:
                 message_to_send = pickle.dumps(self.objet_lidar)
-            client_socket.sendall(message_to_send)
+                last_message = self.objet_lidar
+            if last_message != None and message_to_send != None and last_message != message_to_send:
+                client_socket.sendall(message_to_send)
             time.sleep(0.1)
     
     def update_lidar_object(self, objet):
@@ -235,9 +237,9 @@ class LidarScanner:
 
         return points_in_zone
 
-    def detect_object(self, scan, max_iteration=2):
+    def detect_object(self, scan, max_iteration=2, nb_objets_max=2):
         iteration = 0
-        while True:
+        while iteration < max_iteration:
             # Liste des points associés aux objets déjà trouvés
             points_objets_trouves = []
             for k in range(iteration):
@@ -267,10 +269,6 @@ class LidarScanner:
             x = sum([point[0] for point in points_autour_objet]) / len(points_autour_objet)
             y = sum([point[1] for point in points_autour_objet]) / len(points_autour_objet)
 
-            iteration += 1
-            if iteration > max_iteration:
-                return None
-
             # Calcul de la taille de l'objet
             x_min = min(points_autour_objet, key=lambda x: x[0])
             x_max = max(points_autour_objet, key=lambda x: x[0])
@@ -279,7 +277,7 @@ class LidarScanner:
             taille = math.sqrt((x_max[0] - x_min[0])**2 + (y_max[1] - y_min[1])**2)
 
             # Seuil de détection d'un objet en mm
-            SEUIL = 100  # en mm (distance que peut parcourir le robot entre deux scans)
+            SEUIL = 120  # en mm (distance que peut parcourir le robot entre deux scans)
             
             id_objet_existant = self.trouver_id_objet_existants(x, y, SEUIL)
 
@@ -289,11 +287,17 @@ class LidarScanner:
                 self.objets[id_objet_existant - 1].taille = taille
                 self.objets[id_objet_existant - 1].points = points_autour_objet
             else:
-                # Si l'objet n'est pas déjà suivi, créer un nouvel objet
-                self.id_compteur += 1
-                nouvel_objet = Objet(self.id_compteur, x, y, taille)
-                nouvel_objet.points = points_autour_objet
-                self.objets.append(nouvel_objet)              
+                if len(self.objets) < nb_objets_max:
+                    # Incrémenter le compteur d'identifiants
+                    self.id_compteur += 1
+
+                    # Si l'objet n'est pas déjà suivi, créer un nouvel objet
+                    nouvel_objet = Objet(self.id_compteur, x, y, taille)
+                    nouvel_objet.points = points_autour_objet
+                    self.objets.append(nouvel_objet)
+                else:
+                    # Si le nombre d'objets max est atteint, retourner None
+                    return None           
 
     def detect_object_v1(self, scan):
         objet = min(scan, key=lambda x: x[2]) #Sélectionne le point le plus proche du robot
@@ -459,7 +463,6 @@ class LidarScanner:
         while True:
             try:
                 
-
                 for scan in self.lidar.iter_scans(4000):
                     
                     new_scan = self.transform_scan(scan)

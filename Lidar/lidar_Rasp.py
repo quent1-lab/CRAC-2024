@@ -23,13 +23,16 @@ class Client:
     def receive_data(self, client_socket):
         while True:
             data_received = client_socket.recv(4096)
-            if not data_received or data_received.count("{") != 1 or data_received.count("}") != 1:
+            message = pickle.loads(data_received)
+            if not data_received:
                 break
-            else:
-                message = pickle.loads(data_received)
+            else:        
                 # Vérifie si le message est au format JSON
-                
-                data = json.loads(message)
+                try:
+                    data = json.loads(message)
+                except json.decoder.JSONDecodeError:
+                    print("Le message reçu n'est pas au format JSON")
+                    continue
                 with self.Robot_lock:
                     self.ROBOT.update_position(data["x"], data["y"])
                     self.ROBOT.taille = data["taille"]

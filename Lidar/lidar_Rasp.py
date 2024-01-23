@@ -19,7 +19,7 @@ class Client:
         self.objet_lidar_lock = threading.Lock()  # Verrou pour assurer une lecture/écriture sécurisée
         self.ROBOT = Objet(0, 1500, 1000, 20)
         self.Robot_lock = threading.Lock()  # Verrou pour assurer une lecture/écriture sécurisée
-        self.ROBOT_ANGLE = 0
+        self.ROBOT_angle = 0
 
     def receive_data(self, client_socket):
         while True:
@@ -32,20 +32,20 @@ class Client:
                 break
 
             try:
-                message = pickle.loads(data_received)
+                data = pickle.loads(data_received)
             except Exception as e:
                 continue
             
             # Vérifier si le message est au format JSON
-            if str(message).startswith("{") or str(message).endswith("}"):
+            if str(data).startswith("{") or str(data).endswith("}"):
                 try:
-                    data = json.loads(str(message))
+                    data = json.loads(str(data))
                 except json.decoder.JSONDecodeError as e:
                     continue
 
             with self.Robot_lock:
                 self.ROBOT.update_position(data["x"], data["y"])
-                self.ROBOT_ANGLE = data["theta"]
+                self.ROBOT_angle = data["theta"]
                     
     def send_data(self, client_socket):
         while True:
@@ -66,7 +66,7 @@ class Client:
     
     def get_robot_angle(self):
         with self.Robot_lock:
-            return self.ROBOT_ANGLE
+            return self.ROBOT_angle
             
 """class ComCAN:
     def __init__(self, channel, bustype):

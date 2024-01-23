@@ -35,13 +35,6 @@ class Client:
                 data = pickle.loads(data_received)
             except Exception as e:
                 continue
-            
-            # Vérifier si le message est au format JSON
-            if str(data).startswith("{") or str(data).endswith("}"):
-                try:
-                    data = json.loads(str(data))
-                except json.decoder.JSONDecodeError as e:
-                    continue
 
             with self.Robot_lock:
                 self.ROBOT.update_position(data["x"], data["y"])

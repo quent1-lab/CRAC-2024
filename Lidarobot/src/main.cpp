@@ -254,11 +254,11 @@ void loop()
     avancer(100);
     tourner(PI / 2);
     avancer(100);
-    tourner(PI / 2);
+    tourner(PI);
     avancer(100);
-    tourner(PI / 2);
+    tourner(-PI / 2);
     avancer(100);
-    tourner(PI / 2);
+    tourner(2*PI);
 
     break;
   default:

@@ -35,11 +35,13 @@ class Client:
                 message = pickle.loads(data_received)
             except Exception as e:
                 continue
-
-            try:
-                data = json.loads(str(message))
-            except json.decoder.JSONDecodeError:
-                continue
+            
+            # Vérifier si le message est au format JSON
+            if str(message).startswith("{") or str(message).endswith("}"):
+                try:
+                    data = json.loads(str(message))
+                except json.decoder.JSONDecodeError as e:
+                    continue
 
             with self.Robot_lock:
                 self.ROBOT.update_position(data["x"], data["y"])
@@ -507,10 +509,11 @@ class LidarScanner:
                 for scan in self.lidar.iter_scans(4000):
                     self.ROBOT = client.get_objet_robot()
                     self.ROBOT_ANGLE = client.get_robot_angle()
+
                     new_scan = self.transform_scan(scan)
                     
                     for objet in self.objets:
-                        if objet.reset_if_not_moved(2):
+                        if objet.reset_if_not_moved(1):
                             self.objets.remove(objet)
 
                     self.detect_object(new_scan)

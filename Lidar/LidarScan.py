@@ -290,7 +290,7 @@ class LidarScanner:
         pygame.draw.line(
             self.lcd, pygame.Color(self.WHITE),
             (x * self.X_RATIO, y * self.Y_RATIO),
-            ((x + 100 * math.cos(math.radians(angle))) * self.X_RATIO, (y + 100 * math.sin(math.radians(angle))) * self.Y_RATIO), 5)
+            ((x + 100 * math.cos(math.radians(-angle))) * self.X_RATIO, (y + 100 * math.sin(math.radians(-angle))) * self.Y_RATIO), 5)
     
     def draw_image(self,image_path):
         # Charge l'image à partir du chemin du fichier
@@ -705,7 +705,7 @@ class LidarScanner:
         self.draw_background()
         self.draw_robot(self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)
         pygame.display.update()
-
+        nb_fale = 0
         while True:
             try:
                 while True:
@@ -726,7 +726,10 @@ class LidarScanner:
                             client_socket.send(pickle.dumps({"x":self.ROBOT.x, "y":self.ROBOT.y ,"theta":self.ROBOT_ANGLE}))
                         
                         else:
-                            esp32.send(json.dumps({"cmd": "start", "x":1500.0, "y":1000.0 ,"theta":0.0}).encode())
+                            nb_fale += 1
+                            if nb_fale > 10:
+                                esp32.send(json.dumps({"cmd": "start", "x":1500.0, "y":1000.0 ,"theta":0.0}).encode())
+                                nb_fale = 0
 
                     is_moved = False
                     # Diriger le robot avec les touches du clavier

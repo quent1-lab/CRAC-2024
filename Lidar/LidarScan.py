@@ -94,7 +94,7 @@ class ComESP32:
     def load_json(self, data):
         try:
             # Ne récupère que les données comprises entre les deux crochets
-            #data = data[data.index("{"):data.index("}") + 1]
+            data = data[data.index("{"):data.index("}") + 1]
             return json.loads(data)
         except Exception as e:
             logging.error(f"Failed to unload JSON: {e}")
@@ -725,6 +725,9 @@ class LidarScanner:
                             # Envoie les données du robot au client
                             client_socket.send(pickle.dumps(self.ROBOT))
                         
+                        else:
+                            esp32.send(json.dumps({"cmd": "start", "x":1500.0, "y":1000.0 ,"theta":0.0}).encode())
+
                     is_moved = False
                     # Diriger le robot avec les touches du clavier
                     if keys[pygame.K_LEFT]:

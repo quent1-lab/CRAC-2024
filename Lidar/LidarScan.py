@@ -19,7 +19,7 @@ import re
 
 # Initialiser le serveur
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server_socket.bind(('192.168.36.63', 5000))  # Utilisez une adresse IP appropriée et un port disponible
+server_socket.bind(('', 5000))  # Utilisez une adresse IP appropriée et un port disponible
 server_socket.listen(1)
 
 print("Attente de la connexion du client...")
@@ -669,12 +669,30 @@ class LidarScanner:
             esp.disconnect()
         exit(0)
 
+    def load_json(self,json_string):
+        try:
+            data = json.loads(json_string)
+        except Exception as e:
+            logging.error(f"Failed to unload JSON: {e}")
+            print(f"Failed to unload JSON : {json_string}")
+            return None
+        for item in data:
+            if item["id"] == 1:
+                self.objets[0].update_position(item["x"], item["y"])
+                self.objets[0].taille = item["taille"]
+            elif item["id"] == 2:
+                pass
+
     def run(self):
             
-        esp32 = ComESP32(port="/dev/ttyUSB0", baudrate=115200)
+        esp32 = ComESP32(port=self.interface_choix_port(), baudrate=115200)
         esp32.connect()
 
         self.objets = [Objet(1,-1,-1,1)]
+
+        self.draw_background()
+        self.draw_robot(self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)
+        pygame.display.update()
 
         while True:
             try:
@@ -683,14 +701,9 @@ class LidarScanner:
                     data_received = client_socket.recv(4096)  # Choisissez une taille de tampon appropriée
                     objet_reçu = pickle.loads(data_received)
 
-                    text = objet_reçu
-                    if text is not None:
-                        if len(text) > 10:
-                            # charge le json
-                            data = json.loads(text)
-                            if data["id"] == 1:
-                                self.objets[0].update_position(data["x"], data["y"])
-                                self.objets[0].taille = data["taille"]
+                    if objet_reçu is not None:
+                        # charge le json
+                        self.load_json(objet_reçu)
 
                     keys = pygame.key.get_pressed()
                     quit = pygame.event.get(pygame.QUIT)              

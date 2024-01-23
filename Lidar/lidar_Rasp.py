@@ -27,12 +27,14 @@ class Client:
                 break
             else:
                 message = pickle.loads(data_received)
-                data = json.loads(message)
-                with self.Robot_lock:
-                    self.ROBOT.update_position(data["x"], data["y"])
-                    self.ROBOT.taille = data["taille"]
                 print(message)
-
+                # Vérifie si le message est au format JSON
+                if message.count("{") == 1 and message.count("}") == 1:
+                    data = json.loads(message)
+                    with self.Robot_lock:
+                        self.ROBOT.update_position(data["x"], data["y"])
+                        self.ROBOT.taille = data["taille"]
+                    
     def send_data(self, client_socket):
         while True:
             # Faire quelque chose avec objet_lidar_local et l'envoyer au serveur
@@ -514,7 +516,7 @@ if __name__ == '__main__':
     client = Client()
     scanner = LidarScanner("/dev/ttyUSB0")
 
-    server_address = ('192.168.36.141', 5000)
+    server_address = ('192.168.36.63', 5000)
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     client_socket.connect(server_address)
 

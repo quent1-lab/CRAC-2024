@@ -698,7 +698,7 @@ class LidarScanner:
         esp32 = ComESP32(port=self.interface_choix_port(), baudrate=115200)
         esp32.connect()
         time.sleep(1)
-        esp32.send(json.dumps({"cmd": "start", "x":1500.0, "y":1000.0 ,"theta":0.0}).encode())
+        #esp32.send(json.dumps({"cmd": "start", "x":1500.0, "y":1000.0 ,"theta":0.0}).encode())
 
         self.objets = [Objet(1,-1,-1,1)]
 
@@ -714,7 +714,11 @@ class LidarScanner:
                     quit = pygame.event.get(pygame.QUIT)              
                     if quit or keys[pygame.K_ESCAPE] or keys[pygame.K_SPACE]:
                         self.stop(esp32)
-                        break                  
+                        break     
+
+                    if keys[pygame.K_s]:
+                        esp32.send(json.dumps({"cmd": "start", "x":1500.0, "y":1000.0 ,"theta":0.0}).encode())
+
 
                     if esp32.get_status():
                         data = esp32.load_json(esp32.receive())
@@ -728,7 +732,6 @@ class LidarScanner:
                         else:
                             nb_fale += 1
                             if nb_fale > 10:
-                                esp32.send(json.dumps({"cmd": "start", "x":1500.0, "y":1000.0 ,"theta":0.0}).encode())
                                 nb_fale = 0
 
                     is_moved = False

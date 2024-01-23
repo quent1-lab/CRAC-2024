@@ -3,11 +3,13 @@
  *  Description : Projet de robot autonome avec un lidar
  *  Auteur : Quent1-lab
  *  Date : 15/12/2023
- *  Version : 1.0.0
+ *  Licence : GNU v3.0
+ *  Date de la dernière modification : 24/01/2024
+ *  Version : 1.0.1
  *
  *  Cette bibliothèque est un logiciel libre ; vous pouvez la redistribuer et/ou
  *  la modifier selon les termes de la Licence Publique Générale GNU telle que publiée
- *  par la Free Software Foundation ; soit la version 2 de la Licence, ou
+ *  par la Free Software Foundation ; soit la version 3 de la Licence, ou
  *  (à votre discrétion) toute version ultérieure.
  */
 

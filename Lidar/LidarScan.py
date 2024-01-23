@@ -80,7 +80,13 @@ class ComESP32:
         try:
             if self.esp32.in_waiting > 0:
                 # Renvoie les données reçues par l'ESP32 en enlevant les deux premiers caractères et le dernier
-                return self.esp32.readline().decode()
+                message = self.esp32.readline().decode()
+                # Vérifie s'il n'y a qu'un seul message JSON
+                if message.count("{") == 1 and message.count("}") == 1:
+                    return message
+                else:
+                    # Si plusieurs messages JSON sont reçus, renvoie le dernier
+                    return message[message.rfind("{"):message.rfind("}") + 1]
         except Exception as e:
             logging.error(f"Failed to receive data from ESP32: {e}")
             print("Failed to receive data from ESP32")
@@ -226,7 +232,7 @@ class Objet:
         return dx, dy
 
     def __str__(self):
-        return f"Objet {self.id} : x = {self.x} y = {self.y} taille = {self.taille} points = {len(self.points)}"
+        return f"{{\"id\": {self.id}, \"x\": {int(self.x)}, \"y\": {int(self.y)}, \"taille\": {int(self.taille)}}}"
     
 class LidarScanner:
     def __init__(self, port=None):
@@ -669,7 +675,7 @@ class LidarScanner:
         client_socket.close()
         server_socket.close()
         if esp.get_status():
-            esp.send("stop")
+            esp.send(json.dumps({"cmd": "stop","x":0.0, "y":0.0 ,"theta":0.0}).encode())
             esp.disconnect()
         exit(0)
 
@@ -702,19 +708,22 @@ class LidarScanner:
         while True:
             try:
                 while True:
-                    # Recevoir des données du serveur (exemple avec un objet)
-                    data_received = client_socket.recv(4096)  # Choisissez une taille de tampon appropriée
-                    objet_reçu = pickle.loads(data_received)
-
-                    if objet_reçu is not None:
-                        # charge le json
-                        self.load_json(objet_reçu)
-
+                    
                     keys = pygame.key.get_pressed()
                     quit = pygame.event.get(pygame.QUIT)              
                     if quit or keys[pygame.K_ESCAPE] or keys[pygame.K_SPACE]:
                         self.stop(esp32)
-                    
+                        break                  
+
+                    if esp32.get_status():
+                        data = esp32.load_json(esp32.receive())
+                        if data != None:
+                            self.ROBOT_ANGLE = math.degrees(data["theta"])
+                            self.ROBOT.update_position(data["x"], data["y"])
+
+                            # Envoie les données du robot au client
+                            client_socket.send(pickle.dumps(self.ROBOT))
+                        
                     is_moved = False
                     # Diriger le robot avec les touches du clavier
                     if keys[pygame.K_LEFT]:
@@ -733,15 +742,17 @@ class LidarScanner:
                         esp32.send(json.dumps({"cmd": "move", "x":self.ROBOT.x, "y":self.ROBOT.y ,"theta":self.ROBOT_ANGLE}).encode())
                         is_moved = False
                     
+                    # Recevoir des données du serveur (exemple avec un objet)
+                    data_received = client_socket.recv(4096)  # Choisissez une taille de tampon appropriée
+                    objet_reçu = pickle.loads(data_received)
 
-                    if esp32.get_status():
-                        data = esp32.load_json(esp32.receive())
-                        if data != None:
-                            self.ROBOT_ANGLE = math.degrees(data["theta"])
-                            self.ROBOT.update_position(data["x"], data["y"])
+                    if objet_reçu is not None:
+                        # charge le json
+                        self.load_json(objet_reçu)
+
                         
-                        self.draw_background()
-                        self.draw_robot(self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)
+                    self.draw_background()
+                    self.draw_robot(self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)
                     
                     for objet in self.objets:
                         self.draw_object(objet)

@@ -6,6 +6,7 @@ import serial.tools.list_ports
 import os
 #import can
 import time
+import json
 
 import socket
 import threading
@@ -16,6 +17,8 @@ class Client:
     def __init__(self):
         self.objet_lidar = None
         self.objet_lidar_lock = threading.Lock()  # Verrou pour assurer une lecture/écriture sécurisée
+        self.ROBOT = Objet(0, 1500, 1000, 20)
+        self.Robot_lock = threading.Lock()  # Verrou pour assurer une lecture/écriture sécurisée
 
     def receive_data(self, client_socket):
         while True:
@@ -24,6 +27,10 @@ class Client:
                 break
             else:
                 message = pickle.loads(data_received)
+                data = json.loads(message)
+                with self.Robot_lock:
+                    self.ROBOT.update_position(data["x"], data["y"])
+                    self.ROBOT.taille = data["taille"]
                 print(message)
 
     def send_data(self, client_socket):
@@ -38,6 +45,10 @@ class Client:
     def update_lidar_object(self, objet):
         with self.objet_lidar_lock:
             self.objet_lidar = objet
+    
+    def get_objet_robot(self):
+        with self.Robot_lock:
+            return self.ROBOT
             
 """class ComCAN:
     def __init__(self, channel, bustype):
@@ -125,7 +136,7 @@ class Objet:
         dy = self.y - self.positions_precedentes[-1][1]
 
         # Calculer le temps écoulé entre la position actuelle et la position précédente
-        dt = (time.monotonic_ns() - self.positions_precedentes[-1][2]) + 0.00001 # Ajout de 0.00001 pour éviter la division par 0
+        dt = (time.monotonic_ns() - self.positions_precedentes[-1][2]) + 0.0000001 # Ajout de 0.00001 pour éviter la division par 0
 
         # La direction est l'angle du vecteur de déplacement
         self.direction = math.atan2(dy, dx)
@@ -478,7 +489,7 @@ class LidarScanner:
             try:
                 
                 for scan in self.lidar.iter_scans(4000):
-                    
+                    ROBOT = client.get_objet_robot()
                     new_scan = self.transform_scan(scan)
                     
                     for objet in self.objets:

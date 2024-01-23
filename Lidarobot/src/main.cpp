@@ -122,7 +122,9 @@ void taskEnvoyer(void *pvParameters)
   while (1)
   {
     // Envoyer des données ici
-    envoie_JSON();
+    if(etat_sys != 0){
+      envoie_JSON();
+    }
     vTaskDelay(pdMS_TO_TICKS(100)); // Delay de 100ms
   }
 }
@@ -137,7 +139,7 @@ void taskRecevoir(void *pvParameters)
       // Lire les données reçues
       size_t len = Serial.readBytesUntil('\n', rxBuffer, sizeof(rxBuffer) - 1);
       rxBuffer[len] = '\0';
-      Serial.println(rxBuffer);
+      //Serial.println(rxBuffer);
     }
     vTaskDelay(pdMS_TO_TICKS(10)); // Delay de 10ms
   }
@@ -181,7 +183,7 @@ void setup()
   // initialisation des boutons
   setup_bt(3);
 
-  // xTaskCreate(taskEnvoyer, "Envoyer", 1000, NULL, 2, NULL);
+  xTaskCreate(taskEnvoyer, "Envoyer", 1000, NULL, 2, NULL);
   xTaskCreate(taskRecevoir, "Recevoir", 1000, NULL, 2, NULL);
   xTaskCreatePinnedToCore(taskMoteur, "taskMoteur", 4096, NULL, 1, NULL, 0);
   xTaskCreatePinnedToCore(taskMiseAJourDonnees, "taskMiseAJourDonnees", 4096, NULL, 2, NULL, 0);
@@ -229,6 +231,7 @@ void loop()
     {
       etat_sys = 2;
     }
+    
   }
 
   switch (etat_sys)
@@ -240,11 +243,23 @@ void loop()
   case 1:
     // Etat 1:Test de la ligne droite
     digitalWrite(pinLed, HIGH);
+    delay(2000);
+    etat_sys = 2;
     break;
   case 2:
     // Etat 2:Test de la ligne droite
-    move(x_rx, y_rx, theta_rx);
-    etat_sys = 1;
+    //move(x_rx, y_rx, theta_rx);
+    //etat_sys = 1;
+
+    avancer(100);
+    tourner(PI / 2);
+    avancer(100);
+    tourner(PI / 2);
+    avancer(100);
+    tourner(PI / 2);
+    avancer(100);
+    tourner(PI / 2);
+
     break;
   default:
     break;

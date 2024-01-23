@@ -65,6 +65,10 @@ class ComESP32:
             raise
 
     def send(self, data):
+        # Vérifie si data est en bytes
+        if isinstance(data, str):
+            data = data.encode()
+        
         try:
             print(f"Sending data to ESP32: {data}")
             self.esp32.write(data)
@@ -687,6 +691,7 @@ class LidarScanner:
             
         esp32 = ComESP32(port=self.interface_choix_port(), baudrate=115200)
         esp32.connect()
+        esp32.send(json.dumps({"cmd": "start", "x":1500.0, "y":1000.0 ,"theta":0.0}).encode())
 
         self.objets = [Objet(1,-1,-1,1)]
 
@@ -710,6 +715,25 @@ class LidarScanner:
                     if quit or keys[pygame.K_ESCAPE] or keys[pygame.K_SPACE]:
                         self.stop(esp32)
                     
+                    is_moved = False
+                    # Diriger le robot avec les touches du clavier
+                    if keys[pygame.K_LEFT]:
+                        self.ROBOT_ANGLE -= 1
+                        is_moved = True
+                    if keys[pygame.K_RIGHT]:
+                        self.ROBOT_ANGLE += 1
+                        is_moved = True
+                    if keys[pygame.K_UP]:
+                        self.ROBOT.update_position(self.ROBOT.x + 50 * math.cos(math.radians(self.ROBOT_ANGLE)), self.ROBOT.y + 50 * math.sin(math.radians(self.ROBOT_ANGLE)))
+                        is_moved = True
+                    if keys[pygame.K_DOWN]:
+                        self.ROBOT.update_position(self.ROBOT.x - 50 * math.cos(math.radians(self.ROBOT_ANGLE)), self.ROBOT.y - 50 * math.sin(math.radians(self.ROBOT_ANGLE)))
+                        is_moved = True
+                    if is_moved:
+                        esp32.send(json.dumps({"cmd": "move", "x":self.ROBOT.x, "y":self.ROBOT.y ,"theta":self.ROBOT_ANGLE}).encode())
+                        is_moved = False
+                    
+
                     if esp32.get_status():
                         data = esp32.load_json(esp32.receive())
                         if data != None:

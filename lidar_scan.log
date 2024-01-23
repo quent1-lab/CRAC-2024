@@ -10301,3 +10301,49 @@ INFO:rplidar:Stoping scanning
 19/01/2024 23:59:39 - ERROR - Failed to unload JSON: Extra data: line 1 column 38 (char 37)
 20/01/2024 00:00:20 - INFO - Stopping LiDAR motor
 20/01/2024 00:00:20 - ERROR - Failed to send data to ESP32: unicode strings are not supported, please encode to bytes: 'stop'
+23/01/2024 14:01:52 - INFO - esp32 connected
+23/01/2024 14:01:52 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+23/01/2024 14:01:52 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+23/01/2024 14:01:52 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+23/01/2024 14:01:52 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+23/01/2024 14:01:52 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+23/01/2024 14:01:52 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+23/01/2024 14:01:52 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+23/01/2024 14:01:52 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+23/01/2024 14:01:53 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+23/01/2024 14:01:53 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+23/01/2024 14:01:53 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+23/01/2024 14:01:53 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+23/01/2024 14:01:53 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+23/01/2024 14:01:53 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+23/01/2024 14:01:53 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+23/01/2024 14:01:53 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+23/01/2024 14:01:53 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+23/01/2024 14:02:35 - INFO - esp32 connected
+23/01/2024 14:02:35 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+23/01/2024 14:02:36 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+23/01/2024 14:02:36 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+23/01/2024 14:02:36 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+23/01/2024 14:02:36 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+23/01/2024 14:02:36 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+23/01/2024 14:02:36 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+23/01/2024 14:02:36 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+23/01/2024 14:02:36 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+23/01/2024 14:02:36 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+23/01/2024 14:02:36 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+23/01/2024 14:02:37 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+23/01/2024 14:02:37 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+23/01/2024 14:02:37 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+23/01/2024 14:02:37 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+23/01/2024 14:02:37 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+23/01/2024 14:02:37 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+23/01/2024 14:02:37 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+23/01/2024 14:02:37 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+23/01/2024 14:02:37 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+23/01/2024 14:02:37 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+23/01/2024 14:02:38 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+23/01/2024 14:02:38 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+23/01/2024 14:02:38 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+23/01/2024 14:02:38 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+23/01/2024 14:02:38 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType
+23/01/2024 14:02:38 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not NoneType

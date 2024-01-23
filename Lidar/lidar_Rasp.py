@@ -22,20 +22,30 @@ class Client:
 
     def receive_data(self, client_socket):
         while True:
-            data_received = client_socket.recv(4096)
-            message = pickle.loads(data_received)
+            try:
+                data_received = client_socket.recv(4096)
+            except Exception as e:
+                print(f"Erreur lors de la réception d'un message : {e}")
+                continue
+
             if not data_received:
                 break
-            else:        
-                # Vérifie si le message est au format JSON
-                try:
-                    data = json.loads(message)
-                except json.decoder.JSONDecodeError:
-                    print("Le message reçu n'est pas au format JSON")
-                    continue
-                with self.Robot_lock:
-                    self.ROBOT.update_position(data["x"], data["y"])
-                    self.ROBOT.taille = data["taille"]
+
+            try:
+                message = pickle.loads(data_received)
+            except Exception as e:
+                print(f"Erreur lors de la déserialization du message : {e}")
+                continue
+
+            try:
+                data = json.loads(str(message))
+            except json.decoder.JSONDecodeError:
+                print("Le message reçu n'est pas au format JSON")
+                continue
+
+            with self.Robot_lock:
+                self.ROBOT.update_position(data["x"], data["y"])
+                self.ROBOT.taille = data["taille"]
                     
     def send_data(self, client_socket):
         while True:

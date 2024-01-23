@@ -722,8 +722,8 @@ class LidarScanner:
                             self.ROBOT_ANGLE = math.degrees(data["theta"])
                             self.ROBOT.update_position(data["x"], data["y"])
 
-                            # Envoie les données du robot au client
-                            client_socket.send(pickle.dumps(self.ROBOT))
+                            # Envoie les données du robot au client en JSON
+                            client_socket.send(pickle.dumps({"x":self.ROBOT.x, "y":self.ROBOT.y ,"theta":self.ROBOT_ANGLE}))
                         
                         else:
                             esp32.send(json.dumps({"cmd": "start", "x":1500.0, "y":1000.0 ,"theta":0.0}).encode())

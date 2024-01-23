@@ -107,12 +107,42 @@ Encodeur encodeur(pinEncodeurDroitB, pinEncodeurDroitA, pinEncodeurGaucheA, pinE
 
 /*----------------------------- Fonction OS temps réel ----------------------------------*/
 
-void taskCommuniquer(void *pvParameters) {
+// Buffer pour stocker les données reçues
+char rxBuffer[128];
+
+// Tâche pour l'envoi de données
+void taskEnvoyer(void *pvParameters) {
     while (1) {
-        // Appeler la fonction de communication ici
+        // Envoyer des données ici
         envoie_JSON();
-        //String message = reception();
         vTaskDelay(pdMS_TO_TICKS(100));  // Delay de 100ms
+    }
+}
+
+// Tâche pour la réception de données
+void taskRecevoir(void *pvParameters) {
+    while (1) {
+        if (Serial.available()) {
+            // Lire les données reçues
+            size_t len = Serial.readBytesUntil('\n', rxBuffer, sizeof(rxBuffer) - 1);
+            // Définir la capacité du document JSON
+            const size_t capacity = JSON_OBJECT_SIZE(3) + 40;
+
+            // Créer un objet DynamicJsonDocument
+            DynamicJsonDocument doc(capacity);
+
+            // Convertir rxBuffer en un objet JSON
+            deserializeJson(doc, rxBuffer);
+
+            // Extraire les valeurs x, y, theta
+            double x = doc["x"];
+            double y = doc["y"];
+            double theta = doc["theta"];
+            
+            rxBuffer[len] = '\0';  // Ajouter un caractère de fin de chaîne
+            Serial.println(rxBuffer);  // Imprimer les données reçues
+        }
+        vTaskDelay(pdMS_TO_TICKS(10));  // Delay de 10ms
     }
 }
 
@@ -120,7 +150,7 @@ void taskMoteur(void *pvParameters) {
     while (1) {
         // Appeler la fonction moteur ici
         moteur();
-        vTaskDelay(pdMS_TO_TICKS(10));  // Delay de 10ms
+        vTaskDelay(pdMS_TO_TICKS(5));  // Delay de 10ms
     }
 }
 
@@ -128,7 +158,7 @@ void taskMiseAJourDonnees(void *pvParameters) {
     while (1) {
         // Appeler la fonction de mise à jour des données ici
         mise_a_jour_donnees();
-        vTaskDelay(pdMS_TO_TICKS(20));  // Delay de 20ms
+        vTaskDelay(pdMS_TO_TICKS(10));  // Delay de 20ms
     }
 }
 
@@ -150,7 +180,8 @@ void setup()
   // initialisation des boutons
   setup_bt(3);
 
-  xTaskCreatePinnedToCore(taskCommuniquer, "taskCommuniquer", 4096, NULL, 2, NULL, 0);
+  xTaskCreate(taskEnvoyer, "Envoyer", 1000, NULL, 2, NULL);
+  xTaskCreate(taskRecevoir, "Recevoir", 1000, NULL, 2, NULL);
   xTaskCreatePinnedToCore(taskMoteur, "taskMoteur", 4096, NULL, 1, NULL, 0);
   xTaskCreatePinnedToCore(taskMiseAJourDonnees, "taskMiseAJourDonnees", 4096, NULL, 2, NULL, 0);
 }

@@ -19,13 +19,13 @@ class Client:
         self.objet_lidar_lock = threading.Lock()  # Verrou pour assurer une lecture/écriture sécurisée
         self.ROBOT = Objet(0, 1500, 1000, 20)
         self.Robot_lock = threading.Lock()  # Verrou pour assurer une lecture/écriture sécurisée
+        self.ROBOT_ANGLE = 0
 
     def receive_data(self, client_socket):
         while True:
             try:
                 data_received = client_socket.recv(4096)
             except Exception as e:
-                print(f"Erreur lors de la réception d'un message : {e}")
                 continue
 
             if not data_received:
@@ -34,18 +34,16 @@ class Client:
             try:
                 message = pickle.loads(data_received)
             except Exception as e:
-                print(f"Erreur lors de la déserialization du message : {e}")
                 continue
 
             try:
                 data = json.loads(str(message))
             except json.decoder.JSONDecodeError:
-                print("Le message reçu n'est pas au format JSON")
                 continue
 
             with self.Robot_lock:
                 self.ROBOT.update_position(data["x"], data["y"])
-                self.ROBOT.taille = data["taille"]
+                self.ROBOT_ANGLE = data["theta"]
                     
     def send_data(self, client_socket):
         while True:
@@ -63,6 +61,10 @@ class Client:
     def get_objet_robot(self):
         with self.Robot_lock:
             return self.ROBOT
+    
+    def get_robot_angle(self):
+        with self.Robot_lock:
+            return self.ROBOT_ANGLE
             
 """class ComCAN:
     def __init__(self, channel, bustype):
@@ -503,7 +505,8 @@ class LidarScanner:
             try:
                 
                 for scan in self.lidar.iter_scans(4000):
-                    ROBOT = client.get_objet_robot()
+                    self.ROBOT = client.get_objet_robot()
+                    self.ROBOT_ANGLE = client.get_robot_angle()
                     new_scan = self.transform_scan(scan)
                     
                     for objet in self.objets:

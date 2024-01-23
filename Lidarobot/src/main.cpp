@@ -251,14 +251,14 @@ void loop()
     //move(x_rx, y_rx, theta_rx);
     //etat_sys = 1;
 
-    avancer(500);
+    avancer(100);
     tourner(PI / 2);
-    /*avancer(100);
-    tourner(PI);
+    avancer(100);
+    tourner(-PI);
     avancer(100);
     tourner(-PI / 2);
     avancer(100);
-    tourner(PI);*/
+    tourner(PI);
 
     break;
   default:

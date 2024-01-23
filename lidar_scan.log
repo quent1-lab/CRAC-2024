@@ -38399,3 +38399,42 @@ INFO:rplidar:Stoping scanning
 23/01/2024 18:44:49 - ERROR - Failed to unload JSON: 'NoneType' object has no attribute 'index'
 23/01/2024 18:44:50 - ERROR - Failed to unload JSON: 'NoneType' object has no attribute 'index'
 23/01/2024 18:45:11 - INFO - Stopping LiDAR motor
+23/01/2024 18:58:21 - INFO - Port detected: /dev/ttyUSB0
+23/01/2024 18:58:21 - INFO - esp32 connected
+23/01/2024 18:58:22 - ERROR - Failed to unload JSON: 'NoneType' object has no attribute 'index'
+23/01/2024 18:58:23 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not list
+23/01/2024 18:58:23 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not list
+23/01/2024 18:58:23 - ERROR - Failed to unload JSON: 'NoneType' object has no attribute 'index'
+23/01/2024 18:58:23 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not list
+23/01/2024 18:58:23 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not list
+23/01/2024 18:58:23 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not list
+23/01/2024 18:58:23 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not list
+23/01/2024 18:58:23 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not list
+23/01/2024 18:58:23 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not list
+23/01/2024 18:58:24 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not list
+23/01/2024 18:58:24 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not list
+23/01/2024 18:58:24 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not list
+23/01/2024 18:58:24 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not list
+23/01/2024 18:58:24 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not list
+23/01/2024 18:58:24 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not list
+23/01/2024 18:58:24 - ERROR - Failed to unload JSON: 'NoneType' object has no attribute 'index'
+23/01/2024 18:58:25 - ERROR - Failed to unload JSON: 'NoneType' object has no attribute 'index'
+23/01/2024 18:58:25 - ERROR - Failed to unload JSON: 'NoneType' object has no attribute 'index'
+23/01/2024 18:58:25 - ERROR - Failed to unload JSON: 'NoneType' object has no attribute 'index'
+23/01/2024 18:58:26 - ERROR - Failed to unload JSON: 'NoneType' object has no attribute 'index'
+23/01/2024 18:58:26 - ERROR - Failed to unload JSON: 'NoneType' object has no attribute 'index'
+23/01/2024 18:58:26 - ERROR - Failed to unload JSON: 'NoneType' object has no attribute 'index'
+23/01/2024 18:58:26 - ERROR - Failed to unload JSON: 'NoneType' object has no attribute 'index'
+23/01/2024 18:58:27 - ERROR - Failed to unload JSON: 'NoneType' object has no attribute 'index'
+23/01/2024 18:58:28 - ERROR - Failed to unload JSON: 'NoneType' object has no attribute 'index'
+23/01/2024 18:58:28 - ERROR - Failed to unload JSON: 'NoneType' object has no attribute 'index'
+23/01/2024 18:58:29 - ERROR - Failed to unload JSON: 'NoneType' object has no attribute 'index'
+23/01/2024 18:58:29 - ERROR - Failed to unload JSON: 'NoneType' object has no attribute 'index'
+23/01/2024 18:58:30 - ERROR - Failed to unload JSON: 'NoneType' object has no attribute 'index'
+23/01/2024 18:58:31 - ERROR - Failed to unload JSON: 'NoneType' object has no attribute 'index'
+23/01/2024 18:58:31 - ERROR - Failed to unload JSON: 'NoneType' object has no attribute 'index'
+23/01/2024 18:58:33 - ERROR - Failed to unload JSON: 'NoneType' object has no attribute 'index'
+23/01/2024 18:58:34 - ERROR - Failed to unload JSON: 'NoneType' object has no attribute 'index'
+23/01/2024 18:58:34 - ERROR - Failed to unload JSON: 'NoneType' object has no attribute 'index'
+23/01/2024 18:58:35 - ERROR - Failed to unload JSON: 'NoneType' object has no attribute 'index'
+23/01/2024 18:59:18 - INFO - Stopping LiDAR motor

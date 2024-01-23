@@ -258,7 +258,7 @@ void loop()
     avancer(100);
     tourner(-PI / 2);
     avancer(100);
-    tourner(2*PI);
+    tourner(PI);
 
     break;
   default:

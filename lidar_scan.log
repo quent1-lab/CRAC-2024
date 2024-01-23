@@ -38438,3 +38438,61 @@ INFO:rplidar:Stoping scanning
 23/01/2024 18:58:34 - ERROR - Failed to unload JSON: 'NoneType' object has no attribute 'index'
 23/01/2024 18:58:35 - ERROR - Failed to unload JSON: 'NoneType' object has no attribute 'index'
 23/01/2024 18:59:18 - INFO - Stopping LiDAR motor
+23/01/2024 19:02:31 - INFO - Port detected: /dev/ttyUSB0
+23/01/2024 19:02:31 - INFO - esp32 connected
+23/01/2024 19:02:32 - ERROR - Failed to unload JSON: 'NoneType' object has no attribute 'index'
+23/01/2024 19:02:32 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not list
+23/01/2024 19:02:32 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not list
+23/01/2024 19:02:32 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not list
+23/01/2024 19:02:33 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not list
+23/01/2024 19:02:33 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not list
+23/01/2024 19:02:33 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not list
+23/01/2024 19:02:33 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not list
+23/01/2024 19:02:33 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not list
+23/01/2024 19:02:33 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not list
+23/01/2024 19:02:33 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not list
+23/01/2024 19:02:33 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not list
+23/01/2024 19:02:33 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not list
+23/01/2024 19:02:33 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not list
+23/01/2024 19:02:34 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not list
+23/01/2024 19:02:34 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not list
+23/01/2024 19:06:16 - INFO - Port detected: /dev/ttyUSB0
+23/01/2024 19:06:16 - INFO - esp32 connected
+23/01/2024 19:06:17 - ERROR - Failed to unload JSON: 'NoneType' object has no attribute 'index'
+23/01/2024 19:06:17 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not list
+23/01/2024 19:06:17 - ERROR - Failed to unload JSON: 'NoneType' object has no attribute 'index'
+23/01/2024 19:06:17 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not list
+23/01/2024 19:06:17 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not list
+23/01/2024 19:06:17 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not list
+23/01/2024 19:06:17 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not list
+23/01/2024 19:06:17 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not list
+23/01/2024 19:06:17 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not list
+23/01/2024 19:06:17 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not list
+23/01/2024 19:06:17 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not list
+23/01/2024 19:06:18 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not list
+23/01/2024 19:06:18 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not list
+23/01/2024 19:06:18 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not list
+23/01/2024 19:06:18 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not list
+23/01/2024 19:06:18 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not list
+23/01/2024 19:06:18 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not list
+23/01/2024 19:06:18 - ERROR - Failed to unload JSON: the JSON object must be str, bytes or bytearray, not list
+23/01/2024 19:06:18 - ERROR - Failed to unload JSON: 'NoneType' object has no attribute 'index'
+23/01/2024 19:06:19 - ERROR - Failed to unload JSON: 'NoneType' object has no attribute 'index'
+23/01/2024 19:06:19 - ERROR - Failed to unload JSON: 'NoneType' object has no attribute 'index'
+23/01/2024 19:06:19 - ERROR - Failed to unload JSON: 'NoneType' object has no attribute 'index'
+23/01/2024 19:06:19 - ERROR - Failed to unload JSON: 'NoneType' object has no attribute 'index'
+23/01/2024 19:06:20 - ERROR - Failed to unload JSON: 'NoneType' object has no attribute 'index'
+23/01/2024 19:06:20 - ERROR - Failed to unload JSON: 'NoneType' object has no attribute 'index'
+23/01/2024 19:06:20 - ERROR - Failed to unload JSON: 'NoneType' object has no attribute 'index'
+23/01/2024 19:06:21 - ERROR - Failed to unload JSON: 'NoneType' object has no attribute 'index'
+23/01/2024 19:06:21 - ERROR - Failed to unload JSON: 'NoneType' object has no attribute 'index'
+23/01/2024 19:06:22 - ERROR - Failed to unload JSON: 'NoneType' object has no attribute 'index'
+23/01/2024 19:06:23 - ERROR - Failed to unload JSON: 'NoneType' object has no attribute 'index'
+23/01/2024 19:06:24 - ERROR - Failed to unload JSON: 'NoneType' object has no attribute 'index'
+23/01/2024 19:06:24 - ERROR - Failed to unload JSON: 'NoneType' object has no attribute 'index'
+23/01/2024 19:06:25 - ERROR - Failed to unload JSON: 'NoneType' object has no attribute 'index'
+23/01/2024 19:06:26 - ERROR - Failed to unload JSON: 'NoneType' object has no attribute 'index'
+23/01/2024 19:06:27 - ERROR - Failed to unload JSON: 'NoneType' object has no attribute 'index'
+23/01/2024 19:06:27 - ERROR - Failed to unload JSON: 'NoneType' object has no attribute 'index'
+23/01/2024 19:06:27 - ERROR - Failed to unload JSON: Expecting value: line 1 column 1 (char 0)
+23/01/2024 19:06:28 - ERROR - Failed to unload JSON: 'NoneType' object has no attribute 'index'

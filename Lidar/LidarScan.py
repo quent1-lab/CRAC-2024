@@ -697,6 +697,7 @@ class LidarScanner:
             
         esp32 = ComESP32(port=self.interface_choix_port(), baudrate=115200)
         esp32.connect()
+        time.sleep(1)
         esp32.send(json.dumps({"cmd": "start", "x":1500.0, "y":1000.0 ,"theta":0.0}).encode())
 
         self.objets = [Objet(1,-1,-1,1)]

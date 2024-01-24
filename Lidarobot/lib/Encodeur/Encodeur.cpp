@@ -173,8 +173,9 @@ void Encodeur::odometrie()
         this->theta -= 2*PI;
     if(this->theta < 0)
         this->theta += 2*PI;
+    //this->theta = -this->theta;
     this->x += deltaS * cos(this->theta);
-    this->y += deltaS * sin(this->theta);
+    this->y += deltaS * sin(-this->theta);
 
     //print(this->countD,this->countG);
     

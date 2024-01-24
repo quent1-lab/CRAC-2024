@@ -19,7 +19,7 @@ import re
 
 # Initialiser le serveur
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server_socket.bind(('192.168.36.63', 5000))  # Utilisez une adresse IP appropriée et un port disponible
+server_socket.bind(('', 5000))  # Utilisez une adresse IP appropriée et un port disponible
 server_socket.listen(1)
 
 print("Attente de la connexion du client...")
@@ -65,6 +65,10 @@ class ComESP32:
             raise
 
     def send(self, data):
+        # Vérifie si data est en bytes
+        if isinstance(data, str):
+            data = data.encode()
+        
         try:
             print(f"Sending data to ESP32: {data}")
             self.esp32.write(data)
@@ -76,7 +80,13 @@ class ComESP32:
         try:
             if self.esp32.in_waiting > 0:
                 # Renvoie les données reçues par l'ESP32 en enlevant les deux premiers caractères et le dernier
-                return self.esp32.readline().decode()
+                message = self.esp32.readline().decode()
+                # Vérifie s'il n'y a qu'un seul message JSON
+                if message.count("{") == 1 and message.count("}") == 1:
+                    return message
+                else:
+                    # Si plusieurs messages JSON sont reçus, renvoie le dernier
+                    return message[message.rfind("{"):message.rfind("}") + 1]
         except Exception as e:
             logging.error(f"Failed to receive data from ESP32: {e}")
             print("Failed to receive data from ESP32")
@@ -84,7 +94,7 @@ class ComESP32:
     def load_json(self, data):
         try:
             # Ne récupère que les données comprises entre les deux crochets
-            #data = data[data.index("{"):data.index("}") + 1]
+            data = data[data.index("{"):data.index("}") + 1]
             return json.loads(data)
         except Exception as e:
             logging.error(f"Failed to unload JSON: {e}")
@@ -222,7 +232,7 @@ class Objet:
         return dx, dy
 
     def __str__(self):
-        return f"Objet {self.id} : x = {self.x} y = {self.y} taille = {self.taille} points = {len(self.points)}"
+        return f"{{\"id\": {self.id}, \"x\": {int(self.x)}, \"y\": {int(self.y)}, \"taille\": {int(self.taille)}}}"
     
 class LidarScanner:
     def __init__(self, port=None):
@@ -280,7 +290,7 @@ class LidarScanner:
         pygame.draw.line(
             self.lcd, pygame.Color(self.WHITE),
             (x * self.X_RATIO, y * self.Y_RATIO),
-            ((x + 100 * math.cos(math.radians(angle))) * self.X_RATIO, (y + 100 * math.sin(math.radians(angle))) * self.Y_RATIO), 5)
+            ((x + 100 * math.cos(math.radians(-angle))) * self.X_RATIO, (y + 100 * math.sin(math.radians(-angle))) * self.Y_RATIO), 5)
     
     def draw_image(self,image_path):
         # Charge l'image à partir du chemin du fichier
@@ -485,176 +495,6 @@ class LidarScanner:
         # Mettre à jour l'écran
         pygame.display.update()
         time.sleep(1.5)
-
-    def transform_scan(self, scan):
-        """
-        Transforme les données du scan en coordonnées cartésiennes.
-        Retire les points en dehors du terrain de jeu.
-
-        :param scan: Liste de tuples (quality, angle, distance)
-        :return: Liste de tuples (x, y, distance)
-        """
-        points = []
-        for point in scan:
-            distance = point[2]
-            new_angle = point[1] - self.ROBOT_ANGLE
-
-            new_angle %= 360
-            if new_angle < 0:
-                new_angle += 360
-
-            if distance != 0:
-                x = distance * math.cos(math.radians(new_angle)) + self.ROBOT.x
-                y = distance * math.sin(math.radians(new_angle)) + self.ROBOT.y
-
-                # Vérifier si le point est en dehors du terrain de jeu
-                if self.BORDER_DISTANCE < x < self.FIELD_SIZE[0] - self.BORDER_DISTANCE and self.BORDER_DISTANCE < y < self.FIELD_SIZE[1] - self.BORDER_DISTANCE:
-                    points.append((x, y, distance, new_angle))
-        return points
-
-    def get_points_in_zone(self, points, origin_distance, origin_angle):
-        """
-        Renvoie les points compris dans une zone spécifiée par un seuil de distance par rapport à un point d'origine et une position angulaire.
-
-        :param points: Liste de points à vérifier. Chaque point est un tuple (x, y, distance, angle).
-        :param origin_distance: Distance du point d'origine.
-        :param origin_angle: Angle du point d'origine.
-        :return: Liste des points dans la zone.
-        """
-        points_in_zone = []
-
-        for point in points:
-            distance = point[2]
-            angle = point[3]
-
-            # Vérifier si le point est dans une zone de 50 mm autour du point d'origine et d'un angle de 60 degrés
-            if origin_distance - 50 < distance < origin_distance + 50 and origin_angle - 30 < angle < origin_angle + 30:
-                points_in_zone.append(point)
-
-        return points_in_zone
-
-    def detect_object(self, scan, max_iteration=2):
-        iteration = 0
-        while True:
-            # Liste des points associés aux objets déjà trouvés
-            points_objets_trouves = []
-            for k in range(iteration):
-                if k < len(self.objets):
-                    points_objets_trouves += self.objets[k].points
-
-            # Sélectionne le point le plus proche du robot en excluant les points des objets déjà trouvés
-            points_non_objets = [point for point in scan if point not in points_objets_trouves]
-            if not points_non_objets:
-                # Aucun point trouvé en dehors des objets, retourner None
-                return None
-
-            # Sélectionne le point le plus proche du robot
-            point_proche = min(points_non_objets, key=lambda x: x[2])
-            distance_objet = point_proche[2]
-            angle_objet = point_proche[3]
-            points_autour_objet = []
-
-            # Sélectionne les points autour de l'objet en fonction des coordonnées (x, y) des points
-            points_autour_objet = self.get_points_in_zone(points_non_objets, distance_objet, angle_objet)
-
-            if not points_autour_objet or len(points_autour_objet) < 3:
-                # Aucun point autour de l'objet ou pas assez de points, retourner None
-                return None
-
-            # Calcul des coordonnées moyennes pondérées des points autour de l'objet
-            x = sum([point[0] for point in points_autour_objet]) / len(points_autour_objet)
-            y = sum([point[1] for point in points_autour_objet]) / len(points_autour_objet)
-
-            iteration += 1
-            if iteration > max_iteration:
-                return None
-
-            # Calcul de la taille de l'objet
-            x_min = min(points_autour_objet, key=lambda x: x[0])
-            x_max = max(points_autour_objet, key=lambda x: x[0])
-            y_min = min(points_autour_objet, key=lambda x: x[1])
-            y_max = max(points_autour_objet, key=lambda x: x[1])
-            taille = math.sqrt((x_max[0] - x_min[0])**2 + (y_max[1] - y_min[1])**2)
-
-            # Seuil de détection d'un objet en mm
-            SEUIL = 100  # en mm (distance que peut parcourir le robot entre deux scans)
-            
-            id_objet_existant = self.trouver_id_objet_existants(x, y, SEUIL)
-
-            if id_objet_existant != None:
-                # Si l'objet est déjà suivi, mettre à jour ses coordonnées
-                self.objets[id_objet_existant - 1].update_position(x, y)
-                self.objets[id_objet_existant - 1].taille = taille
-                self.objets[id_objet_existant - 1].points = points_autour_objet
-            else:
-                # Si l'objet n'est pas déjà suivi, créer un nouvel objet
-                self.id_compteur += 1
-                nouvel_objet = Objet(self.id_compteur, x, y, taille)
-                nouvel_objet.points = points_autour_objet
-                self.objets.append(nouvel_objet)              
-
-    def detect_object_v1(self, scan):
-        objet = min(scan, key=lambda x: x[2]) #Sélectionne le point le plus proche du robot
-        angle_objet = objet[1]
-        distance_objet = objet[2]
-        points_autour_objet = []
-
-        #sélectionne les points autour de l'objet en fonction de la distance des points
-        for point in scan:
-            if point[2] < distance_objet + 50 and point[2] > distance_objet - 50:
-                points_autour_objet.append(point)
-
-        x = 0
-        y = 0
-        taille = 0
-
-        for point in points_autour_objet:
-            new_angle = point[1] - self.ROBOT_ANGLE
-            new_angle %= 360
-            if new_angle < 0:
-                new_angle += 360
-            x += point[2] * math.cos(new_angle * math.pi / 180)
-            y += point[2] * math.sin(new_angle * math.pi / 180)
-
-        angle_min = min(points_autour_objet, key=lambda x: x[1])
-        angle_max = max(points_autour_objet, key=lambda x: x[1])
-        distance_min = min(points_autour_objet, key=lambda x: x[2])
-        distance_max = max(points_autour_objet, key=lambda x: x[2])
-        taille = math.sqrt((distance_max[2] * math.cos(angle_max[1] * math.pi / 180) - distance_min[2] * math.cos(
-            angle_min[1] * math.pi / 180)) ** 2 + (distance_max[2] * math.sin(angle_max[1] * math.pi / 180) - distance_min[2] * math.sin(
-            angle_min[1] * math.pi / 180)) ** 2)
-
-        x = self.ROBOT.x + int(x / len(points_autour_objet))
-        y = self.ROBOT.y + int(y / len(points_autour_objet))
-
-        # Seuil de détection d'un objet en mm
-        SEUIL = 100 # en mm (distance que peut parcourir le robot entre deux scans)
-        #Valeur à affiner
-
-        # Vérifier si l'objet est déjà suivi
-        for objet in self.objets:
-            distance = math.sqrt((x - objet.x)**2 + (y - objet.y)**2)
-            if distance < SEUIL:
-                # Si l'objet est déjà suivi, mettre à jour ses coordonnées
-                objet.update_position(x, y)
-                objet.taille = taille
-            return objet
-            
-        if(len(self.objets) < 1):
-            # Incrémenter le compteur d'identifiants
-            self.id_compteur += 1
-
-            # Si l'objet n'est pas déjà suivi, créer un nouvel objet
-            nouvel_objet = Objet(self.id_compteur, x, y, taille)
-            self.objets.append(nouvel_objet)
-
-    def trouver_id_objet_existants(self, x, y, seuil_distance=100):
-        # Vérifier si l'objet est déjà suivi
-        for objet in self.objets:
-            distance = math.sqrt((x - objet.x)**2 + (y - objet.y)**2)
-            if distance < seuil_distance:
-                return objet.id # Retourne l'ID de l'objet existant
-        return None
     
     def trajectoires_anticipation(self, robot_actuel, robot_adverse, duree_anticipation=1.0, pas_temps=0.1, distance_securite=50):
         """
@@ -835,52 +675,94 @@ class LidarScanner:
         client_socket.close()
         server_socket.close()
         if esp.get_status():
-            esp.send("stop")
+            esp.send(json.dumps({"cmd": "stop","x":0.0, "y":0.0 ,"theta":0.0}).encode())
             esp.disconnect()
         exit(0)
 
+    def load_json(self,json_string):
+        try:
+            data = json.loads(json_string)
+        except Exception as e:
+            logging.error(f"Failed to unload JSON: {e}")
+            print(f"Failed to unload JSON : {json_string}")
+            return None
+        for item in data:
+            if item["id"] == 1:
+                self.objets[0].update_position(item["x"], item["y"])
+                self.objets[0].taille = item["taille"]
+            elif item["id"] == 2:
+                pass
+
     def run(self):
             
-        esp32 = ComESP32(port="/dev/ttyUSB0", baudrate=115200)
+        esp32 = ComESP32(port=self.interface_choix_port(), baudrate=115200)
         esp32.connect()
+        time.sleep(1)
+        #esp32.send(json.dumps({"cmd": "start", "x":1500.0, "y":1000.0 ,"theta":0.0}).encode())
 
         self.objets = [Objet(1,-1,-1,1)]
 
+        self.draw_background()
+        self.draw_robot(self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)
+        pygame.display.update()
+        nb_fale = 0
         while True:
             try:
                 while True:
-                    # Recevoir des données du serveur (exemple avec un objet)
-                    data_received = client_socket.recv(4096)  # Choisissez une taille de tampon appropriée
-                    objet_reçu = pickle.loads(data_received)
-
-                    text = objet_reçu
-                    if text is not None:
-                        if len(text) > 10:
-                            match = re.search(r"Objet (\d+) : x = ([\d\.]+) y = ([\d\.]+) taille = ([\d\.]+)", text)
-
-                            if match:
-                                id = int(match.group(1))
-                                x = float(match.group(2))
-                                y = float(match.group(3))
-                                taille = float(match.group(4))
-
-                                if id == 1:
-                                    self.objets[0].update_position(x, y)
-                                    self.objets[0].taille = taille
-
+                    
                     keys = pygame.key.get_pressed()
                     quit = pygame.event.get(pygame.QUIT)              
                     if quit or keys[pygame.K_ESCAPE] or keys[pygame.K_SPACE]:
                         self.stop(esp32)
-                    
+                        break     
+
+                    if keys[pygame.K_s]:
+                        esp32.send(json.dumps({"cmd": "start", "x":1500.0, "y":1000.0 ,"theta":0.0}).encode())
+
+
                     if esp32.get_status():
                         data = esp32.load_json(esp32.receive())
                         if data != None:
                             self.ROBOT_ANGLE = math.degrees(data["theta"])
                             self.ROBOT.update_position(data["x"], data["y"])
+
+                            # Envoie les données du robot au client en JSON
+                            client_socket.send(pickle.dumps({"x":self.ROBOT.x, "y":self.ROBOT.y ,"theta":self.ROBOT_ANGLE}))
                         
-                        self.draw_background()
-                        self.draw_robot(self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)
+                        else:
+                            nb_fale += 1
+                            if nb_fale > 10:
+                                nb_fale = 0
+
+                    is_moved = False
+                    # Diriger le robot avec les touches du clavier
+                    if keys[pygame.K_LEFT]:
+                        self.ROBOT_ANGLE -= 1
+                        is_moved = True
+                    if keys[pygame.K_RIGHT]:
+                        self.ROBOT_ANGLE += 1
+                        is_moved = True
+                    if keys[pygame.K_UP]:
+                        self.ROBOT.update_position(self.ROBOT.x + 50 * math.cos(math.radians(self.ROBOT_ANGLE)), self.ROBOT.y + 50 * math.sin(math.radians(self.ROBOT_ANGLE)))
+                        is_moved = True
+                    if keys[pygame.K_DOWN]:
+                        self.ROBOT.update_position(self.ROBOT.x - 50 * math.cos(math.radians(self.ROBOT_ANGLE)), self.ROBOT.y - 50 * math.sin(math.radians(self.ROBOT_ANGLE)))
+                        is_moved = True
+                    if is_moved:
+                        esp32.send(json.dumps({"cmd": "move", "x":self.ROBOT.x, "y":self.ROBOT.y ,"theta":self.ROBOT_ANGLE}).encode())
+                        is_moved = False
+                    
+                    # Recevoir des données du serveur (exemple avec un objet)
+                    data_received = client_socket.recv(4096)  # Choisissez une taille de tampon appropriée
+                    objet_reçu = pickle.loads(data_received)
+
+                    if objet_reçu is not None:
+                        # charge le json
+                        self.load_json(objet_reçu)
+
+                        
+                    self.draw_background()
+                    self.draw_robot(self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)
                     
                     for objet in self.objets:
                         self.draw_object(objet)

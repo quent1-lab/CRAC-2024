@@ -6,6 +6,7 @@ import serial.tools.list_ports
 import os
 #import can
 import time
+import json
 
 import socket
 import threading
@@ -16,30 +17,50 @@ class Client:
     def __init__(self):
         self.objet_lidar = None
         self.objet_lidar_lock = threading.Lock()  # Verrou pour assurer une lecture/écriture sécurisée
+        self.ROBOT = Objet(0, 1500, 1000, 20)
+        self.Robot_lock = threading.Lock()  # Verrou pour assurer une lecture/écriture sécurisée
+        self.ROBOT_angle = 0
 
     def receive_data(self, client_socket):
         while True:
-            data_received = client_socket.recv(4096)
+            try:
+                data_received = client_socket.recv(4096)
+            except Exception as e:
+                continue
+
             if not data_received:
                 break
-            else:
-                message = pickle.loads(data_received)
-                print(message)
 
+            try:
+                data = pickle.loads(data_received)
+            except Exception as e:
+                continue
+
+            with self.Robot_lock:
+                self.ROBOT.update_position(data["x"], data["y"])
+                self.ROBOT_angle = data["theta"]
+                    
     def send_data(self, client_socket):
         while True:
             # Faire quelque chose avec objet_lidar_local et l'envoyer au serveur
             with self.objet_lidar_lock:
                 message_to_send = pickle.dumps(self.objet_lidar)
-            client_socket.sendall(message_to_send)
+            if message_to_send != None:
+                client_socket.sendall(message_to_send)
             time.sleep(0.1)
     
     def update_lidar_object(self, objet):
         with self.objet_lidar_lock:
             self.objet_lidar = objet
+    
+    def get_objet_robot(self):
+        with self.Robot_lock:
+            return self.ROBOT
+    
+    def get_robot_angle(self):
+        with self.Robot_lock:
+            return self.ROBOT_angle
             
-
-
 """class ComCAN:
     def __init__(self, channel, bustype):
         self.channel = channel
@@ -104,12 +125,21 @@ class Objet:
         self.vitesse = 0
         self.vitesse_ms = 0
         self.points = []
+        self.last_moved = time.time()
 
     def update_position(self, x, y):
         # Mettre à jour la position de l'objet et ajouter la position précédente à la liste
-        self.positions_precedentes.append((self.x, self.y, time.monotonic_ns()))  # Ajout du temps actuel
-        self.x = x
-        self.y = y
+        if self.x != x or self.y != y:
+            self.positions_precedentes.append((self.x, self.y, time.monotonic_ns()))
+            self.x = x
+            self.y = y
+            self.last_moved = time.time()
+
+    def reset_if_not_moved(self, delay):
+        if time.time() > self.last_moved + delay:
+            return True
+        else:
+            return False
 
     def get_direction_speed(self):
         # Calculer le vecteur de déplacement entre la position actuelle et la position précédente
@@ -117,7 +147,7 @@ class Objet:
         dy = self.y - self.positions_precedentes[-1][1]
 
         # Calculer le temps écoulé entre la position actuelle et la position précédente
-        dt = (time.monotonic_ns() - self.positions_precedentes[-1][2]) + 0.00001 # Ajout de 0.00001 pour éviter la division par 0
+        dt = (time.monotonic_ns() - self.positions_precedentes[-1][2]) + 0.0000001 # Ajout de 0.00001 pour éviter la division par 0
 
         # La direction est l'angle du vecteur de déplacement
         self.direction = math.atan2(dy, dx)
@@ -152,7 +182,8 @@ class Objet:
         return dx, dy
 
     def __str__(self):
-        return f"Objet {self.id} : x = {self.x} y = {self.y} taille = {self.taille} points = {len(self.points)}"
+        # Retourne une chaîne de caractères représentant l'objet sous format JSON
+        return f"{{\"id\": {self.id}, \"x\": {int(self.x)}, \"y\": {int(self.y)}, \"taille\": {int(self.taille)}}}"
     
 class LidarScanner:
     def __init__(self, port=None):
@@ -181,7 +212,6 @@ class LidarScanner:
         else:  # Linux et autres
             self.path_picture = "Documents/CRAC-2024/Lidar/Terrain_Jeu.png"
 
-        self.id_compteur = 0  # Compteur pour les identifiants d'objet
         self.objets = []  # Liste pour stocker les objets détectés
 
         self.client_socket = None
@@ -235,9 +265,11 @@ class LidarScanner:
 
         return points_in_zone
 
-    def detect_object(self, scan, max_iteration=2):
+    def detect_object(self, scan, max_iteration=5, nb_objets_max=1):
         iteration = 0
-        while True:
+        while iteration < max_iteration:
+            iteration += 1
+
             # Liste des points associés aux objets déjà trouvés
             points_objets_trouves = []
             for k in range(iteration):
@@ -267,10 +299,6 @@ class LidarScanner:
             x = sum([point[0] for point in points_autour_objet]) / len(points_autour_objet)
             y = sum([point[1] for point in points_autour_objet]) / len(points_autour_objet)
 
-            iteration += 1
-            if iteration > max_iteration:
-                return None
-
             # Calcul de la taille de l'objet
             x_min = min(points_autour_objet, key=lambda x: x[0])
             x_max = max(points_autour_objet, key=lambda x: x[0])
@@ -279,7 +307,7 @@ class LidarScanner:
             taille = math.sqrt((x_max[0] - x_min[0])**2 + (y_max[1] - y_min[1])**2)
 
             # Seuil de détection d'un objet en mm
-            SEUIL = 100  # en mm (distance que peut parcourir le robot entre deux scans)
+            SEUIL = 120  # en mm (distance que peut parcourir le robot entre deux scans)
             
             id_objet_existant = self.trouver_id_objet_existants(x, y, SEUIL)
 
@@ -289,11 +317,14 @@ class LidarScanner:
                 self.objets[id_objet_existant - 1].taille = taille
                 self.objets[id_objet_existant - 1].points = points_autour_objet
             else:
-                # Si l'objet n'est pas déjà suivi, créer un nouvel objet
-                self.id_compteur += 1
-                nouvel_objet = Objet(self.id_compteur, x, y, taille)
-                nouvel_objet.points = points_autour_objet
-                self.objets.append(nouvel_objet)              
+                if len(self.objets) < nb_objets_max:
+                    # Si l'objet n'est pas déjà suivi, créer un nouvel objet
+                    nouvel_objet = Objet(len(self.objets)+1, x, y, taille)
+                    nouvel_objet.points = points_autour_objet
+                    self.objets.append(nouvel_objet)
+                else:
+                    # Si le nombre d'objets max est atteint, retourner None
+                    return None           
 
     def detect_object_v1(self, scan):
         objet = min(scan, key=lambda x: x[2]) #Sélectionne le point le plus proche du robot
@@ -357,7 +388,7 @@ class LidarScanner:
             if distance < seuil_distance:
                 return objet.id # Retourne l'ID de l'objet existant
         return None
-    
+            
     def trajectoires_anticipation(self, robot_actuel, robot_adverse, duree_anticipation=1.0, pas_temps=0.1, distance_securite=50):
         """
         Dessine les futures trajectoires des robots et la trajectoire d'évitement anticipée.
@@ -452,24 +483,34 @@ class LidarScanner:
         self.client_socket.close()
         exit(0)
 
+    def generate_JSON(self):
+        # Générer une chaîne de caractères au format JSON des objets détectés en fonction des id
+        json = "["
+        for objet in self.objets:
+            json += str(objet) + ","
+        json = json[:-1] + "]"
+        return json
+
     def run(self):
         
         self.connexion_lidar()
 
         while True:
+            self.objets = []
             try:
                 
-
                 for scan in self.lidar.iter_scans(4000):
-                    
+                    self.ROBOT = client.get_objet_robot()
+                    self.ROBOT_ANGLE = client.get_robot_angle()
+
                     new_scan = self.transform_scan(scan)
                     
-                    self.detect_object(new_scan)
-                    
                     for objet in self.objets:
-                        trajectoire_actuel, trajectoire_adverse, trajectoire_evitement = self.trajectoires_anticipation(self.ROBOT, objet, 1.5, 0.1, 50)
-                        #print(objet)
-                        client.update_lidar_object(str(objet))
+                        if objet.reset_if_not_moved(1):
+                            self.objets.remove(objet)
+
+                    self.detect_object(new_scan)
+                    client.update_lidar_object(self.generate_JSON())
                     
             except RPLidarException as e:
                 # Code pour gérer RPLidarException

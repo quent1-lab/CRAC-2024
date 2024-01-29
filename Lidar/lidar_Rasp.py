@@ -433,7 +433,7 @@ if __name__ == '__main__':
     scanner = LidarScanner("/dev/ttyUSB0") # Port du lidar
 
     # Connexion au serveur
-    server_address = ('192.168.36.63', 5000)
+    server_address = ('address_IP_server', 5000) # Adresse IP du serveur
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     client_socket.connect(server_address)
 

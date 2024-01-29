@@ -12,10 +12,8 @@ import os
 #import can
 import time
 import socket
-import pickle  # Pour sérialiser/désérialiser les objets Python
-import re
+import pickle
 
-# ...
 
 # Initialiser le serveur
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -232,6 +230,7 @@ class Objet:
         return dx, dy
 
     def __str__(self):
+        # Retourne une chaîne de caractères représentant l'objet
         return f"{{\"id\": {self.id}, \"x\": {int(self.x)}, \"y\": {int(self.y)}, \"taille\": {int(self.taille)}}}"
     
 class LidarScanner:
@@ -286,6 +285,7 @@ class LidarScanner:
         logging.basicConfig(filename='lidar_scan.log', level=logging.INFO,datefmt='%d/%m/%Y %H:%M:%S',format='%(asctime)s - %(levelname)s - %(message)s')
 
     def draw_robot(self, x, y, angle):
+        # Dessine le robot à la position (x, y) avec l'angle donné
         pygame.draw.circle(self.lcd, pygame.Color(self.WHITE), (x * self.X_RATIO, y * self.Y_RATIO), 20)
         pygame.draw.line(
             self.lcd, pygame.Color(self.WHITE),
@@ -304,6 +304,7 @@ class LidarScanner:
         self.lcd.blit(image, (self.BORDER_DISTANCE * self.X_RATIO, self.BORDER_DISTANCE * self.Y_RATIO))
 
     def draw_background(self):
+        # Dessine le fond d'écran
         self.lcd.fill(self.BACKGROUND_COLOR)
         self.draw_image(self.path_picture)
         self.draw_field()
@@ -311,18 +312,18 @@ class LidarScanner:
         #Afficher l'image en fond d'écran, dans l'emplacement du terrain de jeu
     
     def draw_text(self, text, x, y, color=(0, 0, 0)):
-        """Draws text to the pygame screen, on up left corner"""
+        # Dessine le texte à la position (x, y)
         text = self.font.render(text, True, color, pygame.Color(self.BACKGROUND_COLOR))
         self.lcd.blit(text, (x, y))
 
     def draw_text_center(self, text, x, y, color=(0, 0, 0)):
+        # Dessine le texte centré à la position (x, y)
         text_surface = self.font.render(text, True, color, pygame.Color(self.BACKGROUND_COLOR))
         text_rect = text_surface.get_rect(center=(x, y))
         self.lcd.blit(text_surface, text_rect)
 
     def draw_data(self):
-        """Draws data to the pygame screen, on up left corner.For x, y and theta"""
-        """Data is x, y and theta"""
+        # Dessine les données, en haut à droite de l'écran. Pour x, y, vitesse et direction
         window_width, window_height = pygame.display.get_surface().get_size()
         self.draw_text("x: " + "{:.2f}".format(self.ROBOT.x), window_width * 0.01, window_height * 0.01)
         self.draw_text("y: " + "{:.2f}".format(self.ROBOT.y), window_width * 0.01, window_height * 0.05)
@@ -330,6 +331,7 @@ class LidarScanner:
         self.draw_text("speed: " + "{:.2f}".format(self.ROBOT.vitesse/10) + " cm/s", window_width * 0.2, window_height * 0.01)
         self.draw_text("direction: " + "{:.2f}".format(self.ROBOT.direction), window_width * 0.2, window_height * 0.05)
 
+        # Dessine les données des objets détectés
         if(len(self.objets) > 0):
             '''Draws data, on up right corner.For x, y, speed and direction'''
             self.draw_text("x: " + "{:.2f}".format(self.objets[0].x), window_width * 0.76, window_height * 0.01)
@@ -338,12 +340,14 @@ class LidarScanner:
             self.draw_text("direction: " + "{:.2f}".format(self.objets[0].direction), window_width * 0.86, window_height * 0.05)      
 
     def draw_field(self):
+        # Dessine le terrain de jeu
         pygame.draw.rect(self.lcd, pygame.Color(100, 100, 100),
                          (self.BORDER_DISTANCE * self.X_RATIO - 5, self.BORDER_DISTANCE * self.Y_RATIO - 5,
                           (self.FIELD_SIZE[0] - 2 * self.BORDER_DISTANCE) * self.X_RATIO + 10,
                           (self.FIELD_SIZE[1] - 2 * self.BORDER_DISTANCE) * self.Y_RATIO + 10), 10)
 
     def draw_point(self, x, y):
+        # Dessine un point à la position (x, y)
         self.POINT_COLOR = (200, 200, 200)
 
         if x > self.FIELD_SIZE[0] - self.BORDER_DISTANCE:
@@ -363,6 +367,7 @@ class LidarScanner:
         pygame.draw.circle(self.lcd, pygame.Color(self.POINT_COLOR), (x * self.X_RATIO, y * self.Y_RATIO), 3)
 
     def draw_object(self, objet):
+        # Dessine un objet à la position (x, y)
         pygame.draw.circle(self.lcd, pygame.Color(255, 255, 0), (objet.x * self.X_RATIO, objet.y * self.Y_RATIO), 10)
         pygame.draw.circle(self.lcd, pygame.Color(50, 50, 200), (objet.x * self.X_RATIO, objet.y * self.Y_RATIO), int(objet.taille / 2 * self.X_RATIO), 3)
 
@@ -597,6 +602,7 @@ class LidarScanner:
             raise
         
     def valeur_de_test(self):
+        # Fonction pour tester le programme sans lidar
         scan = []
         for i in range(0,360):
             angle = i + self.ROBOT_ANGLE
@@ -611,6 +617,8 @@ class LidarScanner:
         return scan
 
     def programme_simulation(self, mode=0):
+        # Fonction principale du programme
+        # mode = 0 : mode normal (connexion avec l'ESP32)
         print("Programme de simulation")
         logging.info("Starting simulation program")
         
@@ -669,17 +677,20 @@ class LidarScanner:
             time.sleep(0.01)
 
     def stop(self,esp):
+        # Fonction pour arrêter le programme
         logging.info("Stopping LiDAR motor")
         print("Arrêt du moteur LiDAR")
         # Fermer les sockets
         client_socket.close()
         server_socket.close()
+        # Coupe la connexion avec l'ESP32
         if esp.get_status():
             esp.send(json.dumps({"cmd": "stop","x":0.0, "y":0.0 ,"theta":0.0}).encode())
             esp.disconnect()
         exit(0)
 
     def load_json(self,json_string):
+        # Fonction pour charger un objet à partir d'un JSON
         try:
             data = json.loads(json_string)
         except Exception as e:
@@ -690,26 +701,27 @@ class LidarScanner:
             if item["id"] == 1:
                 self.objets[0].update_position(item["x"], item["y"])
                 self.objets[0].taille = item["taille"]
-            elif item["id"] == 2:
-                pass
 
     def run(self):
-            
+        # Fonction principale du programme
         esp32 = ComESP32(port=self.interface_choix_port(), baudrate=115200)
         esp32.connect()
         time.sleep(1)
-        #esp32.send(json.dumps({"cmd": "start", "x":1500.0, "y":1000.0 ,"theta":0.0}).encode())
 
         self.objets = [Objet(1,-1,-1,1)]
 
         self.draw_background()
         self.draw_robot(self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)
         pygame.display.update()
-        nb_fale = 0
-        while True:
+
+        print("Appuyez sur Echap ou Espace pour quitter le programme")
+        print("Appuyez sur S pour démarrer le robot")
+
+        while True: 
             try:
-                while True:
+                while True: # La double boucle permet de ne pas avoir à relancer le programme à chaque fois qu'il y a une erreur
                     
+                    # Lecture des touches du clavier pour quitter le programme
                     keys = pygame.key.get_pressed()
                     quit = pygame.event.get(pygame.QUIT)              
                     if quit or keys[pygame.K_ESCAPE] or keys[pygame.K_SPACE]:
@@ -719,7 +731,7 @@ class LidarScanner:
                     if keys[pygame.K_s]:
                         esp32.send(json.dumps({"cmd": "start", "x":1500.0, "y":1000.0 ,"theta":0.0}).encode())
 
-
+                    # Lecture des données de l'ESP32
                     if esp32.get_status():
                         data = esp32.load_json(esp32.receive())
                         if data != None:
@@ -728,29 +740,6 @@ class LidarScanner:
 
                             # Envoie les données du robot au client en JSON
                             client_socket.send(pickle.dumps({"x":self.ROBOT.x, "y":self.ROBOT.y ,"theta":self.ROBOT_ANGLE}))
-                        
-                        else:
-                            nb_fale += 1
-                            if nb_fale > 10:
-                                nb_fale = 0
-
-                    is_moved = False
-                    # Diriger le robot avec les touches du clavier
-                    if keys[pygame.K_LEFT]:
-                        self.ROBOT_ANGLE -= 1
-                        is_moved = True
-                    if keys[pygame.K_RIGHT]:
-                        self.ROBOT_ANGLE += 1
-                        is_moved = True
-                    if keys[pygame.K_UP]:
-                        self.ROBOT.update_position(self.ROBOT.x + 50 * math.cos(math.radians(self.ROBOT_ANGLE)), self.ROBOT.y + 50 * math.sin(math.radians(self.ROBOT_ANGLE)))
-                        is_moved = True
-                    if keys[pygame.K_DOWN]:
-                        self.ROBOT.update_position(self.ROBOT.x - 50 * math.cos(math.radians(self.ROBOT_ANGLE)), self.ROBOT.y - 50 * math.sin(math.radians(self.ROBOT_ANGLE)))
-                        is_moved = True
-                    if is_moved:
-                        esp32.send(json.dumps({"cmd": "move", "x":self.ROBOT.x, "y":self.ROBOT.y ,"theta":self.ROBOT_ANGLE}).encode())
-                        is_moved = False
                     
                     # Recevoir des données du serveur (exemple avec un objet)
                     data_received = client_socket.recv(4096)  # Choisissez une taille de tampon appropriée
@@ -759,23 +748,22 @@ class LidarScanner:
                     if objet_reçu is not None:
                         # charge le json
                         self.load_json(objet_reçu)
-
-                        
+                    
+                    # Affichage des données
                     self.draw_background()
                     self.draw_robot(self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)
                     
                     for objet in self.objets:
+                        # Dessin des objets et des trajectoires
                         self.draw_object(objet)
                         trajectoire_actuel, trajectoire_adverse, trajectoire_evitement = self.trajectoires_anticipation(self.ROBOT, objet, 1.5, 0.1, 50)
                         self.draw_all_trajectoires(trajectoire_actuel, trajectoire_adverse, trajectoire_evitement)
 
                     pygame.display.update()
-                    #self.lcd.fill(self.WHITE)
                     
             except RPLidarException as e:
                 # Code pour gérer RPLidarException
                 print(f"Une erreur RPLidarException s'est produite dans le run :{e}")
-                
                 self.lidar.stop()
                 time.sleep(1)
                 

@@ -7,9 +7,13 @@ Ce projet à été créer afin de répondre au besoin lié à la coupe de roboti
 
 Le projet est organisé en plusieurs dossiers :
 
-- `Lidar` : Contient le code principal pour le fonctionnement du LIDAR. Le fichier `LidarScan.py` est le point d'entrée du programme.
-- `Tests` : Contient des scripts de test pour vérifier le bon fonctionnement du code.
-- `Data` : Contient les données générées par le LIDAR.
+- `Lidar` : Contient le code python principal pour le fonctionnement du LIDAR. 
+- `Lidarobot` : Contient le code C++ de la base roulante
+- `PCB_CAN` : Contient le projet de la carte PCB CAN
+- `Rapport S3` : Contient le rapport de projet
+- `WIFI` : Contient des scripts simple pour tester la communication par socket et le principe du multitâche
+- `CAN` : Contient un scripts simple pour tester la communication CAN
+- `3D démonstrateur` : Contient les fichers STL et les GCODE correspondant à l'imprimante Ender-3 v2
 
 ## Installation
 
@@ -27,14 +31,14 @@ Ensuite, naviguez dans le dossier du projet et installez les dépendances néces
 ## Déploiement
 
 Le fonctionnement de cette version du code nécessite un ordinateur connecté en série avec la base roulante, et le lidar connecté à la Raspberry Pi. 
-Les deux appareils doivent être connecté au même réseau WIFI (Attention à bien modifier l'adresse IP du serveur sur le fichier lidar_Raso.py).
+Les deux appareils doivent être connecté au même réseau WIFI (Attention à bien modifier l'adresse IP du serveur sur le fichier `lidar_Raso.py`).
 
 Dans l'ordre, il faut lancer :
- - le programme python LidarScan.py sur l'ordinateur (car c'est le serveur)
+ - le programme python `LidarScan.py` sur l'ordinateur (car c'est le serveur)
 ```bash
   python Lidar/LidarScan.py
 ```
- - Le programme python lidar_Rasp.py sur la Raspberry Pi
+ - Le programme python `lidar_Raso.py` sur la Raspberry Pi
 ```bash
   python Lidar/lidar_Rasp.py
 ```

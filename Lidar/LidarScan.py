@@ -11,6 +11,22 @@ import json
 import os
 #import can
 import time
+import socket
+import pickle  # Pour sérialiser/désérialiser les objets Python
+import re
+
+# ...
+
+# Initialiser le serveur
+server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server_socket.bind(('', 5000))  # Utilisez une adresse IP appropriée et un port disponible
+server_socket.listen(1)
+
+print("Attente de la connexion du client...")
+
+# Accepter la connexion du client
+client_socket, client_address = server_socket.accept()
+print(f"Connexion établie avec {client_address}")
 
 class ComESP32:
     def __init__(self, port, baudrate ,timeout = 0):
@@ -49,6 +65,10 @@ class ComESP32:
             raise
 
     def send(self, data):
+        # Vérifie si data est en bytes
+        if isinstance(data, str):
+            data = data.encode()
+        
         try:
             print(f"Sending data to ESP32: {data}")
             self.esp32.write(data)
@@ -60,7 +80,13 @@ class ComESP32:
         try:
             if self.esp32.in_waiting > 0:
                 # Renvoie les données reçues par l'ESP32 en enlevant les deux premiers caractères et le dernier
-                return self.esp32.readline().decode()
+                message = self.esp32.readline().decode()
+                # Vérifie s'il n'y a qu'un seul message JSON
+                if message.count("{") == 1 and message.count("}") == 1:
+                    return message
+                else:
+                    # Si plusieurs messages JSON sont reçus, renvoie le dernier
+                    return message[message.rfind("{"):message.rfind("}") + 1]
         except Exception as e:
             logging.error(f"Failed to receive data from ESP32: {e}")
             print("Failed to receive data from ESP32")
@@ -68,7 +94,7 @@ class ComESP32:
     def load_json(self, data):
         try:
             # Ne récupère que les données comprises entre les deux crochets
-            #data = data[data.index("{"):data.index("}") + 1]
+            data = data[data.index("{"):data.index("}") + 1]
             return json.loads(data)
         except Exception as e:
             logging.error(f"Failed to unload JSON: {e}")
@@ -206,7 +232,7 @@ class Objet:
         return dx, dy
 
     def __str__(self):
-        return f"Objet {self.id} : x = {self.x} y = {self.y} taille = {self.taille} points = {len(self.points)}"
+        return f"{{\"id\": {self.id}, \"x\": {int(self.x)}, \"y\": {int(self.y)}, \"taille\": {int(self.taille)}}}"
     
 class LidarScanner:
     def __init__(self, port=None):
@@ -234,8 +260,6 @@ class LidarScanner:
             self.path_picture = "Lidar/Terrain_Jeu.png"
         else:  # Linux et autres
             self.path_picture = "Documents/CRAC-2024/Lidar/Terrain_Jeu.png"
-
-        self.path_picture = "Lidar/Terrain_Jeu.png"
 
         self.id_compteur = 0  # Compteur pour les identifiants d'objet
         self.objets = []  # Liste pour stocker les objets détectés
@@ -266,7 +290,7 @@ class LidarScanner:
         pygame.draw.line(
             self.lcd, pygame.Color(self.WHITE),
             (x * self.X_RATIO, y * self.Y_RATIO),
-            ((x + 100 * math.cos(math.radians(angle))) * self.X_RATIO, (y + 100 * math.sin(math.radians(angle))) * self.Y_RATIO), 5)
+            ((x + 100 * math.cos(math.radians(-angle))) * self.X_RATIO, (y + 100 * math.sin(math.radians(-angle))) * self.Y_RATIO), 5)
     
     def draw_image(self,image_path):
         # Charge l'image à partir du chemin du fichier
@@ -573,12 +597,11 @@ class LidarScanner:
                 self.objets[id_objet_existant - 1].taille = taille
                 self.objets[id_objet_existant - 1].points = points_autour_objet
             else:
-                if self.id_compteur < 1:
-                    # Si l'objet n'est pas déjà suivi, créer un nouvel objet
-                    self.id_compteur += 1
-                    nouvel_objet = Objet(self.id_compteur, x, y, taille)
-                    nouvel_objet.points = points_autour_objet
-                    self.objets.append(nouvel_objet)              
+                # Si l'objet n'est pas déjà suivi, créer un nouvel objet
+                self.id_compteur += 1
+                nouvel_objet = Objet(self.id_compteur, x, y, taille)
+                nouvel_objet.points = points_autour_objet
+                self.objets.append(nouvel_objet)              
 
     def detect_object_v1(self, scan):
         objet = min(scan, key=lambda x: x[2]) #Sélectionne le point le plus proche du robot
@@ -818,43 +841,96 @@ class LidarScanner:
     def stop(self,esp):
         logging.info("Stopping LiDAR motor")
         print("Arrêt du moteur LiDAR")
-        self.lidar.stop()
-        time.sleep(1)
-        self.lidar.disconnect()
+        # Fermer les sockets
+        client_socket.close()
+        server_socket.close()
         if esp.get_status():
-            esp.send("stop")
+            esp.send(json.dumps({"cmd": "stop","x":0.0, "y":0.0 ,"theta":0.0}).encode())
             esp.disconnect()
         exit(0)
 
+    def load_json(self,json_string):
+        try:
+            data = json.loads(json_string)
+        except Exception as e:
+            logging.error(f"Failed to unload JSON: {e}")
+            print(f"Failed to unload JSON : {json_string}")
+            return None
+        for item in data:
+            if item["id"] == 1:
+                self.objets[0].update_position(item["x"], item["y"])
+                self.objets[0].taille = item["taille"]
+            elif item["id"] == 2:
+                pass
+
     def run(self):
             
-        esp32 = ComESP32(port="/dev/ttyUSB1", baudrate=115200)
+        esp32 = ComESP32(port=None, baudrate=115200)
         esp32.connect()
-    
-        self.connexion_lidar()
+        time.sleep(1)
+        #esp32.send(json.dumps({"cmd": "start", "x":1500.0, "y":1000.0 ,"theta":0.0}).encode())
 
+        self.objets = [Objet(1,-1,-1,1)]
+
+        self.draw_background()
+        self.draw_robot(self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)
+        pygame.display.update()
+        nb_fale = 0
         while True:
             try:
-                self.draw_background()
-                self.draw_robot(self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)
-                self.draw_text_center("ATTENTE DU LANCEMENT DU LIDAR", self.WINDOW_SIZE[0] / 2, self.WINDOW_SIZE[1] / 2, self.RED)
-                pygame.display.update()
-
-                for scan in self.lidar.iter_scans(4000):
+                while True:
+                    
                     keys = pygame.key.get_pressed()
                     quit = pygame.event.get(pygame.QUIT)              
                     if quit or keys[pygame.K_ESCAPE] or keys[pygame.K_SPACE]:
                         self.stop(esp32)
-                    
+                        break     
+
+                    if keys[pygame.K_s]:
+                        esp32.send(json.dumps({"cmd": "start", "x":1500.0, "y":1000.0 ,"theta":0.0}).encode())
+
+
                     if esp32.get_status():
                         data = esp32.load_json(esp32.receive())
                         if data != None:
                             self.ROBOT_ANGLE = math.degrees(data["theta"])
                             self.ROBOT.update_position(data["x"], data["y"])
+
+                            # Envoie les données du robot au client en JSON
+                            client_socket.send(pickle.dumps({"x":self.ROBOT.x, "y":self.ROBOT.y ,"theta":self.ROBOT_ANGLE}))
+                        
+                        else:
+                            nb_fale += 1
+                            if nb_fale > 10:
+                                nb_fale = 0
+
+                    is_moved = False
+                    # Diriger le robot avec les touches du clavier
+                    if keys[pygame.K_LEFT]:
+                        self.ROBOT_ANGLE -= 1
+                        is_moved = True
+                    if keys[pygame.K_RIGHT]:
+                        self.ROBOT_ANGLE += 1
+                        is_moved = True
+                    if keys[pygame.K_UP]:
+                        self.ROBOT.update_position(self.ROBOT.x + 50 * math.cos(math.radians(self.ROBOT_ANGLE)), self.ROBOT.y + 50 * math.sin(math.radians(self.ROBOT_ANGLE)))
+                        is_moved = True
+                    if keys[pygame.K_DOWN]:
+                        self.ROBOT.update_position(self.ROBOT.x - 50 * math.cos(math.radians(self.ROBOT_ANGLE)), self.ROBOT.y - 50 * math.sin(math.radians(self.ROBOT_ANGLE)))
+                        is_moved = True
+                    if is_moved:
+                        esp32.send(json.dumps({"cmd": "move", "x":self.ROBOT.x, "y":self.ROBOT.y ,"theta":self.ROBOT_ANGLE}).encode())
+                        is_moved = False
                     
-                    new_scan = self.transform_scan(scan)
-                    
-                    self.detect_object(new_scan)
+                    # Recevoir des données du serveur (exemple avec un objet)
+                    data_received = client_socket.recv(4096)  # Choisissez une taille de tampon appropriée
+                    objet_reçu = pickle.loads(data_received)
+
+                    if objet_reçu is not None:
+                        # charge le json
+                        self.load_json(objet_reçu)
+
+                        
                     self.draw_background()
                     self.draw_robot(self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)
                     
@@ -863,15 +939,13 @@ class LidarScanner:
                         trajectoire_actuel, trajectoire_adverse, trajectoire_evitement = self.trajectoires_anticipation(self.ROBOT, objet, 1.5, 0.1, 50)
                         self.draw_all_trajectoires(trajectoire_actuel, trajectoire_adverse, trajectoire_evitement)
 
-                    for point in new_scan:
-                        self.draw_point(point[0], point[1])
-
                     pygame.display.update()
-                    self.lcd.fill(self.WHITE)
+                    #self.lcd.fill(self.WHITE)
                     
             except RPLidarException as e:
                 # Code pour gérer RPLidarException
-                print(f"Une erreur RPLidarException s'est produite dans le run : {e}")
+                print(f"Une erreur RPLidarException s'est produite dans le run :{e}")
+                
                 self.lidar.stop()
                 time.sleep(1)
                 

@@ -14,6 +14,7 @@ import pickle
 
 
 class Client:
+    # Classe pour gérer la communication avec le serveur
     def __init__(self):
         self.objet_lidar = None
         self.objet_lidar_lock = threading.Lock()  # Verrou pour assurer une lecture/écriture sécurisée
@@ -22,6 +23,7 @@ class Client:
         self.ROBOT_angle = 0
 
     def receive_data(self, client_socket):
+        # Recevoir les données du serveur
         while True:
             try:
                 data_received = client_socket.recv(4096)
@@ -42,7 +44,7 @@ class Client:
                     
     def send_data(self, client_socket):
         while True:
-            # Faire quelque chose avec objet_lidar_local et l'envoyer au serveur
+            # Envoyer les données au serveur toutes les 100 ms
             with self.objet_lidar_lock:
                 message_to_send = pickle.dumps(self.objet_lidar)
             if message_to_send != None:
@@ -50,69 +52,19 @@ class Client:
             time.sleep(0.1)
     
     def update_lidar_object(self, objet):
+        # Mettre à jour l'objet lidar
         with self.objet_lidar_lock:
             self.objet_lidar = objet
     
     def get_objet_robot(self):
+        # Retourner l'objet robot
         with self.Robot_lock:
             return self.ROBOT
     
     def get_robot_angle(self):
+        # Retourner l'angle du robot
         with self.Robot_lock:
             return self.ROBOT_angle
-            
-"""class ComCAN:
-    def __init__(self, channel, bustype):
-        self.channel = channel
-        self.bustype = bustype
-        self.can = None
-
-    def connect(self):
-        #Vérifie si le système d'exploitation est Linux
-        #Si oui, on lance les commandes pour configurer le CAN
-        try:
-            if os.name == "posix":
-                os.system('sudo ip link set can0 type can bitrate 1000000')
-                os.system('sudo ifconfig can0 up')
-                self.can = can.interface.Bus(channel = self.channel, bustype = self.bustype)
-            else:
-                logging.error("OS not supported")
-                raise OSError("OS not supported")       
-        except Exception as e:
-            logging.error(f"Failed to connect to CAN: {e}")
-            raise
-
-    def disconnect(self):
-        try:
-            self.can.shutdown()
-        except Exception as e:
-            logging.error(f"Failed to disconnect from CAN: {e}")
-            raise
-
-    def send(self, data):
-        try:
-            self.can.send(data)
-        except Exception as e:
-            logging.error(f"Failed to send data to CAN: {e}")
-            raise
-
-    def receive(self):
-        try:
-            return self.can.recv(10.0)
-        except Exception as e:
-            logging.error(f"Failed to receive data from CAN: {e}")
-            raise
-
-    def run(self):
-        try:
-            self.connect()
-            while True:
-                data = self.receive()
-                print(data)
-                
-        except KeyboardInterrupt:
-            self.disconnect()
-            pass"""
 
 class Objet:
     def __init__(self, id, x, y, taille):
@@ -266,6 +218,15 @@ class LidarScanner:
         return points_in_zone
 
     def detect_object(self, scan, max_iteration=5, nb_objets_max=1):
+        """
+        Détecte un objet dans un scan.
+
+        :param scan: Liste de tuples (x, y, distance, angle)
+        :param max_iteration: Nombre d'itérations maximum pour trouver un objet
+        :param nb_objets_max: Nombre maximum d'objets à détecter
+        :return: None si aucun objet n'a été détecté
+        """
+
         iteration = 0
         while iteration < max_iteration:
             iteration += 1
@@ -325,69 +286,6 @@ class LidarScanner:
                 else:
                     # Si le nombre d'objets max est atteint, retourner None
                     return None           
-
-    def detect_object_v1(self, scan):
-        objet = min(scan, key=lambda x: x[2]) #Sélectionne le point le plus proche du robot
-        angle_objet = objet[1]
-        distance_objet = objet[2]
-        points_autour_objet = []
-
-        #sélectionne les points autour de l'objet en fonction de la distance des points
-        for point in scan:
-            if point[2] < distance_objet + 50 and point[2] > distance_objet - 50:
-                points_autour_objet.append(point)
-
-        x = 0
-        y = 0
-        taille = 0
-
-        for point in points_autour_objet:
-            new_angle = point[1] - self.ROBOT_ANGLE
-            new_angle %= 360
-            if new_angle < 0:
-                new_angle += 360
-            x += point[2] * math.cos(new_angle * math.pi / 180)
-            y += point[2] * math.sin(new_angle * math.pi / 180)
-
-        angle_min = min(points_autour_objet, key=lambda x: x[1])
-        angle_max = max(points_autour_objet, key=lambda x: x[1])
-        distance_min = min(points_autour_objet, key=lambda x: x[2])
-        distance_max = max(points_autour_objet, key=lambda x: x[2])
-        taille = math.sqrt((distance_max[2] * math.cos(angle_max[1] * math.pi / 180) - distance_min[2] * math.cos(
-            angle_min[1] * math.pi / 180)) ** 2 + (distance_max[2] * math.sin(angle_max[1] * math.pi / 180) - distance_min[2] * math.sin(
-            angle_min[1] * math.pi / 180)) ** 2)
-
-        x = self.ROBOT.x + int(x / len(points_autour_objet))
-        y = self.ROBOT.y + int(y / len(points_autour_objet))
-
-        # Seuil de détection d'un objet en mm
-        SEUIL = 100 # en mm (distance que peut parcourir le robot entre deux scans)
-        #Valeur à affiner
-
-        # Vérifier si l'objet est déjà suivi
-        for objet in self.objets:
-            distance = math.sqrt((x - objet.x)**2 + (y - objet.y)**2)
-            if distance < SEUIL:
-                # Si l'objet est déjà suivi, mettre à jour ses coordonnées
-                objet.update_position(x, y)
-                objet.taille = taille
-            return objet
-            
-        if(len(self.objets) < 1):
-            # Incrémenter le compteur d'identifiants
-            self.id_compteur += 1
-
-            # Si l'objet n'est pas déjà suivi, créer un nouvel objet
-            nouvel_objet = Objet(self.id_compteur, x, y, taille)
-            self.objets.append(nouvel_objet)
-
-    def trouver_id_objet_existants(self, x, y, seuil_distance=100):
-        # Vérifier si l'objet est déjà suivi
-        for objet in self.objets:
-            distance = math.sqrt((x - objet.x)**2 + (y - objet.y)**2)
-            if distance < seuil_distance:
-                return objet.id # Retourne l'ID de l'objet existant
-        return None
             
     def trajectoires_anticipation(self, robot_actuel, robot_adverse, duree_anticipation=1.0, pas_temps=0.1, distance_securite=50):
         """
@@ -475,6 +373,7 @@ class LidarScanner:
             raise
 
     def stop(self):
+        # Arrêter le lidar
         logging.info("Stopping LiDAR motor")
         print("Arrêt du moteur LiDAR")
         self.lidar.stop()
@@ -492,7 +391,7 @@ class LidarScanner:
         return json
 
     def run(self):
-        
+        # Démarrer le lidar
         self.connexion_lidar()
 
         while True:
@@ -500,16 +399,22 @@ class LidarScanner:
             try:
                 
                 for scan in self.lidar.iter_scans(4000):
+                    # Mise à jour des données du robot via le serveur
                     self.ROBOT = client.get_objet_robot()
                     self.ROBOT_ANGLE = client.get_robot_angle()
 
+                    # Transformation des données du scan
                     new_scan = self.transform_scan(scan)
                     
                     for objet in self.objets:
+                        # Si l'objet n'a pas bougé depuis 1 seconde, le supprimer
                         if objet.reset_if_not_moved(1):
                             self.objets.remove(objet)
 
+                    # Détecter un objet
                     self.detect_object(new_scan)
+
+                    # Envoyer les données des objets au serveur
                     client.update_lidar_object(self.generate_JSON())
                     
             except RPLidarException as e:
@@ -525,8 +430,9 @@ class LidarScanner:
 if __name__ == '__main__':
     # Initialiser le client
     client = Client()
-    scanner = LidarScanner("/dev/ttyUSB0")
+    scanner = LidarScanner("/dev/ttyUSB0") # Port du lidar
 
+    # Connexion au serveur
     server_address = ('192.168.36.63', 5000)
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     client_socket.connect(server_address)
@@ -535,14 +441,15 @@ if __name__ == '__main__':
     receive_thread = threading.Thread(target=client.receive_data, args=(client_socket,))
     send_thread = threading.Thread(target=client.send_data, args=(client_socket,))
     lidar_handler_thread = threading.Thread(target=client.update_lidar_object, args=(scanner.objets,))
-
     lidar_scan = threading.Thread(target=scanner.run)
-    
+
+    # Démarrer les threads
     receive_thread.start()
     send_thread.start()
     lidar_handler_thread.start()
     lidar_scan.start()
 
+    # Attendre la fin des threads
     send_thread.join()
     receive_thread.join()
     lidar_handler_thread.join()

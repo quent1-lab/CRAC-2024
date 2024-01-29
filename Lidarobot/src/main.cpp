@@ -193,11 +193,11 @@ void setup()
 
 void loop()
 {
-  // read_bt(3);
-  if (strcmp(rxBuffer, last_rxBuffer) != 0)
+  
+  if (strcmp(rxBuffer, last_rxBuffer) != 0) // Si la commande reçue est différente de la dernière commande reçue
   {
     // rxBuffer est différent de last_rxBuffer
-    //  Définir la capacité du document JSON
+    // Définir la capacité du document JSON
     const size_t capacity = JSON_OBJECT_SIZE(4) + 50;
 
     // Créer un objet DynamicJsonDocument
@@ -243,15 +243,13 @@ void loop()
     digitalWrite(pinLed, LOW);
     break;
   case 1:
-    // Etat 1:Test de la ligne droite
+    // Etat 1: Départ
     digitalWrite(pinLed, HIGH);
     delay(2000);
     etat_sys = 2;
     break;
   case 2:
-    // Etat 2:Test de la ligne droite
-    //move(x_rx, y_rx, theta_rx);
-    //etat_sys = 1;
+    // Etat 2 : Déplacement (un circuit, le robot revient à son point de départ)
 
     avancer(100);
     tourner(PI / 2);

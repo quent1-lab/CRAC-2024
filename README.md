@@ -31,14 +31,14 @@ Ensuite, naviguez dans le dossier du projet et installez les dépendances néces
 ## Déploiement
 
 Le fonctionnement de cette version du code nécessite un ordinateur connecté en série avec la base roulante, et le lidar connecté à la Raspberry Pi. 
-Les deux appareils doivent être connecté au même réseau WIFI (Attention à bien modifier l'adresse IP du serveur sur le fichier `lidar_Raso.py`).
+Les deux appareils doivent être connecté au même réseau WIFI (Attention à bien modifier l'adresse IP du serveur sur le fichier `lidar_Rasp.py`).
 
 Dans l'ordre, il faut lancer :
  - le programme python `LidarScan.py` sur l'ordinateur (car c'est le serveur)
 ```bash
   python Lidar/LidarScan.py
 ```
- - Le programme python `lidar_Raso.py` sur la Raspberry Pi
+ - Le programme python `lidar_Rasp.py` sur la Raspberry Pi
 ```bash
   python Lidar/lidar_Rasp.py
 ```

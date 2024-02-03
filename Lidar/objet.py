@@ -13,6 +13,7 @@ class Objet:
         self.vitesse_ms = 0
         self.points = []
         self.last_moved = time.time()
+        self.last_seen = time.time()
 
     def update_position(self, x, y):
         # Mettre à jour la position de l'objet et ajouter la position précédente à la liste
@@ -20,6 +21,7 @@ class Objet:
             self.positions_precedentes.append((self.x, self.y, time.monotonic_ns()))
             self.x = x
             self.y = y
+            self.filtre_moyenne()
             self.last_moved = time.time()
 
     def reset_if_not_moved(self, delay):
@@ -68,6 +70,29 @@ class Objet:
 
         return dx, dy
 
+    def filtre_moyenne(self, n=3):
+        # Si ID est 0, on ne filtre pas la position
+        if self.id == 0:
+            return
+        Tau = 0.05
+        Te = 0.01
+        A = 1/(Tau/Te + 1)
+        B = Tau/Te
+
+        # Filtre passe-bas pour lisser les positions toutes les 10ms
+        if time.time() - self.last_seen > Te:
+            self.x = A*(self.x + B*self.positions_precedentes[-1][0])
+            self.y = A*(self.y + B*self.positions_precedentes[-1][1])
+            self.last_seen = time.time()
+        
+
+
+    def __eq__(self, other):
+        # Vérifier si deux objets sont les mêmes
+        if isinstance(other, Objet):
+            return self.id == other.id
+        return False
+    
     def __str__(self):
         # Retourne une chaîne de caractères représentant l'objet sous format JSON
         return f"{{\"id\": {self.id}, \"x\": {int(self.x)}, \"y\": {int(self.y)}, \"taille\": {int(self.taille)}}}"

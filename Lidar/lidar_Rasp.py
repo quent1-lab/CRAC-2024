@@ -4,10 +4,9 @@ import math
 import time
 import serial.tools.list_ports
 import os
-#import can
+from objet import Objet
 import time
-import json
-
+import can
 import socket
 import threading
 import pickle
@@ -61,7 +60,7 @@ class Client:
         with self.Robot_lock:
             return self.ROBOT_angle
             
-"""class ComCAN:
+class ComCAN:
     def __init__(self, channel, bustype):
         self.channel = channel
         self.bustype = bustype
@@ -112,7 +111,7 @@ class Client:
                 
         except KeyboardInterrupt:
             self.disconnect()
-            pass"""
+            pass
 
 class Objet:
     def __init__(self, id, x, y, taille):
@@ -325,61 +324,6 @@ class LidarScanner:
                 else:
                     # Si le nombre d'objets max est atteint, retourner None
                     return None           
-
-    def detect_object_v1(self, scan):
-        objet = min(scan, key=lambda x: x[2]) #Sélectionne le point le plus proche du robot
-        angle_objet = objet[1]
-        distance_objet = objet[2]
-        points_autour_objet = []
-
-        #sélectionne les points autour de l'objet en fonction de la distance des points
-        for point in scan:
-            if point[2] < distance_objet + 50 and point[2] > distance_objet - 50:
-                points_autour_objet.append(point)
-
-        x = 0
-        y = 0
-        taille = 0
-
-        for point in points_autour_objet:
-            new_angle = point[1] - self.ROBOT_ANGLE
-            new_angle %= 360
-            if new_angle < 0:
-                new_angle += 360
-            x += point[2] * math.cos(new_angle * math.pi / 180)
-            y += point[2] * math.sin(new_angle * math.pi / 180)
-
-        angle_min = min(points_autour_objet, key=lambda x: x[1])
-        angle_max = max(points_autour_objet, key=lambda x: x[1])
-        distance_min = min(points_autour_objet, key=lambda x: x[2])
-        distance_max = max(points_autour_objet, key=lambda x: x[2])
-        taille = math.sqrt((distance_max[2] * math.cos(angle_max[1] * math.pi / 180) - distance_min[2] * math.cos(
-            angle_min[1] * math.pi / 180)) ** 2 + (distance_max[2] * math.sin(angle_max[1] * math.pi / 180) - distance_min[2] * math.sin(
-            angle_min[1] * math.pi / 180)) ** 2)
-
-        x = self.ROBOT.x + int(x / len(points_autour_objet))
-        y = self.ROBOT.y + int(y / len(points_autour_objet))
-
-        # Seuil de détection d'un objet en mm
-        SEUIL = 100 # en mm (distance que peut parcourir le robot entre deux scans)
-        #Valeur à affiner
-
-        # Vérifier si l'objet est déjà suivi
-        for objet in self.objets:
-            distance = math.sqrt((x - objet.x)**2 + (y - objet.y)**2)
-            if distance < SEUIL:
-                # Si l'objet est déjà suivi, mettre à jour ses coordonnées
-                objet.update_position(x, y)
-                objet.taille = taille
-            return objet
-            
-        if(len(self.objets) < 1):
-            # Incrémenter le compteur d'identifiants
-            self.id_compteur += 1
-
-            # Si l'objet n'est pas déjà suivi, créer un nouvel objet
-            nouvel_objet = Objet(self.id_compteur, x, y, taille)
-            self.objets.append(nouvel_objet)
 
     def trouver_id_objet_existants(self, x, y, seuil_distance=100):
         # Vérifier si l'objet est déjà suivi

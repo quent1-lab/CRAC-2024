@@ -12,23 +12,15 @@ class Objet:
         self.vitesse = 0
         self.vitesse_ms = 0
         self.points = []
-        self.last_moved = time.time()
         self.last_seen = time.time()
 
     def update_position(self, x, y):
         # Mettre à jour la position de l'objet et ajouter la position précédente à la liste
         if self.x != x or self.y != y:
-            self.positions_precedentes.append((self.x, self.y, time.monotonic_ns()))
+            self.positions_precedentes.append((self.x, self.y, time.time()))
             self.x = x
             self.y = y
             self.filtre_moyenne()
-            self.last_moved = time.time()
-
-    def reset_if_not_moved(self, delay):
-        if time.time() > self.last_moved + delay:
-            return True
-        else:
-            return False
 
     def get_direction_speed(self):
         # Calculer le vecteur de déplacement entre la position actuelle et la position précédente
@@ -36,13 +28,13 @@ class Objet:
         dy = self.y - self.positions_precedentes[-1][1]
 
         # Calculer le temps écoulé entre la position actuelle et la position précédente
-        dt = (time.monotonic_ns() - self.positions_precedentes[-1][2]) + 0.0000001 # Ajout de 0.00001 pour éviter la division par 0
+        dt = (time.time() - self.positions_precedentes[-1][2]) + 0.0000001 # Ajout de 0.000001 pour éviter la division par 0
 
         # La direction est l'angle du vecteur de déplacement
         self.direction = math.atan2(dy, dx)
 
         # La vitesse est la magnitude du vecteur de déplacement divisée par le temps écoulé
-        self.vitesse = math.sqrt(dx**2 + dy**2) / dt * 1000000000  # Conversion en mm/s
+        self.vitesse = math.sqrt(dx**2 + dy**2) / dt
 
         # Convertir la vitesse en m/s
         self.vitesse_ms = self.vitesse /1000
@@ -74,7 +66,7 @@ class Objet:
         # Si ID est 0, on ne filtre pas la position
         if self.id == 0:
             return
-        Tau = 0.05
+        Tau = 0.03
         Te = 0.01
         A = 1/(Tau/Te + 1)
         B = Tau/Te
@@ -84,8 +76,6 @@ class Objet:
             self.x = A*(self.x + B*self.positions_precedentes[-1][0])
             self.y = A*(self.y + B*self.positions_precedentes[-1][1])
             self.last_seen = time.time()
-        
-
 
     def __eq__(self, other):
         # Vérifier si deux objets sont les mêmes

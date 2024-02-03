@@ -11,6 +11,8 @@ import time
 import socket
 import pickle  # Pour sérialiser/désérialiser les objets Python
 import random
+import numpy as np
+from sklearn.cluster import DBSCAN
 
 """# Initialiser le serveur
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -318,6 +320,43 @@ class LidarScanner:
                 nouvel_objet = Objet(self.id_compteur, x, y, taille)
                 nouvel_objet.points = points_autour_objet
                 self.objets.append(nouvel_objet)              
+
+    def detect_objects(scan, taille_objet):
+        # Filtrer les points basés sur la taille des objets
+        scan_filtre = [point for point in scan if point[2] > taille_objet]
+
+        if not scan_filtre:
+            return []
+
+        # Regroupement des points avec DBSCAN
+        X = np.array([(point[2] * np.cos(np.radians(point[1])),
+                    point[2] * np.sin(np.radians(point[1]))) for point in scan_filtre])
+        
+        eps = 100  # À ajuster en fonction de la densité des points
+        min_samples = 3  # À ajuster en fonction de la densité des points
+        dbscan = DBSCAN(eps=eps, min_samples=min_samples)
+        labels = dbscan.fit_predict(X)
+
+        # Création des objets à partir des clusters
+        objets = []
+        for label in set(labels):
+            if label == -1:
+                # Ignore les points considérés comme du bruit (pas de cluster)
+                continue
+
+            cluster_points = X[labels == label]
+            x_moyen = np.mean(cluster_points[:, 0])
+            y_moyen = np.mean(cluster_points[:, 1])
+
+            # Calcul de la taille de l'objet (peut être ajusté en fonction de votre application)
+            distance_min = np.min(cluster_points[:, 0]**2 + cluster_points[:, 1]**2)**0.5
+            distance_max = np.max(cluster_points[:, 0]**2 + cluster_points[:, 1]**2)**0.5
+            taille = distance_max - distance_min
+
+            nouvel_objet = Objet(id=len(objets) + 1, x=x_moyen, y=y_moyen, taille=taille)
+            objets.append(nouvel_objet)
+
+        return objets
 
     def trouver_id_objet_existants(self, x, y, seuil_distance=100):
         # Vérifier si l'objet est déjà suivi

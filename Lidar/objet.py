@@ -12,12 +12,21 @@ class Objet:
         self.vitesse = 0
         self.vitesse_ms = 0
         self.points = []
+        self.last_moved = time.time()
 
     def update_position(self, x, y):
         # Mettre à jour la position de l'objet et ajouter la position précédente à la liste
-        self.positions_precedentes.append((self.x, self.y, time.monotonic_ns()))  # Ajout du temps actuel
-        self.x = x
-        self.y = y
+        if self.x != x or self.y != y:
+            self.positions_precedentes.append((self.x, self.y, time.monotonic_ns()))
+            self.x = x
+            self.y = y
+            self.last_moved = time.time()
+
+    def reset_if_not_moved(self, delay):
+        if time.time() > self.last_moved + delay:
+            return True
+        else:
+            return False
 
     def get_direction_speed(self):
         # Calculer le vecteur de déplacement entre la position actuelle et la position précédente
@@ -25,7 +34,7 @@ class Objet:
         dy = self.y - self.positions_precedentes[-1][1]
 
         # Calculer le temps écoulé entre la position actuelle et la position précédente
-        dt = (time.monotonic_ns() - self.positions_precedentes[-1][2]) + 0.00001 # Ajout de 0.00001 pour éviter la division par 0
+        dt = (time.monotonic_ns() - self.positions_precedentes[-1][2]) + 0.0000001 # Ajout de 0.00001 pour éviter la division par 0
 
         # La direction est l'angle du vecteur de déplacement
         self.direction = math.atan2(dy, dx)
@@ -60,4 +69,6 @@ class Objet:
         return dx, dy
 
     def __str__(self):
+        # Retourne une chaîne de caractères représentant l'objet sous format JSON
         return f"{{\"id\": {self.id}, \"x\": {int(self.x)}, \"y\": {int(self.y)}, \"taille\": {int(self.taille)}}}"
+    

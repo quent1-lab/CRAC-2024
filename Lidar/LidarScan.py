@@ -10,8 +10,9 @@ import os
 import time
 import socket
 import pickle  # Pour sérialiser/désérialiser les objets Python
+import random
 
-# Initialiser le serveur
+"""# Initialiser le serveur
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server_socket.bind(('', 5000))  # Utilisez une adresse IP appropriée et un port disponible
 server_socket.listen(1)
@@ -20,7 +21,7 @@ print("Attente de la connexion du client...")
 
 # Accepter la connexion du client
 client_socket, client_address = server_socket.accept()
-print(f"Connexion établie avec {client_address}")
+print(f"Connexion établie avec {client_address}")"""
     
 class LidarScanner:
     def __init__(self, port=None):
@@ -318,61 +319,6 @@ class LidarScanner:
                 nouvel_objet.points = points_autour_objet
                 self.objets.append(nouvel_objet)              
 
-    def detect_object_v1(self, scan):
-        objet = min(scan, key=lambda x: x[2]) #Sélectionne le point le plus proche du robot
-        angle_objet = objet[1]
-        distance_objet = objet[2]
-        points_autour_objet = []
-
-        #sélectionne les points autour de l'objet en fonction de la distance des points
-        for point in scan:
-            if point[2] < distance_objet + 50 and point[2] > distance_objet - 50:
-                points_autour_objet.append(point)
-
-        x = 0
-        y = 0
-        taille = 0
-
-        for point in points_autour_objet:
-            new_angle = point[1] - self.ROBOT_ANGLE
-            new_angle %= 360
-            if new_angle < 0:
-                new_angle += 360
-            x += point[2] * math.cos(new_angle * math.pi / 180)
-            y += point[2] * math.sin(new_angle * math.pi / 180)
-
-        angle_min = min(points_autour_objet, key=lambda x: x[1])
-        angle_max = max(points_autour_objet, key=lambda x: x[1])
-        distance_min = min(points_autour_objet, key=lambda x: x[2])
-        distance_max = max(points_autour_objet, key=lambda x: x[2])
-        taille = math.sqrt((distance_max[2] * math.cos(angle_max[1] * math.pi / 180) - distance_min[2] * math.cos(
-            angle_min[1] * math.pi / 180)) ** 2 + (distance_max[2] * math.sin(angle_max[1] * math.pi / 180) - distance_min[2] * math.sin(
-            angle_min[1] * math.pi / 180)) ** 2)
-
-        x = self.ROBOT.x + int(x / len(points_autour_objet))
-        y = self.ROBOT.y + int(y / len(points_autour_objet))
-
-        # Seuil de détection d'un objet en mm
-        SEUIL = 100 # en mm (distance que peut parcourir le robot entre deux scans)
-        #Valeur à affiner
-
-        # Vérifier si l'objet est déjà suivi
-        for objet in self.objets:
-            distance = math.sqrt((x - objet.x)**2 + (y - objet.y)**2)
-            if distance < SEUIL:
-                # Si l'objet est déjà suivi, mettre à jour ses coordonnées
-                objet.update_position(x, y)
-                objet.taille = taille
-            return objet
-            
-        if(len(self.objets) < 1):
-            # Incrémenter le compteur d'identifiants
-            self.id_compteur += 1
-
-            # Si l'objet n'est pas déjà suivi, créer un nouvel objet
-            nouvel_objet = Objet(self.id_compteur, x, y, taille)
-            self.objets.append(nouvel_objet)
-
     def trouver_id_objet_existants(self, x, y, seuil_distance=100):
         # Vérifier si l'objet est déjà suivi
         for objet in self.objets:
@@ -447,8 +393,8 @@ class LidarScanner:
         logging.info("Stopping LiDAR motor")
         print("Arrêt du moteur LiDAR")
         # Fermer les sockets
-        client_socket.close()
-        server_socket.close()
+        #client_socket.close()
+        #server_socket.close()
         if esp.get_status():
             esp.send(json.dumps({"cmd": "stop","x":0.0, "y":0.0 ,"theta":0.0}).encode())
             esp.disconnect()
@@ -467,8 +413,74 @@ class LidarScanner:
                 self.objets[0].taille = item["taille"]
             elif item["id"] == 2:
                 pass
+    
+    def valeur_de_test(self):
+            scan = []
+            for i in range(0,360):
+                angle = i + self.ROBOT_ANGLE
+                angle %= 360
+                if 170 <= i <= 185:
+                    distance = random.randint(1000, 1050)
+                elif 350 <= i < 360:
+                    distance = random.randint(800, 850)
+                else:
+                    distance = 3050
+                scan.append((0, angle, distance))
+            return scan
+
+    def programme_simulation(self):
+        print("Programme de simulation")
+        logging.info("Starting simulation program")
+        nb_fale = time.time()
+        while True:
+            keys = pygame.key.get_pressed()
+            quit = pygame.event.get(pygame.QUIT)                     
+            if quit or keys[pygame.K_ESCAPE] or keys[pygame.K_SPACE]:
+                exit(0)
+
+            scan = self.valeur_de_test()
+            new_scan = self.transform_scan(scan)
+
+            self.detect_object(new_scan)
+            self.draw_background()
+            self.draw_text_center("PROGRAMME DE SIMULATION", self.WINDOW_SIZE[0] / 2, 35, self.RED)
+            self.draw_robot(self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)
+            for objet in self.objets:
+                
+                self.draw_object(objet)
+                trajectoire_actuel, trajectoire_adverse, trajectoire_evitement = self.trajectoires_anticipation(self.ROBOT, objet, 1.5, 0.1, 50)
+                self.draw_all_trajectoires(trajectoire_actuel, trajectoire_adverse, trajectoire_evitement)
+
+            for point in new_scan:
+                self.draw_point(point[0], point[1])
+
+            #Affiche les fps sur l'écran (en bas a gauche)
+            self.draw_text("FPS: " + str(int(1 / (time.time() - nb_fale))), 10, self.WINDOW_SIZE[1] - 30)
+            nb_fale = time.time()
+
+            pygame.display.update()
+            self.lcd.fill(self.WHITE)
+            self.ROBOT_ANGLE += 1
+            
+            #Déplacement du robot virtuel avec des touches du clavier
+            x = self.ROBOT.x
+            y = self.ROBOT.y
+            
+            if keys[pygame.K_LEFT]:
+                x -= 10
+            if keys[pygame.K_RIGHT]:
+                x += 10
+            if keys[pygame.K_UP]:
+                 y -= 10
+            if keys[pygame.K_DOWN]:
+                 y += 10
+            self.ROBOT.update_position(x, y)
+
+            time.sleep(0.01)
 
     def run(self):
+
+        self.programme_simulation()
 
         self.objets = [Objet(1,-1,-1,1)]
 
@@ -486,13 +498,13 @@ class LidarScanner:
                         self.stop()
                         break  
                     
-                    # Recevoir des données du serveur (exemple avec un objet)
+                    """# Recevoir des données du serveur (exemple avec un objet)
                     data_received = client_socket.recv(4096)  # Choisissez une taille de tampon appropriée
                     objet_reçu = pickle.loads(data_received)
 
                     if objet_reçu is not None:
                         # charge le json
-                        self.load_json(objet_reçu)
+                        self.load_json(objet_reçu)"""
 
                         
                     self.draw_background()
@@ -502,9 +514,9 @@ class LidarScanner:
                         self.draw_object(objet)
                         trajectoire_actuel, trajectoire_adverse, trajectoire_evitement = self.trajectoires_anticipation(self.ROBOT, objet, 1.5, 0.1, 50)
                         self.draw_all_trajectoires(trajectoire_actuel, trajectoire_adverse, trajectoire_evitement)
-
+                    
+                    
                     pygame.display.update()
-                    #self.lcd.fill(self.WHITE)
                 
             except KeyboardInterrupt:
                 self.stop()

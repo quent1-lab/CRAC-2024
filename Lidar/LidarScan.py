@@ -431,7 +431,7 @@ class LidarScanner:
     def programme_simulation(self):
         print("Programme de simulation")
         logging.info("Starting simulation program")
-        nb_fale = time.time()
+        last_time = time.time()
         while True:
             keys = pygame.key.get_pressed()
             quit = pygame.event.get(pygame.QUIT)                     
@@ -455,8 +455,8 @@ class LidarScanner:
                 self.draw_point(point[0], point[1])
 
             #Affiche les fps sur l'écran (en bas a gauche)
-            self.draw_text("FPS: " + str(int(1 / (time.time() - nb_fale))), 10, self.WINDOW_SIZE[1] - 30)
-            nb_fale = time.time()
+            self.draw_text("FPS: " + str(int(1 / (time.time() - last_time))), 10, self.WINDOW_SIZE[1] - 30)
+            last_time = time.time()
 
             pygame.display.update()
             self.lcd.fill(self.WHITE)
@@ -487,7 +487,6 @@ class LidarScanner:
         self.draw_background()
         self.draw_robot(self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)
         pygame.display.update()
-        nb_fale = 0
         while True:
             try:
                 while True:

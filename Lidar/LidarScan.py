@@ -323,11 +323,10 @@ class LidarScanner:
     def detect_objects(self, scan):
 
         # Regroupement des points avec DBSCAN
-        X = np.array([(point[2] * np.cos(np.radians(point[1])),
-                    point[2] * np.sin(np.radians(point[1]))) for point in scan])
+        X = np.array([(point[0] ,point[1]) for point in scan])
         
-        eps = 100  # À ajuster en fonction de la densité des points
-        min_samples = 3  # À ajuster en fonction de la densité des points
+        eps = 150  # À ajuster en fonction de la densité des points
+        min_samples = 14  # À ajuster en fonction de la densité des points
         dbscan = DBSCAN(eps=eps, min_samples=min_samples)
         labels = dbscan.fit_predict(X)
 
@@ -360,15 +359,22 @@ class LidarScanner:
                 return objet.id # Retourne l'ID de l'objet existant
         return None
     
-    def trouver_id_objet_existants_2(self, objets, seuil_distance=100):
+    def suivre_objet(self, objets, seuil_distance=100):
+
+        if len(self.objets) == 0:
+            self.objets = objets
+            return None
+
         seuil_distance_carre = seuil_distance ** 2  # Pré-calculer le carré du seuil de distance
         # Vérifier si l'objet est déjà suivi
         for objet in self.objets:
             for objet_param in objets:
                 distance_carre = (objet_param.x - objet.x)**2 + (objet_param.y - objet.y)**2
+                print(distance_carre)
                 if distance_carre < seuil_distance_carre:
+                    self.objets[objet_param.id-1].update_position(objet_param.x, objet_param.y)
                     objets.remove(objet_param)  # Retirer l'objet de la liste
-                    return objet.id  # Retourne l'ID de l'objet existant
+                    
         return None
         
     def trajectoires_anticipation(self, robot_actuel, robot_adverse, duree_anticipation=1.0, pas_temps=0.1, distance_securite=50):
@@ -465,10 +471,11 @@ class LidarScanner:
                 angle %= 360
                 if 170 <= i <= 185:
                     distance = random.randint(1000, 1050)
-                elif 350 <= i < 360:
+                elif 345 <= i < 360:
                     distance = random.randint(800, 850)
                 else:
-                    distance = 3050
+                    distance = random.randint(700, 900)
+                    distance = 2000
                 scan.append((0, angle, distance))
             return scan
 
@@ -486,8 +493,9 @@ class LidarScanner:
             new_scan = self.transform_scan(scan)
 
             #self.detect_object(new_scan)
-            new_objets = self.detect_objects(new_scan, 1000)
-            self.trouver_id_objet_existants_2(new_objets, 100)
+            new_objets = self.detect_objects(new_scan)
+            self.suivre_objet(new_objets, 100)
+
             self.draw_background()
             self.draw_text_center("PROGRAMME DE SIMULATION", self.WINDOW_SIZE[0] / 2, 35, self.RED)
             self.draw_robot(self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)

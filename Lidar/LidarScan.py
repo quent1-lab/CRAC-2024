@@ -6,7 +6,6 @@ import math
 import time
 import json
 import os
-#import can
 import time
 import socket
 import pickle  # Pour sérialiser/désérialiser les objets Python
@@ -321,16 +320,11 @@ class LidarScanner:
                 nouvel_objet.points = points_autour_objet
                 self.objets.append(nouvel_objet)              
 
-    def detect_objects(scan, taille_objet):
-        # Filtrer les points basés sur la taille des objets
-        scan_filtre = [point for point in scan if point[2] > taille_objet]
-
-        if not scan_filtre:
-            return []
+    def detect_objects(self, scan):
 
         # Regroupement des points avec DBSCAN
         X = np.array([(point[2] * np.cos(np.radians(point[1])),
-                    point[2] * np.sin(np.radians(point[1]))) for point in scan_filtre])
+                    point[2] * np.sin(np.radians(point[1]))) for point in scan])
         
         eps = 100  # À ajuster en fonction de la densité des points
         min_samples = 3  # À ajuster en fonction de la densité des points
@@ -366,6 +360,17 @@ class LidarScanner:
                 return objet.id # Retourne l'ID de l'objet existant
         return None
     
+    def trouver_id_objet_existants_2(self, objets, seuil_distance=100):
+        seuil_distance_carre = seuil_distance ** 2  # Pré-calculer le carré du seuil de distance
+        # Vérifier si l'objet est déjà suivi
+        for objet in self.objets:
+            for objet_param in objets:
+                distance_carre = (objet_param.x - objet.x)**2 + (objet_param.y - objet.y)**2
+                if distance_carre < seuil_distance_carre:
+                    objets.remove(objet_param)  # Retirer l'objet de la liste
+                    return objet.id  # Retourne l'ID de l'objet existant
+        return None
+        
     def trajectoires_anticipation(self, robot_actuel, robot_adverse, duree_anticipation=1.0, pas_temps=0.1, distance_securite=50):
         """
         Dessine les futures trajectoires des robots et la trajectoire d'évitement anticipée.
@@ -480,7 +485,9 @@ class LidarScanner:
             scan = self.valeur_de_test()
             new_scan = self.transform_scan(scan)
 
-            self.detect_object(new_scan)
+            #self.detect_object(new_scan)
+            new_objets = self.detect_objects(new_scan, 1000)
+            self.trouver_id_objet_existants_2(new_objets, 100)
             self.draw_background()
             self.draw_text_center("PROGRAMME DE SIMULATION", self.WINDOW_SIZE[0] / 2, 35, self.RED)
             self.draw_robot(self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)

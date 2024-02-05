@@ -12,6 +12,8 @@ import pickle  # Pour sérialiser/désérialiser les objets Python
 import random
 import numpy as np
 from sklearn.cluster import DBSCAN
+from rplidar import RPLidar,RPLidarException
+import serial.tools.list_ports
 
 """# Initialiser le serveur
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -440,15 +442,39 @@ class LidarScanner:
         
         return trajectoire_actuel, trajectoire_adverse, trajectoire_evitement
 
-    def stop(self,esp):
+    def connexion_lidar(self):
+        # Connexion au lidar
+        try:
+            if self.port == None:
+                self.port = [port.name for port in serial.tools.list_ports.comports() if port.serial_number and "0001" in port.serial_number][0]
+
+            print(f"Connexion au port {self.port}")
+            
+            self.lidar = RPLidar(self.port)
+            self.lidar.connect()
+            logging.info("Lidar connected")
+            print("LiDAR connecté")
+        except RPLidarException as e:
+            # Code pour gérer RPLidarException
+            print(f"Une erreur RPLidarException s'est produite dans le connexion : {e}")
+            self.lidar.stop()
+            self.connexion_lidar()
+        except Exception as e:
+            logging.error(f"Failed to create an instance of RPLidar: {e}")
+            print("Erreur lors de la création de l'instance du LiDAR")
+
+            time.sleep(1.5)
+            exit(0)
+            raise
+
+    def stop(self):
         logging.info("Stopping LiDAR motor")
         print("Arrêt du moteur LiDAR")
-        # Fermer les sockets
-        #client_socket.close()
-        #server_socket.close()
-        if esp.get_status():
-            esp.send(json.dumps({"cmd": "stop","x":0.0, "y":0.0 ,"theta":0.0}).encode())
-            esp.disconnect()
+        self.lidar.stop()
+        time.sleep(1)
+        self.lidar.disconnect()
+        self.client_socket.close()
+        self.objets = []
         exit(0)
 
     def load_json(self,json_string):
@@ -534,43 +560,43 @@ class LidarScanner:
             time.sleep(0.01)
 
     def run(self):
+        
+        self.connexion_lidar()
 
-        self.programme_simulation()
-
-        self.objets = [Objet(1,-1,-1,1)]
-
-        self.draw_background()
-        self.draw_robot(self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)
-        pygame.display.update()
         while True:
+            self.objets = []
             try:
-                while True:
-                    
-                    keys = pygame.key.get_pressed()
-                    quit = pygame.event.get(pygame.QUIT)              
-                    if quit or keys[pygame.K_ESCAPE] or keys[pygame.K_SPACE]:
-                        self.stop()
-                        break  
-                    
-                    """# Recevoir des données du serveur (exemple avec un objet)
-                    data_received = client_socket.recv(4096)  # Choisissez une taille de tampon appropriée
-                    objet_reçu = pickle.loads(data_received)
+                
+                for scan in self.lidar.iter_scans(4000):
 
-                    if objet_reçu is not None:
-                        # charge le json
-                        self.load_json(objet_reçu)"""
+                    new_scan = self.transform_scan(scan)
 
-                        
+                    #self.detect_object(new_scan)
+                    new_objets = self.detect_objects(new_scan)
+                    self.suivre_objet(new_objets, 100)
+
                     self.draw_background()
                     self.draw_robot(self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)
-                    
                     for objet in self.objets:
+                        
                         self.draw_object(objet)
                         trajectoire_actuel, trajectoire_adverse, trajectoire_evitement = self.trajectoires_anticipation(self.ROBOT, objet, 1.5, 0.1, 50)
                         self.draw_all_trajectoires(trajectoire_actuel, trajectoire_adverse, trajectoire_evitement)
-                    
-                    
+
+                    for point in new_scan:
+                        self.draw_point(point[0], point[1])
+
+                    #Affiche les fps sur l'écran (en bas a gauche)
+                    #self.draw_text("FPS: " + str(int(1 / (time.time() - last_time))), 10, self.WINDOW_SIZE[1] - 30)
+                    #last_time = time.time()
                     pygame.display.update()
+
+                    
+            except RPLidarException as e:
+                # Code pour gérer RPLidarException
+                print(f"Une erreur RPLidarException s'est produite dans le run : {e}")
+                self.lidar.stop()
+                time.sleep(1)
                 
             except KeyboardInterrupt:
                 self.stop()

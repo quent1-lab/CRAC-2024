@@ -364,10 +364,12 @@ class LidarScanner:
     
     def suivre_objet(self, objets, seuil_distance=100):
 
-        if len(self.objets) == 0:
-            self.objets = objets
-            return None
+        if len(self.objets) != len(objets):
+            # Ajoute les objets manquants
+            for objet in objets[len(self.objets):]:
+                self.objets.append(objet)
 
+        
         seuil_distance_carre = seuil_distance ** 2  # Pré-calculer le carré du seuil de distance
         # Vérifier si l'objet est déjà suivi
         for objet in self.objets:
@@ -560,7 +562,8 @@ class LidarScanner:
             time.sleep(0.01)
 
     def run(self):
-        
+        start_time = time.time()
+        start = False
         self.connexion_lidar()
 
         while True:
@@ -570,7 +573,10 @@ class LidarScanner:
                 for scan in self.lidar.iter_scans(4000):
 
                     new_scan = self.transform_scan(scan)
-
+                    if time.time() - start_time > 5 and not start:
+                        self.objets = []
+                        start = True
+                    
                     #self.detect_object(new_scan)
                     new_objets = self.detect_objects(new_scan)
                     self.suivre_objet(new_objets, 100)

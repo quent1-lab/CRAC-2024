@@ -51,6 +51,7 @@ class LidarScanner:
         else:  # Linux et autres
             self.path_picture = "Documents/CRAC-2024/Lidar/Terrain_Jeu.png"
 
+        self.path_picture = "Lidar/Terrain_Jeu.png"
         self.id_compteur = 0  # Compteur pour les identifiants d'objet
         self.objets = []  # Liste pour stocker les objets détectés
 
@@ -370,7 +371,7 @@ class LidarScanner:
         for objet in self.objets:
             for objet_param in objets:
                 distance_carre = (objet_param.x - objet.x)**2 + (objet_param.y - objet.y)**2
-                print(distance_carre)
+
                 if distance_carre < seuil_distance_carre:
                     self.objets[objet_param.id-1].update_position(objet_param.x, objet_param.y)
                     objets.remove(objet_param)  # Retirer l'objet de la liste

@@ -1,1 +1,5 @@
 lidar_scan.log
+.venv
+Lidar/__pycache__
+.vscode
+```

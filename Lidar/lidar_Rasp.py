@@ -384,6 +384,16 @@ class LidarScanner:
                 break
 
 if __name__ == '__main__':
+    can = ComCAN("can0", "socketcan")
+    while True:
+        try:
+            can.run()
+        except Exception as e:
+            print(f"Erreur: {e}")
+            time.sleep(1)
+            continue
+        break
+
     # Initialiser le client
     client = Client()
     scanner = LidarScanner("/dev/ttyUSB0")

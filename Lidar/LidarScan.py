@@ -579,6 +579,34 @@ class LidarScanner:
 
         return solution[x].evalf(), solution[y].evalf()
 
+    def triangulation2(self,x1, y1, x2, y2, x3, y3, d1, d2, d3):
+        """
+        Calcule la position d'un point par triangulation en se basant sur trois points fixes
+        et les distances entre ces points et le point inconnu.
+
+        Args:
+        x1, y1: Coordonnées du premier point fixe.
+        x2, y2: Coordonnées du deuxième point fixe.
+        x3, y3: Coordonnées du troisième point fixe.
+        d1: Distance entre le premier point fixe et le point inconnu.
+        d2: Distance entre le deuxième point fixe et le point inconnu.
+        d3: Distance entre le troisième point fixe et le point inconnu.
+
+        Returns:
+        Un tuple contenant les coordonnées du point inconnu (x, y).
+        """
+        # Calcule les longueurs des côtés des triangles formés par les points fixes et le point inconnu.
+        a = d1
+        b = d2
+        c = d3
+
+        # Calcule les coordonnées du point inconnu.
+        x = (a**2 - b**2 + x2**2 - x1**2 + y2**2 - y1**2) / (2 * (x2 - x1))
+        y = ((a**2 - c**2 + x3**2 - x1**2 + y3**2 - y1**2) / (2 * (y3 - y1))
+            - ((x3 - x1) / (y3 - y1)) * x)
+
+        return x, y
+
     def valeur_de_test(self):
         scan = []
         for i in range(0, 360):

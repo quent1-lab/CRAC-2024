@@ -14,6 +14,7 @@ import numpy as np
 from sklearn.cluster import DBSCAN
 from rplidar import RPLidar,RPLidarException
 import serial.tools.list_ports
+from sympy import symbols, Eq, solve
 
 """# Initialiser le serveur
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -493,6 +494,47 @@ class LidarScanner:
             elif item["id"] == 2:
                 pass
     
+    def calculer_angle(self, objet, deg):
+        # Les coordonnées du robot et de l'objet doivent être fournies en entrée
+        x_robot, y_robot = self.ROBOT.x, self.ROBOT.y
+        x_objet, y_objet = objet
+
+        # Calculer la différence de x et de y
+        dx = x_objet - x_robot
+        dy = y_objet - y_robot
+
+        # Calculer l'angle en radians
+        angle_rad = math.atan2(dy, dx)
+
+        if deg:
+            # Convertir l'angle en degrés
+            angle_deg = math.degrees(angle_rad)
+
+        return angle_deg
+
+    def triangulation(self, objet1, objet2, objet3):
+        # Les coordonnées des objets et les angles doivent être fournis en entrée
+        x1, y1 = objet1
+        x2, y2 = objet2
+        x3, y3 = objet3
+
+        # Convertir les angles en radians
+        angle1 = np.radians(angle1)
+        angle2 = np.radians(angle2)
+        angle3 = np.radians(angle3)
+
+        # Définir les symboles pour les inconnues (x, y)
+        x, y = symbols('x y')
+
+        # Définir les équations basées sur la loi des sinus
+        eq1 = Eq((x - x1) / np.sin(angle1), (x2 - x1) / np.sin(angle2))
+        eq2 = Eq((x - x1) / np.sin(angle1), (x3 - x1) / np.sin(angle3))
+
+        # Résoudre le système d'équations pour obtenir x et y
+        solution = solve((eq1,eq2), (x, y))
+
+        return solution[x], solution[y]
+
     def valeur_de_test(self):
             scan = []
             for i in range(0,360):

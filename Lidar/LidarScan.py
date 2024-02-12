@@ -555,6 +555,20 @@ class LidarScanner:
     
         return angle
 
+    def calculer_distance(self, objet):
+        # Les coordonnées du robot et de l'objet doivent être fournies en entrée
+        x_robot, y_robot = self.ROBOT.x, self.ROBOT.y
+        x_objet, y_objet = objet.x, objet.y
+
+        # Calculer la différence de x et de y
+        dx = x_objet - x_robot
+        dy = y_objet - y_robot
+
+        # Calculer la distance entre le robot et l'objet
+        distance = math.sqrt(dx**2 + dy**2)
+
+        return distance
+
     def triangulation(self, objet1, objet2, objet3):
         # Les coordonnées des objets et les angles doivent être fournis en entrée
         x1, y1 = objet1.x, objet1.y
@@ -579,7 +593,7 @@ class LidarScanner:
 
         return solution[x].evalf(), solution[y].evalf()
 
-    def triangulation2(self,x1, y1, x2, y2, x3, y3, d1, d2, d3):
+    def triangulation2(self, objet1, objet2, objet3):
         """
         Calcule la position d'un point par triangulation en se basant sur trois points fixes
         et les distances entre ces points et le point inconnu.

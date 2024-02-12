@@ -540,20 +540,20 @@ class LidarScanner:
     def calculer_angle(self, objet, deg):
         # Les coordonnées du robot et de l'objet doivent être fournies en entrée
         x_robot, y_robot = self.ROBOT.x, self.ROBOT.y
-        x_objet, y_objet = objet
+        x_objet, y_objet = objet.x,objet.y
 
         # Calculer la différence de x et de y
         dx = x_objet - x_robot
         dy = y_objet - y_robot
 
         # Calculer l'angle en radians
-        angle_rad = math.atan2(dy, dx)
+        angle = math.atan2(dy, dx)
 
         if deg:
             # Convertir l'angle en degrés
-            angle_deg = math.degrees(angle_rad)
-
-        return angle_deg
+            angle = math.degrees(angle)
+    
+        return angle
 
     def triangulation(self, objet1, objet2, objet3):
         # Les coordonnées des objets et les angles doivent être fournis en entrée
@@ -572,21 +572,24 @@ class LidarScanner:
         # Définir les équations basées sur la loi des sinus
         eq1 = Eq((x - x1) / np.sin(angle1), (x2 - x1) / np.sin(angle2))
         eq2 = Eq((x - x1) / np.sin(angle1), (x3 - x1) / np.sin(angle3))
+        print(eq1)
 
         # Résoudre le système d'équations pour obtenir x et y
         solution = solve((eq1, eq2), (x, y))
 
-        return solution[x], solution[y]
+        return solution[x].evalf(), solution[y].evalf()
 
     def valeur_de_test(self):
         scan = []
         for i in range(0, 360):
             angle = i + self.ROBOT_ANGLE
             angle %= 360
-            if 170 <= i <= 185:
+            if 200 <= i <= 215:
                 distance = random.randint(1000, 1050)
             elif 345 <= i < 360:
                 distance = random.randint(800, 850)
+            elif 80 <= i <= 95:
+                distance = random.randint(700, 720)
             else:
                 distance = random.randint(700, 900)
                 distance = 2000
@@ -609,6 +612,10 @@ class LidarScanner:
             # self.detect_object(new_scan)
             new_objets = self.detect_objects(new_scan)
             self.suivre_objet(new_objets, 100)
+
+            if len(self.objets) >= 3:
+                x_r,x_y = self.triangulation(self.objets[0],self.objets[1],self.objets[2])
+                self.draw_text_center(f'x :{x_r}, y :{x_y}', self.WINDOW_SIZE[0] / 2, self.WINDOW_SIZE[1]-20, self.RED)
 
             self.draw_background()
             self.draw_text_center("PROGRAMME DE SIMULATION",
@@ -651,6 +658,7 @@ class LidarScanner:
             time.sleep(0.01)
 
     def run(self):
+        self.programme_simulation()
         start_time = time.time()
         start = False
         self.connexion_lidar()

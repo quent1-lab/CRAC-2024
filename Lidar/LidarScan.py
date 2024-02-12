@@ -562,9 +562,9 @@ class LidarScanner:
         x3, y3 = objet3.x, objet3.y
 
         # Convertir les angles en radians
-        angle1 = np.radians(angle1)
-        angle2 = np.radians(angle2)
-        angle3 = np.radians(angle3)
+        angle1 = self.calculer_angle(objet1,False)
+        angle2 = self.calculer_angle(objet2,False)
+        angle3 = self.calculer_angle(objet3,False)
 
         # Définir les symboles pour les inconnues (x, y)
         x, y = symbols('x y')

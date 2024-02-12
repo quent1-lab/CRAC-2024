@@ -570,28 +570,36 @@ class LidarScanner:
         return distance
 
     def triangulation(self, objet1, objet2, objet3):
-        # Les coordonnées des objets et les angles doivent être fournis en entrée
-        x1, y1 = objet1.x, objet1.y
-        x2, y2 = objet2.x, objet2.y
-        x3, y3 = objet3.x, objet3.y
+        """
+        Détermine la position (x, y, theta) du robot en fonction des distances mesurées par le capteur Lidar
+        et des coordonnées des trois points fixes sur les bords de l'aire de jeu.
 
-        # Convertir les angles en radians
-        angle1 = self.calculer_angle(objet1,False)
-        angle2 = self.calculer_angle(objet2,False)
-        angle3 = self.calculer_angle(objet3,False)
+        Args:
+        points_fixes: Une liste de trois tuples représentant les coordonnées des points fixes.
+        distances: Une liste de trois distances mesurées par le capteur Lidar jusqu'aux points fixes.
 
-        # Définir les symboles pour les inconnues (x, y)
-        x, y = symbols('x y')
+        Returns:
+        Un tuple contenant les coordonnées (x, y) et l'orientation theta du robot.
+        """
+        # Convertit les coordonnées en tableau numpy
+        points_fixes = np.array([[objet1.x, objet1.y], [objet2.x, objet2.y], [objet3.x, objet3.y]])
+        distances = np.array([self.calculer_distance(objet1), self.calculer_distance(objet2), self.calculer_distance(objet3)])
 
-        # Définir les équations basées sur la loi des sinus
-        eq1 = Eq((x - x1) / np.sin(angle1), (x2 - x1) / np.sin(angle2))
-        eq2 = Eq((x - x1) / np.sin(angle1), (x3 - x1) / np.sin(angle3))
-        print(eq1)
+        # Calcule les vecteurs du robot par rapport aux points fixes
+        vecteurs = points_fixes - np.array([[0, 0]])
 
-        # Résoudre le système d'équations pour obtenir x et y
-        solution = solve((eq1, eq2), (x, y))
+        # Calcule les distances horizontales et verticales entre le point du Lidar et les points fixes
+        distances_horizontales = distances * np.cos(np.arctan2(vecteurs[:, 1], vecteurs[:, 0]))
+        distances_verticales = distances * np.sin(np.arctan2(vecteurs[:, 1], vecteurs[:, 0]))
 
-        return solution[x].evalf(), solution[y].evalf()
+        # Calcule la position du robot
+        x = np.mean(points_fixes[:, 0] + distances_horizontales)
+        y = np.mean(points_fixes[:, 1] + distances_verticales)
+
+        # Calcule l'orientation du robot (theta)
+        theta = np.arctan2(np.mean(vecteurs[:, 1]), np.mean(vecteurs[:, 0]))
+
+        return x, y, theta
 
     def triangulation2(self, objet1, objet2, objet3):
         """
@@ -610,16 +618,22 @@ class LidarScanner:
         Un tuple contenant les coordonnées du point inconnu (x, y).
         """
         # Calcule les longueurs des côtés des triangles formés par les points fixes et le point inconnu.
-        a = d1
-        b = d2
-        c = d3
+        a = self.calculer_distance(objet1)
+        b = self.calculer_distance(objet2)
+        c = self.calculer_distance(objet3)
+
+        # Calcule les coordonnées des points fixes.
+        x1, y1 = objet1.x, objet1.y
+        x2, y2 = objet2.x, objet2.y
+        x3, y3 = objet3.x, objet3.y
 
         # Calcule les coordonnées du point inconnu.
         x = (a**2 - b**2 + x2**2 - x1**2 + y2**2 - y1**2) / (2 * (x2 - x1))
         y = ((a**2 - c**2 + x3**2 - x1**2 + y3**2 - y1**2) / (2 * (y3 - y1))
             - ((x3 - x1) / (y3 - y1)) * x)
+        theta = 0
 
-        return x, y
+        return x, y, theta
 
     def valeur_de_test(self):
         scan = []
@@ -655,28 +669,27 @@ class LidarScanner:
             new_objets = self.detect_objects(new_scan)
             self.suivre_objet(new_objets, 100)
 
-            if len(self.objets) >= 3:
-                x_r,x_y = self.triangulation(self.objets[0],self.objets[1],self.objets[2])
-                self.draw_text_center(f'x :{x_r}, y :{x_y}', self.WINDOW_SIZE[0] / 2, self.WINDOW_SIZE[1]-20, self.RED)
-
             self.draw_background()
             self.draw_text_center("PROGRAMME DE SIMULATION",
                                   self.WINDOW_SIZE[0] / 2, 35, self.RED)
             self.draw_robot(self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)
-            for objet in self.objets:
 
+            if len(self.objets) >= 3:
+                x_r,y_r,theta_r = self.triangulation(self.objets[0],self.objets[1],self.objets[2])
+                print(f"x: {x_r}, y: {y_r}, theta: {theta_r}")
+                self.draw_robot(x_r, y_r, theta_r)
+
+            for objet in self.objets:
                 self.draw_object(objet)
                 trajectoire_actuel, trajectoire_adverse, trajectoire_evitement = self.trajectoires_anticipation(
                     self.ROBOT, objet, 1.5, 0.1, 50)
-                self.draw_all_trajectoires(
-                    trajectoire_actuel, trajectoire_adverse, trajectoire_evitement)
+                self.draw_all_trajectoires(trajectoire_actuel, trajectoire_adverse, trajectoire_evitement)
 
             for point in new_scan:
                 self.draw_point(point[0], point[1])
 
             # Affiche les fps sur l'écran (en bas a gauche)
-            self.draw_text(
-                "FPS: " + str(int(1 / (time.time() - last_time))), 10, self.WINDOW_SIZE[1] - 30)
+            self.draw_text("FPS: " + str(int(1 / (time.time() - last_time))), 10, self.WINDOW_SIZE[1] - 30)
             last_time = time.time()
 
             pygame.display.update()

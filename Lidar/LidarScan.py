@@ -635,6 +635,28 @@ class LidarScanner:
 
         return x, y, theta
 
+    def calculer_coordonnees(self, objet1, objet2, objet3):
+        balises = np.array([[objet1.x, objet1.y], [objet2.x, objet2.y], [objet3.x, objet3.y]])
+        distances = np.array([self.calculer_distance(objet1), self.calculer_distance(objet2), self.calculer_distance(objet3)])
+        # Vérifier que le nombre de balises et de distances correspondent
+        if len(balises) != len(distances):
+            raise ValueError("Le nombre de balises et de distances doit être le même")
+
+        # Créer une matrice pour stocker les différences entre les coordonnées des balises
+        A = np.zeros((len(balises) - 1, 2))
+
+        # Remplir la matrice avec les différences entre les coordonnées des balises
+        for i in range(len(balises) - 1):
+            A[i] = np.array(balises[i + 1]) - np.array(balises[0])
+
+        # Calculer les distances entre les balises
+        d = np.array(distances[1:]) ** 2 - np.array(distances[0]) ** 2 + np.sum(np.array(balises[0])**2) - np.sum(np.array(balises[1:])**2)
+
+        # Résoudre le système d'équations linéaires pour obtenir les coordonnées du robot
+        coord_robot = np.linalg.solve(2*A, d)
+
+        return coord_robot
+
     def valeur_de_test(self):
         scan = []
         for i in range(0, 360):
@@ -675,9 +697,9 @@ class LidarScanner:
             self.draw_robot(self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)
 
             if len(self.objets) >= 3:
-                x_r,y_r,theta_r = self.triangulation(self.objets[0],self.objets[1],self.objets[2])
-                print(f"x: {x_r}, y: {y_r}, theta: {theta_r}")
-                self.draw_robot(x_r, y_r, theta_r)
+                x_r,y_r = self.calculer_coordonnees(self.objets[0],self.objets[1],self.objets[2])
+                print(f"x: {x_r}, y: {y_r}")
+                self.draw_robot(x_r, y_r,0)
 
             for objet in self.objets:
                 self.draw_object(objet)

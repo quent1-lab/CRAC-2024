@@ -330,7 +330,7 @@ class LidarScanner:
                 break
 
 if __name__ == '__main__':
-    can = ComCAN("can0", "socketcan")
+    """can = ComCAN("can0", "socketcan")
     while True:
         try:
             can.run()
@@ -338,13 +338,13 @@ if __name__ == '__main__':
             print(f"Erreur: {e}")
             time.sleep(1)
             continue
-        break
+        break"""
 
     # Initialiser le client
     client = Client()
     scanner = LidarScanner("/dev/ttyUSB0")
 
-    server_address = ('192.168.36.63', 5000)
+    server_address = ('172.30.30.100', 5000)
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     client_socket.connect(server_address)
 

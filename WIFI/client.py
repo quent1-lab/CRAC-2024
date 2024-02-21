@@ -28,7 +28,12 @@ def send_data(client_socket):
         time.sleep(1)  # Attendre une seconde avant d'envoyer la prochaine donnée
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:
-    client_socket.connect((COMWIFI_IP, COMWIFI_PORT))
+    while True:
+        try:
+            client_socket.connect((COMWIFI_IP, COMWIFI_PORT))
+            break  # Si la connexion est réussie, sortir de la boucle
+        except socket.error as e:
+            time.sleep(3)  # Attendre 5 secondes avant de réessayer
 
     receive_thread = threading.Thread(target=receive_data, args=(client_socket,))
     send_thread = threading.Thread(target=send_data, args=(client_socket,))

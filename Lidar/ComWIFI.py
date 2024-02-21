@@ -20,6 +20,9 @@ def handle_client(connection, address):
         if not data:
             break  # Si les données sont vides, sortir de la boucle
         print("Données reçues du client:", data.decode())
+        if data == b"stop":
+            stop_threads = False
+            break
     connection.sendall(b"stop")  # Envoyer des données au client
     connection.close()
 
@@ -52,11 +55,11 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
     while stop_threads:
         if keyboard.is_pressed('space'):  # Si la touche espace est enfoncée
             stop_threads = False  # Indiquer aux threads de s'arrêter
-            print("Arrêt des connexions...")
-            for thread in client_threads:
-                thread.join()
-            connection_thread.join()
             break
     
+    print("Arrêt des connexions...")
+    for thread in client_threads:
+        thread.join()
+    connection_thread.join()
     print("Serveur ComWIFI arrêté")
     exit()

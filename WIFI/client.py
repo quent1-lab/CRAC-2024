@@ -36,9 +36,11 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:
     receive_thread.start()
     send_thread.start()
 
-    while True:
+    while stop_threads:
         if not stop_threads:
             receive_thread.join()
             send_thread.join()
             break
+    
+    exit()
 

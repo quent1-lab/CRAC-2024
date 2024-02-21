@@ -9,11 +9,16 @@ COMWIFI_PORT = 22050  # Port sur lequel le serveur ComWIFI écoute
 stop_threads = True
 
 def receive_data(client_socket):
+    global stop_threads
     while stop_threads:
         data_received = client_socket.recv(1024)
         print("Données reçues du serveur ComWIFI:", data_received.decode())
+        if data_received == b"stop":
+            stop_threads = False
+            break
     
 def send_data(client_socket):
+    global stop_threads
     i = 0
     while stop_threads:
         message = "programme client 1: " + str(i)
@@ -32,8 +37,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:
     send_thread.start()
 
     while True:
-        if input("Appuyez sur 'q' pour quitter\n") == 'q':
-            stop_threads = False
+        if not stop_threads:
             receive_thread.join()
             send_thread.join()
             break

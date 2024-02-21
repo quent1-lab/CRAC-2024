@@ -20,6 +20,7 @@ def handle_client(connection, address):
         if not data:
             break  # Si les données sont vides, sortir de la boucle
         print("Données reçues du client:", data.decode())
+    connection.sendall(b"stop")  # Envoyer des données au client
     connection.close()
 
 def handle_connection():

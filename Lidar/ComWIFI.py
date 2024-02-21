@@ -2,7 +2,7 @@ import socket
 
 # Configuration du serveur
 HOST = '0.0.0.0'  # Adresse IP de la Raspberry Pi
-PORT = 12345  # Port sur lequel le serveur écoute
+PORT = 22050  # Port sur lequel le serveur écoute
 
 # Création du socket
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
@@ -22,12 +22,3 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
             data = connection.recv(1024)  # Recevoir des données du client
             if not data:
                 break  # Si les données sont vides, sortir de la boucle
-            # Analyser les données si nécessaire
-            # Envoi des données à l'ordinateur de supervision (exemple)
-            # En supposant que l'adresse IP de l'ordinateur de supervision est 'superviseur_ip'
-            superviseur_ip = '192.168.1.100'
-            superviseur_port = 54321
-            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as superviseur_socket:
-                superviseur_socket.connect((superviseur_ip, superviseur_port))
-                superviseur_socket.sendall(data)
-            print("Données envoyées à l'ordinateur de supervision:", data.decode())

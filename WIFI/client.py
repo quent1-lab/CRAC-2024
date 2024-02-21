@@ -3,7 +3,7 @@ import time
 
 # Configuration du client
 COMWIFI_IP = '192.168.22.100'  # Adresse IP de la Raspberry Pi
-COMWIFI_PORT = 12345  # Port sur lequel le serveur ComWIFI écoute
+COMWIFI_PORT = 22050  # Port sur lequel le serveur ComWIFI écoute
 i = 0
 # Boucle d'envoi de données au serveur ComWIFI
 print("Client ComWIFI démarré")

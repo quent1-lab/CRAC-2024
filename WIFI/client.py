@@ -12,7 +12,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:
     print("Connexion au serveur ComWIFI...")
     client_socket.connect((COMWIFI_IP, COMWIFI_PORT))
     while True:
-        message = "programme client 1: " + str(i)
+        message = "programme client 2: " + str(i)
         i += 1
         client_socket.sendall(message.encode())
         print("Données envoyées au serveur ComWIFI:", message)

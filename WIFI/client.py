@@ -7,10 +7,11 @@ COMWIFI_PORT = 22050  # Port sur lequel le serveur ComWIFI écoute
 i = 0
 # Boucle d'envoi de données au serveur ComWIFI
 print("Client ComWIFI démarré")
-while True:
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:
-        print("Connexion au serveur ComWIFI...")
-        client_socket.connect((COMWIFI_IP, COMWIFI_PORT))
+
+with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:
+    print("Connexion au serveur ComWIFI...")
+    client_socket.connect((COMWIFI_IP, COMWIFI_PORT))
+    while True:
         message = "programme client 1: " + str(i)
         i += 1
         client_socket.sendall(message.encode())

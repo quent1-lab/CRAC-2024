@@ -2,6 +2,8 @@ import socket
 import threading
 import keyboard
 
+# Message type : {"id_sender" : 1, "id_receiver" : 2, "cmd" : "init", "data" : None}
+
 # Configuration du serveur
 HOST = '0.0.0.0'  # Adresse IP de la Raspberry Pi
 PORT = 22050  # Port sur lequel le serveur écoute
@@ -32,7 +34,7 @@ def handle_client(connection, address):
                 if data["id"] in client_adress:
                     client_adress[data["id"]] = (connection, address, client_adress[data["id"]][2])
             print("Données reçues du client:", data.decode())
-    message = {"id" : 0, "cmd" : "stop", "data" : None} # ID 0 pour broadcast
+    message = {"id_sender" : 1, "id_receiver" : 0, "cmd" : "stop", "data" : None}
     connection.sendall(message.encode())  # Envoyer des données au client
     connection.close()
 

@@ -71,6 +71,8 @@ def load_json(data):
     # Vérifier s'il n'y qu'un seul message ou plusieurs
     if data.count('}{') > 0:
         data = data.split('}{')
+        for i in range(1, len(data) - 1):
+            data[i] = '{' + data[i] + '}'
         data[0] += '}'
         data[-1] = '{' + data[-1]
     else:

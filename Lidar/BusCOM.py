@@ -1,6 +1,7 @@
 import socket
 import threading
 import keyboard
+import json
 
 # Message type : {"id_sender" : 1, "id_receiver" : 2, "cmd" : "init", "data" : None}
 # ID : 0 = Broadcast, 1 = BusCOM, 2 = BusCAN, 3 = Lidar, 4 = Ordre Robot, 5 = Stratégie
@@ -29,15 +30,25 @@ def handle_client(connection, address):
     print('Connecté à', address)
     while not stop_threads:
         data = connection.recv(2048)  # Recevoir des données du client
+        print("Données reçues du client:", data.decode())
+        data = json.loads(data.decode())
         if not data:
             continue # Si les données sont vides, continuer
         else:
             if data["cmd"] == "init":
                 if data["id"] in client_adress:
                     client_adress[data["id"]] = (connection, address, client_adress[data["id"]][2])
-            print("Données reçues du client:", data.decode())
+            if data["cmd"] == "data":
+                if data["id_receveir"] == 1:
+                    pass
+                else:
+                    if client_adress[data["id_receveir"]][0] != None :
+                        receveir = client_adress[data["id_receveir"]][0]
+                        message = {"id_sender" : 1, "id_receveir" : data["id_receveir"], "cmd" : "data", data : data["data"]}
+                        send(receveir,message)
+            
     message = {"id_sender" : 1, "id_receiver" : 0, "cmd" : "stop", "data" : None}
-    connection.sendall(message.encode())  # Envoyer des données au client
+    send(connection,message)
     connection.close()
 
 def handle_connection():
@@ -51,6 +62,10 @@ def handle_connection():
             print(f"Connexion active : {threading.activeCount()}")
         except socket.timeout:
             pass
+
+def send(client_socket, message):
+    messageJSON = json.dumps(message)
+    client_socket.sendall(messageJSON.encode())
 
 # Création du socket
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:

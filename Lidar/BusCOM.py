@@ -59,7 +59,7 @@ def handle_connection():
             thread = threading.Thread(target=handle_client, args=(connection, address))
             thread.start()
             client_threads.append(thread)
-            print(f"Connexion active : {threading.activeCount()}")
+            print(f"Connexion active : {threading.active_count()}")
         except socket.timeout:
             pass
 

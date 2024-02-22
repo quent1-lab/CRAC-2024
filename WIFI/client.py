@@ -15,7 +15,7 @@ class Client:
         while self.stop_threads:
             data_received = self.client_socket.recv(2048)
             data = data_received.decode()
-            if data == "stop":
+            if data["cmd"] == "stop":
                 self.stop_threads = False
                 break
 
@@ -44,10 +44,14 @@ class Client:
 
         while self.stop_threads:
             if not self.stop_threads:
+                self.client_socket.close()
                 receive_thread.join()
                 send_thread.join()
                 break
         exit()
+
+    def get_data(self):
+        return self.data
 
 # Utilisation de la classe
 client = Client('192.168.22.100', 22050)

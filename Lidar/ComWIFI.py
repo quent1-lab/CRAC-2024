@@ -40,7 +40,6 @@ def handle_connection():
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
     # Liaison du socket au port
     server_socket.bind((HOST, PORT))
-    # Écoute de nouvelles connexions
     server_socket.listen()
     server_socket.settimeout(1)  # Définir un délai d'attente de 1 seconde
     print("ComWIFI en attente de connexions...")

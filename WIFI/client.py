@@ -7,17 +7,17 @@ class Client:
     def __init__(self, ip, port):
         self.ip = ip
         self.port = port
-        self.stop_threads = True
+        self.stop_threads = False
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        #self.client_socket.settimeout(1)  # Définir un délai d'attente de 1 seconde
         self.data = None
 
     def receive_data(self):
-        while self.stop_threads:
+        while not self.stop_threads:
             data_received = self.client_socket.recv(2048)
             for message in self.load_json(data_received.decode()):
                 if message["cmd"] == "stop":
-                    self.stop_threads = False
+                    self.stop_threads = True
+                    print("Arrêt de la connexion")
                     break
                 if message["cmd"] == "data":
                     print("Données reçues de", message["id_sender"],":", message["data"])
@@ -26,7 +26,7 @@ class Client:
         i = 0
         message = {"id_sender" : 2, "id_receiver" : 1, "cmd" : "init", "data" : None}
         self.send(message)
-        while self.stop_threads:
+        while not self.stop_threads:
             message = {"id_sender" : 2, "id_receiver" : 3, "cmd" : "data", "data" : i}
             i += 1
             self.send(message)
@@ -35,23 +35,26 @@ class Client:
     
     def send(self, message):
         messageJSON = json.dumps(message)
-        self.client_socket.sendall(messageJSON.encode())
+        try :
+            self.client_socket.sendall(messageJSON.encode())
+        except ConnectionResetError:
+            print("Erreur de connexion")
+            self.stop_threads = True
     
-    def load_json(self,data):
-        # Vérifier s'il n'y a qu'un seul message ou plusieurs
-        if data.count('}{') > 0:
-            data = data.split('}{')
-            for i in range(1, len(data) - 1):
-                data[i] = '{' + data[i] + '}'
-            data[0] += '}'
-            data[-1] = '{' + data[-1]
-        else:
-            data = [data]
-        # Charger les données JSON
+    def load_json(self, data):
         messages = []
-        for message in data:
-            messages.append(json.loads(message))
-        return messages 
+        if data:  # Vérifier que les données ne sont pas vides
+            if data.count('}{') > 0:
+                data = data.split('}{')
+                for i in range(1, len(data) - 1):
+                    data[i] = '{' + data[i] + '}'
+                data[0] += '}'
+                data[-1] = '{' + data[-1]
+            else:
+                data = [data]
+            for message in data:
+                messages.append(json.loads(message))
+        return messages
 
     def connect(self):
         while True:
@@ -67,12 +70,14 @@ class Client:
         receive_thread.start()
         send_thread.start()
 
-        while self.stop_threads:
-            if not self.stop_threads:
-                self.client_socket.close()
-                receive_thread.join()
-                send_thread.join()
-                break
+        while not self.stop_threads:
+            pass
+
+        receive_thread.join()
+        send_thread.join()
+        self.client_socket.close()
+        print("Connexion terminée")
+                
 
     def get_data(self):
         return self.data

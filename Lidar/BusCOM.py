@@ -8,19 +8,31 @@ PORT = 22050  # Port sur lequel le serveur écoute
 
 # Liste pour stocker tous les threads clients
 client_threads = []
+client_adress = {
+    1 : (None, None, "BusCOM"),
+    2 : (None, None, "BusCAN"),
+    3 : (None, None, "Lidar"),
+    4 : (None, None, "Ordre Robot"),
+    5 : (None, None, "Stratégie")
+}
+
 # Variable de contrôle pour arrêter les threads
 stop_threads = False
 
 # Fonction pour gérer chaque client
 def handle_client(connection, address):
-    global stop_threads
+    global stop_threads, client_adress
     print('Connecté à', address)
     while not stop_threads:
-        data = connection.recv(1024)  # Recevoir des données du client
+        data = connection.recv(2048)  # Recevoir des données du client
         if not data:
-            break  # Si les données sont vides, sortir de la boucle
-        print("Données reçues du client:", data.decode())
-    message = {"id" : 0, "cmd" : "stop"} # ID 0 pour broadcast
+            continue # Si les données sont vides, continuer
+        else:
+            if data["cmd"] == "init":
+                if data["id"] in client_adress:
+                    client_adress[data["id"]] = (connection, address, client_adress[data["id"]][2])
+            print("Données reçues du client:", data.decode())
+    message = {"id" : 0, "cmd" : "stop", "data" : None} # ID 0 pour broadcast
     connection.sendall(message.encode())  # Envoyer des données au client
     connection.close()
 
@@ -32,7 +44,7 @@ def handle_connection():
             thread = threading.Thread(target=handle_client, args=(connection, address))
             thread.start()
             client_threads.append(thread)
-            print(f"Connexion active : {threading.activeCount() - 1}")
+            print(f"Connexion active : {threading.activeCount()}")
         except socket.timeout:
             pass
 

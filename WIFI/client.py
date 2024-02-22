@@ -8,7 +8,7 @@ class Client:
         self.port = port
         self.stop_threads = True
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.client_socket.settimeout(1)  # Définir un délai d'attente de 1 seconde
+        #self.client_socket.settimeout(1)  # Définir un délai d'attente de 1 seconde
         self.data = None
 
     def receive_data(self):

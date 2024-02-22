@@ -30,22 +30,22 @@ def handle_client(connection, address):
     print('Connecté à', address)
     while not stop_threads:
         data = connection.recv(2048)  # Recevoir des données du client
-        print("Données reçues du client:", data.decode())
-        data = json.loads(data.decode())
-        if not data:
-            continue # Si les données sont vides, continuer
-        else:
-            if data["cmd"] == "init":
-                if data["id"] in client_adress:
-                    client_adress[data["id"]] = (connection, address, client_adress[data["id"]][2])
-            if data["cmd"] == "data":
-                if data["id_receveir"] == 1:
-                    pass
-                else:
-                    if client_adress[data["id_receveir"]][0] != None :
-                        receveir = client_adress[data["id_receveir"]][0]
-                        message = {"id_sender" : 1, "id_receveir" : data["id_receveir"], "cmd" : "data", data : data["data"]}
-                        send(receveir,message)
+
+        for message in load_json(data.decode()):
+            if message["cmd"] == "stop":
+                stop_threads = True
+                break
+            else:
+                print(f"Message reçu : {message}")
+                if message["cmd"] == "init":
+                    client_adress[message["id_sender"]] = (connection, address, client_adress[message["id_sender"]][2])
+                if message["cmd"] == "data":
+                    if message["id_receiver"] == 1:
+                        pass
+                    else:
+                        if client_adress[message["id_receiver"]][0] != None :
+                            receveir = client_adress[message["id_receiver"]][0]
+                            send(receveir,message)
             
     message = {"id_sender" : 1, "id_receiver" : 0, "cmd" : "stop", "data" : None}
     send(connection,message)
@@ -67,6 +67,21 @@ def send(client_socket, message):
     messageJSON = json.dumps(message)
     client_socket.sendall(messageJSON.encode())
 
+def load_json(data):
+    # Vérifier s'il n'y qu'un seul message ou plusieurs
+    if data.count('}{') > 0:
+        data = data.split('}{')
+        data[0] += '}'
+        data[-1] = '{' + data[-1]
+    else:
+        data = [data]
+    # Charger les données JSON
+    messages = []
+    for message in data:
+        messages.append(json.loads(message))
+    return messages
+
+
 # Création du socket
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
     # Liaison du socket au port
@@ -82,7 +97,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
     # Boucle d'acceptation des connexions entrantes
     while not stop_threads:
         if keyboard.is_pressed('space'):  # Si la touche espace est enfoncée
-            stop_threads = False  # Indiquer aux threads de s'arrêter
+            stop_threads = True  # Indiquer aux threads de s'arrêter
             break
     
     print("Arrêt des connexions...")

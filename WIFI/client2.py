@@ -1,6 +1,7 @@
 import socket
 import time
 import threading
+import json
 
 class Client:
     def __init__(self, ip, port):
@@ -24,13 +25,17 @@ class Client:
     def send_data(self):
         i = 0
         message = {"id_sender" : 3, "id_receiver" : 1, "cmd" : "init", "data" : None}
-        self.client_socket.sendall(message.encode())
+        self.send(message)
         while self.stop_threads:
             message = {"id_sender" : 3, "id_receiver" : 2, "cmd" : "data", "data" : i}
             i += 1
-            self.client_socket.sendall(message.encode())
+            self.send(message)
             print("Données envoyées au serveur ComWIFI:", message)
             time.sleep(5)  # Attendre une seconde avant d'envoyer la prochaine donnée
+    
+    def send(self, message):
+        messageJSON = json.dumps(message)
+        self.client_socket.sendall(messageJSON.encode())
 
     def connect(self):
         while True:

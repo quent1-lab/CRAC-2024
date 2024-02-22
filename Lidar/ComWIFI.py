@@ -20,9 +20,6 @@ def handle_client(connection, address):
         if not data:
             break  # Si les données sont vides, sortir de la boucle
         print("Données reçues du client:", data.decode())
-        if data == b"stop":
-            stop_threads = False
-            break
     message = {"id" : 0, "cmd" : "stop"} # ID 0 pour broadcast
     connection.sendall(message.encode())  # Envoyer des données au client
     connection.close()

@@ -18,7 +18,8 @@ client_adress = {
     2 : (None, None, "BusCAN"),
     3 : (None, None, "Lidar"),
     4 : (None, None, "Ordre Robot"),
-    5 : (None, None, "Stratégie")
+    5 : (None, None, "Stratégie"),
+    10 : (None, None, "IHM")
 }
 
 # Variable de contrôle pour arrêter les threads
@@ -49,7 +50,6 @@ def handle_client(connection, address):
             
     message = {"id_sender" : 1, "id_receiver" : 0, "cmd" : "stop", "data" : None}
     send(connection,message)
-    connection.close()
 
 def handle_connection():
     global stop_threads, client_threads
@@ -65,22 +65,25 @@ def handle_connection():
 
 def send(client_socket, message):
     messageJSON = json.dumps(message)
-    client_socket.sendall(messageJSON.encode())
+    try :
+        client_socket.sendall(messageJSON.encode())
+    except ConnectionResetError:
+        print("Erreur de connexion")
+        pass
 
 def load_json(data):
-    # Vérifier s'il n'y qu'un seul message ou plusieurs
-    if data.count('}{') > 0:
-        data = data.split('}{')
-        for i in range(1, len(data) - 1):
-            data[i] = '{' + data[i] + '}'
-        data[0] += '}'
-        data[-1] = '{' + data[-1]
-    else:
-        data = [data]
-    # Charger les données JSON
     messages = []
-    for message in data:
-        messages.append(json.loads(message))
+    if data:  # Vérifier que les données ne sont pas vides
+        if data.count('}{') > 0:
+            data = data.split('}{')
+            for i in range(1, len(data) - 1):
+                data[i] = '{' + data[i] + '}'
+            data[0] += '}'
+            data[-1] = '{' + data[-1]
+        else:
+            data = [data]
+        for message in data:
+            messages.append(json.loads(message))
     return messages
 
 
@@ -106,5 +109,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
     for thread in client_threads:
         thread.join()
     connection_thread.join()
+    for client in client_adress:
+        if client_adress[client][0] != None:
+            client_adress[client][0].close()
     print("Serveur ComWIFI arrêté")
     exit()

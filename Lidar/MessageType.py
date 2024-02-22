@@ -32,6 +32,15 @@ class Decodage:
         if data["cmd"] == "stop":
             self.stop_threads = True
         self.task[index][1] = 1
+    
+    def decode_data_2(self, data):
+        # Traiter les données reçues
+        if data["cmd"] == "stop":
+            self.stop_threads = True
+        if data["cmd"] == "start":
+            self.stop_threads = False
+        if data["cmd"] == "init":
+            self.stop_threads = True
 
     def remove_task(self):
         # Supprimer une tâche de traitement des données

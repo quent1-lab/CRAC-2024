@@ -3,6 +3,7 @@ import threading
 import keyboard
 
 # Message type : {"id_sender" : 1, "id_receiver" : 2, "cmd" : "init", "data" : None}
+# ID : 0 = Broadcast, 1 = BusCOM, 2 = BusCAN, 3 = Lidar, 4 = Ordre Robot, 5 = Stratégie
 
 # Configuration du serveur
 HOST = '0.0.0.0'  # Adresse IP de la Raspberry Pi
@@ -11,6 +12,7 @@ PORT = 22050  # Port sur lequel le serveur écoute
 # Liste pour stocker tous les threads clients
 client_threads = []
 client_adress = {
+    0 : (None, None, "Broadcast"),
     1 : (None, None, "BusCOM"),
     2 : (None, None, "BusCAN"),
     3 : (None, None, "Lidar"),

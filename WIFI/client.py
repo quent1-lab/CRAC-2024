@@ -6,46 +6,54 @@ import threading
 COMWIFI_IP = '192.168.22.100'  # Adresse IP de la Raspberry Pi
 COMWIFI_PORT = 22050  # Port sur lequel le serveur ComWIFI écoute
 
-stop_threads = True
 
-def receive_data(client_socket):
-    global stop_threads
-    while stop_threads:
-        data_received = client_socket.recv(1024)
-        print("Données reçues du serveur ComWIFI:", data_received.decode())
-        if data_received == b"stop":
-            stop_threads = False
-            break
-    
-def send_data(client_socket):
-    global stop_threads
-    i = 0
-    while stop_threads:
-        message = "programme client 1: " + str(i)
-        i += 1
-        client_socket.sendall(message.encode())
-        print("Données envoyées au serveur ComWIFI:", message)
-        time.sleep(1)  # Attendre une seconde avant d'envoyer la prochaine donnée
+class Client:
+    def __init__(self, ip, port):
+        self.ip = ip
+        self.port = port
+        self.stop_threads = True
+        self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.client_socket.settimeout(1)  # Définir un délai d'attente de 1 seconde
+        self.data = None
 
-with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:
-    while True:
-        try:
-            client_socket.connect((COMWIFI_IP, COMWIFI_PORT))
-            break  # Si la connexion est réussie, sortir de la boucle
-        except socket.error as e:
-            time.sleep(3)  # Attendre 5 secondes avant de réessayer
+    def receive_data(self):
+        while self.stop_threads:
+            data_received = self.client_socket.recv(2048)
+            data = data_received.decode()
+            if data == "stop":
+                self.stop_threads = False
+                break
 
-    receive_thread = threading.Thread(target=receive_data, args=(client_socket,))
-    send_thread = threading.Thread(target=send_data, args=(client_socket,))
+    def send_data(self):
+        i = 0
+        while self.stop_threads:
+            message = "programme client 1: " + str(i)
+            i += 1
+            self.client_socket.sendall(message.encode())
+            print("Données envoyées au serveur ComWIFI:", message)
+            time.sleep(1)  # Attendre une seconde avant d'envoyer la prochaine donnée
 
-    receive_thread.start()
-    send_thread.start()
+    def connect(self):
+        while True:
+            try:
+                self.client_socket.connect((self.ip, self.port))
+                break  # Si la connexion est réussie, sortir de la boucle
+            except socket.error as e:
+                time.sleep(3)  # Attendre 3 secondes avant de réessayer
 
-    while stop_threads:
-        if not stop_threads:
-            receive_thread.join()
-            send_thread.join()
-            break
-    
-    exit()
+        receive_thread = threading.Thread(target=self.receive_data)
+        send_thread = threading.Thread(target=self.send_data)
 
+        receive_thread.start()
+        send_thread.start()
+
+        while self.stop_threads:
+            if not self.stop_threads:
+                receive_thread.join()
+                send_thread.join()
+                break
+        exit()
+
+# Utilisation de la classe
+client = Client('192.168.22.100', 22050)
+client.connect()

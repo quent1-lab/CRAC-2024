@@ -15,12 +15,12 @@ class Client:
     def receive_data(self):
         while self.stop_threads:
             data_received = self.client_socket.recv(2048)
-            data = data_received.decode()
-            if data["cmd"] == "stop":
-                self.stop_threads = False
-                break
-            if data["cmd"] == "data":
-                print("Données reçues du serveur ComWIFI:", data["data"])
+            for message in self.load_json(data_received.decode()):
+                if message["cmd"] == "stop":
+                    self.stop_threads = False
+                    break
+                if message["cmd"] == "data":
+                    print("Données reçues de", message["id_sender"],":", message["data"])
 
     def send_data(self):
         i = 0
@@ -36,6 +36,22 @@ class Client:
     def send(self, message):
         messageJSON = json.dumps(message)
         self.client_socket.sendall(messageJSON.encode())
+    
+    def load_json(self,data):
+        # Vérifier s'il n'y a qu'un seul message ou plusieurs
+        if data.count('}{') > 0:
+            data = data.split('}{')
+            for i in range(1, len(data) - 1):
+                data[i] = '{' + data[i] + '}'
+            data[0] += '}'
+            data[-1] = '{' + data[-1]
+        else:
+            data = [data]
+        # Charger les données JSON
+        messages = []
+        for message in data:
+            messages.append(json.loads(message))
+        return messages 
 
     def connect(self):
         while True:

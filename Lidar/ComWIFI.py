@@ -23,7 +23,8 @@ def handle_client(connection, address):
         if data == b"stop":
             stop_threads = False
             break
-    connection.sendall(b"stop")  # Envoyer des données au client
+    message = {"id" : 0, "cmd" : "stop"} # ID 0 pour broadcast
+    connection.sendall(message.encode())  # Envoyer des données au client
     connection.close()
 
 def handle_connection():

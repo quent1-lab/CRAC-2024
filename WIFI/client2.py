@@ -1,4 +1,4 @@
-import socket
+"""import socket
 import time
 import threading
 import json
@@ -84,4 +84,34 @@ class Client:
 
 # Utilisation de la classe
 client = Client('127.0.0.1', 22050)
-client.connect()
+client.connect()"""
+
+from client import *
+
+def decode_client1(message):
+    if message["cmd"] == "stop":
+        client1.stop()
+    else:
+        if message["data"] != None:
+            print("Données reçues de", message["id_sender"],":", message["data"])
+
+def decode_client2(message):
+    if message["cmd"] == "stop":
+        client2.stop()
+    else:
+        if message["data"] != None:
+            print("Données reçues de", message["id_sender"],":", message["data"])
+
+# Utilisation de la classe
+client1 = Client('127.0.0.1', 22050, decode_client1, True)
+client2 = Client('127.0.0.2', 22050, decode_client2, True)
+
+client1_thread = threading.Thread(target=client1.connect, args=(2,))
+client2_thread = threading.Thread(target=client2.connect, args=(3,))
+
+client1_thread.start()
+client2_thread.start()
+
+client1_thread.join()
+client2_thread.join()
+print("Connexion terminée")

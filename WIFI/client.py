@@ -64,13 +64,17 @@ class Client:
         self.stop_threads = True
         print("Arrêt de la connexion")
 
-    def connect(self):
+    def connect(self, id_sender=None):
         while True:
             try:
                 self.client_socket.connect((self.ip, self.port))
                 break  # Si la connexion est réussie, sortir de la boucle
             except socket.error as e:
                 time.sleep(2)  # Attendre 3 secondes avant de réessayer
+
+        if id_sender is not None:
+            message = {"id_sender" : id_sender, "id_receiver" : 1, "cmd" : "init", "data" : None}
+            self.send(message)
 
         receive_thread = threading.Thread(target=self.receive_data)
         receive_thread.start()

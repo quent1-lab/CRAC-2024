@@ -19,7 +19,8 @@ client_adress = { # id : (socket, adress, name)
     3 : (None, None, "Lidar"),
     4 : (None, None, "Ordre Robot"),
     5 : (None, None, "Stratégie"),
-    10 : (None, None, "IHM")
+    10 : (None, None, "IHM"),
+    2205 : (None, None, "Erreur (2205) client init non reconnu"),
 }
 
 # Variable de contrôle pour arrêter les threads
@@ -40,6 +41,10 @@ def handle_client(connection, address):
                 print(f"Message reçu : {message}")
                 if message["cmd"] == "init":
                     client_adress[message["id_sender"]] = (connection, address, client_adress[message["id_sender"]][2])
+                    if message["id_sender"] == 2205:
+                        print(f"Erreur (2205) client init non reconnu")
+                    else:
+                        print(f"Client {client_adress[message['id_sender']][2]} connecté")
                 if message["cmd"] == "data":
                     if message["id_receiver"] == 1:
                         pass

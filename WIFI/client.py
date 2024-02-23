@@ -4,10 +4,11 @@ import threading
 import json
 
 class Client:
-    def __init__(self, ip, port, callback=None):
+    def __init__(self, ip, port, callback=None, test=False):
         self.ip = ip
         self.port = port
         self.callback = callback if callback is not None else self.decode_stop
+        self.test = test
         self.stop_threads = False
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.data = None
@@ -40,7 +41,7 @@ class Client:
         except ConnectionResetError:
             print("Erreur de connexion")
             self.stop_threads = True
-    
+
     def load_json(self, data):
         messages = []
         if data:  # Vérifier que les données ne sont pas vides
@@ -56,6 +57,13 @@ class Client:
                 messages.append(json.loads(message))
         return messages
 
+    def get_data(self):
+        return self.data
+
+    def stop(self):
+        self.stop_threads = True
+        print("Arrêt de la connexion")
+
     def connect(self):
         while True:
             try:
@@ -65,26 +73,22 @@ class Client:
                 time.sleep(2)  # Attendre 3 secondes avant de réessayer
 
         receive_thread = threading.Thread(target=self.receive_data)
-        send_thread = threading.Thread(target=self.send_data)
-
         receive_thread.start()
-        send_thread.start()
+
+        if self.test:
+            send_thread = threading.Thread(target=self.send_data)
+            send_thread.start()
 
         while not self.stop_threads:
             pass
 
         receive_thread.join()
-        send_thread.join()
+        if self.test:
+            send_thread.join()
         self.client_socket.close()
         print("Connexion terminée")
-                
-    def get_data(self):
-        return self.data
-    
-    def stop(self):
-        self.stop_threads = True
-        print("Arrêt de la connexion")
 
-# Utilisation de la classe
-client = Client('127.0.0.1', 22050)
-client.connect()
+if __name__ == "__main__":
+    # Utilisation de la classe
+    client = Client('127.0.0.1', 22050)
+    client.connect()

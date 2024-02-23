@@ -1,12 +1,15 @@
 import can
 import os
-import logging
+from client import Client
 
 class ComCAN:
     def __init__(self, channel, bustype):
         self.channel = channel
         self.bustype = bustype
         self.can = None
+        self.is_connected = False
+        client = Client("127.0.0.2", 22050)
+        client.connect()
 
     def connect(self):
         #Vérifie si le système d'exploitation est Linux
@@ -16,33 +19,29 @@ class ComCAN:
                 os.system('sudo ip link set can0 type can bitrate 1000000')
                 os.system('sudo ifconfig can0 up')
                 self.can = can.interface.Bus(channel = self.channel, bustype = self.bustype)
+                self.is_connected = True
             else:
-                logging.error("OS not supported")
-                raise OSError("OS not supported")       
+                print("Le système d'exploitation n'est pas compatible avec le CAN")
         except Exception as e:
-            logging.error(f"Failed to connect to CAN: {e}")
-            raise
+            pass
 
     def disconnect(self):
         try:
             self.can.shutdown()
         except Exception as e:
-            logging.error(f"Failed to disconnect from CAN: {e}")
-            raise
+            pass
 
     def send(self, data):
         try:
             self.can.send(data)
         except Exception as e:
-            logging.error(f"Failed to send data to CAN: {e}")
-            raise
+            pass
 
     def receive(self):
         try:
             return self.can.recv(10.0)
         except Exception as e:
-            logging.error(f"Failed to receive data from CAN: {e}")
-            raise
+            pass
 
     def run(self):
         try:
@@ -54,3 +53,7 @@ class ComCAN:
         except KeyboardInterrupt:
             self.disconnect()
             pass
+
+if __name__ == "__main__":
+    com = ComCAN('can0', 'socketcan')
+    com.run()

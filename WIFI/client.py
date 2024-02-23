@@ -4,23 +4,23 @@ import threading
 import json
 
 class Client:
-    def __init__(self, ip, port):
+    def __init__(self, ip, port, callback=None):
         self.ip = ip
         self.port = port
+        self.callback = callback if callback is not None else self.decode_stop
         self.stop_threads = False
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.data = None
+    
+    def decode_stop(self, message):
+        if message["cmd"] == "stop":
+            self.stop()
 
     def receive_data(self):
         while not self.stop_threads:
             data_received = self.client_socket.recv(2048)
             for message in self.load_json(data_received.decode()):
-                if message["cmd"] == "stop":
-                    self.stop_threads = True
-                    print("Arrêt de la connexion")
-                    break
-                if message["cmd"] == "data":
-                    print("Données reçues de", message["id_sender"],":", message["data"])
+                self.callback(message)
 
     def send_data(self):
         i = 0
@@ -78,9 +78,12 @@ class Client:
         self.client_socket.close()
         print("Connexion terminée")
                 
-
     def get_data(self):
         return self.data
+    
+    def stop(self):
+        self.stop_threads = True
+        print("Arrêt de la connexion")
 
 # Utilisation de la classe
 client = Client('127.0.0.1', 22050)

@@ -103,15 +103,15 @@ def decode_client2(message):
             print("Données reçues de", message["id_sender"],":", message["data"])
 
 # Utilisation de la classe
-client1 = Client('127.0.0.1', 22050, decode_client1, True)
-client2 = Client('127.0.0.2', 22050, decode_client2, True)
+client1 = Client('127.0.0.1', 22050,2, decode_client1, True)
+client2 = Client('127.0.0.2', 22050,3, decode_client2, True)
 
-client1_thread = threading.Thread(target=client1.connect, args=(2,))
-client2_thread = threading.Thread(target=client2.connect, args=(3,))
+client1_thread = threading.Thread(target=client1.connect)
+client2_thread = threading.Thread(target=client2.connect)
 
 client1_thread.start()
 client2_thread.start()
 
 client1_thread.join()
 client2_thread.join()
-print("Connexion terminée")
+print("Programme terminé")

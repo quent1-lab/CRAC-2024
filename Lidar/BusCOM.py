@@ -12,7 +12,7 @@ PORT = 22050  # Port sur lequel le serveur écoute
 
 # Liste pour stocker tous les threads clients
 client_threads = []
-client_adress = {
+client_adress = { # id : (socket, adress, name)
     0 : (None, None, "Broadcast"),
     1 : (None, None, "BusCOM"),
     2 : (None, None, "BusCAN"),

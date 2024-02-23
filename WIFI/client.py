@@ -4,11 +4,12 @@ import threading
 import json
 
 class Client:
-    def __init__(self, ip, port, callback=None, test=False):
-        self.ip = ip
-        self.port = port
-        self.callback = callback if callback is not None else self.decode_stop
-        self.test = test
+    def __init__(self, _ip, _port, _id_client=2205, _callback=None, _test=False):
+        self.ip = _ip
+        self.port = _port
+        self.id_client = _id_client
+        self.callback = _callback if _callback is not None else self.decode_stop
+        self.test = _test
         self.stop_threads = False
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.data = None
@@ -25,10 +26,8 @@ class Client:
 
     def send_data(self):
         i = 0
-        message = {"id_sender" : 2, "id_receiver" : 1, "cmd" : "init", "data" : None}
-        self.send(message)
         while not self.stop_threads:
-            message = {"id_sender" : 2, "id_receiver" : 3, "cmd" : "data", "data" : i}
+            message = {"id_sender" : self.id_client, "id_receiver" : 3, "cmd" : "data", "data" : i}
             i += 1
             self.send(message)
             print("Données envoyées au serveur ComWIFI:", message)
@@ -39,7 +38,7 @@ class Client:
         try :
             self.client_socket.sendall(messageJSON.encode())
         except ConnectionResetError:
-            print("Erreur de connexion")
+            print("Erreur de connexion pour le client", self.id_client)
             self.stop_threads = True
 
     def load_json(self, data):
@@ -62,19 +61,23 @@ class Client:
 
     def stop(self):
         self.stop_threads = True
-        print("Arrêt de la connexion")
+        print("Arrêt de la connexion pour le client", {self.id_client})
 
-    def connect(self, id_sender=None):
+    def connect(self):
+        print("Connexion du client", self.id_client, "au serveur ComWIFI")
         while True:
             try:
                 self.client_socket.connect((self.ip, self.port))
                 break  # Si la connexion est réussie, sortir de la boucle
             except socket.error as e:
+                print("Erreur de connexion pour le client", self.id_client, "au serveur ComWIFI")
+                print("Réessai de la connexion dans 2 secondes")
                 time.sleep(2)  # Attendre 3 secondes avant de réessayer
 
-        if id_sender is not None:
-            message = {"id_sender" : id_sender, "id_receiver" : 1, "cmd" : "init", "data" : None}
-            self.send(message)
+        if self.id_client is None:
+            self.id_client = 2205
+        message = {"id_sender" : self.id_client, "id_receiver" : 1, "cmd" : "init", "data" : None}
+        self.send(message)
 
         receive_thread = threading.Thread(target=self.receive_data)
         receive_thread.start()
@@ -90,7 +93,7 @@ class Client:
         if self.test:
             send_thread.join()
         self.client_socket.close()
-        print("Connexion terminée")
+        print("Connexion terminée pour le client :", self.id_client)
 
 if __name__ == "__main__":
     # Utilisation de la classe

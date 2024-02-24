@@ -15,6 +15,7 @@ class Client:
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.tasks = []
         self.send_list = []
+        self.lock = threading.Lock()  # Verrou pour la synchronisation des threads
     
     def generate_message(self, _id_receiver, _cmd, _data):
         return {"id_s" : self.id_client, "id_r" : _id_receiver, "cmd" : _cmd, "data" : _data}
@@ -52,21 +53,24 @@ class Client:
     def send(self, message):
         messageJSON = json.dumps(message) + "\n"
         try :
-            self.client_socket.sendall(messageJSON.encode())
+            with self.lock:
+                self.client_socket.sendall(messageJSON.encode())
         except ConnectionResetError:
             print("Erreur de connexion pour le client", self.id_client)
             self.stop_threads = True
 
     def send_task(self):
         while not self.stop_threads:
-            for message in self.send_list:
-                if self.stop_threads:
-                    break
-                self.send(message)
-                self.send_list.remove(message)
+            with self.lock:
+                for message in self.send_list:
+                    if self.stop_threads:
+                        break
+                    self.send(message)
+                    self.send_list.remove(message)
     
     def add_to_send_list(self, message):
-        self.send_list.append(message)
+        with self.lock:
+            self.send_list.append(message)
 
     def load_json(self, data):
         messages = []

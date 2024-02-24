@@ -12,8 +12,7 @@ class Client:
         self.test = _test
         self.stop_threads = False
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.data = None
-
+        self.tasks = []
         self.send_list = []
     
     def decode_stop(self, message):
@@ -66,12 +65,20 @@ class Client:
                 messages.append(json.loads(message))
         return messages
 
-    def get_data(self):
-        return self.data
-
     def stop(self):
         self.stop_threads = True
+        close_trhead = threading.Thread(target=self.close_connection)
+        close_trhead.start()
         print("Arrêt de la connexion pour le client", {self.id_client})
+    
+    def close_connection(self):
+        for task in self.tasks:
+            task.join()
+        self.client_socket.close()
+        print("Connexion fermée pour le client", {self.id_client})
+    
+    def set_callback(self, _callback):
+        self.callback = _callback
 
     def connect(self):
         print("Connexion du client", self.id_client, "au serveur ComWIFI")
@@ -98,14 +105,9 @@ class Client:
         else:
             send_thread = threading.Thread(target=self.send)
             send_thread.start()
-
-        while not self.stop_threads:
-            pass
-
-        receive_thread.join()
-        send_thread.join()
-        self.client_socket.close()
-        print("Connexion terminée pour le client :", self.id_client)
+        
+        self.tasks.append(receive_thread)
+        self.tasks.append(send_thread)
 
 if __name__ == "__main__":
     # Utilisation de la classe

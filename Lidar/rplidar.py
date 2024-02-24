@@ -59,16 +59,6 @@ _HEALTH_STATUSES = {
     2: 'Error',
 }
 
-SCAN_TYPE_NORMAL = 0
-SCAN_TYPE_FORCE = 1
-SCAN_TYPE_EXPRESS = 2
-
-_SCAN_TYPES = (
-    {"byte": b"\x20", "response": 129, "size": 5},
-    {"byte": b"\x21", "response": 129, "size": 5},
-    {"byte": b"\x82", "response": 130, "size": 84},
-)
-
 
 class RPLidarException(Exception):
     '''Basic exception class for RPLidar'''
@@ -101,7 +91,6 @@ class RPLidar(object):
     timeout = 1  #: Serial port timeout
     motor = False  #: Is motor running?
     baudrate = 256000  #: Baudrate for serial port
-    scanning = False
 
     def __init__(self, port, baudrate=256000, timeout=1, logger=None):
         '''Initilize RPLidar object for communicating with the sensor.
@@ -157,7 +146,7 @@ class RPLidar(object):
         self.logger.info('Starting motor')
         cmd = SCAN_BYTE
         self._send_cmd(cmd)
-        time.sleep(2)
+        time.sleep(3)
 
     def stop_motor(self):
         '''Stops sensor motor'''
@@ -268,35 +257,6 @@ class RPLidar(object):
         '''Clears input buffer by reading all available data'''
         self._serial_port.read_all()
 
-    @property
-    def health(self):
-        """Get device health state. When the core system detects some
-        potential risk that may cause hardware failure in the future,
-        the returned status value will be 'Warning'. But sensor can still work
-        as normal. When sensor is in the Protection Stop state, the returned
-        status value will be 'Error'. In case of warning or error statuses
-        non-zero error code will be returned.
-
-        Returns
-
-        status : str
-            'Good', 'Warning' or 'Error' statuses
-        error_code : int
-            The related error code that caused a warning/error.
-        """
-        self._send_cmd(GET_HEALTH_BYTE)
-        dsize, is_single, dtype = self._read_descriptor()
-        if dsize != HEALTH_LEN:
-            raise RPLidarException("Wrong info reply length")
-        if not is_single:
-            raise RPLidarException("Not a single response mode")
-        if dtype != HEALTH_TYPE:
-            raise RPLidarException("Wrong response data type")
-        raw = self._read_response(dsize)
-        status = _HEALTH_STATUSES[raw[0]]
-        error_code = (raw[1] << 8) + raw[2]
-        return (status, error_code)
-    
     def stop(self):
         '''Stops scanning process, disables laser diode and the measurment
         system, moves sensor to the idle state.'''
@@ -305,56 +265,6 @@ class RPLidar(object):
         time.sleep(.001)
         self.clear_input()
 
-    def start(self, scan_type: int = SCAN_TYPE_NORMAL) -> None:
-        """Start the scanning process
-
-        Parameters
-
-        scan_type : int, optional
-            Normal, force or express; default is normal
-        """
-        if self.scanning:
-            raise RPLidarException("Scanning already running!")
-        # Start the scanning process, enable laser diode and the
-        # measurement system
-        status, error_code = self.health
-        self.log("debug", "Health status: %s [%d]" % (status, error_code))
-        if status == _HEALTH_STATUSES[2]:
-            self.log(
-                "warning",
-                "Trying to reset sensor due to the error. "
-                "Error code: %d" % (error_code),
-            )
-            self.reset()
-            status, error_code = self.health
-            if status == _HEALTH_STATUSES[2]:
-                raise RPLidarException(
-                    "RPLidar hardware failure. " "Error code: %d" % error_code
-                )
-        elif status == _HEALTH_STATUSES[1]:
-            self.log(
-                "warning",
-                "Warning sensor status detected! " "Error code: %d" % (error_code),
-            )
-        cmd = _SCAN_TYPES[scan_type]["byte"]
-        self.log("info", "starting scan process in %s mode" % scan_type)
-
-        if scan_type == "express":
-            self._send_payload_cmd(cmd, b"\x00\x00\x00\x00\x00")
-        else:
-            self._send_cmd(cmd)
-
-        dsize, is_single, dtype = self._read_descriptor()
-        if dsize != _SCAN_TYPES[scan_type]["size"]:
-            raise RPLidarException("Wrong info reply length")
-        if is_single:
-            raise RPLidarException("Not a multiple response mode")
-        if dtype != _SCAN_TYPES[scan_type]["response"]:
-            raise RPLidarException("Wrong response data type")
-        self.descriptor_size = dsize
-        self.scan_type = scan_type
-        self.scanning = True
-
     def reset(self):
         '''Resets sensor core, reverting it to a similar state as it has
         just been powered up.'''
@@ -362,8 +272,7 @@ class RPLidar(object):
         self._send_cmd(RESET_BYTE)
         time.sleep(.002)
 
-    def iter_measurments(self, max_buf_meas: int = 500, scan_type: int = SCAN_TYPE_NORMAL
-    ):
+    def iter_measurments(self, max_buf_meas=500):
         '''Iterate over measurments. Note that consumer must be fast enough,
         otherwise data will be accumulated inside buffer and consumer will get
         data with increaing lag.
@@ -402,8 +311,6 @@ class RPLidar(object):
                                 'Error code: %d', error_code)
         
         self.start_motor() # Start motor for scanning
-        if not self.scanning:
-            self.start(scan_type)
 
         dsize, is_single, dtype = self._read_descriptor()
         if dsize != 5:

@@ -123,5 +123,6 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
     for client in client_adress:
         if client_adress[client][0] is not None:
             client_adress[client][0].close()
+    server_socket.close()
     print("Serveur ComWIFI arrêté")
     exit()

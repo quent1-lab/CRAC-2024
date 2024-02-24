@@ -511,14 +511,8 @@ class LidarScanner:
             raise
 
     def stop(self):
-        logging.info("Stopping LiDAR motor")
-        print("Arrêt du moteur LiDAR")
-        self.lidar.stop()
-        time.sleep(1)
-        self.lidar.disconnect()
-        self.client_socket.close()
+        self.client_socket.add_to_send_list(self.client_socket.generate_message(1, "stop", None))
         self.objets = []
-        exit(0)
 
     def load_json(self, json_string):
         try:
@@ -752,8 +746,14 @@ class LidarScanner:
         self.client_socket.connect()
 
         while True:
-            self.objets = []
             try:
+                pygame.event.get()
+                keys = pygame.key.get_pressed()
+                quit = pygame.event.get(pygame.QUIT)
+                if quit or keys[pygame.K_ESCAPE]:
+                    self.stop()
+                    break
+
                 self.draw_background()
                 self.draw_robot(self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)
                 for objet in self.objets:

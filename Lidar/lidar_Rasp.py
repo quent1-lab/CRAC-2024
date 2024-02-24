@@ -1,10 +1,11 @@
 import logging
-from rplidar import RPLidar,RPLidarException
+from rplidar import RPLidar, RPLidarException
 import math
 import serial.tools.list_ports
 import os
 from objet import Objet
 from client import *
+import threading
 
 class LidarScanner:
     def __init__(self, port=None):
@@ -27,7 +28,9 @@ class LidarScanner:
 
         self.client_socket = Client('127.0.0.3', 22050, 3)
 
-        logging.basicConfig(filename='lidar_scan.log', level=logging.INFO,datefmt='%d/%m/%Y %H:%M:%S',format='%(asctime)s - %(levelname)s - %(message)s')
+        self.lock = threading.Lock()  # Verrou pour synchroniser l'accès aux données partagées
+
+        logging.basicConfig(filename='lidar_scan.log', level=logging.INFO, datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
 
     def transform_scan(self, scan):
         """
@@ -124,25 +127,28 @@ class LidarScanner:
 
             if id_objet_existant != None:
                 # Si l'objet est déjà suivi, mettre à jour ses coordonnées
-                self.objets[id_objet_existant - 1].update_position(x, y)
-                self.objets[id_objet_existant - 1].taille = taille
-                self.objets[id_objet_existant - 1].points = points_autour_objet
+                with self.lock:
+                    self.objets[id_objet_existant - 1].update_position(x, y)
+                    self.objets[id_objet_existant - 1].taille = taille
+                    self.objets[id_objet_existant - 1].points = points_autour_objet
             else:
                 if len(self.objets) < nb_objets_max:
                     # Si l'objet n'est pas déjà suivi, créer un nouvel objet
                     nouvel_objet = Objet(len(self.objets)+1, x, y, taille)
                     nouvel_objet.points = points_autour_objet
-                    self.objets.append(nouvel_objet)
+                    with self.lock:
+                        self.objets.append(nouvel_objet)
                 else:
                     # Si le nombre d'objets max est atteint, retourner None
                     return None           
 
     def trouver_id_objet_existants(self, x, y, seuil_distance=100):
         # Vérifier si l'objet est déjà suivi
-        for objet in self.objets:
-            distance = math.sqrt((x - objet.x)**2 + (y - objet.y)**2)
-            if distance < seuil_distance:
-                return objet.id # Retourne l'ID de l'objet existant
+        with self.lock:
+            for objet in self.objets:
+                distance = math.sqrt((x - objet.x)**2 + (y - objet.y)**2)
+                if distance < seuil_distance:
+                    return objet.id # Retourne l'ID de l'objet existant
         return None
             
     def trajectoires_anticipation(self, robot_actuel, robot_adverse, duree_anticipation=1.0, pas_temps=0.1, distance_securite=50):
@@ -298,4 +304,3 @@ if __name__ == '__main__':
     scan_thread.start()
     scan_thread.join()
     print("Fin du programme")
-    

@@ -732,12 +732,10 @@ class LidarScanner:
             self.stop()
         else:
             if message["data"] == "objects":
-                if message["id_s"] == 3:
-                    objects = message["objects"]
-                    self.objets = []
-                    for obj in objects:
-                        self.objets.append(Objet(obj["id"], obj["x"], obj["y"], obj["taille"]))
-        print(f"Objets: {self.objets}")
+                self.objets = []
+                for obj in message["objects"]:
+                    self.objets.append(Objet(obj["id"], obj["x"], obj["y"], obj["taille"]))
+                    print(f"Objets: {obj}")
         
     def run(self):
         #self.programme_simulation()

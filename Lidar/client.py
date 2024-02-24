@@ -69,8 +69,10 @@ class Client:
                     self.send_list.remove(message)
     
     def add_to_send_list(self, message):
+        print("Message ajouté à la liste d'envoi pour le client", self.id_client, ":", message)
         with self.lock:
             self.send_list.append(message)
+            print("Liste d'envoi pour le client", self.id_client, ":", self.send_list)
 
     def load_json(self, data):
         messages = []

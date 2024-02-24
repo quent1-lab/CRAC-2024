@@ -16,7 +16,7 @@ class Client:
         self.send_list = []
     
     def generate_message(self, _id_receiver, _cmd, _data):
-        return {"id_sender" : self.id_client, "id_receiver" : _id_receiver, "cmd" : _cmd, "data" : _data}
+        return {"id_s" : self.id_client, "id_r" : _id_receiver, "cmd" : _cmd, "data" : _data}
 
     def decode_stop(self, message):
         if message["cmd"] == "stop":

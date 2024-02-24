@@ -12,13 +12,14 @@ class Client:
         self.test = _test
         self.stop_threads = False
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.data = None
+        self.tasks = []
+        self.send_list = []
     
     def decode_stop(self, message):
         if message["cmd"] == "stop":
             self.stop()
 
-    def receive_data(self):
+    def receive_task(self):
         while not self.stop_threads:
             data_received = self.client_socket.recv(2048)
             for message in self.load_json(data_received.decode()):
@@ -41,6 +42,14 @@ class Client:
             print("Erreur de connexion pour le client", self.id_client)
             self.stop_threads = True
 
+    def send_task(self):
+        while not self.stop_threads:
+            for message in self.send_list:
+                self.send(message)
+    
+    def add_to_send_list(self, message):
+        self.send_list.append(message)
+
     def load_json(self, data):
         messages = []
         if data:  # Vérifier que les données ne sont pas vides
@@ -56,12 +65,20 @@ class Client:
                 messages.append(json.loads(message))
         return messages
 
-    def get_data(self):
-        return self.data
-
     def stop(self):
         self.stop_threads = True
+        close_trhead = threading.Thread(target=self.close_connection)
+        close_trhead.start()
         print("Arrêt de la connexion pour le client", {self.id_client})
+    
+    def close_connection(self):
+        for task in self.tasks:
+            task.join()
+        self.client_socket.close()
+        print("Connexion fermée pour le client", {self.id_client})
+    
+    def set_callback(self, _callback):
+        self.callback = _callback
 
     def connect(self):
         print("Connexion du client", self.id_client, "au serveur ComWIFI")
@@ -79,21 +96,18 @@ class Client:
         message = {"id_sender" : self.id_client, "id_receiver" : 1, "cmd" : "init", "data" : None}
         self.send(message)
 
-        receive_thread = threading.Thread(target=self.receive_data)
+        receive_thread = threading.Thread(target=self.receive_task)
         receive_thread.start()
 
         if self.test:
             send_thread = threading.Thread(target=self.send_data)
             send_thread.start()
-
-        while not self.stop_threads:
-            pass
-
-        receive_thread.join()
-        if self.test:
-            send_thread.join()
-        self.client_socket.close()
-        print("Connexion terminée pour le client :", self.id_client)
+        else:
+            send_thread = threading.Thread(target=self.send_task)
+            send_thread.start()
+        
+        self.tasks.append(receive_thread)
+        self.tasks.append(send_thread)
 
 if __name__ == "__main__":
     # Utilisation de la classe

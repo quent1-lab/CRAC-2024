@@ -1,6 +1,5 @@
 import socket
 import threading
-#import keyboard
 import json
 
 # Message type : {"id_s" : 1, "id_r" : 2, "cmd" : "init", "data" : None}
@@ -26,6 +25,9 @@ client_adress = { # id : (socket, adress, name)
 # Variable de contrôle pour arrêter les threads
 stop_threads = False
 
+# Verrou pour synchroniser l'accès aux données partagées entre les threads
+lock = threading.Lock()
+
 # Fonction pour gérer chaque client
 def handle_client(connection, address):
     global stop_threads, client_adress
@@ -36,26 +38,27 @@ def handle_client(connection, address):
                 stop_threads = True
                 break
             else:
-                if message["cmd"] == "init":
-                    client_adress[message["id_s"]] = (connection, address, client_adress[message["id_s"]][2])
-                    if message["id_s"] == 2205:
-                        print(f"Erreur (2205) client init non reconnu")
-                    else:
-                        print(f"Client {client_adress[message['id_s']][2]} connecté")
-                if message["cmd"] == "data":
-                    if message["id_r"] == 1:
-                        pass
-                    else:
-                        if client_adress[message["id_r"]][0] != None :
+                with lock:
+                    if message["cmd"] == "init":
+                        client_adress[message["id_s"]] = (connection, address, client_adress[message["id_s"]][2])
+                        if message["id_s"] == 2205:
+                            print(f"Erreur (2205) client init non reconnu")
+                        else:
+                            print(f"Client {client_adress[message['id_s']][2]} connecté")
+                    if message["cmd"] == "data":
+                        if message["id_r"] == 1:
+                            pass
+                        else:
+                            if client_adress[message["id_r"]][0] is not None:
+                                receveir = client_adress[message["id_r"]][0]
+                                send(receveir, message)
+                    if message["cmd"] == "objects":
+                        if client_adress[message["id_r"]][0] is not None:
                             receveir = client_adress[message["id_r"]][0]
-                            send(receveir,message)
-                if message["cmd"] == "objects":
-                    if client_adress[message["id_r"]][0] != None :
-                        receveir = client_adress[message["id_r"]][0]
-                        send(receveir,message)
-            
+                            send(receveir, message)
+    
     message = {"id_s" : 1, "id_r" : 0, "cmd" : "stop", "data" : None}
-    send(connection,message)
+    send(connection, message)
 
 def receive_messages(socket):
     buffer = ""
@@ -75,7 +78,8 @@ def handle_connection():
             connection, address = server_socket.accept()
             thread = threading.Thread(target=handle_client, args=(connection, address))
             thread.start()
-            client_threads.append(thread)
+            with lock:
+                client_threads.append(thread)
             print(f"Connexion active : {threading.active_count()}")
         except socket.timeout:
             pass
@@ -83,7 +87,8 @@ def handle_connection():
 def send(client_socket, message):
     messageJSON = json.dumps(message) + "\n"
     try :
-        client_socket.sendall(messageJSON.encode())
+        with lock:
+            client_socket.sendall(messageJSON.encode())
     except ConnectionResetError:
         print("Erreur de connexion")
         pass
@@ -110,16 +115,14 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
 
     # Boucle d'acceptation des connexions entrantes
     while not stop_threads:
-        """if keyboard.is_pressed('space'):  # Si la touche espace est enfoncée
-            stop_threads = True  # Indiquer aux threads de s'arrêter
-            break"""
+        pass  # Pour garder le programme en cours d'exécution indéfiniment jusqu'à ce que stop_threads soit True
     
     print("Arrêt des connexions...")
     for thread in client_threads:
         thread.join()
     connection_thread.join()
     for client in client_adress:
-        if client_adress[client][0] != None:
+        if client_adress[client][0] is not None:
             client_adress[client][0].close()
     print("Serveur ComWIFI arrêté")
     exit()

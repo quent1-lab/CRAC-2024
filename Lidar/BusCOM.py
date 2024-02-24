@@ -30,10 +30,8 @@ stop_threads = False
 def handle_client(connection, address):
     global stop_threads, client_adress
     print('Connecté à', address)
-    while not stop_threads:
-        data = connection.recv(2048)  # Recevoir des données du client
-
-        for message in load_json(data.decode()):
+    for data in receive_messages(connection):
+        for message in load_json(data):
             if message["cmd"] == "stop":
                 stop_threads = True
                 break
@@ -55,6 +53,17 @@ def handle_client(connection, address):
             
     message = {"id_sender" : 1, "id_receiver" : 0, "cmd" : "stop", "data" : None}
     send(connection,message)
+
+def receive_messages(socket):
+    buffer = ""
+    while not stop_threads:
+        data = socket.recv(4096)
+        if not data:
+            break
+        buffer += data.decode()
+        while "\n" in buffer:
+            line, buffer = buffer.split("\n", 1)
+            yield line
 
 def handle_connection():
     global stop_threads, client_threads
@@ -78,16 +87,8 @@ def send(client_socket, message):
 
 def load_json(data):
     messages = []
-    if data:  # Vérifier que les données ne sont pas vides
-        if data.count('}{') > 0:
-            data = data.split('}{')
-            for i in range(1, len(data) - 1):
-                data[i] = '{' + data[i] + '}'
-            data[0] += '}'
-            data[-1] = '{' + data[-1]
-        else:
-            data = [data]
-        for message in data:
+    for message in data.split('\n'):
+        if message:  # ignore empty lines
             messages.append(json.loads(message))
     return messages
 

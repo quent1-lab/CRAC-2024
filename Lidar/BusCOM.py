@@ -3,7 +3,7 @@ import threading
 import keyboard
 import json
 
-# Message type : {"id_sender" : 1, "id_receiver" : 2, "cmd" : "init", "data" : None}
+# Message type : {"id_s" : 1, "id_r" : 2, "cmd" : "init", "data" : None}
 # ID : 0 = Broadcast, 1 = BusCOM, 2 = BusCAN, 3 = Lidar, 4 = Ordre Robot, 5 = Stratégie
 
 # Configuration du serveur
@@ -38,20 +38,20 @@ def handle_client(connection, address):
             else:
                 print(f"Message reçu : {message}")
                 if message["cmd"] == "init":
-                    client_adress[message["id_sender"]] = (connection, address, client_adress[message["id_sender"]][2])
-                    if message["id_sender"] == 2205:
+                    client_adress[message["id_s"]] = (connection, address, client_adress[message["id_sender"]][2])
+                    if message["id_s"] == 2205:
                         print(f"Erreur (2205) client init non reconnu")
                     else:
                         print(f"Client {client_adress[message['id_sender']][2]} connecté")
                 if message["cmd"] == "data":
-                    if message["id_receiver"] == 1:
+                    if message["id_r"] == 1:
                         pass
                     else:
-                        if client_adress[message["id_receiver"]][0] != None :
-                            receveir = client_adress[message["id_receiver"]][0]
+                        if client_adress[message["id_r"]][0] != None :
+                            receveir = client_adress[message["id_r"]][0]
                             send(receveir,message)
             
-    message = {"id_sender" : 1, "id_receiver" : 0, "cmd" : "stop", "data" : None}
+    message = {"id_s" : 1, "id_r" : 0, "cmd" : "stop", "data" : None}
     send(connection,message)
 
 def receive_messages(socket):

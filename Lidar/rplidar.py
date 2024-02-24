@@ -310,7 +310,7 @@ class RPLidar(object):
             self.logger.warning('Warning sensor status detected! '
                                 'Error code: %d', error_code)
         
-        self.start_motor() # Start motor for scanning
+        #self.start_motor() # Start motor for scanning
 
         dsize, is_single, dtype = self._read_descriptor()
         if dsize != 5:

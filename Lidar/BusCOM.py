@@ -34,7 +34,7 @@ def handle_client(connection, address):
     print('Connecté à', address)
     for data in receive_messages(connection):
         for message in load_json(data):
-            print(f"Message reçu : {message}")
+            #print(f"Message reçu : {message}")
             if message["cmd"] == "stop":
                 stop_threads = True
                 break

@@ -12,6 +12,7 @@ class LidarScanner:
         self.lidar = None
         self.ROBOT_ANGLE = 0
         self.BORDER_DISTANCE = 200
+        self.FIELD_SIZE = (3000, 2000)
 
         # Initialisation du robot virtuel
         self.ROBOT = Objet(0, 1500, 1000, 20)

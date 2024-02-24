@@ -91,13 +91,18 @@ class Client:
 
     def connect(self):
         print("Connexion du client", self.id_client, "au serveur ComWIFI")
+        i = 0
         while True:
             try:
                 self.client_socket.connect((self.ip, self.port))
+                i += 1
                 break  # Si la connexion est réussie, sortir de la boucle
             except socket.error as e:
                 print("Erreur de connexion pour le client", self.id_client, "au serveur ComWIFI")
                 print("Réessai de la connexion dans 2 secondes")
+                if i >= 3:
+                    print("Nombre maximum de tentatives de connexion atteint")
+                    raise e
                 time.sleep(2)  # Attendre 3 secondes avant de réessayer
 
         if self.id_client is None:

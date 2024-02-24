@@ -727,7 +727,6 @@ class LidarScanner:
             time.sleep(0.01)
 
     def receive_to_server(self, message):
-        print(f"Message reçu : {message}")
         if message["cmd"] == "stop":
             self.client_socket.stop()
             self.stop()
@@ -738,6 +737,7 @@ class LidarScanner:
                     self.objets = []
                     for obj in objects:
                         self.objets.append(Objet(obj["id"], obj["x"], obj["y"], obj["taille"]))
+        print(f"Objets: {self.objets}")
         
     def run(self):
         #self.programme_simulation()

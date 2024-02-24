@@ -260,8 +260,8 @@ class LidarScanner:
     def run(self):
         
         self.connexion_lidar()
-        self.client_socket.set_callback(self.receive_to_server)
-        self.client_socket.connect()
+        #self.client_socket.set_callback(self.receive_to_server)
+        #self.client_socket.connect()
 
         while True:
             self.objets = []
@@ -278,7 +278,6 @@ class LidarScanner:
                 print(f"Une erreur RPLidarException s'est produite dans le run : {e}")
                 self.lidar.stop()
                 time.sleep(2)
-                break
                 
             except KeyboardInterrupt:
                 self.stop()

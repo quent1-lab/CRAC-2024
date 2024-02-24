@@ -1,63 +1,11 @@
 import logging
 from rplidar import RPLidar,RPLidarException
 import math
-import time
 import serial.tools.list_ports
 import os
 from objet import Objet
-import time
-import socket
-import threading
-import pickle
-from CAN import ComCAN
-
-class Client:
-    def __init__(self):
-        self.objet_lidar = None
-        self.objet_lidar_lock = threading.Lock()  # Verrou pour assurer une lecture/écriture sécurisée
-        self.ROBOT = Objet(0, 1500, 1000, 20)
-        self.Robot_lock = threading.Lock()  # Verrou pour assurer une lecture/écriture sécurisée
-        self.ROBOT_angle = 0
-
-    def receive_data(self, client_socket):
-        while True:
-            try:
-                data_received = client_socket.recv(4096)
-            except Exception as e:
-                continue
-
-            if not data_received:
-                break
-
-            try:
-                data = pickle.loads(data_received)
-            except Exception as e:
-                continue
-
-            with self.Robot_lock:
-                self.ROBOT.update_position(data["x"], data["y"])
-                self.ROBOT_angle = data["theta"]
-                    
-    def send_data(self, client_socket):
-        while True:
-            # Faire quelque chose avec objet_lidar_local et l'envoyer au serveur
-            with self.objet_lidar_lock:
-                message_to_send = pickle.dumps(self.objet_lidar)
-            if message_to_send != None:
-                client_socket.sendall(message_to_send)
-            time.sleep(0.1)
-    
-    def update_lidar_object(self, objet):
-        with self.objet_lidar_lock:
-            self.objet_lidar = objet
-    
-    def get_objet_robot(self):
-        with self.Robot_lock:
-            return self.ROBOT
-    
-    def get_robot_angle(self):
-        with self.Robot_lock:
-            return self.ROBOT_angle
+from CAN import *
+from client import *
 
 class LidarScanner:
     def __init__(self, port=None):

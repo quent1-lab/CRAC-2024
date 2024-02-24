@@ -78,7 +78,7 @@ def handle_connection():
             pass
 
 def send(client_socket, message):
-    messageJSON = json.dumps(message)
+    messageJSON = json.dumps(message) + "\n"
     try :
         client_socket.sendall(messageJSON.encode())
     except ConnectionResetError:

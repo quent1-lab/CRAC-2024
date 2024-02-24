@@ -747,7 +747,7 @@ class LidarScanner:
         #self.programme_simulation()
         start_time = time.time()
         start = False
-        self.connexion_lidar()
+        #self.connexion_lidar()
         self.client_socket.set_callback(self.receive_to_server)
         self.client_socket.connect()
 

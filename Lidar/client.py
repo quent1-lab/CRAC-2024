@@ -15,6 +15,9 @@ class Client:
         self.tasks = []
         self.send_list = []
     
+    def generate_message(self, _id_receiver, _cmd, _data):
+        return {"id_sender" : self.id_client, "id_receiver" : _id_receiver, "cmd" : _cmd, "data" : _data}
+
     def decode_stop(self, message):
         if message["cmd"] == "stop":
             self.stop()
@@ -38,7 +41,7 @@ class Client:
     def send_data(self):
         i = 0
         while not self.stop_threads:
-            message = {"id_sender" : self.id_client, "id_receiver" : 3, "cmd" : "data", "data" : i}
+            message = self.generate_message(1, "data", i)
             i += 1
             self.add_to_send_list(message)
             print("Données envoyées au serveur ComWIFI:", message)
@@ -99,7 +102,7 @@ class Client:
 
         if self.id_client is None:
             self.id_client = 2205
-        message = {"id_sender" : self.id_client, "id_receiver" : 1, "cmd" : "init", "data" : None}
+        message = self.generate_message(1, "init", None)
         self.send(message)
 
         receive_thread = threading.Thread(target=self.receive_task)

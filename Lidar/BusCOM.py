@@ -1,6 +1,6 @@
 import socket
 import threading
-import keyboard
+#import keyboard
 import json
 
 # Message type : {"id_s" : 1, "id_r" : 2, "cmd" : "init", "data" : None}
@@ -107,9 +107,9 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
 
     # Boucle d'acceptation des connexions entrantes
     while not stop_threads:
-        if keyboard.is_pressed('space'):  # Si la touche espace est enfoncée
+        """if keyboard.is_pressed('space'):  # Si la touche espace est enfoncée
             stop_threads = True  # Indiquer aux threads de s'arrêter
-            break
+            break"""
     
     print("Arrêt des connexions...")
     for thread in client_threads:

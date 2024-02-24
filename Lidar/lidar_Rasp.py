@@ -260,6 +260,7 @@ class LidarScanner:
     def run(self):
         
         self.connexion_lidar()
+        self.lidar.start_motor()
         self.client_socket.set_callback(self.receive_to_server)
         self.client_socket.connect()
 

@@ -245,25 +245,28 @@ class LidarScanner:
         json = json[:-1] + "]"
         return json
 
+    def receive_to_server(self, message):
+        if message["cmd"] == "stop":
+            self.client_socket.stop()
+        else:
+            if message["data"] == "coord":
+                if message["id_s"] == 2:
+                    
+
     def run(self):
         
         self.connexion_lidar()
+        self.client_socket.connect()
 
         while True:
             self.objets = []
             try:
                 
-                for scan in self.lidar.iter_scans(4000):
-                    self.ROBOT = client.get_objet_robot()
-                    self.ROBOT_ANGLE = client.get_robot_angle()
-
+                for scan in self.lidar.iter_scans(8000):
                     new_scan = self.transform_scan(scan)
-                    
-                    for objet in self.objets:
-                        if objet.reset_if_not_moved(1):
-                            self.objets.remove(objet)
 
                     self.detect_object(new_scan)
+
                     
             except RPLidarException as e:
                 # Code pour gérer RPLidarException

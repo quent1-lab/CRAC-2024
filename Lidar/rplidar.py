@@ -146,7 +146,7 @@ class RPLidar(object):
         self.logger.info('Starting motor')
         cmd = SCAN_BYTE
         self._send_cmd(cmd)
-        time.sleep(2)
+        time.sleep(3)
 
     def stop_motor(self):
         '''Stops sensor motor'''

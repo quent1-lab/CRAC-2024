@@ -38,7 +38,7 @@ def handle_client(connection, address):
             else:
                 print(f"Message reçu : {message}")
                 if message["cmd"] == "init":
-                    client_adress[message["id_s"]] = (connection, address, client_adress[message["id_sender"]][2])
+                    client_adress[message["id_s"]] = (connection, address, client_adress[message["id_s"]][2])
                     if message["id_s"] == 2205:
                         print(f"Erreur (2205) client init non reconnu")
                     else:

@@ -20,10 +20,20 @@ class Client:
             self.stop()
 
     def receive_task(self):
-        while not self.stop_threads:
-            data_received = self.client_socket.recv(2048)
-            for message in self.load_json(data_received.decode()):
+        for _message in self.receive_messages(self.client_socket):
+            for message in self.load_json(_message):
                 self.callback(message)
+    
+    def receive_messages(self, socket):
+        buffer = ""
+        while not self.stop_threads:
+            data = socket.recv(4096)
+            if not data:
+                break
+            buffer += data.decode()
+            while "\n" in buffer:
+                line, buffer = buffer.split("\n", 1)
+                yield line
 
     def send_data(self):
         i = 0
@@ -46,15 +56,18 @@ class Client:
     def send_task(self):
         while not self.stop_threads:
             for message in self.send_list:
+                if self.stop_threads:
+                    break
                 self.send(message)
+                self.send_list.remove(message)
     
     def add_to_send_list(self, message):
         self.send_list.append(message)
 
-    def load_json(data):
+    def load_json(self, data):
         messages = []
         for message in data.split('\n'):
-            if message:  # ignore empty lines
+            if message:  # Ignore les lignes vides
                 messages.append(json.loads(message))
         return messages
 

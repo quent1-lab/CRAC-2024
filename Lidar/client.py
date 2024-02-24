@@ -65,6 +65,7 @@ class Client:
                     break
                 self.send(message)
                 self.send_list.remove(message)
+                time.sleep(0.01)
     
     def add_to_send_list(self, message):
         with self.lock:

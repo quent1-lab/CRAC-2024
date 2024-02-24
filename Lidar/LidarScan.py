@@ -727,6 +727,7 @@ class LidarScanner:
             time.sleep(0.01)
 
     def receive_to_server(self, message):
+        print(f"Message reçu : {message}")
         if message["cmd"] == "stop":
             self.client_socket.stop()
             self.stop()
@@ -745,7 +746,7 @@ class LidarScanner:
         #self.connexion_lidar()
         self.client_socket.set_callback(self.receive_to_server)
         self.client_socket.connect()
-
+        print("Connecté au serveur")
         while True:
             try:
                 pygame.event.get()

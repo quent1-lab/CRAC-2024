@@ -13,6 +13,8 @@ class Client:
         self.stop_threads = False
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.data = None
+
+        self.send_list = []
     
     def decode_stop(self, message):
         if message["cmd"] == "stop":
@@ -40,6 +42,14 @@ class Client:
         except ConnectionResetError:
             print("Erreur de connexion pour le client", self.id_client)
             self.stop_threads = True
+
+    def send(self):
+        while not self.stop_threads:
+            for message in self.send_list:
+                self.send(message)
+    
+    def add_to_send_list(self, message):
+        self.send_list.append(message)
 
     def load_json(self, data):
         messages = []
@@ -85,13 +95,15 @@ class Client:
         if self.test:
             send_thread = threading.Thread(target=self.send_data)
             send_thread.start()
+        else:
+            send_thread = threading.Thread(target=self.send)
+            send_thread.start()
 
         while not self.stop_threads:
             pass
 
         receive_thread.join()
-        if self.test:
-            send_thread.join()
+        send_thread.join()
         self.client_socket.close()
         print("Connexion terminée pour le client :", self.id_client)
 

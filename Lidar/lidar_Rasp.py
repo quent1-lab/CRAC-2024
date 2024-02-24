@@ -290,6 +290,8 @@ class LidarScanner:
 if __name__ == '__main__':
     # Initialiser le client
     scanner = LidarScanner("/dev/ttyUSB0")
-    scanner.run()
-    
+    scan_thread = threading.Thread(target=scanner.run)
+    scan_thread.start()
+    scan_thread.join()
+    print("Fin du programme")
     

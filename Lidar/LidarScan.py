@@ -731,14 +731,11 @@ class LidarScanner:
             self.client_socket.stop()
             self.stop()
         else:
-            if message["data"] == "objects":
+            if message["cmd"] == "objects":
                 self.objets = []
-                json_string = json.loads(message["objects"])
-                print(f"Json string: {json_string}")
+                json_string = json.loads(message["data"])
                 for obj in json_string:
                     self.objets.append(Objet(obj["id"], obj["x"], obj["y"], obj["taille"]))
-                    print(f"Objet: {obj}")
-        print(f"Objets : {self.objets}")
         
     def run(self):
         #self.programme_simulation()

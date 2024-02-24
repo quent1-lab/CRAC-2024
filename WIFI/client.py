@@ -30,12 +30,13 @@ class Client:
         while not self.stop_threads:
             message = {"id_sender" : self.id_client, "id_receiver" : 3, "cmd" : "data", "data" : i}
             i += 1
-            self.send(message)
+            self.add_to_send_list(message)
             print("Données envoyées au serveur ComWIFI:", message)
-            time.sleep(5)  # Attendre une seconde avant d'envoyer la prochaine donnée
+            while len(self.send_list) > 0 and not self.stop_threads:
+                time.sleep(0.5)
     
     def send(self, message):
-        messageJSON = json.dumps(message)
+        messageJSON = json.dumps(message) + "\n"
         try :
             self.client_socket.sendall(messageJSON.encode())
         except ConnectionResetError:
@@ -50,18 +51,10 @@ class Client:
     def add_to_send_list(self, message):
         self.send_list.append(message)
 
-    def load_json(self, data):
+    def load_json(data):
         messages = []
-        if data:  # Vérifier que les données ne sont pas vides
-            if data.count('}{') > 0:
-                data = data.split('}{')
-                for i in range(1, len(data) - 1):
-                    data[i] = '{' + data[i] + '}'
-                data[0] += '}'
-                data[-1] = '{' + data[-1]
-            else:
-                data = [data]
-            for message in data:
+        for message in data.split('\n'):
+            if message:  # ignore empty lines
                 messages.append(json.loads(message))
         return messages
 
@@ -99,15 +92,14 @@ class Client:
         receive_thread = threading.Thread(target=self.receive_task)
         receive_thread.start()
 
-        if self.test:
-            send_thread = threading.Thread(target=self.send_data)
-            send_thread.start()
-        else:
-            send_thread = threading.Thread(target=self.send_task)
-            send_thread.start()
+        send_thread_2 = threading.Thread(target=self.send_data)
+        send_thread_2.start()
+        send_thread = threading.Thread(target=self.send_task)
+        send_thread.start()
         
         self.tasks.append(receive_thread)
         self.tasks.append(send_thread)
+        self.tasks.append(send_thread_2)
 
 if __name__ == "__main__":
     # Utilisation de la classe

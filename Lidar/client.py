@@ -19,7 +19,7 @@ class Client:
         if message["cmd"] == "stop":
             self.stop()
 
-    def receive_data(self):
+    def receive_task(self):
         while not self.stop_threads:
             data_received = self.client_socket.recv(2048)
             for message in self.load_json(data_received.decode()):
@@ -42,7 +42,7 @@ class Client:
             print("Erreur de connexion pour le client", self.id_client)
             self.stop_threads = True
 
-    def send(self):
+    def send_task(self):
         while not self.stop_threads:
             for message in self.send_list:
                 self.send(message)
@@ -96,14 +96,14 @@ class Client:
         message = {"id_sender" : self.id_client, "id_receiver" : 1, "cmd" : "init", "data" : None}
         self.send(message)
 
-        receive_thread = threading.Thread(target=self.receive_data)
+        receive_thread = threading.Thread(target=self.receive_task)
         receive_thread.start()
 
         if self.test:
             send_thread = threading.Thread(target=self.send_data)
             send_thread.start()
         else:
-            send_thread = threading.Thread(target=self.send)
+            send_thread = threading.Thread(target=self.send_task)
             send_thread.start()
         
         self.tasks.append(receive_thread)

@@ -235,7 +235,7 @@ class LidarScanner:
         self.lidar.stop()
         time.sleep(1)
         self.lidar.disconnect()
-        self.client_socket.close()
+        self.client_socket.stop()
         exit(0)
 
     def generate_JSON(self):

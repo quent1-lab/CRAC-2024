@@ -53,7 +53,8 @@ class Client:
     def send(self, message):
         messageJSON = json.dumps(message) + "\n"
         try :
-            self.client_socket.sendall(messageJSON.encode())
+            with self.lock:
+                self.client_socket.sendall(messageJSON.encode())
         except ConnectionResetError:
             print("Erreur de connexion pour le client", self.id_client)
             self.stop_threads = True

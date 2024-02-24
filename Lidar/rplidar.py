@@ -268,6 +268,35 @@ class RPLidar(object):
         '''Clears input buffer by reading all available data'''
         self._serial_port.read_all()
 
+    @property
+    def health(self):
+        """Get device health state. When the core system detects some
+        potential risk that may cause hardware failure in the future,
+        the returned status value will be 'Warning'. But sensor can still work
+        as normal. When sensor is in the Protection Stop state, the returned
+        status value will be 'Error'. In case of warning or error statuses
+        non-zero error code will be returned.
+
+        Returns
+
+        status : str
+            'Good', 'Warning' or 'Error' statuses
+        error_code : int
+            The related error code that caused a warning/error.
+        """
+        self._send_cmd(GET_HEALTH_BYTE)
+        dsize, is_single, dtype = self._read_descriptor()
+        if dsize != HEALTH_LEN:
+            raise RPLidarException("Wrong info reply length")
+        if not is_single:
+            raise RPLidarException("Not a single response mode")
+        if dtype != HEALTH_TYPE:
+            raise RPLidarException("Wrong response data type")
+        raw = self._read_response(dsize)
+        status = _HEALTH_STATUSES[raw[0]]
+        error_code = (raw[1] << 8) + raw[2]
+        return (status, error_code)
+    
     def stop(self):
         '''Stops scanning process, disables laser diode and the measurment
         system, moves sensor to the idle state.'''

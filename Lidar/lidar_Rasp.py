@@ -248,14 +248,18 @@ class LidarScanner:
     def receive_to_server(self, message):
         if message["cmd"] == "stop":
             self.client_socket.stop()
+            self.stop()
         else:
             if message["data"] == "coord":
                 if message["id_s"] == 2:
-                    
+                    coord = message["data"]
+                    self.ROBOT.update_position(coord["x"], coord["y"])
+                    self.ROBOT_ANGLE = coord["angle"]
 
     def run(self):
         
         self.connexion_lidar()
+        self.client_socket.set_callback(self.receive_to_server)
         self.client_socket.connect()
 
         while True:
@@ -266,8 +270,8 @@ class LidarScanner:
                     new_scan = self.transform_scan(scan)
 
                     self.detect_object(new_scan)
+                    self.client_socket.add_to_send_list(self.client_socket.generate_message(10, "objects", self.generate_JSON()))
 
-                    
             except RPLidarException as e:
                 # Code pour gérer RPLidarException
                 print(f"Une erreur RPLidarException s'est produite dans le run : {e}")

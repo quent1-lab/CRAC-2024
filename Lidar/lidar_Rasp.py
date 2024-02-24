@@ -281,6 +281,8 @@ class LidarScanner:
                 # Code pour gérer RPLidarException
                 print(f"Une erreur RPLidarException s'est produite dans le run : {e}")
                 self.lidar.stop()
+                self.lidar.disconnect()
+                self.connexion_lidar()
                 time.sleep(2)
                 
             except KeyboardInterrupt:

@@ -53,26 +53,22 @@ class Client:
     def send(self, message):
         messageJSON = json.dumps(message) + "\n"
         try :
-            with self.lock:
-                self.client_socket.sendall(messageJSON.encode())
+            self.client_socket.sendall(messageJSON.encode())
         except ConnectionResetError:
             print("Erreur de connexion pour le client", self.id_client)
             self.stop_threads = True
 
     def send_task(self):
         while not self.stop_threads:
-            with self.lock:
-                for message in self.send_list:
-                    if self.stop_threads:
-                        break
-                    self.send(message)
-                    self.send_list.remove(message)
+            for message in self.send_list:
+                if self.stop_threads:
+                    break
+                self.send(message)
+                self.send_list.remove(message)
     
     def add_to_send_list(self, message):
-        print("Message ajouté à la liste d'envoi pour le client", self.id_client, ":", message)
         with self.lock:
             self.send_list.append(message)
-            print("Liste d'envoi pour le client", self.id_client, ":", self.send_list)
 
     def load_json(self, data):
         messages = []

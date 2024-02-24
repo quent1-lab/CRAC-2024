@@ -9,6 +9,7 @@ class Client:
         self.port = _port
         self.id_client = _id_client
         self.callback = _callback if _callback is not None else self.decode_stop
+        self.callback_stop = None
         self.test = _test
         self.stop_threads = False
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -75,6 +76,8 @@ class Client:
         return messages
 
     def stop(self):
+        if self.callback_stop is not None:
+            self.callback_stop()
         self.stop_threads = True
         close_trhead = threading.Thread(target=self.close_connection)
         close_trhead.start()
@@ -89,6 +92,9 @@ class Client:
     def set_callback(self, _callback):
         self.callback = _callback
 
+    def set_callback_stop(self, _callback):
+        self.callback_stop = _callback
+    
     def connect(self):
         print("Connexion du client", self.id_client, "au serveur ComWIFI")
         i = 0

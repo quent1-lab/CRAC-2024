@@ -511,6 +511,7 @@ class LidarScanner:
             raise
 
     def stop(self):
+        print("Arret du Programme")
         self.client_socket.add_to_send_list(self.client_socket.generate_message(1, "stop", None))
         self.objets = []
 

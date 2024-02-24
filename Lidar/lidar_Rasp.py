@@ -269,7 +269,7 @@ class LidarScanner:
                 
                 for scan in self.lidar.iter_scans(4000):
                     new_scan = self.transform_scan(scan)
-                    print(new_scan)
+
                     #self.detect_object(new_scan)
                     #self.client_socket.add_to_send_list(self.client_socket.generate_message(10, "objects", self.generate_JSON()))
 
@@ -278,6 +278,7 @@ class LidarScanner:
                 print(f"Une erreur RPLidarException s'est produite dans le run : {e}")
                 self.lidar.stop()
                 time.sleep(2)
+                break
                 
             except KeyboardInterrupt:
                 self.stop()

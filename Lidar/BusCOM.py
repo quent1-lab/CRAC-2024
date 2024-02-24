@@ -39,24 +39,23 @@ def handle_client(connection, address):
                 stop_threads = True
                 break
             else:
-                with lock:
-                    if message["cmd"] == "init":
-                        client_adress[message["id_s"]] = (connection, address, client_adress[message["id_s"]][2])
-                        if message["id_s"] == 2205:
-                            print(f"Erreur (2205) client init non reconnu")
-                        else:
-                            print(f"Client {client_adress[message['id_s']][2]} connecté")
-                    if message["cmd"] == "data":
-                        if message["id_r"] == 1:
-                            pass
-                        else:
-                            if client_adress[message["id_r"]][0] is not None:
-                                receveir = client_adress[message["id_r"]][0]
-                                send(receveir, message)
-                    if message["cmd"] == "objects":
+                if message["cmd"] == "init":
+                    client_adress[message["id_s"]] = (connection, address, client_adress[message["id_s"]][2])
+                    if message["id_s"] == 2205:
+                        print(f"Erreur (2205) client init non reconnu")
+                    else:
+                        print(f"Client {client_adress[message['id_s']][2]} connecté")
+                if message["cmd"] == "data":
+                    if message["id_r"] == 1:
+                        pass
+                    else:
                         if client_adress[message["id_r"]][0] is not None:
                             receveir = client_adress[message["id_r"]][0]
                             send(receveir, message)
+                if message["cmd"] == "objects":
+                    if client_adress[message["id_r"]][0] is not None:
+                        receveir = client_adress[message["id_r"]][0]
+                        send(receveir, message)
     
     message = {"id_s" : 1, "id_r" : 0, "cmd" : "stop", "data" : None}
     send(connection, message)
@@ -88,8 +87,7 @@ def handle_connection():
 def send(client_socket, message):
     messageJSON = json.dumps(message) + "\n"
     try :
-        with lock:
-            client_socket.sendall(messageJSON.encode())
+        client_socket.sendall(messageJSON.encode())
     except ConnectionResetError:
         print("Erreur de connexion")
         pass

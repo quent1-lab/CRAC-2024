@@ -3,18 +3,13 @@ from objet import Objet
 import pygame
 from pygame.locals import *
 import math
-import time
-import json
 import os
-import time
-import socket
-import pickle  # Pour sérialiser/désérialiser les objets Python
 import random
 import numpy as np
 from sklearn.cluster import DBSCAN
 from rplidar import RPLidar, RPLidarException
 import serial.tools.list_ports
-from sympy import symbols, Eq, solve
+from client import *
 
 """# Initialiser le serveur
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -70,6 +65,8 @@ class LidarScanner:
         self.X_RATIO = self.WINDOW_SIZE[0] / self.FIELD_SIZE[0]
         self.Y_RATIO = self.WINDOW_SIZE[1] / self.FIELD_SIZE[1]
         self.lcd = pygame.display.set_mode(self.WINDOW_SIZE)
+
+        self.client_socket = Client("192.168.22.101", 22050, 10)
 
         pygame.font.init()
         self.font = pygame.font.SysFont("Arial", 20)
@@ -734,45 +731,35 @@ class LidarScanner:
 
             time.sleep(0.01)
 
+    def receive_to_server(self, message):
+        if message["cmd"] == "stop":
+            self.client_socket.stop()
+            self.stop()
+        else:
+            if message["data"] == "objects":
+                if message["id_s"] == 3:
+                    objects = message["objects"]
+                    self.objets = []
+                    for obj in objects:
+                        self.objets.append(Objet(obj["id"], obj["x"], obj["y"], obj["taille"]))
+        
     def run(self):
-        self.programme_simulation()
+        #self.programme_simulation()
         start_time = time.time()
         start = False
         self.connexion_lidar()
+        self.client_socket.set_callback(self.receive_to_server)
+        self.client_socket.connect()
 
         while True:
             self.objets = []
             try:
-
-                for scan in self.lidar.iter_scans(4000):
-
-                    new_scan = self.transform_scan(scan)
-                    if time.time() - start_time > 5 and not start:
-                        self.objets = []
-                        start = True
-
-                    # self.detect_object(new_scan)
-                    new_objets = self.detect_objects(new_scan)
-                    self.suivre_objet(new_objets, 100)
-
-                    self.draw_background()
-                    self.draw_robot(self.ROBOT.x, self.ROBOT.y,
-                                    self.ROBOT_ANGLE)
-                    for objet in self.objets:
-
-                        self.draw_object(objet)
-                        trajectoire_actuel, trajectoire_adverse, trajectoire_evitement = self.trajectoires_anticipation(
-                            self.ROBOT, objet, 1.5, 0.1, 50)
-                        self.draw_all_trajectoires(
-                            trajectoire_actuel, trajectoire_adverse, trajectoire_evitement)
-
-                    for point in new_scan:
-                        self.draw_point(point[0], point[1])
-
-                    # Affiche les fps sur l'écran (en bas a gauche)
-                    # self.draw_text("FPS: " + str(int(1 / (time.time() - last_time))), 10, self.WINDOW_SIZE[1] - 30)
-                    # last_time = time.time()
-                    pygame.display.update()
+                self.draw_background()
+                self.draw_robot(self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)
+                for objet in self.objets:
+                    self.draw_object(objet)
+                
+                pygame.display.update()
 
             except RPLidarException as e:
                 # Code pour gérer RPLidarException

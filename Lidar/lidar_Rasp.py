@@ -4,7 +4,6 @@ import math
 import serial.tools.list_ports
 import os
 from objet import Objet
-from CAN import *
 from client import *
 
 class LidarScanner:
@@ -24,7 +23,7 @@ class LidarScanner:
 
         self.objets = []  # Liste pour stocker les objets détectés
 
-        self.client_socket = None
+        self.client_socket = Client('127.0.0.3', 22050, 3)
 
         logging.basicConfig(filename='lidar_scan.log', level=logging.INFO,datefmt='%d/%m/%Y %H:%M:%S',format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -265,7 +264,6 @@ class LidarScanner:
                             self.objets.remove(objet)
 
                     self.detect_object(new_scan)
-                    client.update_lidar_object(self.generate_JSON())
                     
             except RPLidarException as e:
                 # Code pour gérer RPLidarException
@@ -278,39 +276,8 @@ class LidarScanner:
                 break
 
 if __name__ == '__main__':
-    """can = ComCAN("can0", "socketcan")
-    while True:
-        try:
-            can.run()
-        except Exception as e:
-            print(f"Erreur: {e}")
-            time.sleep(1)
-            continue
-        break"""
-
     # Initialiser le client
     client = Client()
     scanner = LidarScanner("/dev/ttyUSB0")
-
-    server_address = ('172.30.30.100', 5000)
-    client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    client_socket.connect(server_address)
-
-    # Démarrer les threads de communication
-    receive_thread = threading.Thread(target=client.receive_data, args=(client_socket,))
-    send_thread = threading.Thread(target=client.send_data, args=(client_socket,))
-    lidar_handler_thread = threading.Thread(target=client.update_lidar_object, args=(scanner.objets,))
-
-    lidar_scan = threading.Thread(target=scanner.run)
-    
-    receive_thread.start()
-    send_thread.start()
-    lidar_handler_thread.start()
-    lidar_scan.start()
-
-    send_thread.join()
-    receive_thread.join()
-    lidar_handler_thread.join()
-    lidar_scan.join()
     
     

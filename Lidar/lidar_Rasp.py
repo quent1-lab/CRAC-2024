@@ -278,7 +278,7 @@ class LidarScanner:
                 print(f"Une erreur RPLidarException s'est produite dans le run : {e}")
                 self.lidar.stop()
                 time.sleep(2)
-                self.lidar.start_motor()
+                raise
                 
             except KeyboardInterrupt:
                 self.stop()

@@ -271,10 +271,10 @@ class LidarScanner:
             try:
                 
                 for scan in self.lidar.iter_scans(4000):
-                    #new_scan = self.transform_scan(scan)
+                    new_scan = self.transform_scan(scan)
 
-                    #self.detect_object(new_scan)
-                    self.objets = [Objet(1, 1500, 1000, 20)]
+                    self.detect_object(new_scan)
+                    #self.objets = [Objet(1, 1500, 1000, 20)]
                     self.client_socket.add_to_send_list(self.client_socket.generate_message(10, "objects", self.generate_JSON()))
 
             except RPLidarException as e:

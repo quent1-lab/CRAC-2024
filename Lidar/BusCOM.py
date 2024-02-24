@@ -36,7 +36,6 @@ def handle_client(connection, address):
                 stop_threads = True
                 break
             else:
-                print(f"Message reçu : {message}")
                 if message["cmd"] == "init":
                     client_adress[message["id_s"]] = (connection, address, client_adress[message["id_s"]][2])
                     if message["id_s"] == 2205:
@@ -50,6 +49,10 @@ def handle_client(connection, address):
                         if client_adress[message["id_r"]][0] != None :
                             receveir = client_adress[message["id_r"]][0]
                             send(receveir,message)
+                if message["cmd"] == "objects":
+                    if client_adress[message["id_r"]][0] != None :
+                        receveir = client_adress[message["id_r"]][0]
+                        send(receveir,message)
             
     message = {"id_s" : 1, "id_r" : 0, "cmd" : "stop", "data" : None}
     send(connection,message)

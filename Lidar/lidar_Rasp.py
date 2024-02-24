@@ -13,6 +13,7 @@ class LidarScanner:
         self.ROBOT_ANGLE = 0
         self.BORDER_DISTANCE = 200
         self.FIELD_SIZE = (3000, 2000)
+        self.scanning = True
 
         # Initialisation du robot virtuel
         self.ROBOT = Objet(0, 1500, 1000, 20)
@@ -230,6 +231,7 @@ class LidarScanner:
             raise
 
     def stop(self):
+        self.scanning = False
         logging.info("Stopping LiDAR motor")
         print("Arrêt du moteur LiDAR")
         self.lidar.stop()
@@ -260,10 +262,11 @@ class LidarScanner:
     def run(self):
         
         self.connexion_lidar()
-        #self.client_socket.set_callback(self.receive_to_server)
-        #self.client_socket.connect()
+        self.client_socket.set_callback(self.receive_to_server)
+        self.client_socket.set_callback_stop(self.stop)
+        self.client_socket.connect()
 
-        while True:
+        while self.scanning:
             self.objets = []
             try:
                 
@@ -271,7 +274,7 @@ class LidarScanner:
                     new_scan = self.transform_scan(scan)
 
                     self.detect_object(new_scan)
-                    #self.client_socket.add_to_send_list(self.client_socket.generate_message(10, "objects", self.generate_JSON()))
+                    self.client_socket.add_to_send_list(self.client_socket.generate_message(10, "objects", self.generate_JSON()))
 
             except RPLidarException as e:
                 # Code pour gérer RPLidarException

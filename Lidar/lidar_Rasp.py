@@ -278,11 +278,12 @@ class LidarScanner:
                 print(f"Une erreur RPLidarException s'est produite dans le run : {e}")
                 self.lidar.stop()
                 time.sleep(2)
-                raise
+                break
                 
             except KeyboardInterrupt:
                 self.stop()
                 break
+        self.stop()
 
 if __name__ == '__main__':
     # Initialiser le client

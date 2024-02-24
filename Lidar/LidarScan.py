@@ -733,9 +733,12 @@ class LidarScanner:
         else:
             if message["data"] == "objects":
                 self.objets = []
-                for obj in message["objects"]:
+                json_string = json.loads(message["objects"])
+                print(f"Json string: {json_string}")
+                for obj in json_string:
                     self.objets.append(Objet(obj["id"], obj["x"], obj["y"], obj["taille"]))
-                    print(f"Objets: {obj}")
+                    print(f"Objet: {obj}")
+        print(f"Objets : {self.objets}")
         
     def run(self):
         #self.programme_simulation()

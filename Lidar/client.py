@@ -17,7 +17,7 @@ class Client:
         self.send_list = []
         self.lock = threading.Lock()  # Verrou pour la synchronisation des threads
     
-    def generate_message(self, _id_receiver, _cmd, _data):
+    def create_message(self, _id_receiver, _cmd, _data):
         return {"id_s" : self.id_client, "id_r" : _id_receiver, "cmd" : _cmd, "data" : _data}
 
     def decode_stop(self, message):
@@ -50,7 +50,7 @@ class Client:
             with self.lock:
                 if self.stop_threads:
                     break
-            message = self.generate_message(1, "data", i)
+            message = self.create_message(1, "data", i)
             i += 1
             self.add_to_send_list(message)
             print("Données envoyées au serveur ComWIFI:", message)
@@ -128,7 +128,7 @@ class Client:
 
         if self.id_client is None:
             self.id_client = 2205
-        message = self.generate_message(1, "init", None)
+        message = self.create_message(1, "init", None)
         self.send(message)
 
         receive_thread = threading.Thread(target=self.receive_task)

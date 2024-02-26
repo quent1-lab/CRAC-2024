@@ -30,32 +30,33 @@ lock = threading.Lock()
 
 # Fonction pour gérer chaque client
 def handle_client(connection, address):
-    global stop_threads, client_adress
+    global stop_threads, client_adress, lock
     print('Connecté à', address)
     for data in receive_messages(connection):
         for message in load_json(data):
-            #print(f"Message reçu : {message}")
-            if message["cmd"] == "stop":
-                stop_threads = True
-                break
-            else:
-                if message["cmd"] == "init":
-                    client_adress[message["id_s"]] = (connection, address, client_adress[message["id_s"]][2])
-                    if message["id_s"] == 2205:
-                        print(f"Erreur (2205) client init non reconnu")
-                    else:
-                        print(f"Client {client_adress[message['id_s']][2]} connecté")
-                if message["cmd"] == "data":
-                    if message["id_r"] == 1:
-                        pass
-                    else:
+            with lock:
+                #print(f"Message reçu : {message}")
+                if message["cmd"] == "stop":
+                    stop_threads = True
+                    break
+                else:
+                    if message["cmd"] == "init":
+                        client_adress[message["id_s"]] = (connection, address, client_adress[message["id_s"]][2])
+                        if message["id_s"] == 2205:
+                            print(f"Erreur (2205) client init non reconnu")
+                        else:
+                            print(f"Client {client_adress[message['id_s']][2]} connecté")
+                    if message["cmd"] == "data":
+                        if message["id_r"] == 1:
+                            pass
+                        else:
+                            if client_adress[message["id_r"]][0] is not None:
+                                receveir = client_adress[message["id_r"]][0]
+                                send(receveir, message)
+                    if message["cmd"] == "objects":
                         if client_adress[message["id_r"]][0] is not None:
                             receveir = client_adress[message["id_r"]][0]
                             send(receveir, message)
-                if message["cmd"] == "objects":
-                    if client_adress[message["id_r"]][0] is not None:
-                        receveir = client_adress[message["id_r"]][0]
-                        send(receveir, message)
     
     message = {"id_s" : 1, "id_r" : 0, "cmd" : "stop", "data" : None}
     send(connection, message)

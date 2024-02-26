@@ -23,11 +23,6 @@ class Client:
     def decode_stop(self, message):
         if message["cmd"] == "stop":
             self.stop()
-
-    def receive_task(self):
-        for _message in self.receive_messages(self.client_socket):
-            for message in self.load_json(_message):
-                self.callback(message)
     
     def receive_messages(self, socket):
         buffer = ""
@@ -40,14 +35,29 @@ class Client:
                 line, buffer = buffer.split("\n", 1)
                 yield line
 
+    def receive_task(self):
+        while True:
+            with self.lock:
+                if self.stop_threads:
+                    break
+            for _message in self.receive_messages(self.client_socket):
+                for message in self.load_json(_message):
+                    self.callback(message)
+
     def send_data(self):
         i = 0
-        while not self.stop_threads:
+        while True:
+            with self.lock:
+                if self.stop_threads:
+                    break
             message = self.generate_message(1, "data", i)
             i += 1
             self.add_to_send_list(message)
             print("Données envoyées au serveur ComWIFI:", message)
-            while len(self.send_list) > 0 and not self.stop_threads:
+            while True:
+                with self.lock:
+                    if len(self.send_list) > 0 and not self.stop_threads:
+                        break
                 time.sleep(0.5)
     
     def send(self, message):
@@ -60,10 +70,11 @@ class Client:
             self.stop_threads = True
 
     def send_task(self):
-        while not self.stop_threads:
-            for message in self.send_list:
+        while True:
+            with self.lock:
                 if self.stop_threads:
                     break
+            for message in self.send_list:
                 self.send(message)
                 self.send_list.remove(message)
                 time.sleep(0.01)

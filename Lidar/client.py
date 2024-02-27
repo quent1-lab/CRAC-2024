@@ -2,6 +2,7 @@ import socket
 import time
 import threading
 import json
+from queue import Queue, Empty
 
 class Client:
     def __init__(self, _ip, _port, _id_client=2205, _callback=None, _test=False):
@@ -16,18 +17,15 @@ class Client:
         self.tasks = []
         self.send_list = []
         self.lock = threading.Lock()  # Verrou pour la synchronisation des threads
+
+        self.send_queue = Queue()
     
-    def generate_message(self, _id_receiver, _cmd, _data):
+    def create_message(self, _id_receiver, _cmd, _data):
         return {"id_s" : self.id_client, "id_r" : _id_receiver, "cmd" : _cmd, "data" : _data}
 
     def decode_stop(self, message):
         if message["cmd"] == "stop":
             self.stop()
-
-    def receive_task(self):
-        for _message in self.receive_messages(self.client_socket):
-            for message in self.load_json(_message):
-                self.callback(message)
     
     def receive_messages(self, socket):
         buffer = ""
@@ -40,14 +38,46 @@ class Client:
                 line, buffer = buffer.split("\n", 1)
                 yield line
 
+    def receive_task(self):
+        while not self.stop_threads:
+            for _message in self.receive_messages(self.client_socket):
+                for message in self.load_json(_message):
+                    self.callback(message)
+
+    def send_task(self):
+        while not self.stop_threads:
+            try:
+                message = self.send_queue.get(timeout=0.1)
+                self.send(message)
+            except Empty:
+                pass
+
+    def add_to_send_list(self, message):
+        self.send_queue.put(message)
+
+    def stop(self):
+        if self.callback_stop is not None:
+            self.callback_stop()
+        self.stop_threads = True
+        self.send_queue.join()  # Attend la fin de la mise en file d'attente
+        close_thread = threading.Thread(target=self.close_connection)
+        close_thread.start()
+        print("Arrêt de la connexion pour le client", self.id_client)
+
     def send_data(self):
         i = 0
-        while not self.stop_threads:
-            message = self.generate_message(1, "data", i)
+        while True:
+            with self.lock:
+                if self.stop_threads:
+                    break
+            message = self.create_message(1, "data", i)
             i += 1
             self.add_to_send_list(message)
             print("Données envoyées au serveur ComWIFI:", message)
-            while len(self.send_list) > 0 and not self.stop_threads:
+            while True:
+                with self.lock:
+                    if len(self.send_list) > 0 and not self.stop_threads:
+                        break
                 time.sleep(0.5)
     
     def send(self, message):
@@ -58,34 +88,13 @@ class Client:
         except ConnectionResetError:
             print("Erreur de connexion pour le client", self.id_client)
             self.stop_threads = True
-
-    def send_task(self):
-        while not self.stop_threads:
-            for message in self.send_list:
-                if self.stop_threads:
-                    break
-                self.send(message)
-                self.send_list.remove(message)
-                time.sleep(0.01)
     
-    def add_to_send_list(self, message):
-        with self.lock:
-            self.send_list.append(message)
-
     def load_json(self, data):
         messages = []
         for message in data.split('\n'):
             if message:  # Ignore les lignes vides
                 messages.append(json.loads(message))
         return messages
-
-    def stop(self):
-        if self.callback_stop is not None:
-            self.callback_stop()
-        self.stop_threads = True
-        close_trhead = threading.Thread(target=self.close_connection)
-        close_trhead.start()
-        print("Arrêt de la connexion pour le client", {self.id_client})
     
     def close_connection(self):
         for task in self.tasks:
@@ -117,7 +126,7 @@ class Client:
 
         if self.id_client is None:
             self.id_client = 2205
-        message = self.generate_message(1, "init", None)
+        message = self.create_message(1, "init", None)
         self.send(message)
 
         receive_thread = threading.Thread(target=self.receive_task)

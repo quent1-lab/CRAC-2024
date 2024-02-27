@@ -727,15 +727,16 @@ class LidarScanner:
             time.sleep(0.01)
 
     def receive_to_server(self, message):
-        if message["cmd"] == "stop":
-            self.client_socket.stop()
-            self.stop()
-        else:
-            if message["cmd"] == "objects":
+        if message["cmd"] == "objects":
                 self.objets = []
                 json_string = json.loads(message["data"])
                 for obj in json_string:
                     self.objets.append(Objet(obj["id"], obj["x"], obj["y"], obj["taille"]))
+        elif message["cmd"] == "coord":
+            coord = message["data"]
+            self.ROBOT.update_position(coord["x"], coord["y"])
+            self.ROBOT_ANGLE = coord["theta"]
+            
         
     def run(self):
         #self.programme_simulation()
@@ -743,6 +744,7 @@ class LidarScanner:
         start = False
         #self.connexion_lidar()
         self.client_socket.set_callback(self.receive_to_server)
+        self.client_socket.set_callback_stop(self.stop)
         self.client_socket.connect()
         print("Connecté au serveur")
         while True:

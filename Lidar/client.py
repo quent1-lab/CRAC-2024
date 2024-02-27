@@ -71,7 +71,7 @@ class Client:
         self.send_queue.join()  # Attend la fin de la mise en file d'attente
         close_thread = threading.Thread(target=self.close_connection)
         close_thread.start()
-        print("LIDAR  : Arrêt de la connexion pour le client", self.client_name)
+        print("CLIENT : Arrêt de la connexion pour le client", self.client_name)
         close_thread.join()
 
     def send_data(self):
@@ -96,7 +96,7 @@ class Client:
             with self.lock:
                 self.client_socket.sendall(messageJSON.encode())
         except ConnectionResetError:
-            print("LIDAR  : Erreur de connexion pour le client", self.client_name)
+            print("CLIENT : Erreur de connexion pour le client", self.client_name)
             self.stop_threads = True
     
     def load_json(self, data):
@@ -106,14 +106,14 @@ class Client:
                 try :
                     messages.append(json.loads(message))
                 except json.JSONDecodeError:
-                    print("LIDAR  : Erreur de décodage JSON pour le client", self.client_name)
+                    print("CLIENT : Erreur de décodage JSON pour le client", self.client_name)
         return messages
     
     def close_connection(self):
         for task in self.tasks:
             task.join()
         self.client_socket.close()
-        print("LIDAR  : Connexion fermée pour le client", self.client_name)
+        print("CLIENT : Connexion fermée pour le client", self.client_name)
     
     def set_callback(self, _callback):
         self.callback = _callback
@@ -122,16 +122,16 @@ class Client:
         self.callback_stop = _callback
     
     def connect(self):
-        print("LIDAR  : Connexion du client", self.client_name, "au serveur")
+        print("CLIENT : Connexion du client", self.client_name, "au serveur")
         for i in range(3):
             try:
                 self.client_socket.connect((self.ip, self.port))
                 break  # Si la connexion est réussie, sortir de la boucle
             except socket.error as e:
-                print(f"LIDAR  : Erreur de connexion pour",self.client_name,"au serveur")
+                print(f"CLIENT : Erreur de connexion pour",self.client_name,"au serveur")
                 time.sleep(2)  # Attendre 2 secondes avant de réessayer
         else:
-            print("LIDAR  : Nombre maximum de tentatives de connexion atteint")
+            print("CLIENT : Nombre maximum de tentatives de connexion atteint")
             raise e
 
         if self.id_client is None:

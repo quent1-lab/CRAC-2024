@@ -2,6 +2,7 @@ import socket
 import time
 import threading
 import json
+from queue import Queue, Empty
 
 class Client:
     def __init__(self, _ip, _port, _id_client=2205, _callback=None, _test=False):
@@ -16,6 +17,8 @@ class Client:
         self.tasks = []
         self.send_list = []
         self.lock = threading.Lock()  # Verrou pour la synchronisation des threads
+
+        self.send_queue = Queue()
     
     def create_message(self, _id_receiver, _cmd, _data):
         return {"id_s" : self.id_client, "id_r" : _id_receiver, "cmd" : _cmd, "data" : _data}
@@ -36,13 +39,30 @@ class Client:
                 yield line
 
     def receive_task(self):
-        while True:
-            with self.lock:
-                if self.stop_threads:
-                    break
+        while not self.stop_threads:
             for _message in self.receive_messages(self.client_socket):
                 for message in self.load_json(_message):
                     self.callback(message)
+
+    def send_task(self):
+        while not self.stop_threads:
+            try:
+                message = self.send_queue.get(timeout=0.1)
+                self.send(message)
+            except Empty:
+                pass
+
+    def add_to_send_list(self, message):
+        self.send_queue.put(message)
+
+    def stop(self):
+        if self.callback_stop is not None:
+            self.callback_stop()
+        self.stop_threads = True
+        self.send_queue.join()  # Attend la fin de la mise en file d'attente
+        close_thread = threading.Thread(target=self.close_connection)
+        close_thread.start()
+        print("Arrêt de la connexion pour le client", self.id_client)
 
     def send_data(self):
         i = 0
@@ -68,35 +88,13 @@ class Client:
         except ConnectionResetError:
             print("Erreur de connexion pour le client", self.id_client)
             self.stop_threads = True
-
-    def send_task(self):
-        while True:
-            with self.lock:
-                if self.stop_threads:
-                    break
-            for message in self.send_list:
-                self.send(message)
-                self.send_list.remove(message)
-                time.sleep(0.01)
     
-    def add_to_send_list(self, message):
-        with self.lock:
-            self.send_list.append(message)
-
     def load_json(self, data):
         messages = []
         for message in data.split('\n'):
             if message:  # Ignore les lignes vides
                 messages.append(json.loads(message))
         return messages
-
-    def stop(self):
-        if self.callback_stop is not None:
-            self.callback_stop()
-        self.stop_threads = True
-        close_trhead = threading.Thread(target=self.close_connection)
-        close_trhead.start()
-        print("Arrêt de la connexion pour le client", {self.id_client})
     
     def close_connection(self):
         for task in self.tasks:

@@ -67,6 +67,7 @@ def load_json(data):
 
 def handle_message(message, connection):
     global clients
+    print(f"Message reçu : {message}")
     if message["cmd"] == "stop":
         stop_threads = True
     elif message["cmd"] == "init":

@@ -282,7 +282,7 @@ class LidarScanner:
                     self.detect_object(new_scan)
                     #self.objets = [Objet(1, 1500, 1000, 20)]
                     #self.client_socket.add_to_send_list(self.client_socket.create_message(10, "objects", self.generate_JSON()))
-                    time.sleep(0.05)
+                    #time.sleep(0.05)
 
             except RPLidarException as e:
                 # Code pour gérer RPLidarException
@@ -300,7 +300,8 @@ class LidarScanner:
 if __name__ == '__main__':
     # Initialiser le client
     scanner = LidarScanner("/dev/ttyUSB0")
-    scan_thread = threading.Thread(target=scanner.run)
+    """scan_thread = threading.Thread(target=scanner.run)
     scan_thread.start()
-    scan_thread.join()
+    scan_thread.join()"""
+    scanner.run()
     print("Fin du programme")

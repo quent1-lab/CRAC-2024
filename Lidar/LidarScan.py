@@ -512,7 +512,7 @@ class LidarScanner:
 
     def stop(self):
         print("Arret du Programme")
-        self.client_socket.add_to_send_list(self.client_socket.generate_message(1, "stop", None))
+        self.client_socket.add_to_send_list(self.client_socket.create_message(1, "stop", None))
         self.objets = []
 
     def load_json(self, json_string):

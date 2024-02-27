@@ -19,6 +19,12 @@ class Client:
         self.lock = threading.Lock()  # Verrou pour la synchronisation des threads
 
         self.send_queue = Queue()
+
+        self.client_names = ["Broadcast", "Serveur", "BusCAN", "Lidar"]
+        if _id_client == 2205:
+            self.client_name = "Erreur"
+        else:
+            self.client_name = self.client_names[_id_client]
     
     def create_message(self, _id_receiver, _cmd, _data):
         return {"id_s" : self.id_client, "id_r" : _id_receiver, "cmd" : _cmd, "data" : _data}
@@ -30,13 +36,16 @@ class Client:
     def receive_messages(self, socket):
         buffer = ""
         while not self.stop_threads:
-            data = socket.recv(4096)
-            if not data:
+            try:
+                data = socket.recv(4096)
+                if not data:
+                    break
+                buffer += data.decode()
+                while "\n" in buffer:
+                    line, buffer = buffer.split("\n", 1)
+                    yield line
+            except ConnectionResetError:
                 break
-            buffer += data.decode()
-            while "\n" in buffer:
-                line, buffer = buffer.split("\n", 1)
-                yield line
 
     def receive_task(self):
         while not self.stop_threads:
@@ -62,7 +71,8 @@ class Client:
         self.send_queue.join()  # Attend la fin de la mise en file d'attente
         close_thread = threading.Thread(target=self.close_connection)
         close_thread.start()
-        print("Arrêt de la connexion pour le client", self.id_client)
+        print("LIDAR  : Arrêt de la connexion pour le client", self.client_name)
+        close_thread.join()
 
     def send_data(self):
         i = 0
@@ -86,21 +96,24 @@ class Client:
             with self.lock:
                 self.client_socket.sendall(messageJSON.encode())
         except ConnectionResetError:
-            print("Erreur de connexion pour le client", self.id_client)
+            print("LIDAR  : Erreur de connexion pour le client", self.client_name)
             self.stop_threads = True
     
     def load_json(self, data):
         messages = []
         for message in data.split('\n'):
             if message:  # Ignore les lignes vides
-                messages.append(json.loads(message))
+                try :
+                    messages.append(json.loads(message))
+                except json.JSONDecodeError:
+                    print("LIDAR  : Erreur de décodage JSON pour le client", self.client_name)
         return messages
     
     def close_connection(self):
         for task in self.tasks:
             task.join()
         self.client_socket.close()
-        print("Connexion fermée pour le client", {self.id_client})
+        print("LIDAR  : Connexion fermée pour le client", self.client_name)
     
     def set_callback(self, _callback):
         self.callback = _callback
@@ -109,20 +122,17 @@ class Client:
         self.callback_stop = _callback
     
     def connect(self):
-        print("Connexion du client", self.id_client, "au serveur ComWIFI")
-        i = 0
-        while True:
-            i += 1
+        print("LIDAR  : Connexion du client", self.client_name, "au serveur")
+        for i in range(3):
             try:
                 self.client_socket.connect((self.ip, self.port))
                 break  # Si la connexion est réussie, sortir de la boucle
             except socket.error as e:
-                print("Erreur de connexion pour le client", self.id_client, "au serveur ComWIFI")
-                print("Réessai de la connexion dans 2 secondes")
-                if i >= 3:
-                    print("Nombre maximum de tentatives de connexion atteint")
-                    raise e
-                time.sleep(3)  # Attendre 3 secondes avant de réessayer
+                print(f"LIDAR  : Erreur de connexion pour",self.client_name,"au serveur")
+                time.sleep(2)  # Attendre 2 secondes avant de réessayer
+        else:
+            print("LIDAR  : Nombre maximum de tentatives de connexion atteint")
+            raise e
 
         if self.id_client is None:
             self.id_client = 2205

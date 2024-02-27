@@ -270,7 +270,7 @@ class LidarScanner:
         self.connexion_lidar()
         self.client_socket.set_callback(self.receive_to_server)
         self.client_socket.set_callback_stop(self.stop)
-        self.client_socket.connect()
+        #self.client_socket.connect()
 
         while self.scanning:
             self.objets = []
@@ -281,7 +281,7 @@ class LidarScanner:
 
                     self.detect_object(new_scan)
                     #self.objets = [Objet(1, 1500, 1000, 20)]
-                    self.client_socket.add_to_send_list(self.client_socket.create_message(10, "objects", self.generate_JSON()))
+                    #self.client_socket.add_to_send_list(self.client_socket.create_message(10, "objects", self.generate_JSON()))
                     time.sleep(0.05)
 
             except RPLidarException as e:

@@ -5,21 +5,22 @@ import json
 HOST = '0.0.0.0'
 PORT = 22050
 
-clients = []  # Liste pour stocker les informations sur les clients (socket, address, name)
+clients = []  # Liste pour stocker les informations sur les clients (socket, address, ID)
+client_names = ["Broadcast", "Serveur", "BusCAN", "Lidar"]
 
 stop_threads = False
 lock = threading.Lock()
 
 def handle_client(connection, address):
     global stop_threads, clients
-    print('Connecté à', address)
+    print('BusCOM : Connecté à', address)
     for data in receive_messages(connection):
         messages = load_json(data)
         with lock:
             for message in messages:
                 handle_message(message, connection)
 
-    print(f"Déconnexion de {address}")
+    print(f"BusCOM : Déconnexion de {address}")
     connection.close()
     with lock:
         clients = [client for client in clients if client[0] != connection]
@@ -46,8 +47,8 @@ def handle_connection():
             thread = threading.Thread(target=handle_client, args=(connection, address))
             thread.start()
             with lock:
-                clients.append((connection, address, "Client"))
-            print(f"Connexion active : {threading.active_count()}")
+                clients.append((connection, address, None))
+            print(f"BusCOM : Connexion active : {threading.active_count()}")
         except socket.timeout:
             pass
 
@@ -56,7 +57,7 @@ def send(client_socket, message):
     try:
         client_socket.sendall(messageJSON.encode())
     except ConnectionResetError:
-        print("Erreur de connexion")
+        print("BusCOM : Erreur de connexion")
 
 def load_json(data):
     messages = []
@@ -66,14 +67,15 @@ def load_json(data):
     return messages
 
 def handle_message(message, connection):
-    global clients
-    print(f"Message reçu : {message}")
+    global clients, stop_threads
     if message["cmd"] == "stop":
         stop_threads = True
     elif message["cmd"] == "init":
         client_id = message["id_s"]
-        clients.append((connection, None, f"Client {client_id}"))
-        print(f"Client {client_id} connecté")
+        for client in clients:
+            if client[0] == connection:
+                client[2] = (client_id)
+                break
     elif message["cmd"] == "data":
         recipient_id = message["id_r"]
         recipient = next((client for client in clients if client[0] == connection and client[1] is not None and client[1][1] == recipient_id), None)
@@ -96,9 +98,9 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
     while not stop_threads:
         pass
 
-    print("Arrêt des connexions...")
+    print("BusCOM : Arrêt des connexions...")
     for client in clients:
         client[0].close()
     server_socket.close()
-    print("Serveur arrêté")
+    print("BusCOM : Serveur arrêté")
     exit()

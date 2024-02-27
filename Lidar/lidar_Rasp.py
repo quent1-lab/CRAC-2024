@@ -222,29 +222,25 @@ class LidarScanner:
             self.lidar = RPLidar(self.port)
             self.lidar.connect()
             logging.info("Lidar connected")
-            print("LiDAR connecté")
+            print("LIDAR  : appareil connecté")
         except RPLidarException as e:
             # Code pour gérer RPLidarException
-            print(f"Une erreur RPLidarException s'est produite dans le connexion : {e}")
+            print(f"LIDAR  : Une erreur RPLidarException s'est produite dans le connexion : {e}")
             self.lidar.stop()
             self.connexion_lidar()
         except Exception as e:
             logging.error(f"Failed to create an instance of RPLidar: {e}")
-            print("Erreur lors de la création de l'instance du LiDAR")
+            print("LIDAR  : Erreur lors de la création de l'instance du LiDAR")
 
-            time.sleep(1.5)
+            time.sleep(1)
             exit(0)
-            raise
 
     def stop(self):
         self.scanning = False
         logging.info("Stopping LiDAR motor")
-        print("Arrêt du moteur LiDAR")
+        print("LIDAR  : Arrêt du moteur")
         self.lidar.stop()
-        time.sleep(1)
         self.lidar.disconnect()
-        self.client_socket.stop()
-        exit(0)
 
     def generate_JSON(self):
         # Générer une chaîne de caractères au format JSON des objets détectés en fonction des id
@@ -280,17 +276,15 @@ class LidarScanner:
                     new_scan = self.transform_scan(scan)
 
                     self.detect_object(new_scan)
-                    #self.objets = [Objet(1, 1500, 1000, 20)]
                     self.client_socket.add_to_send_list(self.client_socket.create_message(10, "objects", self.generate_JSON()))
-                    #time.sleep(0.05)
 
             except RPLidarException as e:
                 # Code pour gérer RPLidarException
-                print(f"Une erreur RPLidarException s'est produite dans le run : {e}")
+                print(f"LIDAR  : Une erreur RPLidarException s'est produite dans le run : {e}")
                 self.lidar.stop()
-                self.lidar.disconnect()
-                self.connexion_lidar()
-                time.sleep(2)
+                #self.lidar.disconnect()
+                #self.connexion_lidar()
+                time.sleep(1)
                 
             except KeyboardInterrupt:
                 self.stop()
@@ -300,8 +294,5 @@ class LidarScanner:
 if __name__ == '__main__':
     # Initialiser le client
     scanner = LidarScanner("/dev/ttyUSB0")
-    """scan_thread = threading.Thread(target=scanner.run)
-    scan_thread.start()
-    scan_thread.join()"""
     scanner.run()
-    print("Fin du programme")
+    print("LIDAR  : Fin du programme")

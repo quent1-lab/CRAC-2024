@@ -8,8 +8,7 @@ class ComCAN:
         self.bustype = bustype
         self.can = None
         self.is_connected = False
-        client = Client("127.0.0.2", 22050)
-        client.connect()
+        self.client = Client("127.0.0.2", 22050, 2, self.disconnect)
 
     def connect(self):
         #Vérifie si le système d'exploitation est Linux
@@ -20,14 +19,16 @@ class ComCAN:
                 os.system('sudo ifconfig can0 up')
                 self.can = can.interface.Bus(channel = self.channel, bustype = self.bustype)
                 self.is_connected = True
+                print("BusCAN : Connexion établie")
             else:
-                print("Le système d'exploitation n'est pas compatible avec le CAN")
+                print("BusCAN : Le système d'exploitation n'est pas compatible avec le CAN")
         except Exception as e:
             pass
 
     def disconnect(self):
         try:
             self.can.shutdown()
+            self.is_connected = False
         except Exception as e:
             pass
 
@@ -39,16 +40,24 @@ class ComCAN:
 
     def receive(self):
         try:
-            return self.can.recv(10.0)
+            self.analyse_CAN(self.can.recv(10.0))
         except Exception as e:
             pass
+    
+    def analyse_CAN(self, data):
+        if data[0] == hex(28):
+            x = int(data[1:3], 16)
+            y = int(data[3:5], 16)
+            theta = int(data[5:7], 16)
+            self.client.add_to_send_list(self.client.create_message(0, "coord", {"x": x, "y": y, "theta": theta}))
 
     def run(self):
         try:
+            self.client.connect()
             self.connect()
-            while True:
+            while self.is_connected:
                 data = self.receive()
-                print(data)
+                print("BusCAN :",data)
                 
         except KeyboardInterrupt:
             self.disconnect()

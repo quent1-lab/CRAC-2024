@@ -86,6 +86,18 @@ def handle_message(message, connection):
         recipient = next((client for client in clients if client[0] == connection and client[1] is not None and client[1][1] == recipient_id), None)
         if recipient is not None:
             send(recipient[0], message)
+    elif message["cmd"] == "coord":
+        if message["id_r"] == 0:
+            # Envoie les coordonnées à tous les clients
+            for client in clients:
+                if client[0] != connection:
+                    send(client[0], message)
+        elif message["id_r"] == 3:
+            # Envoie les coordonnées au client Lidar
+            recipient = next((client for client in clients if client[0] == connection and client[1] is not None and client[1][1] == 3), None)
+            if recipient is not None:
+                send(recipient[0], message)
+
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
     server_socket.bind((HOST, PORT))

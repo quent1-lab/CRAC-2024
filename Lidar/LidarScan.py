@@ -736,6 +736,8 @@ class LidarScanner:
             coord = message["data"]
             self.ROBOT.update_position(coord["x"], coord["y"])
             self.ROBOT_ANGLE = coord["theta"]
+        elif message["cmd"] == "stop":
+            self.client_socket.stop()
             
         
     def run(self):

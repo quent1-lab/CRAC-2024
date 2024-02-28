@@ -47,7 +47,7 @@ def handle_connection():
             thread = threading.Thread(target=handle_client, args=(connection, address))
             thread.start()
             with lock:
-                clients.append((connection, address, None))
+                clients.append([connection, address, None])
             print(f"BusCOM : Connexion active : {threading.active_count()}")
         except socket.timeout:
             pass

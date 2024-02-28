@@ -60,6 +60,7 @@ class ComCAN:
 
     def run(self):
         self.client.set_callback_stop(self.disconnect)
+        self.client.set_callback(self.receive_to_server)
         try:
             self.client.connect()
             self.connect()

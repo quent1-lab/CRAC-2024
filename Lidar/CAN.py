@@ -51,7 +51,15 @@ class ComCAN:
             theta = int(data[5:7], 16)
             self.client.add_to_send_list(self.client.create_message(0, "coord", {"x": x, "y": y, "theta": theta}))
 
+    def receive_to_server(self, message):
+        if message["cmd"] == "stop":
+            self.client_socket.stop()
+        elif message["cmd"] == "data":
+            messageCAN = message["data"]
+            self.send(messageCAN)
+
     def run(self):
+        self.client.set_callback_stop(self.disconnect)
         try:
             self.client.connect()
             self.connect()

@@ -253,7 +253,6 @@ class LidarScanner:
     def receive_to_server(self, message):
         if message["cmd"] == "stop":
             self.client_socket.stop()
-            self.stop()
         else:
             if message["cmd"] == "coord":
                 coord = message["data"]

@@ -74,7 +74,7 @@ def handle_message(message, connection):
         client_id = message["id_s"]
         for client in clients:
             if client[0] == connection:
-                client[2] = (client_id)
+                client[2] = client_id
                 break
     elif message["cmd"] == "data":
         recipient_id = message["id_r"]

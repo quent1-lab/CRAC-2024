@@ -78,8 +78,8 @@ class ComCAN:
             while self.is_connected:
                 data = self.receive()
                 if data is not None:
-                    #self.analyse_CAN(data)
-                    print("BusCAN :",data)
+                    self.analyse_CAN(data)
+                    #print("BusCAN :",data)
                 
         except KeyboardInterrupt:
             self.disconnect()

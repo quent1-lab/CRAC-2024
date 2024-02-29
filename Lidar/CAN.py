@@ -70,10 +70,16 @@ class ComCAN:
             self.connect()
             while self.is_connected:
                 data = self.receive()
-                print("BusCAN : ID", data.arbitration_id, "Data", data.data)
+
                 if data is not None:
                     #self.analyse_CAN(data)
-                    print("BusCAN :",data)
+                    #print("BusCAN :",data)
+                    print("BusCAN : ID", hex(data.arbitration_id), "Data", data.data)
+                    _data = data.data
+                    x = struct.unpack('f', _data[0:4])
+                    y = struct.unpack('f', _data[4:8])
+                    theta = struct.unpack('f', _data[8:12])
+                    print("BusCAN : x = ", x, "y = ", y, "theta = ", theta)
                 
         except KeyboardInterrupt:
             self.client_socket.send(self.client.create_message(0, "stop", {}))

@@ -47,8 +47,6 @@ class ComCAN:
     
     def analyse_CAN(self, data):
         # Les données du message CAN
-        data = bytes([0x00, 0x00, 0x00, 0x00, 0xfe, 0xff])
-
         # Décoder les 4 premiers bytes en un entier non signé
         value1 = struct.unpack('>I', data[:4])[0]
 
@@ -77,6 +75,7 @@ class ComCAN:
             self.connect()
             while self.is_connected:
                 data = self.receive()
+                print(type(data))
                 if data is not None:
                     self.analyse_CAN(data)
                     print("BusCAN :",data)

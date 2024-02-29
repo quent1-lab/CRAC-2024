@@ -40,7 +40,7 @@ class ComCAN:
 
     def receive(self):
         try:
-            self.analyse_CAN(self.can.recv(10.0))
+            return self.can.recv(10.0)
         except Exception as e:
             pass
     

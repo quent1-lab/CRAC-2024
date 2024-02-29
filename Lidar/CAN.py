@@ -76,9 +76,9 @@ class ComCAN:
                     #print("BusCAN :",data)
                     print("BusCAN : ID", hex(data.arbitration_id), "Data", data.data)
                     _data = data.data
-                    x = struct.unpack('f', _data[0:2])
-                    y = struct.unpack('f', _data[2:4])
-                    theta = struct.unpack('f', _data[4:6])
+                    x = struct.unpack('i', _data[0:2])
+                    y = struct.unpack('i', _data[2:4])
+                    theta = struct.unpack('i', _data[4:6])
                     print("BusCAN : x = ", x, "y = ", y, "theta = ", theta)
                 
         except KeyboardInterrupt:

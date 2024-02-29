@@ -57,8 +57,6 @@ class ComCAN:
             pass
     
     def analyse_CAN(self, data):
-        # Les données du message CAN
-        # Décoder les 4 premiers bytes en un entier non signé
         if data[0] == 0x28:
             # type data : bytearray(b'\x00\x00\x00\x00\x00\x00') -> 0-2 : (int)x, 2-4 : (int)y, 4-6 : (in)theta 
             x = struct.unpack('h', data[0:2])

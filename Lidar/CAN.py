@@ -49,7 +49,8 @@ class ComCAN:
             x = int(data[1:3], 16)
             y = int(data[3:5], 16)
             theta = int(data[5:7], 16)
-            self.client.add_to_send_list(self.client.create_message(0, "coord", {"x": x, "y": y, "theta": theta}))
+            print("BusCAN : x = ", x, "y = ", y, "theta = ", theta)
+            #self.client.add_to_send_list(self.client.create_message(0, "coord", {"x": x, "y": y, "theta": theta}))
 
     def receive_to_server(self, message):
         if message["cmd"] == "stop":
@@ -66,7 +67,9 @@ class ComCAN:
             self.connect()
             while self.is_connected:
                 data = self.receive()
-                print("BusCAN :",data)
+                if data is not None:
+                    self.analyse_CAN(data)
+                #print("BusCAN :",data)
                 
         except KeyboardInterrupt:
             self.disconnect()

@@ -48,11 +48,6 @@ class ComCAN:
     def analyse_CAN(self, data):
         # Les données du message CAN
         # Décoder les 4 premiers bytes en un entier non signé
-        value1 = struct.unpack('>I', data[:4])[0]
-
-        # Décoder les 2 derniers bytes en un court entier non signé
-        value2 = struct.unpack('>H', data[4:])[0]
-        print(value1, value2)
         """if data[0] == hex(28):
             x = int(data[1:3], 16)
             y = int(data[3:5], 16)
@@ -75,9 +70,9 @@ class ComCAN:
             self.connect()
             while self.is_connected:
                 data = self.receive()
-                print(type(data))
+                print("BusCAN : ID", data.arbitration_id, "Data", data.data)
                 if data is not None:
-                    self.analyse_CAN(data)
+                    #self.analyse_CAN(data)
                     print("BusCAN :",data)
                 
         except KeyboardInterrupt:

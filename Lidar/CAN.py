@@ -38,7 +38,17 @@ class ComCAN:
             self.can.send(data)
         except Exception as e:
             pass
-
+    
+    def packed(self, id, data):
+        # id : int, data : [(int, str)] -> [(data, format)]
+        dataCan = None
+        for i in range(len(data)):
+            if dataCan is None:
+                dataCan = struct.pack(data[i][1], data[i][0])
+            else:
+                dataCan += struct.pack(data[i][1], data[i])
+        return can.Message(arbitration_id = id, data = dataCan, is_extended_id = False)
+    
     def receive(self):
         try:
             messageCan = self.can.recv(10.0)

@@ -1,6 +1,7 @@
 import can
 import os
 from client import Client
+import struct
 
 class ComCAN:
     def __init__(self, channel, bustype):
@@ -45,12 +46,21 @@ class ComCAN:
             pass
     
     def analyse_CAN(self, data):
-        if data[0] == hex(28):
+        # Les données du message CAN
+        data = bytes([0x00, 0x00, 0x00, 0x00, 0xfe, 0xff])
+
+        # Décoder les 4 premiers bytes en un entier non signé
+        value1 = struct.unpack('>I', data[:4])[0]
+
+        # Décoder les 2 derniers bytes en un court entier non signé
+        value2 = struct.unpack('>H', data[4:])[0]
+        print(value1, value2)
+        """if data[0] == hex(28):
             x = int(data[1:3], 16)
             y = int(data[3:5], 16)
             theta = int(data[5:7], 16)
             print("BusCAN : x = ", x, "y = ", y, "theta = ", theta)
-            #self.client.add_to_send_list(self.client.create_message(0, "coord", {"x": x, "y": y, "theta": theta}))
+            #self.client.add_to_send_list(self.client.create_message(0, "coord", {"x": x, "y": y, "theta": theta}))"""
 
     def receive_to_server(self, message):
         if message["cmd"] == "stop":

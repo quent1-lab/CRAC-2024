@@ -82,7 +82,7 @@ class ComCAN:
                     print("BusCAN :",data)
                 
         except KeyboardInterrupt:
-            self.disconnect()
+            self.client_socket.send(self.client.create_message(0, "stop", {}))
             pass
 
 if __name__ == "__main__":

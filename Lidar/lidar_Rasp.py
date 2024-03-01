@@ -242,7 +242,7 @@ class LidarScanner:
         self.lidar.stop()
         self.lidar.disconnect()
 
-    def generate_JSON(self):
+    def generate_JSON_Objets(self):
         # Générer une chaîne de caractères au format JSON des objets détectés en fonction des id
         json = "["
         for objet in self.objets:
@@ -250,10 +250,17 @@ class LidarScanner:
         json = json[:-1] + "]"
         return json
 
+    def generate_JSON_Points(self, points):
+        # Générer une chaîne de caractères au format JSON des points en fonction des coordonnées (x, y)
+        json = "["
+        for point in points:
+            json += f"{{\"x\": {point[0]}, \"y\": {point[1]}, \"dist\": {point[2]}, \"angle\": {point[3]}}},"
+        json = json[:-1] + "]"
+        return json
+
     def receive_to_server(self, message):
         if message["cmd"] == "stop":
             self.client_socket.stop()
-            self.stop()
         else:
             if message["cmd"] == "coord":
                 coord = message["data"]
@@ -273,9 +280,9 @@ class LidarScanner:
                 
                 for scan in self.lidar.iter_scans():
                     new_scan = self.transform_scan(scan)
-
-                    self.detect_object(new_scan)
-                    self.client_socket.add_to_send_list(self.client_socket.create_message(10, "objects", self.generate_JSON()))
+                    self.client_socket.add_to_send_list(self.client_socket.create_message(10, "points", self.generate_JSON_Points(new_scan)))
+                    #self.detect_object(new_scan)
+                    #self.client_socket.add_to_send_list(self.client_socket.create_message(10, "objects", self.generate_JSON_Objets()))
 
             except RPLidarException as e:
                 # Code pour gérer RPLidarException
@@ -283,7 +290,7 @@ class LidarScanner:
                 self.lidar.stop()
                 #self.lidar.disconnect()
                 #self.connexion_lidar()
-                time.sleep(1)
+                time.sleep(2)
                 
             except KeyboardInterrupt:
                 self.stop()
@@ -292,6 +299,6 @@ class LidarScanner:
 
 if __name__ == '__main__':
     # Initialiser le client
-    scanner = LidarScanner("/dev/ttyUSB0")
+    scanner = LidarScanner("/dev/ttyUSB11")
     scanner.run()
     print("LIDAR  : Fin du programme")

@@ -43,6 +43,8 @@ class Client:
                     break
                 buffer += data.decode()
                 while "\n" in buffer:
+                    if self.stop_threads:
+                        break
                     line, buffer = buffer.split("\n", 1)
                     yield line
             except ConnectionResetError:
@@ -124,6 +126,7 @@ class Client:
         try:
             for task in self.tasks:
                 task.join()
+                print("CLIENT : Arrêt du thread", task)
             self.client_socket.close()
             print("CLIENT : Connexion fermée pour le client", self.client_name)
         except Exception as e:

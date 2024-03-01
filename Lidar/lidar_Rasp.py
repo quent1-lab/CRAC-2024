@@ -281,7 +281,6 @@ class LidarScanner:
                 for scan in self.lidar.iter_scans():
                     new_scan = self.transform_scan(scan)
                     self.client_socket.add_to_send_list(self.client_socket.create_message(10, "points", self.generate_JSON_Points(new_scan)))
-                    print("LIDAR  : Envoi des points au serveur")
                     #self.detect_object(new_scan)
                     #self.client_socket.add_to_send_list(self.client_socket.create_message(10, "objects", self.generate_JSON_Objets()))
 

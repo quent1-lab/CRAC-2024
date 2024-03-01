@@ -10,6 +10,7 @@ from sklearn.cluster import DBSCAN
 from rplidar import RPLidar, RPLidarException
 import serial.tools.list_ports
 from client import *
+import json
 
 """# Initialiser le serveur
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -728,7 +729,6 @@ class LidarScanner:
             time.sleep(0.01)
 
     def receive_to_server(self, message):
-        print("Message reçu")
         if message["cmd"] == "objects":
                 self.objets = []
                 json_string = json.loads(message["data"])
@@ -740,8 +740,10 @@ class LidarScanner:
             self.ROBOT_ANGLE = coord["theta"]
         elif message["cmd"] == "points":
             scan = message["data"]
+            scan = json.loads(scan)
             self.new_scan = []
             for point in scan:
+                print(point)
                 self.new_scan.append((point["x"],point["y"], point["dist"], point["angle"]))
             print("Scan reçu")
         elif message["cmd"] == "stop":

@@ -68,6 +68,7 @@ def load_json(data):
 
 def handle_message(message, connection):
     global clients, stop_threads
+    print("BusCOM : Message reçu", message)
     if message["cmd"] == "stop":
         stop_threads = True
     elif message["cmd"] == "init":

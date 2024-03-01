@@ -516,8 +516,8 @@ class LidarScanner:
 
     def stop(self):
         print("Arret du Programme")
-        self.client_socket.add_to_send_list(self.client_socket.create_message(1, "stop", None))
         self.objets = []
+        exit(0)
 
     def load_json(self, json_string):
         try:
@@ -760,7 +760,7 @@ class LidarScanner:
                 self.clicked_position = (x, y)
                 print("Clicked position:", self.clicked_position)
                 # Envoie les coordonnées du clic au CAN
-                self.client_socket.add_to_send_list(self.client_socket.create_message(2, "clic", {"x": x, "y": y}))
+                self.client_socket.add_to_send_list(self.client_socket.create_message(2, "clic", {"x": x, "y": y, "theta": self.ROBOT_ANGLE, "sens": 0}))
 
     def is_within_game_area(self, pos):
         # Vérifie si les coordonnées du clic sont dans la zone de jeu
@@ -779,8 +779,7 @@ class LidarScanner:
             try:
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
-                        self.stop()
-                        self.client_socket.stop()
+                        self.client_socket.add_to_send_list(self.client_socket.create_message(1, "stop", None))
                         exit(0)
 
                     self.handle_mouse_click(event)
@@ -808,7 +807,7 @@ class LidarScanner:
                 time.sleep(1)
 
             except KeyboardInterrupt:
-                self.stop()
+                self.client_socket.add_to_send_list(self.client_socket.create_message(1, "stop", None))
                 break
 
 

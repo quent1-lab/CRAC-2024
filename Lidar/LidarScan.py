@@ -742,6 +742,7 @@ class LidarScanner:
             self.new_scan = []
             for point in scan:
                 self.new_scan.append((point["x"],point["y"], point["angle"], point["distance"]))
+            print("Scan reçu")
         elif message["cmd"] == "stop":
             self.client_socket.stop()
             
@@ -770,9 +771,10 @@ class LidarScanner:
                 for point in self.new_scan:
                     self.draw_point(point[0], point[1])
 
-                self.detect_objects(self.new_scan)
-                self.suivre_objet(self.objets, 100)
-                
+                if len(self.new_scan) >= 3:
+                    self.detect_objects(self.new_scan)
+                    self.suivre_objet(self.objets, 100)
+
                 for objet in self.objets:
                     self.draw_object(objet)
                 

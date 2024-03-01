@@ -91,11 +91,7 @@ class Client:
                 i += 1
                 self.add_to_send_list(message)
                 print("Données envoyées au serveur ComWIFI:", message)
-                while True:
-                    with self.lock:
-                        if len(self.send_list) > 0 and not self.stop_threads:
-                            break
-                    time.sleep(0.5)
+                time.sleep(0.5)
         except Exception as e:
             raise ClientException(f"CLIENT : Une erreur est survenue lors de l'envoi des données pour le client {self.client_name}") from e
     
@@ -171,7 +167,7 @@ class Client:
 if __name__ == "__main__":
     try:
         # Utilisation de la classe
-        client = Client('127.0.0.1', 22050)
+        client = Client('127.0.0.1', 22050, 1, None, True)
         client.connect()
     except ClientException as e:
         print(e)

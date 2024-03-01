@@ -57,14 +57,6 @@ class Serveur:
                 print(f"BusCOM : Connexion active : {threading.active_count()}")
             except socket.timeout:
                 pass
-            except OSError as e:
-                if e.errno == errno.EBADF:
-                    print("Socket fermé.")
-                else:
-                    raise e
-            finally:
-                if self.server_socket.fileno() != -1:  # Check if the server socket is open before closing
-                    self.server_socket.close()
 
     def send(self, client_socket, message):
         messageJSON = json.dumps(message) + "\n"

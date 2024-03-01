@@ -300,5 +300,11 @@ class LidarScanner:
 if __name__ == '__main__':
     # Initialiser le client
     scanner = LidarScanner("/dev/ttyUSB11")
-    scanner.run()
+    try :
+        scanner.run()
+    except KeyboardInterrupt:
+        scanner.stop()
+    except Exception as e:
+            print(f"LIDAR  : Une erreur s'est produite : {e}")
+            scanner.stop()
     print("LIDAR  : Fin du programme")

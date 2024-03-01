@@ -23,9 +23,8 @@ class Serveur:
                     with self.lock:
                         for message in messages:
                             self.handle_message(message, connection)
-            except ConnectionResetError:
-                break
-            except BrokenPipeError:
+            except Exception as e:
+                print(e)
                 break
         self.deconnect_client(connection, address)
 

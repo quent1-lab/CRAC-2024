@@ -345,7 +345,7 @@ class LidarScanner:
 
             id_objet_existant = self.trouver_id_objet_existants(x, y, SEUIL)
 
-            if id_objet_existant != None:
+            if id_objet_existant != None and id_objet_existant <= len(self.objets):
                 # Si l'objet est déjà suivi, mettre à jour ses coordonnées
                 self.objets[id_objet_existant - 1].update_position(x, y)
                 self.objets[id_objet_existant - 1].taille = taille

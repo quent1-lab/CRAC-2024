@@ -27,7 +27,8 @@ class Serveur:
             except Exception as e:
                 print(e)
                 break
-        self.deconnect_client(connection, address)
+        if not self.stop_threads:
+            self.deconnect_client(connection, address)
 
         """print(f"BusCOM : Déconnexion de {address}")
         connection.close()

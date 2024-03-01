@@ -53,6 +53,7 @@ class LidarScanner:
         self.path_picture = "Lidar/Terrain_Jeu.png"
         self.id_compteur = 0  # Compteur pour les identifiants d'objet
         self.objets = []  # Liste pour stocker les objets détectés
+        self.new_scan = []
 
         # Initialisation de Pygame et ajustement de la taille de la fenêtre
         pygame.init()
@@ -736,6 +737,11 @@ class LidarScanner:
             coord = message["data"]
             self.ROBOT.update_position(coord["x"], coord["y"])
             self.ROBOT_ANGLE = coord["theta"]
+        elif message["cmd"] == "points":
+            scan = message["data"]
+            self.new_scan = []
+            for point in scan:
+                self.new_scan.append((point["x"],point["y"], point["angle"], point["distance"]))
         elif message["cmd"] == "stop":
             self.client_socket.stop()
             
@@ -760,6 +766,13 @@ class LidarScanner:
 
                 self.draw_background()
                 self.draw_robot(self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)
+
+                for point in self.new_scan:
+                    self.draw_point(point[0], point[1])
+
+                self.detect_objects(self.new_scan)
+                self.suivre_objet(self.objets, 100)
+                
                 for objet in self.objets:
                     self.draw_object(objet)
                 

@@ -82,11 +82,12 @@ def handle_message(message, connection):
             for client in clients:
                 if client[0] != connection:
                     send(client[0], message)
-        elif message["id_r"] == 3:
-            # Envoie les coordonnées au client Lidar
-            recipient = next((client for client in clients if client[0] == connection and client[1] is not None and client[1][1] == 3), None)
-            if recipient is not None:
-                send(recipient[0], message)
+        else:
+            # Envoie les coordonnées à un client spécifique
+            for client in clients:
+                if client[2] == message["id_r"]:
+                    send(client[0], message)
+            
         
 
 

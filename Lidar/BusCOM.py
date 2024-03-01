@@ -68,7 +68,7 @@ def load_json(data):
 
 def handle_message(message, connection):
     global clients, stop_threads
-    print("BusCOM : Message reçu", message)
+    #print("BusCOM : Message reçu", message)
     if message["cmd"] == "stop":
         stop_threads = True
     elif message["cmd"] == "init":
@@ -87,6 +87,7 @@ def handle_message(message, connection):
             # Envoie les coordonnées à un client spécifique
             for client in clients:
                 if client[2] == message["id_r"]:
+                    print("BusCOM : Envoi à", client[2])
                     send(client[0], message)
             
         

@@ -280,6 +280,7 @@ class LidarScanner:
                 
                 for scan in self.lidar.iter_scans():
                     new_scan = self.transform_scan(scan)
+                    print("LIDAR  : Nouveau scan effectué")
                     self.client_socket.add_to_send_list(self.client_socket.create_message(10, "points", self.generate_JSON_Points(new_scan)))
                     #self.detect_object(new_scan)
                     #self.client_socket.add_to_send_list(self.client_socket.create_message(10, "objects", self.generate_JSON_Objets()))

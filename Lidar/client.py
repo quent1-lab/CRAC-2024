@@ -79,7 +79,7 @@ class Client:
         while not self.send_queue.empty():
             self.send_queue.get()
         self.send_queue.task_done()
-        self.send_queue.join(timeout=1)
+        self.send_queue.join()
         print("CLIENT : Arrêt des threads pour le client", self.client_name)
         close_thread = threading.Thread(target=self.close_connection)
         close_thread.start()

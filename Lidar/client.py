@@ -19,6 +19,14 @@ class Client:
         self.tasks = []
         self.send_list = []
         self.lock = threading.Lock()  # Verrou pour la synchronisation des threads
+
+        self.send_queue = Queue()
+
+        self.client_names = ["Broadcast", "Serveur", "BusCAN", "Lidar","","","","","","","IHM"]
+        if _id_client == 2205:
+            self.client_name = "Erreur"
+        else:
+            self.client_name = self.client_names[_id_client]
     
     def create_message(self, _id_receiver, _cmd, _data):
         return {"id_s" : self.id_client, "id_r" : _id_receiver, "cmd" : _cmd, "data" : _data}

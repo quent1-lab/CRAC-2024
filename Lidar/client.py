@@ -20,7 +20,7 @@ class Client:
 
         self.send_queue = Queue()
 
-        self.client_names = ["Broadcast", "Serveur", "BusCAN", "Lidar"]
+        self.client_names = ["Broadcast", "Serveur", "BusCAN", "Lidar","","","","","","","IHM"]
         if _id_client == 2205:
             self.client_name = "Erreur"
         else:

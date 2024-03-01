@@ -75,6 +75,8 @@ class LidarScanner:
         pygame.mouse.set_visible(True)
         pygame.display.set_caption('LiDAR Scan')
         self.lcd.fill(self.BACKGROUND_COLOR)
+        pygame.event.set_allowed([MOUSEBUTTONDOWN, MOUSEBUTTONUP, MOUSEMOTION])
+        self.clicked_position = None  # Variable pour stocker les coordonnées du clic
         pygame.display.update()
 
         logging.basicConfig(filename='lidar_scan.log', level=logging.INFO,
@@ -746,12 +748,28 @@ class LidarScanner:
                 self.new_scan.append((point["x"],point["y"], point["dist"], point["angle"]))
         elif message["cmd"] == "stop":
             self.client_socket.stop()
-            
+    
+    def handle_mouse_click(self, event):
+        if event.type == MOUSEBUTTONDOWN:
+            # Vérifiez si le clic a eu lieu dans la zone de jeu
+            if self.is_within_game_area(event.pos):
+                # Convertissez les coordonnées de la souris en coordonnées du terrain de jeu
+                x = event.pos[0] / self.X_RATIO
+                y = event.pos[1] / self.Y_RATIO
+                # Stockez les coordonnées du clic
+                self.clicked_position = (x, y)
+                print("Clicked position:", self.clicked_position)
+                # Envoie les coordonnées du clic au CAN
+                self.client_socket.add_to_send_list(self.client_socket.create_message(2, "clic", {"x": x, "y": y}))
+
+    def is_within_game_area(self, pos):
+        # Vérifie si les coordonnées du clic sont dans la zone de jeu
+        return self.BORDER_DISTANCE * self.X_RATIO <= pos[0] <= (self.FIELD_SIZE[0] - self.BORDER_DISTANCE) * self.X_RATIO \
+            and self.BORDER_DISTANCE * self.Y_RATIO <= pos[1] <= (self.FIELD_SIZE[1] - self.BORDER_DISTANCE) * self.Y_RATIO
         
     def run(self):
         #self.programme_simulation()
-        start_time = time.time()
-        start = False
+
         #self.connexion_lidar()
         self.client_socket.set_callback(self.receive_to_server)
         self.client_socket.set_callback_stop(self.stop)
@@ -759,12 +777,13 @@ class LidarScanner:
         print("Connecté au serveur")
         while True:
             try:
-                pygame.event.get()
-                keys = pygame.key.get_pressed()
-                quit = pygame.event.get(pygame.QUIT)
-                if quit or keys[pygame.K_ESCAPE]:
-                    self.stop()
-                    break
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        self.stop()
+                        self.client_socket.stop()
+                        exit(0)
+
+                    self.handle_mouse_click(event)
 
                 self.draw_background()
                 self.draw_robot(self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)

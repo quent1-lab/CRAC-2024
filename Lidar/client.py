@@ -130,9 +130,8 @@ class Client:
     
     def close_connection(self):
         try:
-            for task in self.tasks:
-                task.join()
-                print("CLIENT : Arrêt du thread", task)
+            self.tasks[1].join()
+    
             self.client_socket.close()
             print("CLIENT : Connexion fermée pour le client", self.client_name)
         except Exception as e:

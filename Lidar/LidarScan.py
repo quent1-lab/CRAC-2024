@@ -356,6 +356,7 @@ class LidarScanner:
                 nouvel_objet = Objet(self.id_compteur, x, y, taille)
                 nouvel_objet.points = points_autour_objet
                 self.objets.append(nouvel_objet)
+            return None
 
     def detect_objects(self, scan):
 
@@ -399,25 +400,25 @@ class LidarScanner:
                 return objet.id  # Retourne l'ID de l'objet existant
         return None
 
-    def suivre_objet(self, objets, seuil_distance=100):
+    def suivre_objet(self, objets, rayon_cercle=100):
 
         if len(self.objets) != len(objets):
             # Ajoute les objets manquants
             for objet in objets[len(self.objets):]:
                 self.objets.append(objet)
 
-        # Pré-calculer le carré du seuil de distance
-        seuil_distance_carre = seuil_distance ** 2
+        # Pré-calculer le carré du rayon du cercle
+        rayon_cercle_carre = rayon_cercle ** 2
         # Vérifier si l'objet est déjà suivi
+        objets_copy = objets.copy()
         for objet in self.objets:
-            for objet_param in objets:
-                distance_carre = (objet_param.x - objet.x)**2 + \
-                    (objet_param.y - objet.y)**2
-
-                if distance_carre < seuil_distance_carre:
-                    self.objets[objet_param.id -
-                                1].update_position(objet_param.x, objet_param.y)
-                    objets.remove(objet_param)  # Retirer l'objet de la liste
+            objets_dans_cercle = [objet_param for objet_param in objets_copy if (objet_param.x - objet.x)**2 + (objet_param.y - objet.y)**2 < rayon_cercle_carre]
+            
+            if objets_dans_cercle:
+                # Trouver l'objet le plus proche
+                objet_le_plus_proche = min(objets_dans_cercle, key=lambda objet_param: (objet_param.x - objet.x)**2 + (objet_param.y - objet.y)**2)
+                self.objets[objet_le_plus_proche.id - 1].update_position(objet_le_plus_proche.x, objet_le_plus_proche.y)
+                objets_copy.remove(objet_le_plus_proche)  # Retirer l'objet de la liste
 
         return None
 
@@ -537,7 +538,7 @@ class LidarScanner:
     def calculer_angle(self, objet, deg):
         # Les coordonnées du robot et de l'objet doivent être fournies en entrée
         x_robot, y_robot = self.ROBOT.x, self.ROBOT.y
-        x_objet, y_objet = objet.x,objet.y
+        x_objet, y_objet = objet.x, objet.y
 
         # Calculer la différence de x et de y
         dx = x_objet - x_robot
@@ -549,7 +550,7 @@ class LidarScanner:
         if deg:
             # Convertir l'angle en degrés
             angle = math.degrees(angle)
-    
+
         return angle
 
     def calculer_distance(self, objet):
@@ -579,15 +580,19 @@ class LidarScanner:
         Un tuple contenant les coordonnées (x, y) et l'orientation theta du robot.
         """
         # Convertit les coordonnées en tableau numpy
-        points_fixes = np.array([[objet1.x, objet1.y], [objet2.x, objet2.y], [objet3.x, objet3.y]])
-        distances = np.array([self.calculer_distance(objet1), self.calculer_distance(objet2), self.calculer_distance(objet3)])
+        points_fixes = np.array(
+            [[objet1.x, objet1.y], [objet2.x, objet2.y], [objet3.x, objet3.y]])
+        distances = np.array([self.calculer_distance(
+            objet1), self.calculer_distance(objet2), self.calculer_distance(objet3)])
 
         # Calcule les vecteurs du robot par rapport aux points fixes
         vecteurs = points_fixes - np.array([[0, 0]])
 
         # Calcule les distances horizontales et verticales entre le point du Lidar et les points fixes
-        distances_horizontales = distances * np.cos(np.arctan2(vecteurs[:, 1], vecteurs[:, 0]))
-        distances_verticales = distances * np.sin(np.arctan2(vecteurs[:, 1], vecteurs[:, 0]))
+        distances_horizontales = distances * \
+            np.cos(np.arctan2(vecteurs[:, 1], vecteurs[:, 0]))
+        distances_verticales = distances * \
+            np.sin(np.arctan2(vecteurs[:, 1], vecteurs[:, 0]))
 
         # Calcule la position du robot
         x = np.mean(points_fixes[:, 0] + distances_horizontales)
@@ -627,17 +632,20 @@ class LidarScanner:
         # Calcule les coordonnées du point inconnu.
         x = (a**2 - b**2 + x2**2 - x1**2 + y2**2 - y1**2) / (2 * (x2 - x1))
         y = ((a**2 - c**2 + x3**2 - x1**2 + y3**2 - y1**2) / (2 * (y3 - y1))
-            - ((x3 - x1) / (y3 - y1)) * x)
+             - ((x3 - x1) / (y3 - y1)) * x)
         theta = 0
 
         return x, y, theta
 
     def calculer_coordonnees(self, objet1, objet2, objet3):
-        balises = np.array([[objet1.x, objet1.y], [objet2.x, objet2.y], [objet3.x, objet3.y]])
-        distances = np.array([self.calculer_distance(objet1), self.calculer_distance(objet2), self.calculer_distance(objet3)])
+        balises = np.array(
+            [[objet1.x, objet1.y], [objet2.x, objet2.y], [objet3.x, objet3.y]])
+        distances = np.array([self.calculer_distance(
+            objet1), self.calculer_distance(objet2), self.calculer_distance(objet3)])
         # Vérifier que le nombre de balises et de distances correspondent
         if len(balises) != len(distances):
-            raise ValueError("Le nombre de balises et de distances doit être le même")
+            raise ValueError(
+                "Le nombre de balises et de distances doit être le même")
 
         # Créer une matrice pour stocker les différences entre les coordonnées des balises
         A = np.zeros((len(balises) - 1, 2))
@@ -647,7 +655,8 @@ class LidarScanner:
             A[i] = np.array(balises[i + 1]) - np.array(balises[0])
 
         # Calculer les distances entre les balises
-        d = np.array(distances[1:]) ** 2 - np.array(distances[0]) ** 2 + np.sum(np.array(balises[0])**2) - np.sum(np.array(balises[1:])**2)
+        d = np.array(distances[1:]) ** 2 - np.array(distances[0]) ** 2 + \
+            np.sum(np.array(balises[0])**2) - np.sum(np.array(balises[1:])**2)
 
         # Résoudre le système d'équations linéaires pour obtenir les coordonnées du robot
         coord_robot = np.linalg.solve(2*A, d)
@@ -694,21 +703,24 @@ class LidarScanner:
             self.draw_robot(self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)
 
             if len(self.objets) >= 3:
-                x_r,y_r = self.calculer_coordonnees(self.objets[0],self.objets[1],self.objets[2])
+                x_r, y_r = self.calculer_coordonnees(
+                    self.objets[0], self.objets[1], self.objets[2])
                 print(f"x: {x_r}, y: {y_r}")
-                self.draw_robot(x_r, y_r,0)
+                self.draw_robot(x_r, y_r, 0)
 
             for objet in self.objets:
                 self.draw_object(objet)
                 trajectoire_actuel, trajectoire_adverse, trajectoire_evitement = self.trajectoires_anticipation(
                     self.ROBOT, objet, 1.5, 0.1, 50)
-                self.draw_all_trajectoires(trajectoire_actuel, trajectoire_adverse, trajectoire_evitement)
+                self.draw_all_trajectoires(
+                    trajectoire_actuel, trajectoire_adverse, trajectoire_evitement)
 
             for point in new_scan:
                 self.draw_point(point[0], point[1])
 
             # Affiche les fps sur l'écran (en bas a gauche)
-            self.draw_text("FPS: " + str(int(1 / (time.time() - last_time))), 10, self.WINDOW_SIZE[1] - 30)
+            self.draw_text(
+                "FPS: " + str(int(1 / (time.time() - last_time))), 10, self.WINDOW_SIZE[1] - 30)
             last_time = time.time()
 
             pygame.display.update()
@@ -733,10 +745,11 @@ class LidarScanner:
 
     def receive_to_server(self, message):
         if message["cmd"] == "objects":
-                self.objets = []
-                json_string = json.loads(message["data"])
-                for obj in json_string:
-                    self.objets.append(Objet(obj["id"], obj["x"], obj["y"], obj["taille"]))
+            self.objets = []
+            json_string = json.loads(message["data"])
+            for obj in json_string:
+                self.objets.append(
+                    Objet(obj["id"], obj["x"], obj["y"], obj["taille"]))
         elif message["cmd"] == "coord":
             coord = message["data"]
             self.ROBOT.update_position(coord["x"], coord["y"])
@@ -746,10 +759,11 @@ class LidarScanner:
             scan = json.loads(scan)
             self.new_scan = []
             for point in scan:
-                self.new_scan.append((point["x"],point["y"], point["dist"], point["angle"]))
+                self.new_scan.append(
+                    (point["x"], point["y"], point["dist"], point["angle"]))
         elif message["cmd"] == "stop":
             self.client_socket.stop()
-    
+
     def handle_mouse_click(self, event):
         if event.type == MOUSEBUTTONDOWN:
             # Vérifiez si le clic a eu lieu dans la zone de jeu
@@ -761,26 +775,33 @@ class LidarScanner:
                 self.clicked_position = (x, y)
                 print("Clicked position:", self.clicked_position)
                 # Envoie les coordonnées du clic au CAN
-                self.client_socket.add_to_send_list(self.client_socket.create_message(2, "clic", {"x": x, "y": y, "theta": int(self.ROBOT_ANGLE), "sens": "0"}))
+                self.client_socket.add_to_send_list(self.client_socket.create_message(
+                    2, "clic", {"x": x, "y": y, "theta": int(self.ROBOT_ANGLE), "sens": "0"}))
 
     def is_within_game_area(self, pos):
         # Vérifie si les coordonnées du clic sont dans la zone de jeu
         return self.BORDER_DISTANCE * self.X_RATIO <= pos[0] <= (self.FIELD_SIZE[0] - self.BORDER_DISTANCE) * self.X_RATIO \
             and self.BORDER_DISTANCE * self.Y_RATIO <= pos[1] <= (self.FIELD_SIZE[1] - self.BORDER_DISTANCE) * self.Y_RATIO
-        
-    def run(self):
-        #self.programme_simulation()
 
-        #self.connexion_lidar()
+    def run(self):
+        # self.programme_simulation()
+
+        # self.connexion_lidar()
         self.client_socket.set_callback(self.receive_to_server)
         self.client_socket.set_callback_stop(None)
         self.client_socket.connect()
         print("Connecté au serveur")
         while self.scanning:
             try:
+                key = pygame.key.get_pressed()
+                if key[pygame.K_ESCAPE] or key[pygame.K_SPACE]:
+                    self.client_socket.add_to_send_list(
+                        self.client_socket.create_message(1, "stop", None))
+                    break
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
-                        self.client_socket.add_to_send_list(self.client_socket.create_message(1, "stop", None))
+                        self.client_socket.add_to_send_list(
+                            self.client_socket.create_message(1, "stop", None))
                         exit(0)
 
                     self.handle_mouse_click(event)
@@ -791,13 +812,15 @@ class LidarScanner:
                 for point in self.new_scan:
                     self.draw_point(point[0], point[1])
 
-                if len(self.new_scan) >= 3:
-                    self.detect_objects(self.new_scan)
-                    self.suivre_objet(self.objets, 100)
+                if len(self.new_scan) > 0:
+                    new_objets = self.detect_object(self.new_scan)
+                     #self.suivre_objet(new_objets, 100)
 
                 for objet in self.objets:
+                    if objet.is_not_moving():
+                        self.objets.remove(objet)
                     self.draw_object(objet)
-                
+
                 pygame.display.update()
 
             except RPLidarException as e:
@@ -808,7 +831,8 @@ class LidarScanner:
                 time.sleep(1)
 
             except KeyboardInterrupt:
-                self.client_socket.add_to_send_list(self.client_socket.create_message(1, "stop", None))
+                self.client_socket.add_to_send_list(
+                    self.client_socket.create_message(1, "stop", None))
                 break
         print("Fin du programme")
         exit(0)

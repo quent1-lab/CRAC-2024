@@ -242,11 +242,19 @@ class LidarScanner:
         self.lidar.stop()
         self.lidar.disconnect()
 
-    def generate_JSON(self):
+    def generate_JSON_Objets(self):
         # Générer une chaîne de caractères au format JSON des objets détectés en fonction des id
         json = "["
         for objet in self.objets:
             json += str(objet) + ","
+        json = json[:-1] + "]"
+        return json
+
+    def generate_JSON_Points(self, points):
+        # Générer une chaîne de caractères au format JSON des points en fonction des coordonnées (x, y)
+        json = "["
+        for point in points:
+            json += f"{{\"x\": {point[0]}, \"y\": {point[1]}, \"dist\": {point[2]}, \"angle\": {point[3]}}},"
         json = json[:-1] + "]"
         return json
 
@@ -272,9 +280,9 @@ class LidarScanner:
                 
                 for scan in self.lidar.iter_scans():
                     new_scan = self.transform_scan(scan)
-
-                    self.detect_object(new_scan)
-                    self.client_socket.add_to_send_list(self.client_socket.create_message(10, "objects", self.generate_JSON()))
+                    self.client_socket.add_to_send_list(self.client_socket.create_message(10, "points", self.generate_JSON_Points()))
+                    #self.detect_object(new_scan)
+                    #self.client_socket.add_to_send_list(self.client_socket.create_message(10, "objects", self.generate_JSON_Objets()))
 
             except RPLidarException as e:
                 # Code pour gérer RPLidarException

@@ -291,9 +291,11 @@ class LidarScanner:
 
         return points_in_zone
 
-    def detect_object(self, scan, max_iteration=2):
+    def detect_object(self, scan, max_iteration=5, nb_objets_max=1):
         iteration = 0
-        while True:
+        while iteration < max_iteration:
+            iteration += 1
+
             # Liste des points associés aux objets déjà trouvés
             points_objets_trouves = []
             for k in range(iteration):
@@ -301,8 +303,7 @@ class LidarScanner:
                     points_objets_trouves += self.objets[k].points
 
             # Sélectionne le point le plus proche du robot en excluant les points des objets déjà trouvés
-            points_non_objets = [
-                point for point in scan if point not in points_objets_trouves]
+            points_non_objets = [point for point in scan if point not in points_objets_trouves]
             if not points_non_objets:
                 # Aucun point trouvé en dehors des objets, retourner None
                 return None
@@ -314,49 +315,50 @@ class LidarScanner:
             points_autour_objet = []
 
             # Sélectionne les points autour de l'objet en fonction des coordonnées (x, y) des points
-            points_autour_objet = self.get_points_in_zone(
-                points_non_objets, distance_objet, angle_objet)
+            points_autour_objet = self.get_points_in_zone(points_non_objets, distance_objet, angle_objet)
 
             if not points_autour_objet or len(points_autour_objet) < 3:
                 # Aucun point autour de l'objet ou pas assez de points, retourner None
                 return None
 
             # Calcul des coordonnées moyennes pondérées des points autour de l'objet
-            x = sum([point[0] for point in points_autour_objet]) / \
-                len(points_autour_objet)
-            y = sum([point[1] for point in points_autour_objet]) / \
-                len(points_autour_objet)
-
-            iteration += 1
-            if iteration > max_iteration:
-                return None
+            x = sum([point[0] for point in points_autour_objet]) / len(points_autour_objet)
+            y = sum([point[1] for point in points_autour_objet]) / len(points_autour_objet)
 
             # Calcul de la taille de l'objet
             x_min = min(points_autour_objet, key=lambda x: x[0])
             x_max = max(points_autour_objet, key=lambda x: x[0])
             y_min = min(points_autour_objet, key=lambda x: x[1])
             y_max = max(points_autour_objet, key=lambda x: x[1])
-            taille = math.sqrt((x_max[0] - x_min[0])
-                               ** 2 + (y_max[1] - y_min[1])**2)
+            taille = math.sqrt((x_max[0] - x_min[0])**2 + (y_max[1] - y_min[1])**2)
 
             # Seuil de détection d'un objet en mm
-            # en mm (distance que peut parcourir le robot entre deux scans)
-            SEUIL = 100
-
+            SEUIL = 120  # en mm (distance que peut parcourir le robot entre deux scans)
+            
             id_objet_existant = self.trouver_id_objet_existants(x, y, SEUIL)
 
-            if id_objet_existant != None and id_objet_existant <= len(self.objets):
+            if id_objet_existant != None:
                 # Si l'objet est déjà suivi, mettre à jour ses coordonnées
                 self.objets[id_objet_existant - 1].update_position(x, y)
                 self.objets[id_objet_existant - 1].taille = taille
                 self.objets[id_objet_existant - 1].points = points_autour_objet
             else:
-                # Si l'objet n'est pas déjà suivi, créer un nouvel objet
-                self.id_compteur += 1
-                nouvel_objet = Objet(self.id_compteur, x, y, taille)
-                nouvel_objet.points = points_autour_objet
-                self.objets.append(nouvel_objet)
-            return None
+                if len(self.objets) < nb_objets_max:
+                    # Si l'objet n'est pas déjà suivi, créer un nouvel objet
+                    nouvel_objet = Objet(len(self.objets)+1, x, y, taille)
+                    nouvel_objet.points = points_autour_objet
+                    self.objets.append(nouvel_objet)
+                else:
+                    # Si le nombre d'objets max est atteint, retourner None
+                    return None           
+
+    def trouver_id_objet_existants(self, x, y, seuil_distance=100):
+        # Vérifier si l'objet est déjà suivi
+        for objet in self.objets:
+            distance = math.sqrt((x - objet.x)**2 + (y - objet.y)**2)
+            if distance < seuil_distance:
+                return objet.id # Retourne l'ID de l'objet existant
+        return None
 
     def detect_objects(self, scan):
 
@@ -391,14 +393,6 @@ class LidarScanner:
             objets.append(nouvel_objet)
 
         return objets
-
-    def trouver_id_objet_existants(self, x, y, seuil_distance=100):
-        # Vérifier si l'objet est déjà suivi
-        for objet in self.objets:
-            distance = math.sqrt((x - objet.x)**2 + (y - objet.y)**2)
-            if distance < seuil_distance:
-                return objet.id  # Retourne l'ID de l'objet existant
-        return None
 
     def suivre_objet(self, objets, rayon_cercle=100):
 

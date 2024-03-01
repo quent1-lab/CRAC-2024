@@ -742,7 +742,7 @@ class LidarScanner:
             scan = message["data"]
             self.new_scan = []
             for point in scan:
-                self.new_scan.append((point["x"],point["y"], point["angle"], point["distance"]))
+                self.new_scan.append((point["x"],point["y"], point["dist"], point["angle"]))
             print("Scan reçu")
         elif message["cmd"] == "stop":
             self.client_socket.stop()

@@ -52,7 +52,10 @@ class ComCAN:
     def receive(self):
         try:
             messageCan = self.can.recv(10.0)
-            return messageCan.arbitration_id, messageCan.dlc, messageCan.data
+            if messageCan is not None:
+                return messageCan.arbitration_id, messageCan.dlc, messageCan.data
+            else:
+                return None
         except Exception as e:
             pass
     
@@ -71,6 +74,12 @@ class ComCAN:
         elif message["cmd"] == "data":
             messageCAN = message["data"]
             self.send(messageCAN)
+        elif message["cmd"] == "clic":
+            # type data à envoyer : short x, short y, short theta
+            data = message["data"]
+            dataCan = struct.pack('hhh', data["x"], data["y"], data["theta"], data["sens"])
+            messageCan = can.Message(arbitration_id = 0x28, data = dataCan, is_extended_id = False)
+            self.send(messageCan)
 
     def run(self):
         self.client.set_callback_stop(self.disconnect)

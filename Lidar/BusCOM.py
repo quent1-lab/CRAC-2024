@@ -25,6 +25,9 @@ class Serveur:
                             self.handle_message(message, connection)
             except ConnectionResetError:
                 break
+            except BrokenPipeError:
+                break
+        self.deconnect_client(connection, address)
 
         """print(f"BusCOM : Déconnexion de {address}")
         connection.close()
@@ -61,6 +64,8 @@ class Serveur:
             client_socket.sendall(messageJSON.encode())
         except ConnectionResetError:
             raise ServeurException("BusCOM : Erreur de connexion")
+        except BrokenPipeError:
+            raise ServeurException("BusCOM : Erreur de connexion")
     
     def send_stop(self):
         message = {"id_s" : 0, "id_r" : 0, "cmd" : "stop", "data" : ""}
@@ -78,6 +83,12 @@ class Serveur:
                 client[0].close()
         if self.server_socket.fileno() != -1:  # Check if the server socket is open before closing
             self.server_socket.close()
+    
+    def deconnect_client(self, connection, address):
+        print(f"BusCOM : Déconnexion de {address}")
+        connection.close()
+        with self.lock:
+            self.clients = [client for client in self.clients if client[0] != connection]
 
 
     def load_json(self, data):

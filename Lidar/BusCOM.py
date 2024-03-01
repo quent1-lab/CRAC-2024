@@ -131,7 +131,7 @@ class Serveur:
             print("BusCOM : Serveur arrêté")
 
 if __name__ == "__main__":
-    serveur = Serveur("127.0.0.1",22050)
+    serveur = Serveur("0.0.0.0",22050)
     try:
         serveur.start()
     except KeyboardInterrupt:

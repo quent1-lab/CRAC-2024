@@ -55,6 +55,7 @@ class LidarScanner:
         self.id_compteur = 0  # Compteur pour les identifiants d'objet
         self.objets = []  # Liste pour stocker les objets détectés
         self.new_scan = []
+        self.scanning = True
 
         # Initialisation de Pygame et ajustement de la taille de la fenêtre
         pygame.init()
@@ -515,9 +516,9 @@ class LidarScanner:
             raise
 
     def stop(self):
-        print("Arret du Programme")
+        print("Arret du Programme en cours...")
         self.objets = []
-        exit(0)
+        self.scanning = False
 
     def load_json(self, json_string):
         try:
@@ -775,7 +776,7 @@ class LidarScanner:
         self.client_socket.set_callback_stop(self.stop)
         self.client_socket.connect()
         print("Connecté au serveur")
-        while True:
+        while self.scanning:
             try:
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
@@ -809,6 +810,8 @@ class LidarScanner:
             except KeyboardInterrupt:
                 self.client_socket.add_to_send_list(self.client_socket.create_message(1, "stop", None))
                 break
+        print("Fin du programme")
+        exit(0)
 
 
 if __name__ == '__main__':

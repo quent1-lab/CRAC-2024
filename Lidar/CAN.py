@@ -76,8 +76,8 @@ class ComCAN:
             self.send(messageCAN)
         elif message["cmd"] == "clic":
             # type data à envoyer : short x, short y, short theta, char sens
-            data = (message["x"], message["y"], message["theta"], message["sens"])
-            dataCan = struct.pack('hhhB', *data)
+            data = message["data"]
+            dataCan = struct.pack('h', data["x"]) + struct.pack('h', data["y"]) + struct.pack('h', data["theta"]) + struct.pack('c', data["sens"])
             messageCan = can.Message(arbitration_id = 0x28, data = dataCan, is_extended_id = False)
             self.send(messageCan)
 
@@ -92,6 +92,8 @@ class ComCAN:
 
                 if data is not None:
                     self.analyse_CAN(data)
+            
+            exit(0)
                 
         except KeyboardInterrupt:
             self.client.send(self.client.create_message(0, "stop", {}))

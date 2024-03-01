@@ -61,6 +61,7 @@ class Client:
         try:
             while not self.stop_threads:
                 message = self.send_queue.get(timeout=0.1)
+                print("CLIENT : Envoi de message pour le client", self.client_name, ":", message)
                 self.send(message)
         except Empty:
             pass

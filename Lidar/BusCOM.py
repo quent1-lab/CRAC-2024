@@ -57,6 +57,11 @@ class Serveur:
                 print(f"BusCOM : Connexion active : {threading.active_count()}")
             except socket.timeout:
                 pass
+            except OSError as e:
+                if e.errno == errno.EBADF:
+                    break
+                else:
+                    raise ServeurException("BusCOM : Erreur de connexion") from e
 
     def send(self, client_socket, message):
         messageJSON = json.dumps(message) + "\n"

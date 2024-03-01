@@ -77,7 +77,7 @@ class ComCAN:
         elif message["cmd"] == "clic":
             # type data à envoyer : short x, short y, short theta, char sens
             data = message["data"]
-            dataCan = struct.pack('h', int(data["x"])) + struct.pack('h', int(data["y"])) + struct.pack('h', int(data["theta"])) + struct.pack('c', data["sens"].encode())
+            dataCan = struct.pack('h', int(data["x"])) + struct.pack('h', int(data["y"])) + struct.pack('h', int(data["theta"])) + struct.pack('c', bytes(data["sens"]))
             messageCan = can.Message(arbitration_id = 0x28, data = dataCan, is_extended_id = False)
             self.send(messageCan)
 

@@ -122,6 +122,8 @@ class Serveur:
             connection_thread = threading.Thread(target=self.handle_connection)
             connection_thread.start()
 
+            self.tasks.append(connection_thread)
+
             while not self.stop_threads:
                 pass
 

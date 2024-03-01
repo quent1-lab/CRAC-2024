@@ -109,7 +109,6 @@ class Serveur:
                 # Envoie les coordonnées à un client spécifique
                 for client in self.clients:
                     if client[2] == message["id_r"]:
-                        print("BusCOM : Envoi à", client[2])
                         self.send(client[0], message)
 
     def start(self):

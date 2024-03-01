@@ -74,7 +74,13 @@ class Client:
         if self.callback_stop is not None:
             self.callback_stop()
         self.stop_threads = True
-        self.send_queue.join()  # Attend la fin de la mise en file d'attente
+        print("CLIENT : Arrêt de la queue", self.client_name)
+        # Vider la queue
+        while not self.send_queue.empty():
+            self.send_queue.get()
+        self.send_queue.task_done()
+        self.send_queue.join(timeout=1)
+        print("CLIENT : Arrêt des threads pour le client", self.client_name)
         close_thread = threading.Thread(target=self.close_connection)
         close_thread.start()
         print("CLIENT : Arrêt de la connexion pour le client", self.client_name)

@@ -755,13 +755,13 @@ class LidarScanner:
             # Vérifiez si le clic a eu lieu dans la zone de jeu
             if self.is_within_game_area(event.pos):
                 # Convertissez les coordonnées de la souris en coordonnées du terrain de jeu
-                x = event.pos[0] / self.X_RATIO
-                y = event.pos[1] / self.Y_RATIO
+                x = int(event.pos[0] / self.X_RATIO)
+                y = int(event.pos[1] / self.Y_RATIO)
                 # Stockez les coordonnées du clic
                 self.clicked_position = (x, y)
                 print("Clicked position:", self.clicked_position)
                 # Envoie les coordonnées du clic au CAN
-                self.client_socket.add_to_send_list(self.client_socket.create_message(2, "clic", {"x": x, "y": y, "theta": self.ROBOT_ANGLE, "sens": 0}))
+                self.client_socket.add_to_send_list(self.client_socket.create_message(2, "clic", {"x": x, "y": y, "theta": int(self.ROBOT_ANGLE), "sens": "0"}))
 
     def is_within_game_area(self, pos):
         # Vérifie si les coordonnées du clic sont dans la zone de jeu

@@ -80,6 +80,7 @@ class ComCAN:
             dataCan = struct.pack('h', data["x"]) + struct.pack('h', data["y"]) + struct.pack('h', data["theta"]) + struct.pack('c', data["sens"].encode())
             messageCan = can.Message(arbitration_id = 0x28, data = dataCan, is_extended_id = False)
             self.send(messageCan)
+            print("BusCAN : Envoi de la commande XYT")
 
     def run(self):
         self.client.set_callback_stop(self.disconnect)

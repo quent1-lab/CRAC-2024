@@ -302,6 +302,7 @@ if __name__ == '__main__':
     # Initialiser le client
     scanner = LidarScanner("/dev/ttyUSB11")
     try :
+        print("LIDAR  : Démarrage du programme")
         scanner.run()
     except KeyboardInterrupt:
         scanner.stop()

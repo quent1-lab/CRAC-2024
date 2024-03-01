@@ -58,17 +58,18 @@ class Client:
             raise ClientException(f"CLIENT : Une erreur est survenue lors de la réception des messages pour le client {self.client_name}") from e
 
     def send_task(self):
-        try:
-            while not self.stop_threads:
+        while not self.stop_threads:
+            try:  
                 message = self.send_queue.get(timeout=0.1)
                 print("CLIENT : Envoi de message pour le client", self.client_name, ":", message)
                 self.send(message)
-        except Empty:
-            pass
-        except Exception as e:
-            raise ClientException(f"CLIENT : Une erreur est survenue lors de l'envoi des messages pour le client {self.client_name}") from e
+            except Empty:
+                pass
+            except Exception as e:
+                raise ClientException(f"CLIENT : Une erreur est survenue lors de l'envoi des messages pour le client {self.client_name}") from e
 
     def add_to_send_list(self, message):
+        print("CLIENT : Ajout de message à la file d'attente pour le client", self.client_name, ":", message)
         self.send_queue.put(message)
 
     def stop(self):

@@ -91,7 +91,6 @@ class Serveur:
         return messages
 
     def handle_message(self, message, connection):
-        print("BusCOM : Message reçu", message)
         if message["cmd"] == "stop":
             self.stop_threads = True
         elif message["cmd"] == "init":

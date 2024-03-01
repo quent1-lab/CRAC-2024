@@ -233,9 +233,6 @@ class LidarScanner:
         self.scanning = False
         logging.info("Stopping LiDAR motor")
         print("LIDAR  : Arrêt du moteur")
-        self.lidar.stop()
-        self.lidar.disconnect()
-        exit(0)
 
     def generate_JSON_Objets(self):
         # Générer une chaîne de caractères au format JSON des objets détectés en fonction des id
@@ -274,11 +271,12 @@ class LidarScanner:
             try:
                 
                 for scan in self.lidar.iter_scans():
+                    if not self.scanning:
+                        break
                     new_scan = self.transform_scan(scan)
                     self.client_socket.add_to_send_list(self.client_socket.create_message(10, "points", self.generate_JSON_Points(new_scan)))
                     #self.detect_object(new_scan)
                     #self.client_socket.add_to_send_list(self.client_socket.create_message(10, "objects", self.generate_JSON_Objets()))
-
             except RPLidarException as e:
                 # Code pour gérer RPLidarException
                 print(f"LIDAR  : Une erreur RPLidarException s'est produite dans le run : {e}")
@@ -290,7 +288,9 @@ class LidarScanner:
             except KeyboardInterrupt:
                 self.stop()
                 break
-        self.stop()
+        self.lidar.stop()
+        self.lidar.disconnect()
+        exit(0)
 
 if __name__ == '__main__':
     # Initialiser le client

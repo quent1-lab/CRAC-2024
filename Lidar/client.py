@@ -54,7 +54,11 @@ class Client:
         try:
             while not self.stop_threads:
                 for _message in self.receive_messages(self.client_socket):
+                    if self.stop_threads:
+                        break
                     for message in self.load_json(_message):
+                        if self.stop_threads:
+                            break
                         self.callback(message)
         except Exception as e:
             raise ClientException(f"CLIENT : Une erreur est survenue lors de la réception des messages pour le client {self.client_name}") from e
@@ -63,6 +67,8 @@ class Client:
         while not self.stop_threads:
             try:  
                 message = self.send_queue.get(timeout=0.1)
+                if self.stop_threads:
+                    break
                 self.send(message)
             except Empty:
                 pass

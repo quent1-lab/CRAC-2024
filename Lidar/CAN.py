@@ -70,14 +70,14 @@ class ComCAN:
 
     def receive_to_server(self, message):
         if message["cmd"] == "stop":
-            self.client_socket.stop()
+            self.client.stop()
         elif message["cmd"] == "data":
             messageCAN = message["data"]
             self.send(messageCAN)
         elif message["cmd"] == "clic":
-            # type data à envoyer : short x, short y, short theta
-            data = message["data"]
-            dataCan = struct.pack('hhh', data["x"], data["y"], data["theta"], data["sens"])
+            # type data à envoyer : short x, short y, short theta, char sens
+            data = (message["x"], message["y"], message["theta"], message["sens"])
+            dataCan = struct.pack('hhhB', *data)
             messageCan = can.Message(arbitration_id = 0x28, data = dataCan, is_extended_id = False)
             self.send(messageCan)
 
@@ -94,7 +94,7 @@ class ComCAN:
                     self.analyse_CAN(data)
                 
         except KeyboardInterrupt:
-            self.client_socket.send(self.client.create_message(0, "stop", {}))
+            self.client.send(self.client.create_message(0, "stop", {}))
             pass
 
 if __name__ == "__main__":

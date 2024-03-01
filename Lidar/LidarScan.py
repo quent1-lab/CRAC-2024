@@ -773,7 +773,7 @@ class LidarScanner:
 
         #self.connexion_lidar()
         self.client_socket.set_callback(self.receive_to_server)
-        self.client_socket.set_callback_stop(self.stop)
+        self.client_socket.set_callback_stop(None)
         self.client_socket.connect()
         print("Connecté au serveur")
         while self.scanning:

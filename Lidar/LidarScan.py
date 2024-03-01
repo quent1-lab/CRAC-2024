@@ -728,6 +728,7 @@ class LidarScanner:
             time.sleep(0.01)
 
     def receive_to_server(self, message):
+        print("Message reçu")
         if message["cmd"] == "objects":
                 self.objets = []
                 json_string = json.loads(message["data"])

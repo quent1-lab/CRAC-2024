@@ -76,17 +76,7 @@ def handle_message(message, connection):
             if client[0] == connection:
                 client[2] = client_id
                 break
-    elif message["cmd"] == "data":
-        recipient_id = message["id_r"]
-        recipient = next((client for client in clients if client[0] == connection and client[1] is not None and client[1][1] == recipient_id), None)
-        if recipient is not None:
-            send(recipient[0], message)
-    elif message["cmd"] == "objects":
-        recipient_id = message["id_r"]
-        recipient = next((client for client in clients if client[0] == connection and client[1] is not None and client[1][1] == recipient_id), None)
-        if recipient is not None:
-            send(recipient[0], message)
-    elif message["cmd"] == "coord":
+    else:
         if message["id_r"] == 0:
             # Envoie les coordonnées à tous les clients
             for client in clients:
@@ -97,6 +87,7 @@ def handle_message(message, connection):
             recipient = next((client for client in clients if client[0] == connection and client[1] is not None and client[1][1] == 3), None)
             if recipient is not None:
                 send(recipient[0], message)
+        
 
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:

@@ -82,8 +82,8 @@ class Client:
         print("CLIENT : Arrêt des threads pour le client", self.client_name)
         close_thread = threading.Thread(target=self.close_connection)
         close_thread.start()
-        print("CLIENT : Arrêt de la connexion pour le client", self.client_name)
         close_thread.join()
+        print("CLIENT : Arrêt de la connexion pour le client", self.client_name)
 
     def send_data(self):
         try:

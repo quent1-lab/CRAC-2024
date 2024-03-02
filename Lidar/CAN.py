@@ -52,7 +52,10 @@ class ComCAN:
     def receive(self):
         try:
             messageCan = self.can.recv(10.0)
-            return messageCan.arbitration_id, messageCan.dlc, messageCan.data
+            if messageCan is not None:
+                return messageCan.arbitration_id, messageCan.dlc, messageCan.data
+            else:
+                return None
         except Exception as e:
             pass
     
@@ -68,10 +71,17 @@ class ComCAN:
 
     def receive_to_server(self, message):
         if message["cmd"] == "stop":
-            self.client_socket.stop()
+            self.client.stop()
         elif message["cmd"] == "data":
             messageCAN = message["data"]
             self.send(messageCAN)
+        elif message["cmd"] == "clic":
+            # type data à envoyer : short x, short y, short theta, char sens
+            data = message["data"]
+            dataCan = struct.pack('h', data["x"]) + struct.pack('h', data["y"]) + struct.pack('h', data["theta"]) + struct.pack('c', data["sens"].encode())
+            messageCan = can.Message(arbitration_id = 0x28, data = dataCan, is_extended_id = False)
+            self.send(messageCan)
+            print("BusCAN : Envoi de la commande XYT")
 
     def run(self):
         self.client.set_callback_stop(self.disconnect)
@@ -84,9 +94,11 @@ class ComCAN:
 
                 if data is not None:
                     self.analyse_CAN(data)
+            
+            exit(0)
                 
         except KeyboardInterrupt:
-            self.client_socket.send(self.client.create_message(0, "stop", {}))
+            self.client.send(self.client.create_message(0, "stop", {}))
             pass
 
 if __name__ == "__main__":

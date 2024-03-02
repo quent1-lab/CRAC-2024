@@ -84,11 +84,13 @@ class LidarScanner:
                             datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
 
     def draw_robot(self, x, y, angle):
+        x_r = self.map_value(x, 0, self.FIELD_SIZE[0], self.BORDER_DISTANCE+5, self.WINDOW_SIZE[0]-5-self.BORDER_DISTANCE)
+        y_r = self.map_value(y, 0, self.FIELD_SIZE[1], self.BORDER_DISTANCE+5, self.WINDOW_SIZE[1]-5-self.BORDER_DISTANCE)
         pygame.draw.circle(self.lcd, pygame.Color(self.WHITE),
-                           (x * self.X_RATIO, y * self.Y_RATIO), 20)
+                           (x_r, y_r), 20)
         pygame.draw.line(
             self.lcd, pygame.Color(self.WHITE),
-            (x * self.X_RATIO, y * self.Y_RATIO),
+            (x_r, y_r),
             ((x + 100 * math.cos(math.radians(-angle))) * self.X_RATIO, (y + 100 * math.sin(math.radians(-angle))) * self.Y_RATIO), 5)
 
     def draw_image(self, image_path):
@@ -757,14 +759,22 @@ class LidarScanner:
                     (point["x"], point["y"], point["dist"], point["angle"]))
         elif message["cmd"] == "stop":
             self.client_socket.stop()
+    
+    def map_value(self,x, in_min, in_max, out_min, out_max):
+        return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
 
     def handle_mouse_click(self, event):
         if event.type == MOUSEBUTTONDOWN:
             # Vérifiez si le clic a eu lieu dans la zone de jeu
             if self.is_within_game_area(event.pos):
                 # Convertissez les coordonnées de la souris en coordonnées du terrain de jeu
-                x = int(event.pos[0] / self.X_RATIO)
-                y = int(event.pos[1] / self.Y_RATIO)
+                #On recalibre les coordonnées pour que le 0,0 soit en bas à droite
+                x = self.map_value(event.pos[0], 5, self.WINDOW_SIZE[0]-5, 0, self.FIELD_SIZE[0])
+                y = self.map_value(event.pos[1], 5, self.WINDOW_SIZE[1]-5, 0, self.FIELD_SIZE[1])
+                #x = event.pos[0] / self.X_RATIO
+                #y = event.pos[1] / self.Y_RATIO
+                x = int(x)
+                y = int(y)
                 # Stockez les coordonnées du clic
                 self.clicked_position = (x, y)
                 print("Clicked position:", self.clicked_position)

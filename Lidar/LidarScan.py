@@ -29,7 +29,6 @@ class LidarScanner:
         self.port = port
         self.lidar = None
         self.lcd = None
-        self.ROBOT_ANGLE = 0
         self.BLACK = (0, 0, 0)
         self.WHITE = (255, 255, 255)
         self.LIGHT_GREY = (200, 200, 200)
@@ -44,7 +43,9 @@ class LidarScanner:
         self.FONT_COLOR = self.BLACK
 
         # Initialisation du robot virtuel
-        self.ROBOT = Objet(0, 1500, 1000, 20)
+        self.ROBOT = Objet(0, 0, 0, 20)
+        self.ROBOT_ANGLE = 0
+        self.ROBOT_Dimension = (300, 300)
 
         if os.name == 'nt':  # Windows
             self.path_picture = "Lidar/Terrain_Jeu.png"
@@ -84,14 +85,31 @@ class LidarScanner:
                             datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
 
     def draw_robot(self, x, y, angle):
-        x_r = self.map_value(x, 0, self.FIELD_SIZE[0], self.BORDER_DISTANCE+5, self.WINDOW_SIZE[0]-5-self.BORDER_DISTANCE)
-        y_r = self.map_value(y, 0, self.FIELD_SIZE[1], self.BORDER_DISTANCE+5, self.WINDOW_SIZE[1]-5-self.BORDER_DISTANCE)
-        pygame.draw.circle(self.lcd, pygame.Color(self.WHITE),
-                           (x_r, y_r), 20)
-        pygame.draw.line(
-            self.lcd, pygame.Color(self.WHITE),
-            (x_r, y_r),
-            ((x + 100 * math.cos(math.radians(-angle))) * self.X_RATIO, (y + 100 * math.sin(math.radians(-angle))) * self.Y_RATIO), 5)
+        x_r = self.map_value(x, 0, self.FIELD_SIZE[0], self.WINDOW_SIZE[0]-5-self.BORDER_DISTANCE*self.X_RATIO, self.BORDER_DISTANCE*self.X_RATIO+5)
+        y_r = self.map_value(y, 0, self.FIELD_SIZE[1], self.BORDER_DISTANCE*self.Y_RATIO+5 ,self.WINDOW_SIZE[1]-5-self.BORDER_DISTANCE*self.Y_RATIO)
+        x_r = int(x_r)-self.ROBOT_Dimension[0]*self.X_RATIO
+        y_r = int(y_r)      
+        # Dessiner le robot en fonction de ses coordonnées et de son angle et de ses dimensions en rectangle
+        # Point de départ du rectangle au milieu du robot
+        #pygame.draw.rect(self.lcd, pygame.Color(101, 67, 33), (x_r, y_r, self.ROBOT_Dimension[0] * self.X_RATIO, self.ROBOT_Dimension[1]* self.Y_RATIO), 0,10)
+        # Créer une nouvelle surface pour le robot
+        robot_surface = pygame.Surface((self.ROBOT_Dimension[0] * self.X_RATIO, self.ROBOT_Dimension[1]* self.Y_RATIO), pygame.SRCALPHA)
+
+        # Dessiner le rectangle du robot sur la nouvelle surface
+        pygame.draw.rect(robot_surface, pygame.Color(101, 67, 33), (0, 0, self.ROBOT_Dimension[0] * self.X_RATIO, self.ROBOT_Dimension[1]* self.Y_RATIO), 0,10)
+
+        dim_x = self.ROBOT_Dimension[0] * self.X_RATIO
+        dim_y = self.ROBOT_Dimension[1] * self.Y_RATIO
+
+        # Dessiner la flèche sur la nouvelle surface
+        pygame.draw.polygon(robot_surface, pygame.Color(255, 0, 0), [(5, dim_y / 2), (dim_x /2, 10), (dim_x / 2, dim_y / 2 - 10),(dim_x-10,dim_y / 2 - 10), (dim_x-10,dim_y / 2 + 10), (dim_x / 2, dim_y / 2 + 10), (dim_x / 2, dim_y - 10), (5, dim_y / 2)], 0)
+
+        # Faire pivoter la surface du robot par rapport au centre
+        robot_surface = pygame.transform.rotate(robot_surface, -angle)
+
+        # Dessiner la surface du robot sur l'écran
+        self.lcd.blit(robot_surface, (x_r, y_r))
+        
 
     def draw_image(self, image_path):
         # Charge l'image à partir du chemin du fichier
@@ -793,19 +811,17 @@ class LidarScanner:
         # self.connexion_lidar()
         self.client_socket.set_callback(self.receive_to_server)
         self.client_socket.set_callback_stop(None)
-        self.client_socket.connect()
+        #self.client_socket.connect()
         print("Connecté au serveur")
         while self.scanning:
             try:
                 key = pygame.key.get_pressed()
                 if key[pygame.K_ESCAPE] or key[pygame.K_SPACE]:
-                    self.client_socket.add_to_send_list(
-                        self.client_socket.create_message(1, "stop", None))
+                    self.client_socket.add_to_send_list(self.client_socket.create_message(1, "stop", None))
                     break
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
-                        self.client_socket.add_to_send_list(
-                            self.client_socket.create_message(1, "stop", None))
+                        self.client_socket.add_to_send_list(self.client_socket.create_message(1, "stop", None))
                         exit(0)
 
                     self.handle_mouse_click(event)

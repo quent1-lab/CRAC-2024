@@ -76,6 +76,16 @@ class Objet:
             self.x = A*(self.x + B*self.positions_precedentes[-1][0])
             self.y = A*(self.y + B*self.positions_precedentes[-1][1])
             self.last_seen = time.time()
+    
+    def is_not_moving(self):
+        # Vérifier si l'objet n'est pas immobile depuis plus de 2 seconde
+        if time.time() - self.positions_precedentes[-1][2] > 2:
+            return True
+        return False
+
+    def __hash__(self):
+        # Retourne un hash de l'objet
+        return hash(self.id)
 
     def __eq__(self, other):
         # Vérifier si deux objets sont les mêmes

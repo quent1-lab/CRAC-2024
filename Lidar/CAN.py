@@ -66,7 +66,7 @@ class ComCAN:
             x = struct.unpack('h', dataX[0:2])
             y = struct.unpack('h', dataX[2:4])
             theta = struct.unpack('h', dataX[4:6])
-            print("BusCAN : x = ", x, "y = ", y, "theta = ", theta)
+            #print("BusCAN : x = ", x, "y = ", y, "theta = ", theta)
             self.client.add_to_send_list(self.client.create_message(0, "coord", {"x": x, "y": y, "theta": theta}))
 
     def receive_to_server(self, message):

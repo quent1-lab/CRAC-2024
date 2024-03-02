@@ -90,8 +90,6 @@ class LidarScanner:
         x_r = int(x_r)-self.ROBOT_Dimension[0]*self.X_RATIO
         y_r = int(y_r)      
         # Dessiner le robot en fonction de ses coordonnées et de son angle et de ses dimensions en rectangle
-        # Point de départ du rectangle au milieu du robot
-        #pygame.draw.rect(self.lcd, pygame.Color(101, 67, 33), (x_r, y_r, self.ROBOT_Dimension[0] * self.X_RATIO, self.ROBOT_Dimension[1]* self.Y_RATIO), 0,10)
         # Créer une nouvelle surface pour le robot
         robot_surface = pygame.Surface((self.ROBOT_Dimension[0] * self.X_RATIO, self.ROBOT_Dimension[1]* self.Y_RATIO), pygame.SRCALPHA)
 
@@ -787,8 +785,8 @@ class LidarScanner:
             if self.is_within_game_area(event.pos):
                 # Convertissez les coordonnées de la souris en coordonnées du terrain de jeu
                 #On recalibre les coordonnées pour que le 0,0 soit en bas à droite
-                x = self.map_value(event.pos[0], 5, self.WINDOW_SIZE[0]-5, 0, self.FIELD_SIZE[0])
-                y = self.map_value(event.pos[1], 5, self.WINDOW_SIZE[1]-5, 0, self.FIELD_SIZE[1])
+                x = self.map_value(event.pos[0], self.WINDOW_SIZE[0]-5-self.BORDER_DISTANCE*self.X_RATIO, self.BORDER_DISTANCE*self.X_RATIO+5, 0, self.FIELD_SIZE[0])
+                y = self.map_value(event.pos[1], self.BORDER_DISTANCE*self.Y_RATIO+5 ,self.WINDOW_SIZE[1]-5-self.BORDER_DISTANCE*self.Y_RATIO, 0, self.FIELD_SIZE[1])
                 #x = event.pos[0] / self.X_RATIO
                 #y = event.pos[1] / self.Y_RATIO
                 x = int(x)
@@ -802,8 +800,8 @@ class LidarScanner:
 
     def is_within_game_area(self, pos):
         # Vérifie si les coordonnées du clic sont dans la zone de jeu
-        return self.BORDER_DISTANCE * self.X_RATIO <= pos[0] <= (self.FIELD_SIZE[0] - self.BORDER_DISTANCE) * self.X_RATIO \
-            and self.BORDER_DISTANCE * self.Y_RATIO <= pos[1] <= (self.FIELD_SIZE[1] - self.BORDER_DISTANCE) * self.Y_RATIO
+        return self.BORDER_DISTANCE * self.X_RATIO + 5 <= pos[0] <= (self.FIELD_SIZE[0] - self.BORDER_DISTANCE) * self.X_RATIO -5\
+            and self.BORDER_DISTANCE * self.Y_RATIO + 5 <= pos[1] <= (self.FIELD_SIZE[1] - self.BORDER_DISTANCE) * self.Y_RATIO -5
 
     def run(self):
         # self.programme_simulation()

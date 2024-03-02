@@ -57,11 +57,12 @@ class ComCAN:
             pass
     
     def analyse_CAN(self, data):
+        dataX = data[2]
         if data[0] == 0x28:
             # type data : bytearray(b'\x00\x00\x00\x00\x00\x00') -> 0-2 : (int)x, 2-4 : (int)y, 4-6 : (in)theta 
-            x = struct.unpack('h', data[0:2])
-            y = struct.unpack('h', data[2:4])
-            theta = struct.unpack('h', data[4:6])
+            x = struct.unpack('h', dataX[0:2])
+            y = struct.unpack('h', dataX[2:4])
+            theta = struct.unpack('h', dataX[4:6])
             print("BusCAN : x = ", x, "y = ", y, "theta = ", theta)
             self.client.add_to_send_list(self.client.create_message(0, "coord", {"x": x, "y": y, "theta": theta}))
 

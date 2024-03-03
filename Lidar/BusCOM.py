@@ -2,6 +2,10 @@ import socket
 import threading
 import json
 import errno
+import logging
+
+# Configuration du logger
+logging.basicConfig(filename='buscom.log', level=logging.INFO, datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
 
 class ServeurException(Exception):
     """Classe pour les exceptions du serveur"""
@@ -16,7 +20,7 @@ class Serveur:
         self.lock = threading.Lock()
 
     def handle_client(self, connection, address):
-        print(f'BusCOM : Connecté à {address}')
+        logging.info(f'BusCOM : Connecté à {address}')
         while not self.stop_threads:
             try:
                 for data in self.receive_messages(connection):
@@ -25,15 +29,10 @@ class Serveur:
                         for message in messages:
                             self.handle_message(message, connection)
             except Exception as e:
-                print(e)
+                logging.error(f"Erreur lors de la manipulation du client : {str(e)}")
                 break
         if not self.stop_threads:
             self.deconnect_client(connection, address)
-
-        """print(f"BusCOM : Déconnexion de {address}")
-        connection.close()
-        with self.lock:
-            self.clients = [client for client in self.clients if client[0] != connection]"""
 
     def receive_messages(self, socket):
         buffer = ""
@@ -55,22 +54,24 @@ class Serveur:
                 with self.lock:
                     self.clients.append([connection, address, None])
                     self.tasks.append(thread)
-                print(f"BusCOM : Connexion active : {threading.active_count()}")
+                logging.info(f"BusCOM : Connexion active : {threading.active_count()}")
             except socket.timeout:
                 pass
             except OSError as e:
                 if e.errno == errno.EBADF:
                     break
                 else:
-                    raise ServeurException("BusCOM : Erreur de connexion") from e
+                    logging.error("BusCOM : Erreur de connexion", exc_info=True)
 
     def send(self, client_socket, message):
         messageJSON = json.dumps(message) + "\n"
         try:
             client_socket.sendall(messageJSON.encode())
         except ConnectionResetError:
+            logging.error("BusCOM : Erreur de connexion", exc_info=True)
             raise ServeurException("BusCOM : Erreur de connexion")
         except BrokenPipeError:
+            logging.error("BusCOM : Erreur de connexion", exc_info=True)
             raise ServeurException("BusCOM : Erreur de connexion")
     
     def send_stop(self):
@@ -91,7 +92,7 @@ class Serveur:
             self.server_socket.close()
     
     def deconnect_client(self, connection, address):
-        print(f"BusCOM : Déconnexion de {address}")
+        logging.info(f"BusCOM : Déconnexion de {address}")
         connection.close()
         with self.lock:
             self.clients = [client for client in self.clients if client[0] != connection]
@@ -104,7 +105,7 @@ class Serveur:
                 try:
                     messages.append(json.loads(message))
                 except json.JSONDecodeError:
-                    print("BusCOM : Erreur de décodage JSON")
+                    logging.error("BusCOM : Erreur de décodage JSON", exc_info=True)
         return messages
 
     def handle_message(self, message, connection):
@@ -130,7 +131,7 @@ class Serveur:
 
     def start(self):
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as self.server_socket:
-            print("BusCOM : Démarrage du serveur...")
+            logging.info("BusCOM : Démarrage du serveur...")
             self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) # Permet de réutiliser le port après un arrêt brutal
             self.server_socket.bind((self.host, self.port))
             self.server_socket.listen()
@@ -144,16 +145,16 @@ class Serveur:
             while not self.stop_threads:
                 pass
 
-            print("BusCOM : Arrêt des connexions...")
+            logging.info("BusCOM : Arrêt des connexions...")
             self.deconnection()
-            print("BusCOM : Serveur arrêté")
+            logging.info("BusCOM : Serveur arrêté")
 
 if __name__ == "__main__":
-    serveur = Serveur("0.0.0.0",22050)
+    serveur = Serveur("0.0.0.0", 22050)
     try:
         serveur.start()
     except KeyboardInterrupt:
         serveur.stop_threads = True
     except ServeurException as e:
-        print(e)
+        logging.error(str(e), exc_info=True)
         serveur.deconnection()

@@ -44,7 +44,7 @@ class LidarScanner:
 
         # Initialisation du robot virtuel
         self.ROBOT = Objet(0, 0, 0, 20)
-        self.ROBOT_ANGLE = 0
+        self.ROBOT_ANGLE = 180
         self.ROBOT_Dimension = (300, 300)
 
         if os.name == 'nt':  # Windows
@@ -100,7 +100,7 @@ class LidarScanner:
         dim_y = self.ROBOT_Dimension[1] * self.Y_RATIO
 
         # Dessiner la flèche sur la nouvelle surface
-        pygame.draw.polygon(robot_surface, pygame.Color(255, 0, 0), [(5, dim_y / 2), (dim_x /2, 10), (dim_x / 2, dim_y / 2 - 10),(dim_x-10,dim_y / 2 - 10), (dim_x-10,dim_y / 2 + 10), (dim_x / 2, dim_y / 2 + 10), (dim_x / 2, dim_y - 10), (5, dim_y / 2)], 0)
+        pygame.draw.polygon(robot_surface, pygame.Color(255, 0, 0), [(dim_x - 5, dim_y / 2), (dim_x /2, 10), (dim_x / 2, dim_y / 2 - 10),(10,dim_y / 2 - 10), (10,dim_y / 2 + 10), (dim_x / 2, dim_y / 2 + 10), (dim_x / 2, dim_y - 10), (dim_x-5, dim_y / 2)], 0)
 
         # Faire pivoter la surface du robot par rapport au centre
         robot_surface = pygame.transform.rotate(robot_surface, -angle)
@@ -765,7 +765,7 @@ class LidarScanner:
         elif message["cmd"] == "coord":
             coord = message["data"]
             self.ROBOT.update_position(coord["x"], coord["y"])
-            self.ROBOT_ANGLE = coord["theta"]
+            self.ROBOT_ANGLE = coord["theta"] + 180
         elif message["cmd"] == "points":
             scan = message["data"]
             scan = json.loads(scan)

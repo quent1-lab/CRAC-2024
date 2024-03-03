@@ -2,4 +2,8 @@ lidar_scan.log
 .venv/
 Lidar/__pycache__/*
 .vscode/
+ihm.log
+buscan.log
+buscom.log
+client.log
 ```

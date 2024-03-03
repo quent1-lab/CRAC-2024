@@ -7,8 +7,6 @@ import os
 import random
 import numpy as np
 from sklearn.cluster import DBSCAN
-from rplidar import RPLidar, RPLidarException
-import serial.tools.list_ports
 from client import *
 import json
 

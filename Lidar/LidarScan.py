@@ -24,7 +24,7 @@ client_socket, client_address = server_socket.accept()
 print(f"Connexion établie avec {client_address}")"""
 
 
-class LidarScanner:
+class IHM:
     def __init__(self, port=None):
         self.port = port
         self.lidar = None
@@ -45,7 +45,7 @@ class LidarScanner:
         # Initialisation du robot virtuel
         self.ROBOT = Objet(0, 0, 0, 20)
         self.ROBOT_ANGLE = 180
-        self.ROBOT_Dimension = (300, 300)
+        self.ROBOT_Dimension = (264, 268)
 
         if os.name == 'nt':  # Windows
             self.path_picture = "Lidar/Terrain_Jeu.png"
@@ -57,6 +57,7 @@ class LidarScanner:
         self.objets = []  # Liste pour stocker les objets détectés
         self.new_scan = []
         self.scanning = True
+        self.ETAT = 0
 
         # Initialisation de Pygame et ajustement de la taille de la fenêtre
         pygame.init()
@@ -108,7 +109,6 @@ class LidarScanner:
         # Dessiner la surface du robot sur l'écran
         self.lcd.blit(robot_surface, (x_r, y_r))
         
-
     def draw_image(self, image_path):
         # Charge l'image à partir du chemin du fichier
         image = pygame.image.load(image_path)
@@ -501,33 +501,6 @@ class LidarScanner:
 
         return trajectoire_actuel, trajectoire_adverse, trajectoire_evitement
 
-    def connexion_lidar(self):
-        # Connexion au lidar
-        try:
-            if self.port == None:
-                self.port = [port.name for port in serial.tools.list_ports.comports(
-                ) if port.serial_number and "0001" in port.serial_number][0]
-
-            print(f"Connexion au port {self.port}")
-
-            self.lidar = RPLidar(self.port)
-            self.lidar.connect()
-            logging.info("Lidar connected")
-            print("LiDAR connecté")
-        except RPLidarException as e:
-            # Code pour gérer RPLidarException
-            print(
-                f"Une erreur RPLidarException s'est produite dans le connexion : {e}")
-            self.lidar.stop()
-            self.connexion_lidar()
-        except Exception as e:
-            logging.error(f"Failed to create an instance of RPLidar: {e}")
-            print("Erreur lors de la création de l'instance du LiDAR")
-
-            time.sleep(1.5)
-            exit(0)
-            raise
-
     def stop(self):
         print("Arret du Programme en cours...")
         self.objets = []
@@ -803,10 +776,48 @@ class LidarScanner:
         return self.BORDER_DISTANCE * self.X_RATIO + 5 <= pos[0] <= (self.FIELD_SIZE[0] - self.BORDER_DISTANCE) * self.X_RATIO -5\
             and self.BORDER_DISTANCE * self.Y_RATIO + 5 <= pos[1] <= (self.FIELD_SIZE[1] - self.BORDER_DISTANCE) * self.Y_RATIO -5
 
+    def init_match(self):
+        # Définir les rectangles de départ
+        shape_x = 400
+        shape_y = 350
+        start_positions = [pygame.Rect(self.BORDER_DISTANCE * self.X_RATIO + 5, self.BORDER_DISTANCE * self.Y_RATIO + 5, shape_x * self.X_RATIO, shape_y * self.Y_RATIO),
+                           pygame.Rect((self.FIELD_SIZE[0] - self.BORDER_DISTANCE - shape_x) * self.X_RATIO - 5, self.BORDER_DISTANCE * self.Y_RATIO + 5, shape_x * self.X_RATIO, shape_y * self.Y_RATIO),
+                           pygame.Rect((self.FIELD_SIZE[0] - self.BORDER_DISTANCE - shape_x) * self.X_RATIO - 5, (self.FIELD_SIZE[1] - self.BORDER_DISTANCE - shape_y) * self.Y_RATIO - 5, shape_x * self.X_RATIO, shape_y * self.Y_RATIO),
+                           pygame.Rect(self.BORDER_DISTANCE * self.X_RATIO + 5, (self.FIELD_SIZE[1] - self.BORDER_DISTANCE - shape_y) * self.Y_RATIO - 5, shape_x * self.X_RATIO, shape_y * self.Y_RATIO)]
+        angle_depart = [180, 0, 0, 180]
+        pos_r_depart = [((self.FIELD_SIZE[0] - self.ROBOT_Dimension[0]/2), (0 + self.ROBOT_Dimension[1]/2)), 
+                        ((0 + self.ROBOT_Dimension[0]/2), (0 + self.ROBOT_Dimension[1]/2)), 
+                        ((0 + self.ROBOT_Dimension[0]/2), (self.FIELD_SIZE[1] - self.ROBOT_Dimension[1]/2)), 
+                        ((self.FIELD_SIZE[0] - self.ROBOT_Dimension[0] / 2), (self.FIELD_SIZE[1] - self.ROBOT_Dimension[1]/2))]
+        # Définir le bouton de démarrage
+        start_button = pygame.Rect(self.WINDOW_SIZE[0] / 2 - 50, self.WINDOW_SIZE[1] - 50, 100, 40)
+        k = 1
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = event.pos
+                for i, rect in enumerate(start_positions):
+                    if rect.collidepoint(mouse_pos):
+                        print(f"Robot commencera à la position de départ {i+1}, x: {pos_r_depart[i][0]}, y: {pos_r_depart[i][1]}, angle: {angle_depart[i]}")
+                        k = i
+                if start_button.collidepoint(mouse_pos):
+                    print("Démarrage du match")
+                    # Envoie la position de départ au CAN
+                    self.client_socket.add_to_send_list(self.client_socket.create_message(
+                            2, "reca", {"x": pos_r_depart[k][0], "y": pos_r_depart[k][1], "angle": angle_depart[k]}))
+                    self.ETAT = 1
+
+        # Dessiner les rectangles de départ
+        for rect in start_positions:
+            pygame.draw.rect(self.lcd, (255, 255, 255), rect, 10)
+
+        # Dessiner le bouton de démarrage
+        pygame.draw.rect(self.lcd, (255, 255, 255), start_button, 5)
+        self.draw_text_center("Démarrer", self.WINDOW_SIZE[0] / 2, self.WINDOW_SIZE[1] - 31)
+
+
     def run(self):
         # self.programme_simulation()
 
-        # self.connexion_lidar()
         self.client_socket.set_callback(self.receive_to_server)
         self.client_socket.set_callback_stop(None)
         #self.client_socket.connect()
@@ -814,17 +825,21 @@ class LidarScanner:
         while self.scanning:
             try:
                 key = pygame.key.get_pressed()
-                if key[pygame.K_ESCAPE] or key[pygame.K_SPACE]:
+                quit = pygame.event.get(pygame.QUIT)
+                if key[pygame.K_ESCAPE] or key[pygame.K_SPACE] or quit:
                     self.client_socket.add_to_send_list(self.client_socket.create_message(1, "stop", None))
                     break
-                for event in pygame.event.get():
-                    if event.type == pygame.QUIT:
-                        self.client_socket.add_to_send_list(self.client_socket.create_message(1, "stop", None))
-                        exit(0)
-
-                    self.handle_mouse_click(event)
 
                 self.draw_background()
+
+                if self.ETAT == 0:
+                    self.draw_text_center("INITIALISATION DU MATCH", self.WINDOW_SIZE[0] / 2, 35, self.RED)
+                    self.init_match()
+                elif self.ETAT == 1:
+                    self.draw_text_center("MATCH EN COURS", self.WINDOW_SIZE[0] / 2, 35, self.RED)
+                    for event in pygame.event.get():
+                        self.handle_mouse_click(event)
+
                 self.draw_robot(self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)
 
                 for point in self.new_scan:
@@ -841,13 +856,6 @@ class LidarScanner:
 
                 pygame.display.update()
 
-            except RPLidarException as e:
-                # Code pour gérer RPLidarException
-                print(
-                    f"Une erreur RPLidarException s'est produite dans le run : {e}")
-                self.lidar.stop()
-                time.sleep(1)
-
             except KeyboardInterrupt:
                 self.client_socket.add_to_send_list(
                     self.client_socket.create_message(1, "stop", None))
@@ -857,5 +865,5 @@ class LidarScanner:
 
 
 if __name__ == '__main__':
-    scanner = LidarScanner("/dev/ttyUSB0")
-    scanner.run()
+    Ihm = IHM()
+    Ihm.run()

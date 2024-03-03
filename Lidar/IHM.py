@@ -82,7 +82,7 @@ class IHM:
         self.clicked_position = None  # Variable pour stocker les coordonnées du clic
         pygame.display.update()
 
-        logging.basicConfig(filename='IHM.log', level=logging.INFO,
+        logging.basicConfig(filename='ihm.log', level=logging.INFO,
                             datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
 
     def draw_robot(self, x, y, angle):

@@ -803,7 +803,7 @@ class IHM:
                     print("Démarrage du match")
                     # Envoie la position de départ au CAN
                     self.client_socket.add_to_send_list(self.client_socket.create_message(
-                            2, "reca", {"x": pos_r_depart[k][0], "y": pos_r_depart[k][1], "angle": angle_depart[k]}))
+                            2, "recal", {"x": pos_r_depart[k][0], "y": pos_r_depart[k][1], "theta": angle_depart[k]}))
                     self.ETAT = 1
 
         # Dessiner les rectangles de départ

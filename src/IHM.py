@@ -42,7 +42,7 @@ class IHM:
 
         # Initialisation du robot virtuel
         self.ROBOT = Objet(0, 0, 0, 20)
-        self.ROBOT_ANGLE = 180
+        self.ROBOT_ANGLE = 0
         self.ROBOT_Dimension = (264, 268)
 
         if os.name == 'nt':  # Windows

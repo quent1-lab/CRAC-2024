@@ -48,9 +48,9 @@ class IHM:
         if os.name == 'nt':  # Windows
             self.path_picture = "Lidar/Terrain_Jeu.png"
         else:  # Linux et autres
-            self.path_picture = "Documents/CRAC-2024/Lidar/Terrain_Jeu.png"
+            self.path_picture = "Documents/CRAC-2024/src/Terrain_Jeu.png"
 
-        self.path_picture = "Lidar/Terrain_Jeu.png"
+        self.path_picture = "src/Terrain_Jeu.png"
         self.id_compteur = 0  # Compteur pour les identifiants d'objet
         self.objets = []  # Liste pour stocker les objets détectés
         self.new_scan = []

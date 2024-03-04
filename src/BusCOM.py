@@ -61,6 +61,7 @@ class Serveur:
                 pass
             except OSError as e:
                 if e.errno == errno.EBADF:
+                    logging.info("BusCOM : Arrêt des connexions, erreur de socket")
                     break
                 else:
                     logging.error("BusCOM : Erreur de connexion", exc_info=True)
@@ -92,6 +93,8 @@ class Serveur:
                 client[0].close()
         if self.server_socket.fileno() != -1:  # Check if the server socket is open before closing
             self.server_socket.close()
+        logging.info("BusCOM : Serveur arrêté")
+        print("BusCOM : Serveur arrêté")
     
     def deconnect_client(self, connection, address):
         logging.info(f"BusCOM : Déconnexion de {address}")
@@ -133,6 +136,7 @@ class Serveur:
     def start(self):
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as self.server_socket:
             logging.info("BusCOM : Démarrage du serveur...")
+            print("BusCOM : Démarrage du serveur...")
             self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) # Permet de réutiliser le port après un arrêt brutal
             self.server_socket.bind((self.host, self.port))
             self.server_socket.listen()
@@ -157,8 +161,9 @@ class Serveur:
                 pass
 
             logging.info("BusCOM : Arrêt des connexions...")
+            print("BusCOM : Arrêt des connexions...")
             self.deconnection()
-            logging.info("BusCOM : Serveur arrêté")
+            
 
 if __name__ == "__main__":
     serveur = Serveur("0.0.0.0", 22050)

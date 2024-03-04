@@ -31,6 +31,7 @@ class ComCAN:
     def disconnect(self):
         try:
             self.can.shutdown()
+            os.system('sudo ifconfig can0 down')
             self.is_connected = False
             logging.info("BusCAN : Connexion fermée")
         except Exception as e:

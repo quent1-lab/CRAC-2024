@@ -19,7 +19,7 @@ class LidarScanner:
         self.ROBOT = Objet(0, 1500, 1000, 20)
 
         if os.name == 'nt':  # Windows
-            self.path_picture = "Lidar/Terrain_Jeu.png"
+            self.path_picture = "src/Terrain_Jeu.png"
         else:  # Linux et autres
             self.path_picture = "Documents/CRAC-2024/Lidar/Terrain_Jeu.png"
 

@@ -805,8 +805,9 @@ class IHM:
                     self.ETAT = 1
 
         # Dessiner les rectangles de départ
-        for rect in start_positions:
-            pygame.draw.rect(self.lcd, (255, 255, 255), rect, 10)
+        for i, rect in enumerate(start_positions):
+            color = (0, 255, 0) if i == k else (255, 255, 255)
+            pygame.draw.rect(self.lcd, color, rect, 10)
 
         # Dessiner le bouton de démarrage
         pygame.draw.rect(self.lcd, (255, 255, 255), start_button, 5)

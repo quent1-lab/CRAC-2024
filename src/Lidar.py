@@ -262,9 +262,11 @@ class LidarScanner:
     def run(self):
         
         self.connexion_lidar()
+        print("LIDAR  : Connecté au LiDAR")
         self.client_socket.set_callback(self.receive_to_server)
         self.client_socket.set_callback_stop(self.stop)
         self.client_socket.connect()
+        print("LIDAR  : Connecté au serveur")
 
         while self.scanning:
             self.objets = []

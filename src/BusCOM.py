@@ -22,6 +22,7 @@ class Serveur:
 
     def handle_client(self, connection, address):
         logging.info(f'BusCOM : Connecté à {address}')
+        print(f'BusCOM : Connecté à {address}')
         while not self.stop_threads:
             try:
                 for data in self.receive_messages(connection):

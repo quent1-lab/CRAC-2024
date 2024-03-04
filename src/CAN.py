@@ -59,7 +59,6 @@ class ComCAN:
         try:
             messageCan = self.can.recv(10.0)
             if messageCan is not None:
-                logging.info("Message reçu sur le bus CAN")
                 return messageCan.arbitration_id, messageCan.dlc, messageCan.data
             else:
                 return None
@@ -91,11 +90,13 @@ class ComCAN:
                 dataCan = struct.pack('h', data["x"]) + struct.pack('h', data["y"]) + struct.pack('h', data["theta"]) + struct.pack('c', data["sens"].encode())
                 messageCan = can.Message(arbitration_id=0x20, data=dataCan, is_extended_id=False)
                 self.send(messageCan)
+                print("BusCAN : Message de clic envoyé")
             elif message["cmd"] == "recal":
                 data = message["data"]
                 dataCan = struct.pack('h', data["x"]) + struct.pack('h', data["y"]) + struct.pack('h', data["theta"])
                 messageCan = can.Message(arbitration_id=0x22, data=dataCan, is_extended_id=False)
                 self.send(messageCan)
+                print("BusCAN : Message de recalage envoyé")
         except Exception as e:
             logging.error(f"Erreur lors du traitement du message serveur : {str(e)}")
 

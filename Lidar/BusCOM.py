@@ -98,7 +98,6 @@ class Serveur:
         with self.lock:
             self.clients = [client for client in self.clients if client[0] != connection]
 
-
     def load_json(self, data):
         messages = []
         for message in data.split('\n'):

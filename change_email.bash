@@ -1,4 +1,4 @@
-git filter-branch --env-filter '
+git filter-branch -f --env-filter '
 OLD_EMAIL="quentin@quentin-linux.fr"
 CORRECT_NAME="Quentin"
 CORRECT_EMAIL="quentin.cunha@outlook.fr"

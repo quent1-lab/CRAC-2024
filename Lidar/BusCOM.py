@@ -3,6 +3,7 @@ import threading
 import json
 import errno
 import logging
+import time
 
 # Configuration du logger
 logging.basicConfig(filename='buscom.log', level=logging.INFO, datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
@@ -143,7 +144,16 @@ class Serveur:
             self.tasks.append(connection_thread)
 
             while not self.stop_threads:
-                pass
+                # Vérification des connexions inactives
+                with self.lock:
+                    for client in self.clients:
+                        try:
+                            client[0].send(b'')
+                        except Exception:
+                            logging.info(f"BusCOM : Déconnexion détectée : {client[1]}")
+                            self.deconnect_client(client[0], client[1])
+                            break
+                time.sleep(5)  # Attendre 5 secondes avant de vérifier à nouveau
 
             logging.info("BusCOM : Arrêt des connexions...")
             self.deconnection()

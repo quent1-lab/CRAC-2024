@@ -309,26 +309,29 @@ class IHM:
         pygame.display.update()
         time.sleep(1.5)
 
-    def transform_scan(self, scan):
+    def transform_scan(self, scan, x_r, y_r, angle):
         """
         Transforme les données du scan en coordonnées cartésiennes.
         Retire les points en dehors du terrain de jeu.
 
         :param scan: Liste de tuples (quality, angle, distance)
+        :param x_r: Coordonnée x du robot
+        :param y_r: Coordonnée y du robot
+        :param angle: Angle du robot
         :return: Liste de tuples (x, y, distance)
         """
         points = []
         for point in scan:
             distance = point[2]
-            new_angle = point[1] - self.ROBOT_ANGLE
+            new_angle = point[1] - angle
 
             new_angle %= 360
             if new_angle < 0:
                 new_angle += 360
 
             if distance != 0:
-                x = distance * math.cos(math.radians(new_angle)) + self.ROBOT.x
-                y = distance * math.sin(math.radians(new_angle)) + self.ROBOT.y
+                x = distance * math.cos(math.radians(new_angle)) + x_r
+                y = distance * math.sin(math.radians(new_angle)) + y_r
 
                 # Vérifier si le point est en dehors du terrain de jeu
                 if self.BORDER_DISTANCE < x < self.FIELD_SIZE[0] - self.BORDER_DISTANCE and self.BORDER_DISTANCE < y < self.FIELD_SIZE[1] - self.BORDER_DISTANCE:
@@ -736,7 +739,7 @@ class IHM:
             
 
             scan = self.valeur_de_test()
-            new_scan = self.transform_scan(scan)
+            new_scan = self.transform_scan(scan, self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)
 
             eps_value = eps_slider.get_current_value()
             min_samples_value = min_samples_slider.get_current_value()

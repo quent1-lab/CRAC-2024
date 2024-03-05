@@ -88,13 +88,15 @@ class ComCAN:
                 self.send(messageCAN)
             elif message["cmd"] == "clic":
                 data = message["data"]
+                # Format des données : x (short), y (short), theta (short), sens(char)
                 dataCan = struct.pack('h', data["x"]) + struct.pack('h', data["y"]) + struct.pack('h', data["theta"]) + struct.pack('c', data["sens"].encode())
                 messageCan = can.Message(arbitration_id=0x20, data=dataCan, is_extended_id=False)
                 self.send(messageCan)
                 print("BusCAN : Message de clic envoyé")
             elif message["cmd"] == "recal":
                 data = message["data"]
-                dataCan = struct.pack('h', data["x"]) + struct.pack('h', data["y"]) + struct.pack('h', data["theta"])
+                # Format des données : zone (char)
+                dataCan = struct.pack('h', data["zone"])
                 messageCan = can.Message(arbitration_id=0x22, data=dataCan, is_extended_id=False)
                 self.send(messageCan)
                 print("BusCAN : Message de recalage envoyé")

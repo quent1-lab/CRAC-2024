@@ -56,6 +56,7 @@ class IHM:
         self.new_scan = []
         self.scanning = True
         self.ETAT = 0
+        self.EQUIPE = "Jaune"
 
         # Initialisation de Pygame et ajustement de la taille de la fenêtre
         pygame.init()
@@ -736,7 +737,7 @@ class IHM:
         elif message["cmd"] == "coord":
             coord = message["data"]
             self.ROBOT.update_position(coord["x"], coord["y"])
-            self.ROBOT_ANGLE = coord["theta"] + 180
+            self.ROBOT_ANGLE = coord["theta"]
         elif message["cmd"] == "points":
             scan = message["data"]
             scan = json.loads(scan)
@@ -797,11 +798,15 @@ class IHM:
                     if rect.collidepoint(mouse_pos):
                         print(f"Robot commencera à la position de départ {i+1}, x: {pos_r_depart[i][0]}, y: {pos_r_depart[i][1]}, angle: {angle_depart[i]}")
                         k = i
+                        if k%2 == 0:
+                            self.EQUIPE = "Bleu"
+                        else:
+                            self.EQUIPE = "Jaune"
                 if start_button.collidepoint(mouse_pos):
                     print("Démarrage du match")
                     # Envoie la position de départ au CAN
                     self.client_socket.add_to_send_list(self.client_socket.create_message(
-                            2, "recal", {"x": pos_r_depart[k][0], "y": pos_r_depart[k][1], "theta": angle_depart[k]}))
+                            2, "recal", {"zone": k,}))
                     self.ETAT = 1
 
         # Dessiner les rectangles de départ

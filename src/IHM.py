@@ -1,6 +1,7 @@
 import logging
 from objet import Objet
 import pygame
+import pygame_gui
 from pygame.locals import *
 import math
 import os
@@ -69,6 +70,13 @@ class IHM:
         self.X_RATIO = self.WINDOW_SIZE[0] / self.FIELD_SIZE[0]
         self.Y_RATIO = self.WINDOW_SIZE[1] / self.FIELD_SIZE[1]
         self.lcd = pygame.display.set_mode(self.WINDOW_SIZE)
+
+        theme = {
+            "UILabel": {
+                "text_colour": pygame.Color('black')
+            }
+        }
+        self.manager = pygame_gui.UIManager(self.WINDOW_SIZE, theme_path="theme.json")
 
         self.client_socket = Client("192.168.22.101", 22050, 10)
 
@@ -245,6 +253,36 @@ class IHM:
 
             pygame.draw.circle(self.lcd, color, (x, y), 2)
 
+    def create_slider(self, x, y, width, height, name, range_start, range_end):
+        manager = pygame_gui.UIManager((800, 600))
+
+        # Créer un label pour le nom du slider
+        label_rect = pygame.Rect((x, y), (width, height))
+        pygame_gui.elements.UILabel(relative_rect=label_rect, text=name, manager=manager)
+
+        # Créer le slider
+        slider_rect = pygame.Rect((x, y + height), (width, height))
+        slider = pygame_gui.elements.UIHorizontalSlider(relative_rect=slider_rect, start_value=range_start, value_range=(range_start, range_end), manager=manager)
+
+        return slider
+
+    def create_sliders(self):
+        # Créer un slider pour eps
+        eps_slider = pygame_gui.elements.UIHorizontalSlider(relative_rect=pygame.Rect((self.WINDOW_SIZE[0]/2-250, self.WINDOW_SIZE[1]-30), (200, 20)), start_value=150, value_range=(1, 200), manager=self.manager)
+
+        # Créer un label pour le slider eps
+        text_eps = "eps"
+        pygame_gui.elements.UILabel(relative_rect=pygame.Rect((self.WINDOW_SIZE[0]/2-250, self.WINDOW_SIZE[1]-50), (200, 20)), text=text_eps, manager=self.manager)
+
+        # Créer un slider pour min_samples
+        min_samples_slider = pygame_gui.elements.UIHorizontalSlider(relative_rect=pygame.Rect((self.WINDOW_SIZE[0]/2+50, self.WINDOW_SIZE[1]-30), (200, 20)), start_value=10, value_range=(1, 100), manager=self.manager)
+
+        # Créer un label pour le slider min_samples
+        text_samples = "min_samples"
+        pygame_gui.elements.UILabel(relative_rect=pygame.Rect((self.WINDOW_SIZE[0]/2+60, self.WINDOW_SIZE[1]-50), (200, 20)), text=text_samples, manager=self.manager)
+
+        return eps_slider, min_samples_slider
+
     def display_lidar_status(self):
         # Obtenir l'état du lidar
         try:
@@ -387,13 +425,13 @@ class IHM:
                 return objet.id # Retourne l'ID de l'objet existant
         return None
 
-    def detect_objects(self, scan):
+    def detect_objects(self, scan, eps=150, min_samples=14):
 
         # Regroupement des points avec DBSCAN
         X = np.array([(point[0], point[1]) for point in scan])
 
-        eps = 150  # À ajuster en fonction de la densité des points
-        min_samples = 14  # À ajuster en fonction de la densité des points
+        #eps = 200  # À ajuster en fonction de la densité des points
+        #min_samples = 20  # À ajuster en fonction de la densité des points
         dbscan = DBSCAN(eps=eps, min_samples=min_samples)
         labels = dbscan.fit_predict(X)
 
@@ -409,11 +447,11 @@ class IHM:
             y_moyen = np.mean(cluster_points[:, 1])
 
             # Calcul de la taille de l'objet (peut être ajusté en fonction de votre application)
-            distance_min = np.min(
-                cluster_points[:, 0]**2 + cluster_points[:, 1]**2)**0.5
-            distance_max = np.max(
-                cluster_points[:, 0]**2 + cluster_points[:, 1]**2)**0.5
-            taille = distance_max - distance_min
+            x_min = np.min(cluster_points[:, 0])
+            x_max = np.max(cluster_points[:, 0])
+            y_min = np.min(cluster_points[:, 1])
+            y_max = np.max(cluster_points[:, 1])
+            taille = math.sqrt((x_max - x_min)**2 + (y_max - y_min)**2)
 
             nouvel_objet = Objet(id=len(objets) + 1,
                                  x=x_moyen, y=y_moyen, taille=taille)
@@ -680,22 +718,39 @@ class IHM:
         last_time = time.time()
         self.ROBOT.x = 1500
         self.ROBOT.y = 1000
+        eps_slider, min_samples_slider = self.create_sliders()
+        clock = pygame.time.Clock()
         while True:
             keys = pygame.key.get_pressed()
             quit = pygame.event.get(pygame.QUIT)
             if quit or keys[pygame.K_ESCAPE] or keys[pygame.K_SPACE]:
                 exit(0)
+            for event in pygame.event.get():
+                # Gérer les événements des sliders
+                self.manager.process_events(event)
+
+            time_delta = clock.tick(60)/1000.0
+            # Mettre à jour les sliders
+            self.manager.update(time_delta)
+            
+            
 
             scan = self.valeur_de_test()
             new_scan = self.transform_scan(scan)
 
+            eps_value = eps_slider.get_current_value()
+            min_samples_value = min_samples_slider.get_current_value()
+            print(f"eps: {eps_value}, min_samples: {min_samples_value}")
+
             # self.detect_object(new_scan)
-            new_objets = self.detect_objects(new_scan)
+            new_objets = self.detect_objects(new_scan, eps_value, min_samples_value)
             self.suivre_objet(new_objets, 100)
 
             self.draw_background()
             self.draw_text_center("PROGRAMME DE SIMULATION",self.WINDOW_SIZE[0] / 2, 35, self.RED)
             self.draw_robot()
+            # Dessiner les sliders
+            self.manager.draw_ui(self.lcd)
 
             if len(self.objets) >= 3:
                 x_r, y_r = self.calculer_coordonnees(

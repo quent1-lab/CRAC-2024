@@ -84,7 +84,10 @@ class IHM:
         logging.basicConfig(filename='ihm.log', level=logging.INFO,
                             datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
 
-    def draw_robot(self, x, y, angle):
+    def draw_robot(self):
+        x = self.ROBOT.x
+        y = self.ROBOT.y
+        angle = self.ROBOT_ANGLE
         x_r = self.map_value(x, 0, self.FIELD_SIZE[0], self.WINDOW_SIZE[0]-5-self.BORDER_DISTANCE*self.X_RATIO, self.BORDER_DISTANCE*self.X_RATIO+5)
         y_r = self.map_value(y, 0, self.FIELD_SIZE[1], self.BORDER_DISTANCE*self.Y_RATIO+5 ,self.WINDOW_SIZE[1]-5-self.BORDER_DISTANCE*self.Y_RATIO)
         x_r = int(x_r)-self.ROBOT_Dimension[0]*self.X_RATIO
@@ -668,6 +671,8 @@ class IHM:
         print("Programme de simulation")
         logging.info("Starting simulation program")
         last_time = time.time()
+        self.ROBOT.x = 1500
+        self.ROBOT.y = 1000
         while True:
             keys = pygame.key.get_pressed()
             quit = pygame.event.get(pygame.QUIT)
@@ -682,15 +687,14 @@ class IHM:
             self.suivre_objet(new_objets, 100)
 
             self.draw_background()
-            self.draw_text_center("PROGRAMME DE SIMULATION",
-                                  self.WINDOW_SIZE[0] / 2, 35, self.RED)
-            self.draw_robot(self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)
+            self.draw_text_center("PROGRAMME DE SIMULATION",self.WINDOW_SIZE[0] / 2, 35, self.RED)
+            self.draw_robot()
 
             if len(self.objets) >= 3:
                 x_r, y_r = self.calculer_coordonnees(
                     self.objets[0], self.objets[1], self.objets[2])
                 print(f"x: {x_r}, y: {y_r}")
-                self.draw_robot(x_r, y_r, 0)
+                #self.draw_robot(x_r, y_r, 0)
 
             for objet in self.objets:
                 self.draw_object(objet)
@@ -818,9 +822,8 @@ class IHM:
         pygame.draw.rect(self.lcd, (255, 255, 255), start_button, 5)
         self.draw_text_center("Démarrer", self.WINDOW_SIZE[0] / 2, self.WINDOW_SIZE[1] - 31)
 
-
     def run(self):
-        # self.programme_simulation()
+        self.programme_simulation()
 
         self.client_socket.set_callback(self.receive_to_server)
         self.client_socket.set_callback_stop(None)

@@ -41,9 +41,9 @@ class IHM:
         self.FONT_COLOR = self.BLACK
 
         # Initialisation du robot virtuel
-        self.ROBOT = Objet(0, 0, 0, 20)
-        self.ROBOT_ANGLE = 0
         self.ROBOT_Dimension = (264, 268)
+        self.ROBOT = Objet(0, self.ROBOT_Dimension[0], self.ROBOT_Dimension[1], 20)
+        self.ROBOT_ANGLE = 0
 
         if os.name == 'nt':  # Windows
             self.path_picture = "Lidar/Terrain_Jeu.png"
@@ -90,7 +90,7 @@ class IHM:
         angle = self.ROBOT_ANGLE
         x_r = self.map_value(x, 0, self.FIELD_SIZE[0], self.WINDOW_SIZE[0]-5-self.BORDER_DISTANCE*self.X_RATIO, self.BORDER_DISTANCE*self.X_RATIO+5)
         y_r = self.map_value(y, 0, self.FIELD_SIZE[1], self.BORDER_DISTANCE*self.Y_RATIO+5 ,self.WINDOW_SIZE[1]-5-self.BORDER_DISTANCE*self.Y_RATIO)
-        x_r = int(x_r)-self.ROBOT_Dimension[0]*self.X_RATIO
+        x_r = int(x_r)
         y_r = int(y_r)      
         # Dessiner le robot en fonction de ses coordonnées et de son angle et de ses dimensions en rectangle
         # Créer une nouvelle surface pour le robot
@@ -106,10 +106,17 @@ class IHM:
         pygame.draw.polygon(robot_surface, pygame.Color(255, 0, 0), [(dim_x - 5, dim_y / 2), (dim_x /2, 10), (dim_x / 2, dim_y / 2 - 10),(10,dim_y / 2 - 10), (10,dim_y / 2 + 10), (dim_x / 2, dim_y / 2 + 10), (dim_x / 2, dim_y - 10), (dim_x-5, dim_y / 2)], 0)
 
         # Faire pivoter la surface du robot par rapport au centre
-        robot_surface = pygame.transform.rotate(robot_surface, -angle)
+        # Obtenir la position actuelle du centre de la surface
+        old_center = robot_surface.get_rect().center
 
-        # Dessiner la surface du robot sur l'écran
-        self.lcd.blit(robot_surface, (x_r, y_r))
+        # Faire pivoter la surface du robot
+        robot_surface = pygame.transform.rotate(robot_surface, angle+180)
+        robot_surface_rect = robot_surface.get_rect(center=(x_r, y_r))
+
+        # Obtenir la position du nouveau centre de la surface
+
+        # Dessiner la surface du robot sur l'écran en ajustant les coordonnées pour que le centre reste à la même position
+        self.lcd.blit(robot_surface, robot_surface_rect)
         
     def draw_image(self, image_path):
         # Charge l'image à partir du chemin du fichier
@@ -693,7 +700,7 @@ class IHM:
             if len(self.objets) >= 3:
                 x_r, y_r = self.calculer_coordonnees(
                     self.objets[0], self.objets[1], self.objets[2])
-                print(f"x: {x_r}, y: {y_r}")
+                #print(f"x: {x_r}, y: {y_r}")
                 #self.draw_robot(x_r, y_r, 0)
 
             for objet in self.objets:

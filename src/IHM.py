@@ -78,7 +78,7 @@ class IHM:
         pygame.font.init()
         self.font = pygame.font.SysFont("Arial", 20)
         pygame.mouse.set_visible(True)
-        pygame.display.set_caption('LiDAR Scan')
+        pygame.display.set_caption('IHM')
         self.lcd.fill(self.BACKGROUND_COLOR)
         pygame.event.set_allowed([MOUSEBUTTONDOWN, MOUSEBUTTONUP, MOUSEMOTION])
         self.clicked_position = None  # Variable pour stocker les coordonnées du clic

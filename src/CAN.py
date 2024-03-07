@@ -4,9 +4,6 @@ from client import Client
 import struct
 import logging
 
-# Configuration du logger
-logging.basicConfig(filename='buscan.log', level=logging.INFO, datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
-
 class ComCAN:
     def __init__(self, channel, bustype):
         self.channel = channel
@@ -14,6 +11,8 @@ class ComCAN:
         self.can = None
         self.is_connected = False
         self.client = Client("127.0.0.2", 22050, 2, self.disconnect)
+        # Configuration du logger
+        logging.basicConfig(filename='buscan.log', level=logging.INFO, datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
 
     def connect(self):
         try:
@@ -76,6 +75,7 @@ class ComCAN:
                 self.client.add_to_send_list(self.client.create_message(0, "coord", {"x": x[0], "y": y[0], "theta": theta[0]}))
             else:
                 logging.error(f"ID inconnu ; data : {data}")
+                print(f"ID inconnu ; data : {data}")
         except Exception as e:
             logging.error(f"Erreur lors de l'analyse du message CAN : {str(e)}")
 
@@ -92,7 +92,7 @@ class ComCAN:
                 dataCan = struct.pack('h', data["x"]) + struct.pack('h', data["y"]) + struct.pack('h', data["theta"]) + struct.pack('c', data["sens"].encode())
                 messageCan = can.Message(arbitration_id=0x20, data=dataCan, is_extended_id=False)
                 self.send(messageCan)
-                print("BusCAN : Message de clic envoyé")
+                print("BusCAN : Message de clic envoyé", messageCan)
             elif message["cmd"] == "recal":
                 data = message["data"]
                 # Format des données : zone (char)

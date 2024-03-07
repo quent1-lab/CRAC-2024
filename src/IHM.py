@@ -627,7 +627,7 @@ class IHM:
         self.draw_text_center("Démarrer", self.WINDOW_SIZE[0] / 2, self.WINDOW_SIZE[1] - 31)
 
     def run(self):
-        self.programme_simulation()
+        #self.programme_simulation()
 
         self.client_socket.set_callback(self.receive_to_server)
         self.client_socket.set_callback_stop(None)
@@ -651,7 +651,7 @@ class IHM:
                     for event in pygame.event.get():
                         self.handle_mouse_click(event)
 
-                self.draw_robot(self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)
+                self.draw_robot()
 
                 for point in self.new_scan:
                     self.draw_point(point[0], point[1])

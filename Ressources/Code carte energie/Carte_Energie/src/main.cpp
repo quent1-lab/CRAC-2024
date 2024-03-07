@@ -153,16 +153,13 @@ int main()
         }
 
         // Remplissage des données
-        for (int i = 0; i < 8; i++)
-        {
-            msg.data[i] = V_BatMain;
-            msg1.data[i] = V_Bat1;
-            msg2.data[i] = V_Bat2;
-            msg3.data[i] = V_Bat3;
-            msg4.data[i] = Cap_I1;
-            msg5.data[i] = Cap_Courant2;
-            msg6.data[i] = Cap_Courant3;
-        }
+        msg.data[0] = V_BatMain;
+        msg1.data[0] = V_Bat1;
+        msg2.data[0] = V_Bat2;
+        msg3.data[0] = V_Bat3;
+        msg4.data[0] = Cap_I1;
+        msg5.data[0] = Cap_Courant2;
+        msg6.data[0] = Cap_Courant3;
         /*if (V_Bat1 < 7.0)
         {
             printf("Batterie Faible 1. Mettre à Charger !!\n");

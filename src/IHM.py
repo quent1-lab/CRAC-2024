@@ -71,12 +71,7 @@ class IHM:
         self.Y_RATIO = self.WINDOW_SIZE[1] / self.FIELD_SIZE[1]
         self.lcd = pygame.display.set_mode(self.WINDOW_SIZE)
 
-        theme = {
-            "UILabel": {
-                "text_colour": pygame.Color('black')
-            }
-        }
-        self.manager = pygame_gui.UIManager(self.WINDOW_SIZE, theme_path="theme.json")
+        self.manager = pygame_gui.UIManager(self.WINDOW_SIZE, theme_path="src/theme.json")
 
         self.client_socket = Client("192.168.22.101", 22050, 10)
 
@@ -460,45 +455,24 @@ class IHM:
         last_time = time.time()
         self.ROBOT.x = 1500
         self.ROBOT.y = 1000
-        eps_slider, min_samples_slider = self.create_sliders()
-        clock = pygame.time.Clock()
+
         while True:
             keys = pygame.key.get_pressed()
             quit = pygame.event.get(pygame.QUIT)
             if quit or keys[pygame.K_ESCAPE] or keys[pygame.K_SPACE]:
                 exit(0)
-            for event in pygame.event.get():
-                # Gérer les événements des sliders
-                self.manager.process_events(event)
-
-            time_delta = clock.tick(60)/1000.0
-            # Mettre à jour les sliders
-            self.manager.update(time_delta)
-            
             
 
             scan = self.valeur_de_test()
             new_scan = self.transform_scan(scan, self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)
 
-            eps_value = eps_slider.get_current_value()
-            min_samples_value = min_samples_slider.get_current_value()
-            print(f"eps: {eps_value}, min_samples: {min_samples_value}")
-
             # self.detect_object(new_scan)
-            new_objets = self.detect_objects(new_scan, eps_value, min_samples_value)
+            new_objets = self.detect_objects(new_scan)
             self.suivre_objet(new_objets, 100)
 
             self.draw_background()
             self.draw_text_center("PROGRAMME DE SIMULATION",self.WINDOW_SIZE[0] / 2, 35, self.RED)
             self.draw_robot()
-            # Dessiner les sliders
-            self.manager.draw_ui(self.lcd)
-
-            if len(self.objets) >= 3:
-                x_r, y_r = self.calculer_coordonnees(
-                    self.objets[0], self.objets[1], self.objets[2])
-                #print(f"x: {x_r}, y: {y_r}")
-                #self.draw_robot(x_r, y_r, 0)
 
             for objet in self.objets:
                 self.draw_object(objet)
@@ -627,7 +601,7 @@ class IHM:
         self.draw_text_center("Démarrer", self.WINDOW_SIZE[0] / 2, self.WINDOW_SIZE[1] - 31)
 
     def run(self):
-        #self.programme_simulation()
+        self.programme_simulation()
 
         self.client_socket.set_callback(self.receive_to_server)
         self.client_socket.set_callback_stop(None)

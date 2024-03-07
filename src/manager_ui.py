@@ -72,11 +72,15 @@ class GUIManager:
             if object_id is not None:
                 callback = self.callbacks.get(object_id[0])  # Get the callback function
                 if callback is not None:
-                    if isinstance(button, UIDropDownMenu):
-                        selected_option = button.selected_option
-                        callback(selected_option)  # Call the callback function with the selected option
-                    else:
+                    if object_id[0].split('_')[-1] == 'button':
                         callback()  # Call the callback function
+        elif event.type == UI_DROP_DOWN_MENU_CHANGED:
+            drop_down = event.ui_element
+            object_id = drop_down.object_ids
+            if object_id is not None:
+                callback = self.callbacks.get(object_id[0])
+                if callback is not None:
+                    callback(drop_down.selected_option)
 
     def update(self, delta_time):
         self.manager.update(delta_time)

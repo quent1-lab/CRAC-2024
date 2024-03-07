@@ -1,7 +1,8 @@
 import logging
 from objet import Objet
 import pygame
-import pygame_gui
+from pygame_gui import *
+from pygame_gui.elements import *
 from pygame.locals import *
 import math
 import os
@@ -71,7 +72,8 @@ class IHM:
         self.Y_RATIO = self.WINDOW_SIZE[1] / self.FIELD_SIZE[1]
         self.lcd = pygame.display.set_mode(self.WINDOW_SIZE)
 
-        self.manager = pygame_gui.UIManager(self.WINDOW_SIZE, theme_path="src/theme.json")
+        self.manager = UIManager(self.WINDOW_SIZE, "src/theme.json")
+        self.callbacks = {}
 
         self.client_socket = Client("192.168.22.101", 22050, 10)
 
@@ -247,19 +249,6 @@ class IHM:
                 continue
 
             pygame.draw.circle(self.lcd, color, (x, y), 2)
-
-    def create_slider(self, x, y, width, height, name, range_start, range_end):
-        manager = pygame_gui.UIManager((800, 600))
-
-        # Créer un label pour le nom du slider
-        label_rect = pygame.Rect((x, y), (width, height))
-        pygame_gui.elements.UILabel(relative_rect=label_rect, text=name, manager=manager)
-
-        # Créer le slider
-        slider_rect = pygame.Rect((x, y + height), (width, height))
-        slider = pygame_gui.elements.UIHorizontalSlider(relative_rect=slider_rect, start_value=range_start, value_range=(range_start, range_end), manager=manager)
-
-        return slider
 
     def transform_scan(self, scan, x_r, y_r, angle):
         """
@@ -449,12 +438,110 @@ class IHM:
             scan.append((0, angle, distance))
         return scan
 
+    def create_button(self, text, position, size, callback):
+        object_id = f'{text}_button'.replace(' ', '_').replace('.', '_')
+        button = elements.UIButton(relative_rect=pygame.Rect(position, size),
+                                            text=text,
+                                            manager=self.manager,
+                                            container=None,
+                                            object_id=object_id)  # Assigning object_id
+        self.callbacks[object_id] = callback  # Store the callback function
+        return button
+
+    def create_slider(self, position, size, start_value, value_range, callback):
+        object_id = f'slider_{position}_{size}'.replace(' ', '_').replace('.', '_')
+        slider = elements.UIHorizontalSlider(relative_rect=pygame.Rect(position, size),
+                                                        start_value=start_value,
+                                                        value_range=value_range,
+                                                        manager=self.manager,
+                                                        container=None,
+                                                        object_id=object_id)  # Assigning object_id
+        self.callbacks[object_id] = callback  # Store the callback function
+        return slider
+
+    def create_label(self, text, position, size):
+        object_id = f'label_{text}'.replace(' ', '_').replace('.', '_')
+        label = UILabel(relative_rect=pygame.Rect(position, size),
+                                             text=text,
+                                             manager=self.manager,
+                                             container=None,
+                                             object_id=object_id)  # Assigning object_id
+        return label
+
+    def update_label(self, label, new_text):
+        label.set_text(new_text)
+
+    def create_drop_down(self, options, position, size, callback):
+        object_id = f'drop_down_{position}_{size}'.replace(' ', '_').replace('.', '_')
+        drop_down = elements.UIDropDownMenu(options_list=options,
+                                                        starting_option=options[0],
+                                                        relative_rect=pygame.Rect(position, size),
+                                                        manager=self.manager,
+                                                        container=None,
+                                                        object_id=object_id)  # Assigning object_id
+        self.callbacks[object_id] = callback  # Store the callback function
+        return drop_down
+
+    def open_window(self, title, size):
+        object_id = f'{title}_window'.replace(' ', '_').replace('.', '_')
+        window = elements.UIWindow(rect=pygame.Rect((100, 100), size),
+                                              manager=self.manager,
+                                              window_display_title=title,
+                                              object_id=object_id)  # Assigning object_id
+        return window
+
+    def handle_events(self, event):
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            quit()
+        self.manager.process_events(event)
+
+        if event.type == UI_BUTTON_PRESSED:
+            print("Button pressed")
+            button = event.ui_element
+            object_id = button.object_ids  # Get the object_id
+            if object_id is not None:
+                callback = self.callbacks.get(object_id[0])  # Get the callback function
+                if callback is not None:
+                    if object_id[0].split('_')[-1] == 'button':
+                        callback()  # Call the callback function
+        elif event.type == UI_DROP_DOWN_MENU_CHANGED:
+            drop_down = event.ui_element
+            object_id = drop_down.object_ids
+            if object_id is not None:
+                callback = self.callbacks.get(object_id[0])
+                if callback is not None:
+                    callback(self,drop_down.selected_option)
+    
+    def update(self, delta_time):
+        self.manager.update(delta_time)
+
+    def draw(self):
+        #self.screen.fill((255, 255, 255))
+        self.manager.draw_ui(self.lcd)
+        #pygame.display.update()
+
+    def run_gui(self,clock):
+        time_delta = clock.tick(60)/1000.0
+        for event in pygame.event.get():
+            print(UI_BUTTON_PRESSED)
+            self.handle_events(event)
+        self.update(time_delta)
+        self.draw()
+
     def programme_simulation(self):
         print("Programme de simulation")
         logging.info("Starting simulation program")
         last_time = time.time()
         self.ROBOT.x = 1500
         self.ROBOT.y = 1000
+
+        start_button = self.create_button("Démarrer", 
+                            (self.WINDOW_SIZE[0] / 2 - 50, self.WINDOW_SIZE[1] - 50), 
+                            (100, 40), 
+                            lambda: setattr(self, 'ETAT', 10))
+
+        clock = pygame.time.Clock()
 
         while True:
             keys = pygame.key.get_pressed()
@@ -471,7 +558,17 @@ class IHM:
             self.suivre_objet(new_objets, 100)
 
             self.draw_background()
-            self.draw_text_center("PROGRAMME DE SIMULATION",self.WINDOW_SIZE[0] / 2, 35, self.RED)
+            self.run_gui(clock)
+            if self.ETAT == 0:
+                self.draw_text_center("INITIALISATION DU MATCH", self.WINDOW_SIZE[0] / 2, 35, self.RED)
+                self.init_match()
+            elif self.ETAT == 1:
+                self.draw_text_center("MATCH EN COURS", self.WINDOW_SIZE[0] / 2, 35, self.RED)
+                for event in pygame.event.get():
+                    self.handle_mouse_click(event)
+            elif self.ETAT == 10:
+                self.ETAT = 1
+                start_button.kill()
             self.draw_robot()
 
             for objet in self.objets:
@@ -584,12 +681,12 @@ class IHM:
                             self.EQUIPE = "Bleu"
                         else:
                             self.EQUIPE = "Jaune"
-                if start_button.collidepoint(mouse_pos):
+                """if start_button.collidepoint(mouse_pos):
                     print("Démarrage du match")
                     # Envoie la position de départ au CAN
                     self.client_socket.add_to_send_list(self.client_socket.create_message(
                             2, "recal", {"zone": k,}))
-                    self.ETAT = 1
+                    self.ETAT = 1"""
 
         # Dessiner les rectangles de départ
         for i, rect in enumerate(start_positions):
@@ -597,12 +694,17 @@ class IHM:
             pygame.draw.rect(self.lcd, color, rect, 10)
 
         # Dessiner le bouton de démarrage
-        pygame.draw.rect(self.lcd, (255, 255, 255), start_button, 5)
-        self.draw_text_center("Démarrer", self.WINDOW_SIZE[0] / 2, self.WINDOW_SIZE[1] - 31)
+        #pygame.draw.rect(self.lcd, (255, 255, 255), start_button, 5)
+        #self.draw_text_center("Démarrer", self.WINDOW_SIZE[0] / 2, self.WINDOW_SIZE[1] - 31)
 
     def run(self):
         self.programme_simulation()
 
+        """start_button = self.gui.create_button("Démarrer", 
+                            (self.WINDOW_SIZE[0] / 2 - 50, self.WINDOW_SIZE[1] - 50), 
+                            (100, 40), 
+                            lambda: setattr(self, 'ETAT', 10))"""
+        
         self.client_socket.set_callback(self.receive_to_server)
         self.client_socket.set_callback_stop(None)
         self.client_socket.connect()
@@ -624,6 +726,9 @@ class IHM:
                     self.draw_text_center("MATCH EN COURS", self.WINDOW_SIZE[0] / 2, 35, self.RED)
                     for event in pygame.event.get():
                         self.handle_mouse_click(event)
+                elif self.ETAT == 10:
+                    setattr(self, 'ETAT', 1)
+                    #start_button.kill()
 
                 self.draw_robot()
 

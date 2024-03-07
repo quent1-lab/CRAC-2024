@@ -5,11 +5,18 @@ from pygame_gui.elements import *
 
 
 class GUIManager:
-    def __init__(self, screen_width, screen_height):
+    def __init__(self, screen_width = 800, screen_height=600,screen = None, theme_path=None):
         pygame.init()
-        self.screen = pygame.display.set_mode((screen_width, screen_height))
-        self.manager = UIManager((screen_width, screen_height))
+        if screen is not None:
+            self.screen = screen
+        else:
+            self.screen = pygame.display.set_mode((screen_width, screen_height))
+        if theme_path is not None:
+            self.manager = UIManager((screen_width, screen_height), theme_path)
+        else:
+            self.manager = UIManager((screen_width, screen_height))
         self.callbacks = {}
+        self.is_running = True
 
     def create_button(self, text, position, size, callback):
         object_id = f'{text}_button'.replace(' ', '_').replace('.', '_')
@@ -34,12 +41,15 @@ class GUIManager:
 
     def create_label(self, text, position, size):
         object_id = f'label_{text}'.replace(' ', '_').replace('.', '_')
-        label = elements.UILabel(relative_rect=pygame.Rect(position, size),
+        label = UILabel(relative_rect=pygame.Rect(position, size),
                                              text=text,
                                              manager=self.manager,
                                              container=None,
                                              object_id=object_id)  # Assigning object_id
         return label
+
+    def update_label(self, label, new_text):
+        label.set_text(new_text)
 
     def create_drop_down(self, options, position, size, callback):
         object_id = f'drop_down_{position}_{size}'.replace(' ', '_').replace('.', '_')
@@ -80,7 +90,7 @@ class GUIManager:
             if object_id is not None:
                 callback = self.callbacks.get(object_id[0])
                 if callback is not None:
-                    callback(drop_down.selected_option)
+                    callback(self,drop_down.selected_option)
 
     def update(self, delta_time):
         self.manager.update(delta_time)
@@ -90,10 +100,12 @@ class GUIManager:
         self.manager.draw_ui(self.screen)
         pygame.display.update()
 
+    def stop(self):
+        self.is_running = False
+
     def run(self):
         clock = pygame.time.Clock()
-        is_running = True
-        while is_running:
+        while self.is_running:
             time_delta = clock.tick(60)/1000.0
             for event in pygame.event.get():
                 self.handle_events(event)
@@ -105,9 +117,9 @@ if __name__ == "__main__":
     gui_manager = GUIManager(800, 600)
     gui_manager.create_button("Click Me", (50, 50), (100, 50), lambda: print("Button Clicked"))
     gui_manager.create_slider((50, 150), (200, 20), 50, (0, 100), lambda value: print("Slider Value:", value))
-    gui_manager.create_label("Hello World", (50, 200), (200, 20))
+    label1 = gui_manager.create_label("Hello World", (50, 200), (200, 20))
     gui_manager.create_drop_down(["Option 1", "Option 2", "Option 3"], (50, 250), (200, 50),
-                                 lambda selected_option: print("Selected Option:", selected_option))
+                                 lambda self, selected_option: self.update_label(label1, selected_option))
     window = gui_manager.open_window("Test Window", (300, 300))
     gui_manager.create_button("Close Window", (400, 50), (100, 50), window.kill)
     gui_manager.run()

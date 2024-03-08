@@ -8,12 +8,10 @@ from sklearn.cluster import DBSCAN
 from objet import Objet
 from client import Client
 from PyQt5.QtWidgets import *
-from PyQt5.QtGui import QColor, QPixmap, QPainter, QFont
+from PyQt5.QtGui import QColor, QPixmap, QPainter, QFont,QPen
 from PyQt5.QtCore import Qt, QRectF
-from PyQt5.QtWidgets import QGraphicsTextItem
-from PyQt5.QtWidgets import QGraphicsScene, QGraphicsView, QVBoxLayout, QLabel, QHBoxLayout, QPushButton
-from PyQt5.QtCore import QRectF, Qt
-from PyQt5.QtGui import QPen
+from screeninfo import get_monitors
+
 
 
 class MatchInfoWindow(QWidget):
@@ -44,9 +42,6 @@ class IHM(QMainWindow):
         self.POINT_COLOR = QColor(255, 0, 0)
         self.BACKGROUND_COLOR = self.LIGHT_GREY
         self.FONT_COLOR = self.BLACK
-        self.WINDOW_SIZE = (900, 600)
-        self.X_RATIO = self.WINDOW_SIZE[0] / self.FIELD_SIZE[0]
-        self.Y_RATIO = self.WINDOW_SIZE[1] / self.FIELD_SIZE[1]
 
         # Initialize virtual robot
         self.ROBOT_Dimension = (264, 268)
@@ -69,10 +64,21 @@ class IHM(QMainWindow):
         self.background = QLabel(self)
         self.init_ui()
 
+        # Maximize the window
+        self.WINDOW_SIZE = (self.width(), self.height())
+        self.X_RATIO = self.WINDOW_SIZE[0] / self.FIELD_SIZE[0]
+        self.Y_RATIO = self.WINDOW_SIZE[1] / self.FIELD_SIZE[1]
+        print(self.WINDOW_SIZE)
+
     def init_ui(self):
         self.layout = QVBoxLayout()  # Initialize self.layout as a QVBoxLayout
         self.setWindowTitle("Application de Coupe de Robotique")
-        self.setGeometry(100, 100, 900, 600)
+
+        monitor = get_monitors()[0]
+        width = monitor.width - 100
+        height = int(width * 2 / 3)  # Maintain 3:2 aspect ratio
+
+        self.setGeometry(100, 100, width, height)
 
         self.create_top_left_widget()
         self.create_middle_widget()
@@ -139,16 +145,27 @@ class IHM(QMainWindow):
 
     def draw_image(self, path):
         pixmap = QPixmap(path)
-        width = int((self.FIELD_SIZE[0] - 2 * self.BORDER_DISTANCE) * self.X_RATIO)
-        height = int((self.FIELD_SIZE[1] - 2 * self.BORDER_DISTANCE) * self.Y_RATIO)
+
+        # Calculate the width and height as 80% of the window size
+        width = int(self.width() * 0.5)
+        height = int(width * 2 / 3)  # Maintain 3:2 aspect ratio
+
+
+        # Scale the pixmap
         pixmap = pixmap.scaled(width, height, Qt.KeepAspectRatio)
-        
+
         # Create a QGraphicsPixmapItem with the pixmap
         pixmap_item = QGraphicsPixmapItem(pixmap)
-        
-        # Position the pixmap_item at the top left corner of the field
-        pixmap_item.setPos(self.BORDER_DISTANCE * self.X_RATIO, self.BORDER_DISTANCE * self.Y_RATIO)
-        
+
+        # Calculate the position to center the pixmap_item
+        x_pos = (self.WINDOW_SIZE[0] - width) / 2
+        y_pos = (self.WINDOW_SIZE[1] - height) / 2
+
+        print("x_pos", x_pos, "y_pos", y_pos, "width", width, "height", height)
+
+        # Position the pixmap_item at the center of the window
+        pixmap_item.setPos(x_pos, y_pos)
+
         # Add the pixmap_item to the scene
         self.scene.addItem(pixmap_item)
 

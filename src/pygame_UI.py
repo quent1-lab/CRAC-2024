@@ -24,7 +24,7 @@ class Button:
 
         # Draw text on button
         text_surface = self.font.render(self.text, True, self.theme['text_color'])
-        text_rect = text_surface.get_rect(center=self.rect.center)
+        text_rect = text_surface.get_rect(center=(self.rect.centerx, self.rect.centery *1.03))
         self.surface.blit(text_surface, text_rect)
 
     def handle_event(self, event):

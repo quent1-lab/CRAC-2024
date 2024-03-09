@@ -90,7 +90,7 @@ class IHM:
         self.clicked_position = None  # Variable pour stocker les coordonnées du clic
         pygame.display.update()
 
-        self.start_button = Button(self.lcd, pygame.Rect(self.WINDOW_SIZE[0]/2-50, self.WINDOW_SIZE[1]-60, 100, 50),"src/theme.json", "Démarrer", color=(20,200,20),on_click= self.start_match())
+        self.start_button = Button(self.lcd, pygame.Rect(self.WINDOW_SIZE[0]/2-50, self.WINDOW_SIZE[1]-60, 100, 50),"src/theme.json", "Démarrer", color=(20,200,20),on_click= self.start_match)
 
         logging.basicConfig(filename='ihm.log', level=logging.INFO,
                             datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
@@ -466,7 +466,7 @@ class IHM:
             self.suivre_objet(new_objets, 100)
 
             self.draw_background()
-            self.init_match()
+
             if self.ETAT == 0:
                 self.draw_text_center("INITIALISATION DU MATCH", self.WINDOW_SIZE[0] / 2, 35, self.RED)
                 self.init_match()
@@ -474,9 +474,7 @@ class IHM:
                 self.draw_text_center("MATCH EN COURS", self.WINDOW_SIZE[0] / 2, 35, self.RED)
                 for event in pygame.event.get():
                     self.handle_mouse_click(event)
-            elif self.ETAT == 10:
-                self.ETAT = 1
-                self.client_socket.add_to_send_list(self.client_socket.create_message(0, "clic", {"zone": self.zone_depart}))
+                
             self.draw_robot()
 
             for objet in self.objets:
@@ -596,7 +594,8 @@ class IHM:
 
     def start_match(self):
         self.ETAT = 1
-        print("Match en cours")
+        self.client_socket.add_to_send_list(self.client_socket.create_message(0, "clic", {"zone": self.zone_depart}))
+        print("Match en cours0")
 
     def run(self):
         self.programme_simulation()

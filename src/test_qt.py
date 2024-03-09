@@ -146,10 +146,9 @@ class IHM(QMainWindow):
     def draw_image(self, path):
         pixmap = QPixmap(path)
 
-        # Calculate the width and height as 80% of the window size
-        width = int(self.width() * 0.5)
+        # Calculate the width and height as 60% of the window size
+        width = int(self.width() * 0.6)
         height = int(width * 2 / 3)  # Maintain 3:2 aspect ratio
-
 
         # Scale the pixmap
         pixmap = pixmap.scaled(width, height, Qt.KeepAspectRatio)
@@ -157,17 +156,11 @@ class IHM(QMainWindow):
         # Create a QGraphicsPixmapItem with the pixmap
         pixmap_item = QGraphicsPixmapItem(pixmap)
 
-        # Calculate the position to center the pixmap_item
-        x_pos = (self.WINDOW_SIZE[0] - width) / 2
-        y_pos = (self.WINDOW_SIZE[1] - height) / 2
-
-        print("x_pos", x_pos, "y_pos", y_pos, "width", width, "height", height)
-
-        # Position the pixmap_item at the center of the window
-        pixmap_item.setPos(x_pos, y_pos)
-
         # Add the pixmap_item to the scene
         self.scene.addItem(pixmap_item)
+
+        # Center the view on the pixmap_item
+        self.view.centerOn(pixmap_item)
 
     def draw_point(self, x, y):
         # Dessine un point sur la scène

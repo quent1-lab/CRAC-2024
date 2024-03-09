@@ -16,6 +16,10 @@
     "font_size": 20,
     "track_color": [200, 200, 200],
     "thumb_color": [100, 100, 100],
-    "thumb_size": 10
+    "thumb_size": 10,
+    "bg_color": [240, 240, 240],
+    "slider_color": [200, 200, 200],
+    "cursor_color": [0, 0, 0],
+    "send_button_color": [0, 0, 0]
   }
   

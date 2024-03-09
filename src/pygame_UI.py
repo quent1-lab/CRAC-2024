@@ -24,7 +24,7 @@ class Button:
 
         # Draw text on button
         text_surface = self.font.render(self.text, True, self.theme['text_color'])
-        text_rect = text_surface.get_rect(center=(self.rect.centerx, self.rect.centery *1.03))
+        text_rect = text_surface.get_rect(center=(self.rect.centerx, self.rect.centery *1))
         self.surface.blit(text_surface, text_rect)
 
     def handle_event(self, event):
@@ -112,29 +112,104 @@ class Slider:
 
 
 class TextBox:
-    def __init__(self, surface, rect, color, font=None, text_color=(0, 0, 0), on_text_change=None):
+    def __init__(self, surface, rect, theme_file, font=None, max_length=50, send_button = False):
         self.surface = surface
         self.rect = pygame.Rect(rect)
-        self.color = color
-        self.text = ''
-        self.font = font or pygame.font.Font(None, 30)
-        self.text_color = text_color
-        self.on_text_change = on_text_change
+        self.font = font or pygame.font.Font(None, 24)
+        self.theme_file = theme_file
+        self.max_length = max_length
+        self.text = ""
+        self.text_to_display = ""
+        self.cursor_pos = 0
+        self.cursor_visible = True
+        self.cursor_timer = 0
+        self.cursor_interval = 500  # Interval for cursor blinking (milliseconds)
+        self.selected = False
+
+        # Get the average width of a character
+        average_char_width = self.font.size('a')[0]
+
+        # Calculate the max length of text to display based on the width of the text box
+        self.max_text_display_length = self.rect.width // average_char_width
+
+        # Load theme from file
+        with open(theme_file, 'r') as file:
+            self.theme = json.load(file)
+        
+        # Send button
+        self.send_button = send_button
+        if self.send_button:
+            self.button = Button(surface, (self.rect.right + 5, self.rect.y, 50, self.rect.height), theme_file, text='Send', on_click=self.send_message)
+            self.send_button_rect = self.button.rect
+
 
     def draw(self):
-        pygame.draw.rect(self.surface, self.color, self.rect)
-        text_surface = self.font.render(self.text, True, self.text_color)
-        text_rect = text_surface.get_rect(center=self.rect.center)
-        self.surface.blit(text_surface, text_rect)
+        # Draw text box
+        pygame.draw.rect(self.surface, self.theme['bg_color'], self.rect, border_radius=self.theme['border_radius'])
+
+        # Draw text
+        text_render = self.font.render(self.text_to_display, True, self.theme['text_color'])
+        text_rect = text_render.get_rect(midleft=(self.rect.left + 5, self.rect.centery))
+        self.surface.blit(text_render, text_rect)
+
+        if self.send_button:
+            self.button.draw()
+
+    def update_text_to_display(self):
+        # Update text to display based on current text and cursor position
+        self.text_to_display = ""
+        if len(self.text) > self.max_text_display_length:
+            if self.cursor_pos < self.max_text_display_length - 1:
+                self.text_to_display = self.text[:self.max_text_display_length]
+            else:
+                self.text_to_display = self.text[self.cursor_pos - self.max_text_display_length + 1:self.cursor_pos + 1]
+        else:
+            self.text_to_display = self.text
+
+        # Add cursor to text to display
+        #self.update_cursor(1000/60)
+        if self.cursor_visible and self.selected:
+            self.text_to_display = self.text_to_display[:self.cursor_pos] + "|" + self.text_to_display[self.cursor_pos:]
+
+    def update_cursor(self, dt):
+        # Update cursor visibility
+        self.cursor_timer += dt
+        if self.cursor_timer >= self.cursor_interval:
+            self.cursor_visible = not self.cursor_visible
+            self.cursor_timer = 0
 
     def handle_event(self, event):
-        if event.type == pg_constants.KEYDOWN:
-            if event.key == pg_constants.K_BACKSPACE:
-                self.text = self.text[:-1]
+        self.button.handle_event(event)        
+        if event.type == pygame.KEYDOWN and self.selected:
+            if event.key == pygame.K_LEFT:
+                self.cursor_pos = max(0, self.cursor_pos - 1)
+            elif event.key == pygame.K_RIGHT:
+                self.cursor_pos = min(len(self.text), self.cursor_pos + 1)
+            elif event.key == pygame.K_BACKSPACE:
+                if self.cursor_pos > 0:
+                    self.text = self.text[:self.cursor_pos - 1] + self.text[self.cursor_pos:]
+                    self.cursor_pos -= 1
+            elif event.key == pygame.K_DELETE:
+                if self.cursor_pos < len(self.text):
+                    self.text = self.text[:self.cursor_pos] + self.text[self.cursor_pos + 1:]
+            elif event.key == pygame.K_RETURN:
+                self.send_message()
             else:
-                self.text += event.unicode
-            if self.on_text_change:
-                self.on_text_change(self.text)
+                # Handle text input
+                if len(self.text) < self.max_length:
+                    self.text = self.text[:self.cursor_pos] + event.unicode + self.text[self.cursor_pos:]
+                    self.cursor_pos += 1
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if self.rect.collidepoint(event.pos):
+                self.selected = True
+            else:
+                self.selected = False
+        # Update text to display
+        self.update_text_to_display()
+
+    def send_message(self):
+        print("Sending message:", self.text)
+
 
 
 # Exemple d'utilisation :
@@ -142,10 +217,12 @@ if __name__ == '__main__':
     pygame.init()
     screen = pygame.display.set_mode((800, 600))
     clock = pygame.time.Clock()
+    theme_file = "src/theme.json"
 
-    button = Button(screen, (50, 50, 100, 50), "src/theme.json", text='Click Me', on_click=lambda: print('Button clicked'))
-    slider = Slider(screen, (50, 125, 200, 20), 'src/theme.json', value_range=(0, 100),start_value = 50)
-    text_box = TextBox(screen, (50, 200, 200, 50), (0, 0, 255))
+    button = Button(screen, (50, 50, 100, 50), theme_file, text='Click Me', on_click=lambda: print('Button clicked'))
+    slider = Slider(screen, (50, 125, 200, 20), theme_file, value_range=(0, 100),start_value = 50)
+
+    text_box = TextBox(screen, (100, 300, 300, 40), theme_file, send_button=True)
 
     running = True
     while running:

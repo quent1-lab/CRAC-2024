@@ -1,34 +1,46 @@
 import pygame
 import pygame.locals as pg_constants
-
+import json
 
 class Button:
-    def __init__(self, surface, rect, color, text='', font=None, text_color=(0, 0, 0), border_width=0,
-                 border_color=(0, 0, 0), on_click=None):
+    def __init__(self, surface, rect, theme_file, text='', font=None, on_click=None):
         self.surface = surface
         self.rect = pygame.Rect(rect)
-        self.color = color
         self.text = text
         self.font = font or pygame.font.Font(None, 30)
-        self.text_color = text_color
-        self.border_width = border_width
-        self.border_color = border_color
         self.on_click = on_click
 
+        # Load theme from file
+        with open(theme_file, 'r') as file:
+            self.theme = json.load(file)
+
+        self.state = 'normal'
+        self.font = pygame.font.SysFont(self.theme['font'], self.theme['font_size'])
+
     def draw(self):
-        pygame.draw.rect(self.surface, self.color, self.rect, 0)
-        if self.border_width:
-            pygame.draw.rect(self.surface, self.border_color, self.rect, self.border_width)
-        if self.text:
-            text_surface = self.font.render(self.text, True, self.text_color)
-            text_rect = text_surface.get_rect(center=self.rect.center)
-            self.surface.blit(text_surface, text_rect)
+        # Draw button based on current state
+        button_color = self.theme[self.state]['color']
+        pygame.draw.rect(self.surface, button_color, self.rect, border_radius=self.theme['border_radius'])
+
+        # Draw text on button
+        text_surface = self.font.render(self.text, True, self.theme['text_color'])
+        text_rect = text_surface.get_rect(center=self.rect.center)
+        self.surface.blit(text_surface, text_rect)
 
     def handle_event(self, event):
-        if event.type == pg_constants.MOUSEBUTTONDOWN:
+        if event.type == pg_constants.MOUSEMOTION:
             if self.rect.collidepoint(event.pos):
+                self.state = 'hover'
+            else:
+                self.state = 'normal'
+        elif event.type == pg_constants.MOUSEBUTTONDOWN:
+            if event.button == 1 and self.rect.collidepoint(event.pos):
+                self.state = 'clicked'
+        elif event.type == pg_constants.MOUSEBUTTONUP:
+            if event.button == 1 and self.rect.collidepoint(event.pos):
                 if self.on_click:
                     self.on_click()
+                self.state = 'hover'
 
 
 class Slider:
@@ -104,7 +116,7 @@ if __name__ == '__main__':
     screen = pygame.display.set_mode((800, 600))
     clock = pygame.time.Clock()
 
-    button = Button(screen, (50, 50, 100, 50), (255, 0, 0), text='Click Me', on_click=lambda: print('Button clicked'))
+    button = Button(screen, (50, 50, 100, 50), "src/theme.json", text='Click Me', on_click=lambda: print('Button clicked'))
     slider = Slider(screen, (50, 150, 300, 20), (0, 255, 0), min_value=0, max_value=100, initial_value=50)
     text_box = TextBox(screen, (50, 200, 200, 50), (0, 0, 255))
 

@@ -1,5 +1,18 @@
 {
-    "UILabel": {
-        "text_colour": [0, 0, 0, 255]
-    }
-}
+    "normal": {
+      "color": [200, 200, 200]
+    },
+    "hover": {
+      "color": [220, 220, 220]
+    },
+    "clicked": {
+      "color": [180, 180, 180]
+    },
+    "text_color": [0, 0, 0],
+    "border_radius": 10,
+    "border_width": 1,
+    "border_color": [0, 0, 0],
+    "font": "Arial",
+    "font_size": 20
+  }
+  

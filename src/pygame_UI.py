@@ -44,44 +44,60 @@ class Button:
 
 
 class Slider:
-    def __init__(self, surface, rect, color, min_value=0, max_value=100, initial_value=0, slider_color=(0, 0, 255),
-                 on_value_change=None):
+    def __init__(self, surface, rect, theme_file, value_range=(0, 100), start_value=50, font=None):
         self.surface = surface
         self.rect = pygame.Rect(rect)
-        self.color = color
-        self.min_value = min_value
-        self.max_value = max_value
-        self.value = initial_value
-        self.slider_color = slider_color
-        self.on_value_change = on_value_change
+        self.value_range = value_range
+        self.current_value = start_value
+        self.font = font or pygame.font.Font(None, 24)
         self.dragging = False
 
-    def draw(self):
-        pygame.draw.rect(self.surface, self.color, self.rect)
-        slider_pos = self.calculate_slider_pos()
-        pygame.draw.circle(self.surface, self.slider_color, slider_pos, 10)
+        # Load theme from file
+        with open(theme_file, 'r') as file:
+            self.theme = json.load(file)
 
-    def calculate_slider_pos(self):
-        percent = (self.value - self.min_value) / (self.max_value - self.min_value)
-        x = int(self.rect.left + percent * self.rect.width)
-        y = self.rect.centery
-        return x, y
+        self.thumb_rect = pygame.Rect(self.rect.x, self.rect.y, self.theme['thumb_size'], self.rect.height)
+        self.thumb_rect.centerx = self._get_thumb_pos_from_value()
+
+    def _get_thumb_pos_from_value(self):
+        value_range = self.value_range[1] - self.value_range[0]
+        percentage = (self.current_value - self.value_range[0]) / value_range
+        return self.rect.x + percentage * self.rect.width
+
+    def _get_value_from_thumb_pos(self):
+        percentage = (self.thumb_rect.centerx - self.rect.x) / self.rect.width
+        return round(self.value_range[0] + percentage * (self.value_range[1] - self.value_range[0]))
+
+    def draw(self):
+        # Draw track
+        pygame.draw.rect(self.surface, self.theme['track_color'], self.rect, border_radius=self.theme['border_radius'])
+
+        # Draw thumb
+        pygame.draw.rect(self.surface, self.theme['thumb_color'], self.thumb_rect, border_radius=self.theme['border_radius'])
+
+        if self.dragging:
+            # Draw text (min, max, current value)
+            min_text = self.font.render(str(self.value_range[0]), True, self.theme['text_color'])
+            min_text_rect = min_text.get_rect(midtop=(self.rect.left, self.rect.bottom + 5))
+            self.surface.blit(min_text, min_text_rect)
+
+            max_text = self.font.render(str(self.value_range[1]), True, self.theme['text_color'])
+            max_text_rect = max_text.get_rect(midtop=(self.rect.right, self.rect.bottom + 5))
+            self.surface.blit(max_text, max_text_rect)
+
+            current_value_text = self.font.render(str(self.current_value), True, self.theme['text_color'])
+            current_value_text_rect = current_value_text.get_rect(midtop=(self.thumb_rect.centerx, self.rect.top - 5))
+            self.surface.blit(current_value_text, current_value_text_rect)
 
     def handle_event(self, event):
-        if event.type == pg_constants.MOUSEBUTTONDOWN:
-            if event.button == 1 and self.rect.collidepoint(event.pos):
+        if event.type == pg_constants.MOUSEBUTTONDOWN and event.button == 1:
+            if self.thumb_rect.collidepoint(event.pos):
                 self.dragging = True
-        elif event.type == pg_constants.MOUSEBUTTONUP:
-            if event.button == 1:
-                self.dragging = False
-        elif event.type == pg_constants.MOUSEMOTION:
-            if self.dragging:
-                x = event.pos[0]
-                x = max(self.rect.left, min(self.rect.right, x))
-                percent = (x - self.rect.left) / self.rect.width
-                self.value = round(percent * (self.max_value - self.min_value) + self.min_value)
-                if self.on_value_change:
-                    self.on_value_change(self.value)
+        elif event.type == pg_constants.MOUSEBUTTONUP and event.button == 1:
+            self.dragging = False
+        elif event.type == pg_constants.MOUSEMOTION and self.dragging:
+            self.thumb_rect.centerx = min(max(event.pos[0], self.rect.left), self.rect.right)
+            self.current_value = self._get_value_from_thumb_pos()
 
 
 class TextBox:
@@ -117,7 +133,7 @@ if __name__ == '__main__':
     clock = pygame.time.Clock()
 
     button = Button(screen, (50, 50, 100, 50), "src/theme.json", text='Click Me', on_click=lambda: print('Button clicked'))
-    slider = Slider(screen, (50, 150, 300, 20), (0, 255, 0), min_value=0, max_value=100, initial_value=50)
+    slider = Slider(screen, (50, 125, 200, 20), 'src/theme.json', value_range=(0, 100))
     text_box = TextBox(screen, (50, 200, 200, 50), (0, 0, 255))
 
     running = True

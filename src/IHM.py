@@ -72,7 +72,6 @@ class IHM:
         self.Y_RATIO = self.WINDOW_SIZE[1] / self.FIELD_SIZE[1]
         self.lcd = pygame.display.set_mode(self.WINDOW_SIZE)
 
-        self.manager = UIManager(self.WINDOW_SIZE, "src/theme.json")
         self.callbacks = {}
 
         self.client_socket = Client("192.168.22.101", 22050, 10)

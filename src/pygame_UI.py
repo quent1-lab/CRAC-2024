@@ -3,7 +3,7 @@ import pygame.locals as pg_constants
 import json
 
 class Button:
-    def __init__(self, surface, rect, theme_file, text='', font=None, on_click=None):
+    def __init__(self, surface, rect, theme_file, text='', font=None, on_click=None, color=None):
         self.surface = surface
         self.rect = pygame.Rect(rect)
         self.text = text
@@ -13,6 +13,13 @@ class Button:
         # Load theme from file
         with open(theme_file, 'r') as file:
             self.theme = json.load(file)
+        
+        if color is not None:
+            self.theme['normal']['color'] = color
+            # Hover color is 20% lighter than normal color
+            self.theme['hover']['color'] = (color[0] * 1.2, color[1] * 1.2, color[2] * 1.2)
+            # Clicked color is 20% darker than normal color
+            self.theme['clicked']['color'] = (color[0] * 0.8, color[1] * 0.8, color[2] * 0.8)
 
         self.state = 'normal'
         self.font = pygame.font.SysFont(self.theme['font'], self.theme['font_size'])
@@ -38,8 +45,9 @@ class Button:
                 self.state = 'clicked'
         elif event.type == pg_constants.MOUSEBUTTONUP:
             if event.button == 1 and self.rect.collidepoint(event.pos):
-                if self.on_click:
+                if self.on_click is not None:
                     self.on_click()
+                    print("Button clicked")
                 self.state = 'hover'
 
 

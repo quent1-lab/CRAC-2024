@@ -4,6 +4,7 @@ import pygame
 from pygame_gui import *
 from pygame_gui.elements import *
 from pygame.locals import *
+from pygame_UI import *
 import math
 import os
 import random
@@ -59,6 +60,7 @@ class IHM:
         self.scanning = True
         self.ETAT = 0
         self.EQUIPE = "Jaune"
+        self.zone_depart = 1
 
         # Initialisation de Pygame et ajustement de la taille de la fenêtre
         pygame.init()
@@ -72,6 +74,9 @@ class IHM:
         self.Y_RATIO = self.WINDOW_SIZE[1] / self.FIELD_SIZE[1]
         self.lcd = pygame.display.set_mode(self.WINDOW_SIZE)
 
+        self.ui_draw = []
+        self.ui_handle = []
+
         self.callbacks = {}
 
         self.client_socket = Client("192.168.22.101", 22050, 10)
@@ -84,6 +89,8 @@ class IHM:
         pygame.event.set_allowed([MOUSEBUTTONDOWN, MOUSEBUTTONUP, MOUSEMOTION])
         self.clicked_position = None  # Variable pour stocker les coordonnées du clic
         pygame.display.update()
+
+        self.start_button = Button(self.lcd, pygame.Rect(self.WINDOW_SIZE[0]/2-50, self.WINDOW_SIZE[1]-60, 100, 50),"src/theme.json", "Démarrer", color=(20,200,20),on_click= self.start_match())
 
         logging.basicConfig(filename='ihm.log', level=logging.INFO,
                             datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
@@ -467,6 +474,9 @@ class IHM:
                 self.draw_text_center("MATCH EN COURS", self.WINDOW_SIZE[0] / 2, 35, self.RED)
                 for event in pygame.event.get():
                     self.handle_mouse_click(event)
+            elif self.ETAT == 10:
+                self.ETAT = 1
+                self.client_socket.add_to_send_list(self.client_socket.create_message(0, "clic", {"zone": self.zone_depart}))
             self.draw_robot()
 
             for objet in self.objets:
@@ -565,35 +575,28 @@ class IHM:
                         ((0 + self.ROBOT_Dimension[0]/2), (0 + self.ROBOT_Dimension[1]/2)), 
                         ((0 + self.ROBOT_Dimension[0]/2), (self.FIELD_SIZE[1] - self.ROBOT_Dimension[1]/2)), 
                         ((self.FIELD_SIZE[0] - self.ROBOT_Dimension[0] / 2), (self.FIELD_SIZE[1] - self.ROBOT_Dimension[1]/2))]
-        # Définir le bouton de démarrage
-        start_button = pygame.Rect(self.WINDOW_SIZE[0] / 2 - 50, self.WINDOW_SIZE[1] - 50, 100, 40)
-        k = 1
+        self.start_button.draw()
         for event in pygame.event.get():
+            self.start_button.handle_event(event)
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = event.pos
                 for i, rect in enumerate(start_positions):
                     if rect.collidepoint(mouse_pos):
                         print(f"Robot commencera à la position de départ {i+1}, x: {pos_r_depart[i][0]}, y: {pos_r_depart[i][1]}, angle: {angle_depart[i]}")
-                        k = i
-                        if k%2 == 0:
+                        self.zone_depart = i
+                        if self.zone_depart%2 == 0:
                             self.EQUIPE = "Bleu"
                         else:
                             self.EQUIPE = "Jaune"
-                if start_button.collidepoint(mouse_pos):
-                    print("Démarrage du match")
-                    # Envoie la position de départ au CAN
-                    self.client_socket.add_to_send_list(self.client_socket.create_message(
-                            2, "recal", {"zone": k,}))
-                    self.ETAT = 1
 
         # Dessiner les rectangles de départ
         for i, rect in enumerate(start_positions):
-            color = (0, 255, 0) if i == k else (255, 255, 255)
+            color = (0, 255, 0) if i == self.zone_depart else (255, 255, 255)
             pygame.draw.rect(self.lcd, color, rect, 10)
 
-        # Dessiner le bouton de démarrage
-        pygame.draw.rect(self.lcd, (255, 255, 255), start_button, 5)
-        self.draw_text_center("Démarrer", self.WINDOW_SIZE[0] / 2, self.WINDOW_SIZE[1] - 31)
+    def start_match(self):
+        self.ETAT = 1
+        print("Match en cours")
 
     def run(self):
         self.programme_simulation()

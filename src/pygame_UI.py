@@ -1,4 +1,5 @@
 import pygame
+import pygame_gui
 import pygame.locals as pg_constants
 import json
 
@@ -218,6 +219,39 @@ class TextBox:
     def send_message(self):
         print("Sending message:", self.text)
 
+
+class UILabel:
+    def __init__(self, rect, text, manager, theme_file):
+        self.rect = rect
+        self.text = text
+        self.manager = manager
+
+        # Load theme from file
+        with open(theme_file, 'r') as file:
+            self.theme = json.load(file)['label']
+
+        # Set font size based on rect height
+        self.font_size = int(self.rect.height * 0.8)
+        self.font = pygame.font.Font(None, self.font_size)
+
+        # Create UI label element
+        self.label = pygame_gui.elements.UILabel(relative_rect=self.rect,
+                                                  text=self.text,
+                                                  manager=self.manager)
+
+    def set_text(self, text):
+        self.text = text
+        self.label.set_text(self.text)
+
+    def update_font_size(self):
+        # Update font size based on rect height
+        self.font_size = int(self.rect.height * 0.8)
+        self.font = pygame.font.Font(None, self.font_size)
+
+    def draw(self, surface):
+        # Draw text
+        rendered_text = self.font.render(self.text, True, self.theme['text_color'])
+        surface.blit(rendered_text, self.rect.topleft)
 
 
 # Exemple d'utilisation :

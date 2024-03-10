@@ -15,18 +15,6 @@ import json
 
 from test_pygame import NewWindow
 
-"""# Initialiser le serveur
-server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server_socket.bind(('', 5000))  # Utilisez une adresse IP appropriée et un port disponible
-server_socket.listen(1)
-
-print("Attente de la connexion du client...")
-
-# Accepter la connexion du client
-client_socket, client_address = server_socket.accept()
-print(f"Connexion établie avec {client_address}")"""
-
-
 class IHM:
     def __init__(self, port=None):
         self.port = port
@@ -95,7 +83,9 @@ class IHM:
         self.manager = pygame_gui.UIManager(self.WINDOW_SIZE)
         self.command_window = None
 
-        self.start_button = Button(self.lcd, pygame.Rect(self.WINDOW_SIZE[0]/2-50, self.WINDOW_SIZE[1]-60, 100, 50),"src/theme.json", "Démarrer", color=(20,200,20),on_click= self.start_match)
+        self.start_button = Button(self.lcd, pygame.Rect(self.WINDOW_SIZE[0]/2-50, self.WINDOW_SIZE[1]-65, 100, 50),"src/theme.json", "Démarrer", color=(20,200,20),on_click= self.start_match)
+        self.command_button = Button(self.lcd, pygame.Rect(100, self.WINDOW_SIZE[1]-65, 100, 50),"src/theme.json", "Commandes",
+                                    on_click= lambda : setattr(self, "command_window", NewWindow(self.manager)) if self.command_window is None else None)
 
         logging.basicConfig(filename='ihm.log', level=logging.INFO,
                             datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
@@ -478,13 +468,19 @@ class IHM:
             elif self.ETAT == 1:
                 self.draw_text_center("MATCH EN COURS", self.WINDOW_SIZE[0] / 2, 35, self.RED)
 
+                self.command_button.draw()
+
             for event in pygame.event.get():
                 self.manager.process_events(event)
+                
+                if event.type == UI_WINDOW_CLOSE:
+                    self.command_window = None
                 if self.command_window:
                     self.command_window.process_events(event)
                 elif self.ETAT == 1:
                     self.handle_mouse_click(event)
-                
+                if self.ETAT == 1:
+                    self.command_button.handle_event(event)
             self.draw_robot()
 
             for objet in self.objets:
@@ -606,9 +602,7 @@ class IHM:
 
     def start_match(self):
         self.ETAT = 1
-        self.command_window = NewWindow(self.manager)
         self.client_socket.add_to_send_list(self.client_socket.create_message(0, "clic", {"zone": self.zone_depart}))
-        print("Match en cours0")
 
     def run(self):
         self.programme_simulation()

@@ -23,7 +23,7 @@ class NewWindow:
                                                         text='Send',
                                                         manager=self.manager,
                                                         container=self.window)
-        #self.action_button = Button(self.manager, self.window, (10, 100), (150, 30), "Action 1", self.action_1)
+
         self.action_button1 = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((10, 100), (150, 30)),
                                                            text='Action 1',
                                                            manager=self.manager,

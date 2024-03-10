@@ -5,7 +5,7 @@ from pygame_UI import *
 class NewWindow:
     def __init__(self, manager):
         self.manager = manager
-        self.size = (400, 300)
+        self.size = (500, 400)
         self.window = pygame_gui.elements.UIWindow(rect=pygame.Rect((100, 100), self.size),
                                                    manager=self.manager,
                                                    window_display_title="Command Manager")

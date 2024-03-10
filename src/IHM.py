@@ -13,6 +13,8 @@ from sklearn.cluster import DBSCAN
 from client import *
 import json
 
+from test_pygame import NewWindow
+
 """# Initialiser le serveur
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server_socket.bind(('', 5000))  # Utilisez une adresse IP appropriée et un port disponible
@@ -89,6 +91,9 @@ class IHM:
         pygame.event.set_allowed([MOUSEBUTTONDOWN, MOUSEBUTTONUP, MOUSEMOTION])
         self.clicked_position = None  # Variable pour stocker les coordonnées du clic
         pygame.display.update()
+
+        self.manager = pygame_gui.UIManager(self.WINDOW_SIZE)
+        self.command_window = None
 
         self.start_button = Button(self.lcd, pygame.Rect(self.WINDOW_SIZE[0]/2-50, self.WINDOW_SIZE[1]-60, 100, 50),"src/theme.json", "Démarrer", color=(20,200,20),on_click= self.start_match)
 
@@ -472,7 +477,12 @@ class IHM:
                 self.init_match()
             elif self.ETAT == 1:
                 self.draw_text_center("MATCH EN COURS", self.WINDOW_SIZE[0] / 2, 35, self.RED)
-                for event in pygame.event.get():
+
+            for event in pygame.event.get():
+                self.manager.process_events(event)
+                if self.command_window:
+                    self.command_window.process_events(event)
+                elif self.ETAT == 1:
                     self.handle_mouse_click(event)
                 
             self.draw_robot()
@@ -492,6 +502,8 @@ class IHM:
                 "FPS: " + str(int(1 / (time.time() - last_time))), 10, self.WINDOW_SIZE[1] - 30)
             last_time = time.time()
 
+            self.manager.update(1/60.0)
+            self.manager.draw_ui(self.lcd)
             pygame.display.update()
             self.lcd.fill(self.WHITE)
             self.ROBOT_ANGLE += 1
@@ -594,6 +606,7 @@ class IHM:
 
     def start_match(self):
         self.ETAT = 1
+        self.command_window = NewWindow(self.manager)
         self.client_socket.add_to_send_list(self.client_socket.create_message(0, "clic", {"zone": self.zone_depart}))
         print("Match en cours0")
 
@@ -619,7 +632,12 @@ class IHM:
                     self.init_match()
                 elif self.ETAT == 1:
                     self.draw_text_center("MATCH EN COURS", self.WINDOW_SIZE[0] / 2, 35, self.RED)
-                    for event in pygame.event.get():
+                
+                for event in pygame.event.get():
+                    self.manager.process_events(event)
+                    if self.command_window:
+                        self.command_window.process_events(event)
+                    elif self.ETAT == 1:
                         self.handle_mouse_click(event)
 
                 self.draw_robot()
@@ -636,6 +654,8 @@ class IHM:
                         self.objets.remove(objet)
                     self.draw_object(objet)
 
+                self.manager.update(1/60.0)
+                self.manager.draw_ui(self.screen)
                 pygame.display.update()
 
             except KeyboardInterrupt:

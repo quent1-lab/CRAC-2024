@@ -131,7 +131,7 @@ class ComCAN:
                     messageCan = can.Message(arbitration_id=0x1, data=[0], is_extended_id=False)
                 else:
                     dataCan = struct.pack('h', 1)
-                    messageCan = can.Message(arbitration_id=0x1f7, data=dataCan, is_extended_id=True)
+                    messageCan = can.Message(arbitration_id=0x1f7, data=[1], is_extended_id=True)
                 
                 self.send(messageCan)
                 print("BusCAN : Message de ", "désactivation" if data else "réactivation"," envoyé")

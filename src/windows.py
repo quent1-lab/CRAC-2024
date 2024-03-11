@@ -3,12 +3,12 @@ import pygame_gui
 from pygame_UI import *
 
 class IHM_Command:
-    def __init__(self, manager, desactive_callback=None):    
+    def __init__(self, manager, desactive_callback=None, restart_callback=None):    
         self.manager = manager
         self.size = (500, 400)
 
         self.desactive_callback = desactive_callback
-        self.restart_callback = None
+        self.restart_callback = restart_callback
 
         self.window = pygame_gui.elements.UIWindow(rect=pygame.Rect((100, 100), self.size),
                                                    manager=self.manager,

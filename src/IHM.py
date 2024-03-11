@@ -428,6 +428,7 @@ class IHM:
     def restart_motor(self):
         self.client_socket.send(self.client_socket.create_message(0, "resta", True))
         print("Moteur est activé")
+        
     def valeur_de_test(self):
         scan = []
         for i in range(0, 360):

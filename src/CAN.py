@@ -131,14 +131,14 @@ class ComCAN:
                     messageCan = can.Message(arbitration_id=0x1f7, data=[1], is_extended_id=False)
                 
                 self.send(messageCan)
-                print("BusCAN : Message de désactivation envoyé")
+                print("BusCAN : Message de ", "désactivation" if data else "réactivation"," envoyé")
             elif message["cmd"] == "resta":
                 data = message["data"]
                 # Format des données : restart (char)
                 if data:
                     messageCan = can.Message(arbitration_id=0x34, data=[1], is_extended_id=False)
                 self.send(messageCan)
-                print("BusCAN : Message de réactivation envoyé")
+                print("BusCAN : Message de restart envoyé")
         except Exception as e:
             logging.error(f"Erreur lors du traitement du message serveur : {str(e)}")
 

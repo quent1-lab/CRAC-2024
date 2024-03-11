@@ -103,7 +103,7 @@ class ComCAN:
             elif message["cmd"] == "desa":
                 data = message["data"]
                 # Format des données : desa (char)
-                dataCan = struct.pack('c', "0".encode())
+                dataCan = struct.pack('c', "1".encode())
                 if data:
                     messageCan = can.Message(arbitration_id=0x1, data=dataCan, is_extended_id=False)
                 else:

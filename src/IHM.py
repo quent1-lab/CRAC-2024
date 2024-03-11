@@ -608,7 +608,7 @@ class IHM:
         self.client_socket.add_to_send_list(self.client_socket.create_message(0, "clic", {"zone": self.zone_depart}))
 
     def run(self):
-        self.programme_simulation()
+        #self.programme_simulation()
         
         self.client_socket.set_callback(self.receive_to_server)
         self.client_socket.set_callback_stop(None)
@@ -629,13 +629,20 @@ class IHM:
                     self.init_match()
                 elif self.ETAT == 1:
                     self.draw_text_center("MATCH EN COURS", self.WINDOW_SIZE[0] / 2, 35, self.RED)
-                
+
+                    self.command_button.draw()
+
                 for event in pygame.event.get():
                     self.manager.process_events(event)
+                    
+                    if event.type == UI_WINDOW_CLOSE:
+                        self.command_window = None
                     if self.command_window:
                         self.command_window.process_events(event)
                     elif self.ETAT == 1:
                         self.handle_mouse_click(event)
+                    if self.ETAT == 1:
+                        self.command_button.handle_event(event)
 
                 self.draw_robot()
 
@@ -652,7 +659,7 @@ class IHM:
                     self.draw_object(objet)
 
                 self.manager.update(1/60.0)
-                self.manager.draw_ui(self.screen)
+                self.manager.draw_ui(self.lcd)
                 pygame.display.update()
 
             except KeyboardInterrupt:

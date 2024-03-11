@@ -3,7 +3,7 @@ import pygame_gui
 from pygame_UI import *
 
 class NewWindow:
-    def __init__(self, manager):
+    def __init__(self, manager):    
         self.manager = manager
         self.size = (500, 400)
         self.window = pygame_gui.elements.UIWindow(rect=pygame.Rect((100, 100), self.size),
@@ -75,8 +75,6 @@ class NewWindow:
                     self.action_1()
                 elif event.ui_element == self.action_button2:
                     self.action_2()
-
-        self.manager.process_events(event)
 
     def send_command(self):
         self.command = self.command_input.get_text()

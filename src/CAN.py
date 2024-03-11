@@ -128,11 +128,11 @@ class ComCAN:
                 data = message["data"]
                 # Format des données : desa (char)
                 if data:
-                    messageCan = can.Message(arbitration_id=0x1, data=[0], is_extended_id=False)
+                    messageCan = can.Message(arbitration_id=0x1F7, data=[0], is_extended_id=False)
                 else:
-                    dataCan = struct.pack('h', 1)
                     messageCan = can.Message(arbitration_id=0x1F7, data=[1], is_extended_id=False)
                 
+                print(messageCan)
                 self.send(messageCan)
                 print("BusCAN : Message de ", "désactivation" if data else "réactivation"," envoyé")
             elif message["cmd"] == "resta":

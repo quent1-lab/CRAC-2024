@@ -43,7 +43,7 @@ class IHM:
         else:  # Linux et autres
             self.path_picture = "Documents/CRAC-2024/src/Terrain_Jeu.png"
 
-        self.path_picture = "src/Terrain_Jeu.png"
+        self.path_picture = "data/Terrain_Jeu.png"
         self.id_compteur = 0  # Compteur pour les identifiants d'objet
         self.objets = []  # Liste pour stocker les objets détectés
         self.new_scan = []
@@ -81,8 +81,8 @@ class IHM:
         self.manager = pygame_gui.UIManager(self.WINDOW_SIZE)
         self.command_window = None
 
-        self.start_button = Button(self.lcd, pygame.Rect(self.WINDOW_SIZE[0]/2-50, self.WINDOW_SIZE[1]-55, 100, 40),"src/theme.json", "Démarrer", color=(20,200,20),on_click= self.start_match)
-        self.command_button = Button(self.lcd, pygame.Rect(100, self.WINDOW_SIZE[1]-55, 120, 40),"src/theme.json", "Commandes",
+        self.start_button = Button(self.lcd, pygame.Rect(self.WINDOW_SIZE[0]/2-50, self.WINDOW_SIZE[1]-55, 100, 40),"data/theme.json", "Démarrer", color=(20,200,20),on_click= self.start_match)
+        self.command_button = Button(self.lcd, pygame.Rect(100, self.WINDOW_SIZE[1]-55, 120, 40),"data/theme.json", "Commandes",
                                     on_click= lambda : setattr(self, "command_window", IHM_Command(self.manager, self.desactive_motor)) if self.command_window is None else None)
 
         logging.basicConfig(filename='ihm.log', level=logging.INFO,

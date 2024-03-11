@@ -96,10 +96,21 @@ class ComCAN:
             elif message["cmd"] == "recal":
                 data = message["data"]
                 # Format des données : zone (char)
-                dataCan = struct.pack('h', data["zone"])
-                messageCan = can.Message(arbitration_id=0x22, data=dataCan, is_extended_id=False)
-                self.send(messageCan)
+                dataCan = struct.pack('c', data["zone"])
+                messageCan = can.Message(arbitration_id=0x24, data=dataCan, is_extended_id=False)
+                #self.send(messageCan)
                 print("BusCAN : Message de recalage envoyé")
+            elif message["cmd"] == "desa":
+                data = message["data"]
+                # Format des données : desa (char)
+                dataCan = struct.pack('c', "0".encode())
+                if data:
+                    messageCan = can.Message(arbitration_id=0x1, data=dataCan, is_extended_id=False)
+                else:
+                    messageCan = can.Message(arbitration_id=0x1f7, data=dataCan, is_extended_id=False)
+                
+                self.send(messageCan)
+                print("BusCAN : Message de désactivation envoyé")
         except Exception as e:
             logging.error(f"Erreur lors du traitement du message serveur : {str(e)}")
 

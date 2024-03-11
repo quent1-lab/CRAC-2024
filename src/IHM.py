@@ -51,6 +51,7 @@ class IHM:
         self.ETAT = 0
         self.EQUIPE = "Jaune"
         self.zone_depart = 1
+        self.desactive_m = False
 
         # Initialisation de Pygame et ajustement de la taille de la fenêtre
         pygame.init()
@@ -63,9 +64,6 @@ class IHM:
         self.X_RATIO = self.WINDOW_SIZE[0] / self.FIELD_SIZE[0]
         self.Y_RATIO = self.WINDOW_SIZE[1] / self.FIELD_SIZE[1]
         self.lcd = pygame.display.set_mode(self.WINDOW_SIZE)
-
-        self.ui_draw = []
-        self.ui_handle = []
 
         self.callbacks = {}
 
@@ -83,9 +81,9 @@ class IHM:
         self.manager = pygame_gui.UIManager(self.WINDOW_SIZE)
         self.command_window = None
 
-        self.start_button = Button(self.lcd, pygame.Rect(self.WINDOW_SIZE[0]/2-50, self.WINDOW_SIZE[1]-65, 100, 50),"src/theme.json", "Démarrer", color=(20,200,20),on_click= self.start_match)
-        self.command_button = Button(self.lcd, pygame.Rect(100, self.WINDOW_SIZE[1]-65, 100, 50),"src/theme.json", "Commandes",
-                                    on_click= lambda : setattr(self, "command_window", NewWindow(self.manager)) if self.command_window is None else None)
+        self.start_button = Button(self.lcd, pygame.Rect(self.WINDOW_SIZE[0]/2-50, self.WINDOW_SIZE[1]-55, 100, 40),"src/theme.json", "Démarrer", color=(20,200,20),on_click= self.start_match)
+        self.command_button = Button(self.lcd, pygame.Rect(100, self.WINDOW_SIZE[1]-55, 120, 40),"src/theme.json", "Commandes",
+                                    on_click= lambda : setattr(self, "command_window", NewWindow(self.manager, self.desactive_motor)) if self.command_window is None else None)
 
         logging.basicConfig(filename='ihm.log', level=logging.INFO,
                             datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
@@ -421,6 +419,11 @@ class IHM:
                 self.objets[0].taille = item["taille"]
             elif item["id"] == 2:
                 pass
+
+    def desactive_motor(self):
+        self.desactive_m = not self.desactive_m
+        self.client_socket.send(self.client_socket.create_message(0, "desa", self.desactive_m))
+        print("Moteur est", "désactivé" if self.desactive_m else "activé")
 
     def valeur_de_test(self):
         scan = []

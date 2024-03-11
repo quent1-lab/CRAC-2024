@@ -422,13 +422,13 @@ class IHM:
 
     def desactive_motor(self):
         self.desactive_m = not self.desactive_m
-        self.client_socket.send(self.client_socket.create_message(0, "desa", self.desactive_m))
+        self.client_socket.send(self.client_socket.create_message(2, "desa", self.desactive_m))
         print("Moteur est", "désactivé" if self.desactive_m else "activé")
 
     def restart_motor(self):
-        self.client_socket.send(self.client_socket.create_message(0, "resta", True))
+        self.client_socket.send(self.client_socket.create_message(2, "resta", True))
         print("Moteur est activé")
-        
+
     def valeur_de_test(self):
         scan = []
         for i in range(0, 360):

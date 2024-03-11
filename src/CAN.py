@@ -77,7 +77,6 @@ class ComCAN:
                 # V_Batterie
                 v_bat = struct.unpack('h', dataX[0:2])
                 print(f"V_Batterie : {v_bat[0]}")
-                pass
             elif data[0] == 0x124:
                 # V_Batterie
                 pass
@@ -138,6 +137,7 @@ class ComCAN:
 
 
     def run(self):
+        print("BusCAN : Lancement du programme")
         try:
             self.client.set_callback_stop(self.disconnect)
             self.client.set_callback(self.receive_to_server)

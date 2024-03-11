@@ -3,6 +3,8 @@ import os
 from client import Client
 import struct
 import logging
+import can
+import struct
 
 class ComCAN:
     def __init__(self, channel, bustype):
@@ -129,7 +131,7 @@ class ComCAN:
                     messageCan = can.Message(arbitration_id=0x1, data=[0], is_extended_id=False)
                 else:
                     dataCan = struct.pack('h', 1)
-                    messageCan = can.Message(arbitration_id=0x1f7, data=dataCan, is_extended_id=False)
+                    messageCan = can.Message(arbitration_id=0x1f7, data=dataCan, is_extended_id=True)
                 
                 self.send(messageCan)
                 print("BusCAN : Message de ", "désactivation" if data else "réactivation"," envoyé")

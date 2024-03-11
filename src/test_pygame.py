@@ -23,38 +23,45 @@ class NewWindow:
                                                         text='Send',
                                                         manager=self.manager,
                                                         container=self.window)
+        
+        self.XYT_label = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((10, 80), (30, 20)),
+                                                              text="XYT",
+                                                              manager=self.manager,
+                                                              container=self.window)
 
-        self.action_button1 = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((10, 100), (150, 30)),
+        self.command_X = pygame_gui.elements.UITextEntryLine(relative_rect=pygame.Rect((10, 100), (75, 30)),
+                                                                 manager=self.manager,
+                                                                 container=self.window)
+        
+        self.command_Y = pygame_gui.elements.UITextEntryLine(relative_rect=pygame.Rect((95, 100), (75, 30)),
+                                                                manager=self.manager,
+                                                                container=self.window)
+        
+        self.command_T = pygame_gui.elements.UITextEntryLine(relative_rect=pygame.Rect((180, 100), (75, 30)),
+                                                            manager=self.manager,
+                                                            container=self.window)
+        
+        self.command_S = pygame_gui.elements.UITextEntryLine(relative_rect=pygame.Rect((265, 100), (75, 30)),
+                                                            manager=self.manager,
+                                                            container=self.window)
+
+        self.send_button_XYT = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((350, 100), (70, 30)),
+                                                        text='Send',
+                                                        manager=self.manager,
+                                                        container=self.window)
+
+        self.action_button1 = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((10, 300), (150, 30)),
                                                            text='Action 1',
                                                            manager=self.manager,
                                                            container=self.window)
 
-        self.action_button2 = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((170, 100), (150, 30)),
+        self.action_button2 = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((170, 300), (150, 30)),
                                                            text='Action 2',
                                                            manager=self.manager,
                                                            container=self.window)
 
-        self.action_button3 = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((10, 150), (150, 30)),
-                                                           text='Action 3',
-                                                           manager=self.manager,
-                                                           container=self.window)
-
-        self.action_button4 = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((170, 150), (150, 30)),
-                                                           text='Action 4',
-                                                           manager=self.manager,
-                                                           container=self.window)
-
-        self.action_button5 = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((10, 200), (150, 30)),
-                                                           text='Action 5',
-                                                           manager=self.manager,
-                                                           container=self.window)
-
-        self.action_button6 = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((170, 200), (150, 30)),
-                                                           text='Action 6',
-                                                           manager=self.manager,
-                                                           container=self.window)
-
         self.command = None
+        self.command_XYT_ = [None, None, None, None]
 
     
     def process_events(self, event):
@@ -62,23 +69,25 @@ class NewWindow:
             if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element == self.send_button:
                     self.send_command()
+                elif event.ui_element == self.send_button_XYT:
+                    self.send_command_XYT()
                 elif event.ui_element == self.action_button1:
                     self.action_1()
                 elif event.ui_element == self.action_button2:
                     self.action_2()
-                elif event.ui_element == self.action_button3:
-                    self.action_3()
-                elif event.ui_element == self.action_button4:
-                    self.action_4()
-                elif event.ui_element == self.action_button5:
-                    self.action_5()
-                elif event.ui_element == self.action_button6:
-                    self.action_6()
+
         self.manager.process_events(event)
 
     def send_command(self):
         self.command = self.command_input.get_text()
         self.last_command_label.set_text(f"Last Command: {self.command}")
+    
+    def send_command_XYT(self):
+        self.command_XYT_[0] = self.command_X.get_text()
+        self.command_XYT_[1] = self.command_Y.get_text()
+        self.command_XYT_[2] = self.command_T.get_text()
+        self.command_XYT_[3] = self.command_S.get_text()
+        self.last_command_label.set_text(f"Last Command: {self.command_XYT_[0]} {self.command_XYT_[1]} {self.command_XYT_[2]} {self.command_XYT_[3]}")
 
     def action_1(self):
         print("Action 1 triggered")

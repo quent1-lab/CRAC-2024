@@ -8,6 +8,7 @@ class IHM_Command:
         self.size = (500, 400)
 
         self.desactive_callback = desactive_callback
+        self.restart_callback = None
 
         self.window = pygame_gui.elements.UIWindow(rect=pygame.Rect((100, 100), self.size),
                                                    manager=self.manager,
@@ -62,6 +63,11 @@ class IHM_Command:
                                                     manager=self.manager,
                                                     container=self.window)
         
+        self.restart_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((170, 150), (150, 30)),
+                                                    text='RESTART',
+                                                    manager=self.manager,
+                                                    container=self.window)
+        
         # Définir les zones de texte pour chaque ligne
         self.text_boxes_lines = [
             [self.text_boxes[0]],
@@ -78,6 +84,9 @@ class IHM_Command:
                 elif event.ui_element == self.desactive_button:
                     if self.desactive_callback:
                         self.desactive_callback()
+                elif event.ui_element == self.restart_button:
+                    if self.restart_callback:
+                        self.restart_callback()
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_TAB:
                 # Déplacer le focus de la zone de texte suivante avec Tab
@@ -107,23 +116,15 @@ class IHM_Command:
         self.command_XYT_[3] = self.text_boxes[4].get_text()
         self.last_command_label.set_text(f"Last Command: {self.command_XYT_[0]} {self.command_XYT_[1]} {self.command_XYT_[2]} {self.command_XYT_[3]}")
 
-    def action_1(self):
-        print("Action 1 triggered")
-
-    def action_2(self):
-        print("Action 2 triggered")
-
-    def action_3(self):
-        print("Action 3 triggered")
-
-    def action_4(self):
-        print("Action 4 triggered")
-
-    def action_5(self):
-        print("Action 5 triggered")
-
-    def action_6(self):
-        print("Action 6 triggered")
+    def restart(self):
+        if self.restart_callback:
+            self.restart_callback()
+    
+    def set_restart_callback(self, callback):
+        self.restart_callback = callback
+    
+    def set_desactive_callback(self, callback):
+        self.desactive_callback = callback
 
 class MainWindow:
     def __init__(self):

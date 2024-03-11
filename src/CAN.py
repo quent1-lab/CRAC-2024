@@ -73,6 +73,29 @@ class ComCAN:
                 y = struct.unpack('h', dataX[2:4])
                 theta = struct.unpack('h', dataX[4:6])
                 self.client.add_to_send_list(self.client.create_message(0, "coord", {"x": x[0], "y": y[0], "theta": theta[0]}))
+            elif data[0] == 0x123:
+                # V_Batterie
+                v_bat = struct.unpack('h', dataX[0:2])
+                print(f"V_Batterie : {v_bat[0]}")
+                pass
+            elif data[0] == 0x124:
+                # V_Batterie
+                pass
+            elif data[0] == 0x125:
+                # V_Moteur
+                pass
+            elif data[0] == 0x126:
+                # V_Moteur
+                pass
+            elif data[0] == 0x127:
+                # V_Moteur
+                pass
+            elif data[0] == 0x128:
+                # V_Moteur
+                pass
+            elif data[0] == 0x129:
+                # V_Moteur
+                pass
             else:
                 logging.error(f"ID inconnu ; data : {data}")
                 print(f"ID inconnu ; data : {data}")
@@ -103,11 +126,10 @@ class ComCAN:
             elif message["cmd"] == "desa":
                 data = message["data"]
                 # Format des données : desa (char)
-                dataCan = struct.pack('c', 1)
                 if data:
-                    messageCan = can.Message(arbitration_id=0x1, data=dataCan, is_extended_id=False)
+                    messageCan = can.Message(arbitration_id=0x1, data=[0], is_extended_id=False)
                 else:
-                    messageCan = can.Message(arbitration_id=0x1f7, data=[0], is_extended_id=False)
+                    messageCan = can.Message(arbitration_id=0x1f7, data=[1], is_extended_id=False)
                 
                 self.send(messageCan)
                 print("BusCAN : Message de désactivation envoyé")

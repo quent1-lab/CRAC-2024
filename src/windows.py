@@ -2,7 +2,7 @@ import pygame
 import pygame_gui
 from pygame_UI import *
 
-class NewWindow:
+class IHM_Command:
     def __init__(self, manager, desactive_callback=None):    
         self.manager = manager
         self.size = (500, 400)
@@ -148,7 +148,7 @@ class MainWindow:
                 if event.type == pygame.USEREVENT:
                     if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
                         if event.ui_element == self.button:
-                            self.new_window = NewWindow(self.manager)
+                            self.new_window = IHM_Command(self.manager)
                 self.manager.process_events(event)
                 if self.new_window:
                     self.new_window.process_events(event)

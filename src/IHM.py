@@ -13,7 +13,7 @@ from sklearn.cluster import DBSCAN
 from client import *
 import json
 
-from test_pygame import NewWindow
+from windows import IHM_Command
 
 class IHM:
     def __init__(self, port=None):
@@ -83,7 +83,7 @@ class IHM:
 
         self.start_button = Button(self.lcd, pygame.Rect(self.WINDOW_SIZE[0]/2-50, self.WINDOW_SIZE[1]-55, 100, 40),"src/theme.json", "Démarrer", color=(20,200,20),on_click= self.start_match)
         self.command_button = Button(self.lcd, pygame.Rect(100, self.WINDOW_SIZE[1]-55, 120, 40),"src/theme.json", "Commandes",
-                                    on_click= lambda : setattr(self, "command_window", NewWindow(self.manager, self.desactive_motor)) if self.command_window is None else None)
+                                    on_click= lambda : setattr(self, "command_window", IHM_Command(self.manager, self.desactive_motor)) if self.command_window is None else None)
 
         logging.basicConfig(filename='ihm.log', level=logging.INFO,
                             datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')

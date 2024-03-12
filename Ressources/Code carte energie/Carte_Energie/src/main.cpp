@@ -1,9 +1,6 @@
 #include <mbed.h>
 #include <CAN.h>
 
-#define TensionMin 0
-#define TensionMax 30
-
 DigitalOut led(LED1);
 
 CAN can1(PA_11, PA_12, 1000000); // CAN Rx pin name (PA11), CAN Tx pin name (PA12), Frequency = 500kbits
@@ -61,32 +58,41 @@ float calcul_courant1(float x)
     return y;
 }
 
+bool checkVoltage(float voltage, float min, float max) {
+    return voltage >= min && voltage <= max;
+}
+
 int main()
 {
     double temps = 0;
     printf("CRAC stm32f303k8 démo\n");
 
     // Création d'un message CAN
-    CANMessage msg, msg1, msg2, msg3, msg4, msg5, msg6;
+    CANMessage request_V, request_I, request_S; 
+    CANMessage response_V, response_I, response_S;
+    CANMessage order; // Ordre à exécuter
+    // requetes (tension, courant, switch) / reponse (tension, courant, switch)
 
     // Définition de l'ID du message CAN (11 bits)
-    msg.id = 0x123;
-    msg1.id = 0x124;
-    msg2.id = 0x125;
-    msg3.id = 0x126;
-    msg4.id = 0x127;
-    msg5.id = 0x128;
-    msg6.id = 0x129;
+    request_V.id = 0x200;
+    request_I.id = 0x201;
+    request_S.id = 0x202;
+    response_V.id = 0x203;
+    response_I.id = 0x204;
+    response_S.id = 0x205;
+    order.id = 0x206;
 
     // Définition de la longueur des données (8 octets maximum)
-    msg.len = 4;
-    msg1.len = 4;
-    msg2.len = 4;
-    msg3.len = 4;
-    msg4.len = 4;
-    msg5.len = 4;
-    msg6.len = 4;
+    request_V.len = 1;
+    request_I.len = 1;
+    request_S.len = 1;
+    response_V.len = 2;
+    response_I.len = 2;
+    response_S.len = 2;
+    order.len = 2;
+
     float V_BatMain, V_Bat1, V_Bat2, V_Bat3;
+    float TensionMin = 0, TensionMaxBAT1 = 20, TensionMaxBAT2 = 20, TensionMaxBAT3 = 20;
 
     while (1)
     {
@@ -123,132 +129,93 @@ int main()
 
         V_Bat3 = calcul_VBat3(analogValue6 * 3.3); // Supposons que la tension de référence est de 3.3V
 
-        // Control des seuils de tension:
+        // Attendre une demande via CAN
+        if (can1.read(request_V))
+        {
+            int batteryID = request_V.data[0];
 
-        if (V_Bat1 >= TensionMin && V_Bat1 <= TensionMax)
-        {
-            controlSwitch(switchControl1, true);
-        }
-        else
-        {
-            controlSwitch(switchControl1, false);
-        }
+            // Récupérer les tensions des batteries
+            if (batteryID == 1){
+                response_V.data[0] = 1;
+                response_V.data[1] = V_BatMain;}
+            else if (batteryID == 2){
+                response_V.data[0] = 2;
+                response_V.data[1] = V_Bat1;}
+            else if (batteryID == 3){
+                response_V.data[0] = 3;
+                response_V.data[1] = V_Bat2;}
+            else if (batteryID == 4){
+                response_V.data[0] = 4;
+                response_V.data[1] = V_Bat3;}
 
-        if (V_Bat2 >= TensionMin && V_Bat2 <= TensionMax)
-        {
-            controlSwitch(switchControl2, true);
-        }
-        else
-        {
-            controlSwitch(switchControl2, false);
-        }
-
-        if (V_Bat3 >= TensionMin && V_Bat3 <= TensionMax)
-        {
-            controlSwitch(switchControl3, true);
-        }
-        else
-        {
-            controlSwitch(switchControl3, false);
+            // Envoyer la réponse
+            can1.write(response_V);
         }
 
-        // Remplissage des données
-        msg.data[0] = V_BatMain;
-        msg1.data[0] = V_Bat1;
-        msg2.data[0] = V_Bat2;
-        msg3.data[0] = V_Bat3;
-        msg4.data[0] = Cap_I1;
-        msg5.data[0] = Cap_Courant2;
-        msg6.data[0] = Cap_Courant3;
-        /*if (V_Bat1 < 7.0)
+        if (can1.read(request_I))
         {
-            printf("Batterie Faible 1. Mettre à Charger !!\n");
-        }
-        if (V_Bat2 < 7.0)
-        {
-            printf("Batterie Faible 2. Mettre à Charger !!\n");
-        }
-        if (V_Bat3 < 7.0)
-        {
-            printf("Batterie Faible 3. Mettre à Charger !!\n");
-        }*/
+            int batteryID = request_I.data[0];
 
-        // Afficher la valeur du courant
-        printf("Cap_Courant1: %.3f A\r\n", Cap_I1);
-        if (can1.write(msg4))
-        {
-            printf("Erreur lors de l'envoi du message CAN 4 !\n");
-        }
-        else
-        {
-            printf("Message CAN 4 envoyé avec succès !\n");
-        }
-        // ThisThread::sleep_for(500ms);
+            // Récupérer les courants des batteries
+            if (batteryID == 1){
+                response_I.data[0] = 1;
+                response_I.data[1] = Cap_I1;}
+            else if (batteryID == 2){
+                response_I.data[0] = 2;
+                response_I.data[1] = Cap_Courant2;}
+            else if (batteryID == 3){
+                response_I.data[0] = 3;
+                response_I.data[1] = Cap_Courant3;}
 
-        printf("Cap_Courant2: %.3f A\r\n", Cap_Courant2);
-        if (can1.write(msg5))
-        {
-            printf("Erreur lors de l'envoi du message CAN 5 !\n");
+            // Envoyer la réponse
+            can1.write(response_I);
         }
-        else
-        {
-            printf("Message CAN 5 envoyé avec succès !\n");
-        }
-        // ThisThread::sleep_for(500ms);
 
-        printf("Cap_Courant3: %.3f A\r\n\r\n", Cap_Courant3);
-        if (can1.write(msg6))
+        if (can1.read(request_S))
         {
-            printf("Erreur lors de l'envoi du message CAN 6 !\n");
-        }
-        else
-        {
-            printf("Message CAN 6 envoyé avec succès !\n");
-        }
-        // ThisThread::sleep_for(500ms);
+            int batteryID = request_S.data[0];
 
-        printf("V_BatMain: %.3f V\r\n", V_BatMain);
-        // Envoi du message CAN de V_BatMain
-        if (can1.write(msg))
-        {
-            printf("Erreur lors de l'envoi du message CAN !\n");
-        }
-        else
-        {
-            printf("Message CAN envoyé avec succès !\n");
-        }
-        // ThisThread::sleep_for(500ms);
+            // Récupérer les états des interrupteurs
+            if (batteryID == 1){
+                response_S.data[0] = 1;
+                response_S.data[1] = switchControl1;}
+            else if (batteryID == 2){
+                response_S.data[0] = 2;
+                response_S.data[1] = switchControl2;}
+            else if (batteryID == 3){
+                response_S.data[0] = 3;
+                response_S.data[1] = switchControl3;}
 
-        printf("V_Bat1: %.3f V\r\n", V_Bat1);
-        if (can1.write(msg1))
-        {
-            printf("Erreur lors de l'envoi du message CAN 1 !\n");
+            // Envoyer la réponse
+            can1.write(response_S);
         }
-        else
-        {
-            printf("Message CAN 1 envoyé avec succès !\n");
-        }
-        // ThisThread::sleep_for(500ms);
 
-        printf("V_Bat2: %.3f V\r\n", V_Bat2);
-        if (can1.write(msg2))
+        if (can1.read(order))
         {
-            printf("Erreur lors de l'envoi du message CAN 2 !\n");
-        }
-        else
-        {
-            printf("Message CAN 2 envoyé avec succès !\n");
-        }
-        // ThisThread::sleep_for(500ms);
+            int OrderID = order.data[0];
+            float state = order.data[1];
 
-        printf("V_Bat3: %.3f V\r\n\r\n", V_Bat3);
-        if (can1.write(msg3))
-        {
-            printf("Erreur lors de l'envoi du message CAN 3 !\n");
+            // Activer ou désactiver les interrupteurs
+            if (OrderID == 1)
+                controlSwitch(switchControl1, state == 1.0f ? true : false);
+            else if (OrderID == 2)
+                controlSwitch(switchControl2, state == 1.0f ? true : false);
+            else if (OrderID == 3)
+                controlSwitch(switchControl3, state == 1.0f ? true : false);
+            else if (OrderID == 10)
+                TensionMin = state;
+            else if (OrderID == 11)
+                TensionMaxBAT1 = state;
+            else if (OrderID == 12)
+                TensionMaxBAT2 = state;
+            else if (OrderID == 13)
+                TensionMaxBAT3 = state;
         }
-        else
-        {
-            printf("Message CAN 3 envoyé avec succès !\n");
-        }
+
+        // Contrôle des seuils de tension
+        switchControl1 = checkVoltage(V_Bat1, TensionMin, TensionMaxBAT1) ? 1 : 0;
+        switchControl2 = checkVoltage(V_Bat2, TensionMin, TensionMaxBAT2) ? 1 : 0;
+        switchControl3 = checkVoltage(V_Bat3, TensionMin, TensionMaxBAT3) ? 1 : 0;
+
     }
 }

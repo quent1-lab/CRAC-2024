@@ -54,6 +54,19 @@ def gstreamer_pipeline(
         )
     )
 
+def draw_lines_and_circles(frame, corners, color=(0, 255, 0)):
+    topLeft, topRight, bottomRight, bottomLeft = corners
+
+    cv.line(frame, topLeft, topRight, color, 2)
+    cv.line(frame, topRight, bottomRight, color, 2)
+    cv.line(frame, bottomRight, bottomLeft, color, 2)
+    cv.line(frame, bottomLeft, topLeft, color, 2)
+
+    cx = int((topLeft[0] + bottomRight[0]) / 2.0)
+    cy = int((topLeft[1] + bottomRight[1]) / 2.0)
+    cv.circle(frame, (cx, cy), 4, (0, 0, 255), -1)
+
+    return (cx, cy)
 
 # Données de départ du tag 42
 mat42 = np.eye(3, 3, dtype=np.float64)

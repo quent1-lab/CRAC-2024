@@ -96,13 +96,13 @@ int main()
 
     while (1)
     {
-        // Attendre un court laps de temps avant la prochaine lecture
+        /*// Attendre un court laps de temps avant la prochaine lecture
         ThisThread::sleep_for(500ms);
         led = 0;
         ThisThread::sleep_for(500ms);
         led = 1;
         // printf("%.1f\n", temps);
-        temps += 0.5;
+        temps += 0.5;*/
 
         float analogValue0 = analogInPin0.read(); // Lire la valeur analogique - Cap_courant1
         float analogValue1 = analogInPin1.read(); // Lire la valeur analogique - Cap_courant2
@@ -147,6 +147,8 @@ int main()
             else if (batteryID == 4){
                 response_V.data[0] = 4;
                 response_V.data[1] = V_Bat3;}
+            else 
+                continue;
 
             // Envoyer la réponse
             can1.write(response_V);
@@ -166,6 +168,8 @@ int main()
             else if (batteryID == 3){
                 response_I.data[0] = 3;
                 response_I.data[1] = Cap_Courant3;}
+            else 
+                continue;
 
             // Envoyer la réponse
             can1.write(response_I);
@@ -185,6 +189,8 @@ int main()
             else if (batteryID == 3){
                 response_S.data[0] = 3;
                 response_S.data[1] = switchControl3;}
+            else
+                continue;
 
             // Envoyer la réponse
             can1.write(response_S);

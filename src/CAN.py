@@ -75,28 +75,38 @@ class ComCAN:
                 y = struct.unpack('h', dataX[2:4])
                 theta = struct.unpack('h', dataX[4:6])
                 self.client.add_to_send_list(self.client.create_message(0, "coord", {"x": x[0], "y": y[0], "theta": theta[0]}))
-            elif data[0] == 0x123:
-                # V_Batterie
-                v_bat = struct.unpack('h', dataX[0:2])
-                print(f"V_Batterie : {v_bat[0]}")
-            elif data[0] == 0x124:
-                # V_Batterie
-                pass
-            elif data[0] == 0x125:
-                # V_Moteur
-                pass
-            elif data[0] == 0x126:
-                # V_Moteur
-                pass
-            elif data[0] == 0x127:
-                # V_Moteur
-                pass
-            elif data[0] == 0x128:
-                # V_Moteur
-                pass
-            elif data[0] == 0x129:
-                # V_Moteur
-                pass
+            elif data[0] == 0x203:
+                # V_Batterie : ID batterie (char), V_Batterie (short)
+                v_bat = struct.unpack('h', dataX[1:3])
+                id_bat = struct.unpack('c', dataX[0:1])
+                if id_bat == 1:
+                    print(f"V_Main : {v_bat}")
+                elif id_bat == 2:
+                    print(f"V_Batterie_1 : {v_bat}")
+                elif id_bat == 3:
+                    print(f"V_Batterie_2 : {v_bat}")
+                elif id_bat == 4:
+                    print(f"V_Batterie_3 : {v_bat}")
+            elif data[0] == 0x204:
+                # I_Batterie : ID batterie (char), I_Batterie (short)
+                i_bat = struct.unpack('h', dataX[1:3])
+                id_bat = struct.unpack('c', dataX[0:1])
+                if id_bat == 1:
+                    print(f"I_Batterie_1 : {i_bat}")
+                elif id_bat == 2:
+                    print(f"I_Batterie_2 : {i_bat}")
+                elif id_bat == 3:
+                    print(f"I_Batterie_3 : {i_bat}")
+            elif data[0] == 0x205:
+                # Switch_Batterie : ID batterie (char), Switch_Batterie (short)
+                s_bat = struct.unpack('h', dataX[1:3])
+                id_bat = struct.unpack('c', dataX[0:1])
+                if id_bat == 1:
+                    print(f"Switch_Batterie_1 : {s_bat}")
+                elif id_bat == 2:
+                    print(f"Switch_Batterie_2 : {s_bat}")
+                elif id_bat == 3:
+                    print(f"Switch_Batterie_3 : {s_bat}")
             else:
                 logging.error(f"ID inconnu ; data : {data}")
                 print(f"ID inconnu ; data : {data}")
@@ -140,7 +150,7 @@ class ComCAN:
                 elif data["cmd"] == "S":
                     messageCan = can.Message(arbitration_id=0x202, data=[data["byte1"]], is_extended_id=False)
                 elif data["cmd"] == "O":
-                    messageCan = can.Message(arbitration_id=0x203, data=[data["byte1"],data["byte2"]], is_extended_id=False)
+                    messageCan = can.Message(arbitration_id=0x206, data=[data["byte1"],data["byte2"]], is_extended_id=False)
                 
                 print(messageCan)
                 self.send(messageCan)

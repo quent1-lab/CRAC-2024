@@ -96,20 +96,26 @@ class ComCAN:
                 i_bat = struct.unpack('h', dataX[1:3])
                 id_bat = struct.unpack('c', dataX[0:1])
                 if id_bat == 1:
+                    self.client.add_to_send_list(self.client.create_message(0, "energie", {"Courant": {"Bat1" : i_bat}}))
                     print(f"I_Batterie_1 : {i_bat}")
                 elif id_bat == 2:
+                    self.client.add_to_send_list(self.client.create_message(0, "energie", {"Courant": {"Bat2" : i_bat}}))
                     print(f"I_Batterie_2 : {i_bat}")
                 elif id_bat == 3:
+                    self.client.add_to_send_list(self.client.create_message(0, "energie", {"Courant": {"Bat3" : i_bat}}))
                     print(f"I_Batterie_3 : {i_bat}")
             elif data[0] == 0x205:
                 # Switch_Batterie : ID batterie (char), Switch_Batterie (short)
                 s_bat = struct.unpack('h', dataX[1:3])
                 id_bat = struct.unpack('c', dataX[0:1])
                 if id_bat == 1:
+                    self.client.add_to_send_list(self.client.create_message(0, "energie", {"Switch": {"Bat1" : s_bat}}))
                     print(f"Switch_Batterie_1 : {s_bat}")
                 elif id_bat == 2:
+                    self.client.add_to_send_list(self.client.create_message(0, "energie", {"Switch": {"Bat2" : s_bat}}))
                     print(f"Switch_Batterie_2 : {s_bat}")
                 elif id_bat == 3:
+                    self.client.add_to_send_list(self.client.create_message(0, "energie", {"Switch": {"Bat3" : s_bat}}))
                     print(f"Switch_Batterie_3 : {s_bat}")
             else:
                 logging.error(f"ID inconnu ; data : {data}")

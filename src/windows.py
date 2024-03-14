@@ -3,12 +3,13 @@ import pygame_gui
 from pygame_UI import *
 
 class IHM_Command:
-    def __init__(self, manager, desactive_callback=None, restart_callback=None):    
+    def __init__(self, manager, desactive_callback=None, restart_callback=None, CAN_callback=None):    
         self.manager = manager
         self.size = (500, 400)
 
         self.desactive_callback = desactive_callback
         self.restart_callback = restart_callback
+        self.CAN_callback = CAN_callback
 
         self.window = pygame_gui.elements.UIWindow(rect=pygame.Rect((100, 100), self.size),
                                                    manager=self.manager,
@@ -26,6 +27,7 @@ class IHM_Command:
 
         self.command = None
         self.command_XYT_ = [None, None, None, None]
+        self.command_CAN = [None,None,None,None]
 
         # Ajouter des zones de texte et des labels correspondants
         text_box_info = [
@@ -33,7 +35,11 @@ class IHM_Command:
             ("X", (10, 100), (80, 30)),
             ("Y", (110, 100), (80, 30)),
             ("T", (210, 100), (80, 30)),
-            ("S", (310, 100), (80, 30))
+            ("S", (310, 100), (80, 30)),
+            ("CMD", (10, 200), (80, 30)),
+            ("B1", (110, 200), (80, 30)),
+            ("B2", (210, 200), (80, 30)),
+            ("B3", (310, 200), (80, 30)),
         ]
 
         for label_text, box_position, box_size in text_box_info:
@@ -48,6 +54,11 @@ class IHM_Command:
                                                             container=self.window)
             self.text_boxes.append(text_box)
 
+        self.last_command_CAN_label = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((10, 150), (200, 30)),
+                                                        text="Commande CAN",
+                                                        manager=self.manager,
+                                                        container=self.window)
+
         self.send_button_command = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((390, 50), (70, 30)),
                                                         text='Send',
                                                         manager=self.manager,
@@ -57,6 +68,11 @@ class IHM_Command:
                                                     text='Send',
                                                     manager=self.manager,
                                                     container=self.window)
+
+        self.send_button_CAN = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((390, 200), (70, 30)),
+                                            text='Send',
+                                            manager=self.manager,
+                                            container=self.window)
 
         self.desactive_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((10, 150), (150, 30)),
                                                     text='Désactiver',
@@ -71,7 +87,8 @@ class IHM_Command:
         # Définir les zones de texte pour chaque ligne
         self.text_boxes_lines = [
             [self.text_boxes[0]],
-            [self.text_boxes[1], self.text_boxes[2], self.text_boxes[3], self.text_boxes[4]]
+            [self.text_boxes[1], self.text_boxes[2], self.text_boxes[3], self.text_boxes[4]],
+            [self.text_boxes[5], self.text_boxes[6], self.text_boxes[7], self.text_boxes[8]],
         ]
         
     def process_events(self, event):
@@ -81,6 +98,8 @@ class IHM_Command:
                     self.send_command()
                 elif event.ui_element == self.send_button_XYT:
                     self.send_command_XYT()
+                elif event.ui_element == self.send_button_CAN:
+                    self.send_command_CAN()
                 elif event.ui_element == self.desactive_button:
                     if self.desactive_callback:
                         self.desactive_callback()
@@ -108,6 +127,13 @@ class IHM_Command:
     def send_command(self):
         self.command = self.text_boxes[0].get_text()
         self.last_command_label.set_text(f"Last Command: {self.command}")
+    
+    def send_command_CAN(self):
+        self.command_CAN[0] = self.text_boxes[5].get_text()
+        self.command_CAN[1] = self.text_boxes[6].get_text()
+        self.command_CAN[2] = self.text_boxes[7].get_text()
+        self.command_CAN[3] = self.text_boxes[8].get_text()
+        self.CAN_callback(self.command_CAN)
 
     def send_command_XYT(self):
         self.command_XYT_[0] = self.text_boxes[1].get_text()

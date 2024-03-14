@@ -83,7 +83,11 @@ class IHM:
 
         self.start_button = Button(self.lcd, pygame.Rect(self.WINDOW_SIZE[0]/2-50, self.WINDOW_SIZE[1]-55, 100, 40),"data/theme.json", "Démarrer", color=(20,200,20),on_click= self.start_match)
         self.command_button = Button(self.lcd, pygame.Rect(100, self.WINDOW_SIZE[1]-55, 120, 40),"data/theme.json", "Commandes",
-                                    on_click= lambda : setattr(self, "command_window", IHM_Command(self.manager, self.desactive_motor, self.restart_motor)) if self.command_window is None else None)
+                                    on_click= lambda : setattr(self, "command_window", IHM_Command(self.manager, 
+                                                                                                   self.desactive_motor, 
+                                                                                                   self.restart_motor,
+                                                                                                   self.command_CAN
+                                                                                                   )) if self.command_window is None else None)
 
         logging.basicConfig(filename='ihm.log', level=logging.INFO,
                             datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
@@ -428,6 +432,13 @@ class IHM:
     def restart_motor(self):
         self.client_socket.send(self.client_socket.create_message(2, "resta", True))
         print("Moteur est activé")
+
+    def command_CAN(self, message):
+        commande = message[0]
+        byte1 = message[1]
+        byte2 = message[2]
+        byte3 = message[3]
+        self.client_socket.send(self.client_socket.create_message(2, "CAN", {"cmd": commande, "byte1": byte1, "byte2": byte2, "byte3": byte3}))
 
     def valeur_de_test(self):
         scan = []

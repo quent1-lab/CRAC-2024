@@ -53,6 +53,12 @@ class IHM:
         self.zone_depart = 1
         self.desactive_m = False
 
+        self.Energie = {
+            "Tension" : {"Main": 0, "Bat1" : 13, "Bat2" : 12, "Bat3" : 1},
+            "Courant" : {"Bat1" : 0, "Bat2" : 0, "Bat3" : 0},
+            "Switch" : {"Bat1" : False, "Bat2" : False, "Bat3" : False}
+        }
+
         # Initialisation de Pygame et ajustement de la taille de la fenêtre
         pygame.init()
         info_object = pygame.display.Info()
@@ -182,6 +188,18 @@ class IHM:
                 self.objets[0].vitesse/10) + " cm/s", window_width * 0.86, window_height * 0.01)
             self.draw_text("direction: " + "{:.2f}".format(
                 self.objets[0].direction), window_width * 0.86, window_height * 0.05)
+        
+        # Dessine les données liées à l'énergie
+        # Tension si la batterie est connectée
+        k = 0
+        for i, key in enumerate(self.Energie["Tension"]):
+            if self.Energie["Tension"][key] != 0:
+                if k < 2:
+                    self.draw_text(key + ": " + "{:.2f}".format(self.Energie["Tension"][key]) + " V", window_width * 0.9, window_height * (0.92 + k*0.04))
+                else :
+                    self.draw_text(key + ": " + "{:.2f}".format(self.Energie["Tension"][key]) + " V", window_width * 0.8, window_height * (0.92 + (k-2)*0.04))
+                k += 1
+            
 
     def draw_field(self):
         pygame.draw.rect(self.lcd, pygame.Color(100, 100, 100),
@@ -556,9 +574,26 @@ class IHM:
             for point in scan:
                 self.new_scan.append(
                     (point["x"], point["y"], point["dist"], point["angle"]))
+        elif message["cmd"] == "energie":
+            energie = message["data"]
+            print(f"Energie restante: {energie}")
+
         elif message["cmd"] == "stop":
             self.client_socket.stop()
-    
+        
+    def update_energie(self, _json):
+        if _json is None:
+            return
+        if _json.type == str:
+            data = _json.loads(json)
+        else:
+            data = _json
+        for key in data:
+            if key in self.Energie:
+                for subkey in data[key]:
+                    if subkey in self.Energie[key]:
+                        self.Energie[key][subkey] = data[key][subkey]
+
     def map_value(self,x, in_min, in_max, out_min, out_max):
         return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
 
@@ -623,7 +658,7 @@ class IHM:
         self.client_socket.add_to_send_list(self.client_socket.create_message(0, "clic", {"zone": self.zone_depart}))
 
     def run(self):
-        #self.programme_simulation()
+        self.programme_simulation()
         
         self.client_socket.set_callback(self.receive_to_server)
         self.client_socket.set_callback_stop(None)

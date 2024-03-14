@@ -80,12 +80,16 @@ class ComCAN:
                 v_bat = struct.unpack('h', dataX[1:3])
                 id_bat = struct.unpack('c', dataX[0:1])
                 if id_bat == 1:
+                    self.client.add_to_send_list(self.client.create_message(0, "energie", {"Tension": {"Main" : v_bat}}))
                     print(f"V_Main : {v_bat}")
                 elif id_bat == 2:
+                    self.client.add_to_send_list(self.client.create_message(0, "energie", {"Tension": {"Bat1" : v_bat}}))
                     print(f"V_Batterie_1 : {v_bat}")
                 elif id_bat == 3:
+                    self.client.add_to_send_list(self.client.create_message(0, "energie", {"Tension": {"Bat2" : v_bat}}))
                     print(f"V_Batterie_2 : {v_bat}")
                 elif id_bat == 4:
+                    self.client.add_to_send_list(self.client.create_message(0, "energie", {"Tension": {"Bat3" : v_bat}}))
                     print(f"V_Batterie_3 : {v_bat}")
             elif data[0] == 0x204:
                 # I_Batterie : ID batterie (char), I_Batterie (short)

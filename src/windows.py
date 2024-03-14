@@ -36,10 +36,10 @@ class IHM_Command:
             ("Y", (110, 100), (80, 30)),
             ("T", (210, 100), (80, 30)),
             ("S", (310, 100), (80, 30)),
-            ("CMD", (10, 200), (80, 30)),
-            ("B1", (110, 200), (80, 30)),
-            ("B2", (210, 200), (80, 30)),
-            ("B3", (310, 200), (80, 30)),
+            ("CMD", (10, 180), (80, 30)),
+            ("B1", (110, 180), (80, 30)),
+            ("B2", (210, 180), (80, 30)),
+            ("B3", (310, 180), (80, 30)),
         ]
 
         for label_text, box_position, box_size in text_box_info:
@@ -54,7 +54,7 @@ class IHM_Command:
                                                             container=self.window)
             self.text_boxes.append(text_box)
 
-        self.last_command_CAN_label = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((10, 150), (200, 30)),
+        self.last_command_CAN_label = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((10, 135), (100, 30)),
                                                         text="Commande CAN",
                                                         manager=self.manager,
                                                         container=self.window)
@@ -69,17 +69,17 @@ class IHM_Command:
                                                     manager=self.manager,
                                                     container=self.window)
 
-        self.send_button_CAN = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((390, 200), (70, 30)),
+        self.send_button_CAN = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((390, 180), (70, 30)),
                                             text='Send',
                                             manager=self.manager,
                                             container=self.window)
 
-        self.desactive_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((10, 150), (150, 30)),
+        self.desactive_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((10, 230), (150, 30)),
                                                     text='Désactiver',
                                                     manager=self.manager,
                                                     container=self.window)
         
-        self.restart_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((170, 150), (150, 30)),
+        self.restart_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((170, 230), (150, 30)),
                                                     text='RESTART',
                                                     manager=self.manager,
                                                     container=self.window)

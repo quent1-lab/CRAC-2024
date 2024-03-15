@@ -24,7 +24,7 @@ detector = cv.aruco.ArucoDetector(marker_dict, param_markers)
 taillemarker = 0.1  # en mètre
 
 
-font = cv.FONT_HERSHEY_PLAIN
+font = cv.FONT_HERSHEY_SIMPLEX
 talbe_path = "data/Terrain_jeu.png"
 
 def gstreamer_pipeline(
@@ -104,12 +104,11 @@ while True:
 
             cx, cy = draw_lines_and_circles(frame, corners)
 
-            marker_centers.append((cx, cy))
+            marker_centers.append([ids,(cx, cy)])
 
             if len(marker_centers) > 1:
-                for i in range(len(marker_centers) - 1):
-                    cv.line(
-                        frame, marker_centers[i], marker_centers[i + 1], (0, 0, 255), 2)
+                for id, center in marker_centers:
+                    cv.line(frame, marker_centers[0][1], center, (0, 255, 0), 2)
 
             rvecs, tvecs, _ = aruco.estimatePoseSingleMarkers(
                 marker_corners, taillemarker, camera_matrix, dist_coeffs)  # OK
@@ -117,7 +116,7 @@ while True:
             for i in range(len(marker_IDs)):
                 cv.drawFrameAxes(frame, camera_matrix,
                                  dist_coeffs, rvecs[i], tvecs[i], 0.03)
-                print(f"id {marker_IDs[i]}", rvecs[i], tvecs[i])
+                #print(f"id {marker_IDs[i]}", rvecs[i], tvecs[i])
                 if marker_IDs[i] == 20:
                     rvecs42 = rvecs[i]
                     tvecs42 = tvecs[i]
@@ -129,15 +128,15 @@ while True:
                     relative_rotation = np.dot(mat42.T, mat)
                     rdest, _ = cv.Rodrigues(relative_rotation)
                     # si la valeur est fausse, multiplier par 10 au lieu de 100
-                    print(f"t{marker_IDs[i]}/42: {relative_position.T * 100}")
-                    print(f"r{marker_IDs[i]}/42: {np.degrees(rdest)}")
+                    #print(f"t{marker_IDs[i]}/42: {relative_position.T * 100}")
+                    #print(f"r{marker_IDs[i]}/42: {np.degrees(rdest)}")
                     cv.putText(
-                        frame, f"d{marker_IDs[i]}/42: {relative_position.T[0,0].round(4)*100} cm", (0, 30), font, 1, (0, 255, 0), 2, cv.LINE_AA)
+                        frame, f"d{marker_IDs[i]}/42: {relative_position.T[0,0].round(4)*100} cm", (0, 30), font, 0.8, (0, 255, 0), 2, cv.LINE_AA)
                     cv.putText(
-                        frame, f"r{marker_IDs[i]}/42: {np.degrees(rdest[2,0]).round(3)} °", (0, 50), font, 1, (0, 255, 0), 2, cv.LINE_AA)
+                        frame, f"r{marker_IDs[i]}/42: {np.degrees(rdest[2,0]).round(3)} °", (0, 100), font, 0.8, (0, 255, 0), 2, cv.LINE_AA)
 
             cv.putText(frame, f"ID: {ids[0]}", tuple(
-                topRight), font, 1, (0, 255, 0), 2, cv.LINE_AA)
+                topRight), font, 0.5, (0, 255, 0), 2, cv.LINE_AA)
             # print("centre tag 2D: ",marker_centers)
 
     cv.imshow("frame", frame)

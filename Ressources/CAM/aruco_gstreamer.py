@@ -25,7 +25,7 @@ taillemarker = 0.1  # en mètre
 
 
 font = cv.FONT_HERSHEY_PLAIN
-
+talbe_path = "data/Terrain_jeu.png"
 
 def gstreamer_pipeline(
     sensor_id=0,
@@ -76,9 +76,13 @@ tvecs42 = np.zeros((3, 1), dtype=np.float64)
 # cap = cv.VideoCapture(1)
 # cap = cv.VideoCapture(pipeline, cv.CAP_GSTREAMER)
 # 0 si la caméra est montée à l'envers 2 sinon
-cap = cv.VideoCapture(gstreamer_pipeline(flip_method=0), cv.CAP_GSTREAMER)
+#cap = cv.VideoCapture(gstreamer_pipeline(flip_method=0), cv.CAP_GSTREAMER)
+
+#Chargé une image a la place de la vidéo
+cap = cv.VideoCapture(talbe_path)
 
 while True:
+    cap = cv.VideoCapture(talbe_path)
     ret, frame = cap.read()
     # frame = cv.imread('table_jeu.png')
     if not ret:
@@ -98,14 +102,7 @@ while True:
             corners = corners.astype(int)
             topLeft, topRight, bottomRight, bottomLeft = corners
 
-            cv.line(frame, topLeft, topRight, (0, 255, 0), 2)
-            cv.line(frame, topRight, bottomRight, (0, 255, 0), 2)
-            cv.line(frame, bottomRight, bottomLeft, (0, 255, 0), 2)
-            cv.line(frame, bottomLeft, topLeft, (0, 255, 0), 2)
-
-            cx = int((topLeft[0] + bottomRight[0]) / 2.0)
-            cy = int((topLeft[1] + bottomRight[1]) / 2.0)
-            cv.circle(frame, (cx, cy), 4, (0, 0, 255), -1)
+            cx, cy = draw_lines_and_circles(frame, corners)
 
             marker_centers.append((cx, cy))
 
@@ -121,7 +118,7 @@ while True:
                 cv.drawFrameAxes(frame, camera_matrix,
                                  dist_coeffs, rvecs[i], tvecs[i], 0.03)
                 print(f"id {marker_IDs[i]}", rvecs[i], tvecs[i])
-                if marker_IDs[i] == 42:
+                if marker_IDs[i] == 20:
                     rvecs42 = rvecs[i]
                     tvecs42 = tvecs[i]
                     mat42, _ = cv.Rodrigues(rvecs42)

@@ -93,9 +93,19 @@ while True:
 
     # marker_corners, marker_IDs, reject = cv.aruco.detectMarkers(gray_frame, marker_dict, parameters=param_markers)
     marker_corners, marker_IDs, reject = detector.detectMarkers(gray_frame)
+    
+    # Trier marker_corners et marker_IDs par ID
+    if marker_IDs is not None:
+        _marker_IDs = marker_IDs.flatten()
+        marker_corners = [marker_corners[i] for i in np.argsort(_marker_IDs)]
+        marker_IDs = sorted(marker_IDs)
+
+    rvecs, tvecs, _ = aruco.estimatePoseSingleMarkers(
+    marker_corners, taillemarker, camera_matrix, dist_coeffs)  # OK
+
+    marker_centers = []
 
     if marker_corners:
-        marker_centers = []
         for ids, corners in zip(marker_IDs, marker_corners):
             # cv.polylines(corrected_frame, [corners.astype(np.int32)], True, (0, 255, 255), 4, cv.LINE_AA)
             corners = corners.reshape(4, 2)
@@ -106,38 +116,36 @@ while True:
 
             marker_centers.append([ids,(cx, cy)])
 
-            if len(marker_centers) > 1:
-                for id, center in marker_centers:
-                    cv.line(frame, marker_centers[0][1], center, (0, 255, 0), 2)
-
-            rvecs, tvecs, _ = aruco.estimatePoseSingleMarkers(
-                marker_corners, taillemarker, camera_matrix, dist_coeffs)  # OK
-
-            for i in range(len(marker_IDs)):
-                cv.drawFrameAxes(frame, camera_matrix,
-                                 dist_coeffs, rvecs[i], tvecs[i], 0.03)
-                #print(f"id {marker_IDs[i]}", rvecs[i], tvecs[i])
-                if marker_IDs[i] == 20:
-                    rvecs42 = rvecs[i]
-                    tvecs42 = tvecs[i]
-                    mat42, _ = cv.Rodrigues(rvecs42)
-                else:
-                    mat, _ = cv.Rodrigues(rvecs[i])
-                    relative_position = np.dot(
-                        mat42.T, (tvecs[i].T - tvecs42.T))
-                    relative_rotation = np.dot(mat42.T, mat)
-                    rdest, _ = cv.Rodrigues(relative_rotation)
-                    # si la valeur est fausse, multiplier par 10 au lieu de 100
-                    #print(f"t{marker_IDs[i]}/42: {relative_position.T * 100}")
-                    #print(f"r{marker_IDs[i]}/42: {np.degrees(rdest)}")
-                    cv.putText(
-                        frame, f"d{marker_IDs[i]}/42: {relative_position.T[0,0].round(4)*100} cm", (0, 30), font, 0.8, (0, 255, 0), 2, cv.LINE_AA)
-                    cv.putText(
-                        frame, f"r{marker_IDs[i]}/42: {np.degrees(rdest[2,0]).round(3)} °", (0, 100), font, 0.8, (0, 255, 0), 2, cv.LINE_AA)
-
             cv.putText(frame, f"ID: {ids[0]}", tuple(
                 topRight), font, 0.5, (0, 255, 0), 2, cv.LINE_AA)
             # print("centre tag 2D: ",marker_centers)
+
+        for i in range(len(marker_IDs)):
+            cv.drawFrameAxes(frame, camera_matrix,
+                                dist_coeffs, rvecs[i], tvecs[i], 0.03)
+            #print(f"id {marker_IDs[i]}", rvecs[i], tvecs[i])
+            if marker_IDs[i] == 20:
+                rvecs42 = rvecs[i]
+                tvecs42 = tvecs[i]
+                mat42, _ = cv.Rodrigues(rvecs42)
+            else:
+                mat, _ = cv.Rodrigues(rvecs[i])
+                relative_position = np.dot(
+                    mat42.T, (tvecs[i].T - tvecs42.T))
+                relative_rotation = np.dot(mat42.T, mat)
+                rdest, _ = cv.Rodrigues(relative_rotation)
+                # si la valeur est fausse, multiplier par 10 au lieu de 100
+                #print(f"t{marker_IDs[i]}/42: {relative_position.T * 100}")
+                #print(f"r{marker_IDs[i]}/42: {np.degrees(rdest)}")
+                cv.putText(
+                    frame, f"d{marker_IDs[i]}/42: {int(relative_position.T[0,0]*100)} cm", (0,30 + (i-1)*80), font, 0.8, (0, 255, 0), 2, cv.LINE_AA)
+                cv.putText(
+                    frame, f"r{marker_IDs[i]}/42: {int(np.degrees(rdest[2,0]))} deg", (0, 60 + (i-1)*80), font, 0.8, (0, 255, 0), 2, cv.LINE_AA)
+
+        if len(marker_centers) > 1:
+            # Dessiner une ligne entre chaque paire consécutive de centres
+            for i in range(len(marker_centers) - 1):
+                cv.line(frame, marker_centers[i][1], marker_centers[i + 1][1], (0, 255, 0), 2)
 
     cv.imshow("frame", frame)
     stop = cv.waitKey(1)

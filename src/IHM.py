@@ -576,7 +576,7 @@ class IHM:
                     (point["x"], point["y"], point["dist"], point["angle"]))
         elif message["cmd"] == "energie":
             energie = message["data"]
-            print(f"Energie restante: {energie}")
+            self.update_energie(energie)
 
         elif message["cmd"] == "stop":
             self.client_socket.stop()
@@ -593,6 +593,11 @@ class IHM:
                 for subkey in data[key]:
                     if subkey in self.Energie[key]:
                         self.Energie[key][subkey] = data[key][subkey]
+    
+    def request_voltages(self, state):
+        for battery_id in self.batteries:
+            if state == 0 or (state == 1 and self.get_battery_status(battery_id) != 0):
+                self.request_voltage(battery_id)
 
     def map_value(self,x, in_min, in_max, out_min, out_max):
         return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min

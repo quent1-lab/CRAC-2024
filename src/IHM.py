@@ -59,6 +59,9 @@ class IHM:
             "Switch" : {"Bat1" : False, "Bat2" : False, "Bat3" : False}
         }
 
+        self.pos_waiting_list = [] # Liste pour stocker les futurs positions positions du robot à atteindre 
+        self.robot_move = False # Variable pour savoir si le robot est en mouvement
+
         # Initialisation de Pygame et ajustement de la taille de la fenêtre
         pygame.init()
         info_object = pygame.display.Info()
@@ -199,7 +202,6 @@ class IHM:
                 else :
                     self.draw_text(key + ": " + "{:.2f}".format(self.Energie["Tension"][key]) + " V", window_width * 0.8, window_height * (0.92 + (k-2)*0.04))
                 k += 1
-            
 
     def draw_field(self):
         pygame.draw.rect(self.lcd, pygame.Color(100, 100, 100),
@@ -244,6 +246,37 @@ class IHM:
             self.lcd, pygame.Color(255, 255, 0),
             (objet.x * self.X_RATIO, objet.y * self.Y_RATIO),
             ((objet.x + vitesse * math.cos(direction)) * self.X_RATIO, (objet.y + vitesse * math.sin(direction)) * self.Y_RATIO), 3)
+
+    def draw_list_position(self):
+        # Dessine les positions de la liste d'attente par un point rouge
+        # Et dessine le chemin entre le robot et le prochain point et entre les points
+        new_waiting_list = []
+        if self.pos_waiting_list:
+            # Remettre dans la bonne origine les valeurs de position
+            for pos in self.pos_waiting_list:
+                x = self.map_value(pos[0], 0, self.FIELD_SIZE[0], self.WINDOW_SIZE[0]-5-self.BORDER_DISTANCE*self.X_RATIO, self.BORDER_DISTANCE*self.X_RATIO+5)
+                y = self.map_value(pos[1], 0, self.FIELD_SIZE[1], self.BORDER_DISTANCE*self.Y_RATIO+5 ,self.WINDOW_SIZE[1]-5-self.BORDER_DISTANCE*self.Y_RATIO)
+                new_waiting_list.append((int(x), int(y)))
+
+            # Dessine le chemin entre le robot et le prochain point
+            x = self.ROBOT.x
+            y = self.ROBOT.y
+            x = int(self.map_value(x, 0, self.FIELD_SIZE[0], self.FIELD_SIZE[0], 0))
+            pygame.draw.line(
+                self.lcd, pygame.Color(0, 255, 0),
+                (x * self.X_RATIO, y * self.Y_RATIO),
+                (new_waiting_list[0][0], new_waiting_list[0][1]), 3)
+
+            # Dessine le chemin entre les points
+            for i in range(len(new_waiting_list) - 1):
+                pygame.draw.line(
+                    self.lcd, pygame.Color(0, 255, 0),
+                    (new_waiting_list[i][0], new_waiting_list[i][1]),
+                    (new_waiting_list[i + 1][0], new_waiting_list[i + 1][1]), 3)
+                
+            # Dessine les points de la liste d'attente
+            for pos in new_waiting_list:
+                pygame.draw.circle(self.lcd, pygame.Color(255, 0, 0), (pos[0], pos[1]), 5)
 
     def draw_all_trajectoires(self, trajectoire_actuel, trajectoire_adverse, trajectoire_evitement):
         # Dessin des trajectoires
@@ -367,7 +400,11 @@ class IHM:
         :param distance_securite: Distance de sécurité minimale entre les robots
         """
         # Copie des positions actuelles des robots
-        x_actuel, y_actuel = robot_actuel.x, robot_actuel.y
+        x = robot_actuel.x
+        y = robot_actuel.y
+        x = int(self.map_value(x, 0, self.FIELD_SIZE[0], self.FIELD_SIZE[0], 0))
+
+        x_actuel, y_actuel = x, y
         x_adverse, y_adverse = robot_adverse.x, robot_adverse.y
 
         # Copie des vitesses actuelles des robots
@@ -501,6 +538,7 @@ class IHM:
             self.suivre_objet(new_objets, 100)
 
             self.draw_background()
+            self.draw_list_position()
 
             if self.ETAT == 0:
                 self.draw_text_center("INITIALISATION DU MATCH", self.WINDOW_SIZE[0] / 2, 35, self.RED)
@@ -519,7 +557,9 @@ class IHM:
                     self.command_window.process_events(event)
                 elif self.ETAT == 1:
                     self.handle_mouse_click(event)
+
                 if self.ETAT == 1:
+                    self.go_to_position()
                     self.command_button.handle_event(event)
             self.draw_robot()
 
@@ -549,9 +589,9 @@ class IHM:
             y = self.ROBOT.y
 
             if keys[pygame.K_LEFT]:
-                x -= 10
-            if keys[pygame.K_RIGHT]:
                 x += 10
+            if keys[pygame.K_RIGHT]:
+                x -= 10
             if keys[pygame.K_UP]:
                 y -= 10
             if keys[pygame.K_DOWN]:
@@ -581,6 +621,9 @@ class IHM:
         elif message["cmd"] == "energie":
             energie = message["data"]
             self.update_energie(energie)
+        elif message["cmd"] == "akn_p":
+            self.robot_move = False
+            self.pos_waiting_list.pop(0)
 
         elif message["cmd"] == "stop":
             self.client_socket.stop()
@@ -622,13 +665,32 @@ class IHM:
                 self.clicked_position = (x, y)
                 print("Clicked position:", self.clicked_position)
                 # Envoie les coordonnées du clic au CAN
-                self.client_socket.add_to_send_list(self.client_socket.create_message(
-                    2, "clic", {"x": x, "y": y, "theta": int(self.ROBOT_ANGLE), "sens": "0"}))
+                #self.client_socket.add_to_send_list(self.client_socket.create_message(
+                #    2, "clic", {"x": x, "y": y, "theta": int(self.ROBOT_ANGLE), "sens": "0"}))
+
+                self.pos_waiting_list.append((x,y, int(self.ROBOT_ANGLE), "0"))
 
     def is_within_game_area(self, pos):
         # Vérifie si les coordonnées du clic sont dans la zone de jeu
         return self.BORDER_DISTANCE * self.X_RATIO + 5 <= pos[0] <= (self.FIELD_SIZE[0] - self.BORDER_DISTANCE) * self.X_RATIO -5\
             and self.BORDER_DISTANCE * self.Y_RATIO + 5 <= pos[1] <= (self.FIELD_SIZE[1] - self.BORDER_DISTANCE) * self.Y_RATIO -5
+
+    def go_to_position(self):
+        # Cette fonction gère les déplacements du robot
+        # Elle vérifie s'il y a des positions à atteindre, si le robot attent ou est en mouvement
+        # Elle envoie les commandes de déplacement au CAN
+
+        # Si la liste des positions à atteindre n'est pas vide
+        if self.pos_waiting_list:
+            # Si le robot n'est pas en mouvement
+            if not self.robot_move:
+                self.robot_move = True
+                # Prenez la première position de la liste
+                pos = self.pos_waiting_list[0]
+                # Envoyez la position au CAN
+                self.client_socket.add_to_send_list(self.client_socket.create_message(
+                    2, "clic", {"x": pos[0], "y": pos[1], "theta": pos[2], "sens": pos[3]}))
+                print("Going to position:", pos)
 
     def init_match(self):
         # Définir les rectangles de départ

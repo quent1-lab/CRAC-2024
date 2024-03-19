@@ -153,14 +153,11 @@ class ComCAN:
                     messageCan = can.Message(arbitration_id=0x1F7, data=[1], is_extended_id=False)
             elif message["cmd"] == "CAN":
                 data = message["data"]
-                if data["cmd"] == "V":
-                    messageCan = can.Message(arbitration_id=0x200, data=[data["byte1"]], is_extended_id=False)
-                elif data["cmd"] == "I":
-                    messageCan = can.Message(arbitration_id=0x201, data=[data["byte1"]], is_extended_id=False)
-                elif data["cmd"] == "S":
-                    messageCan = can.Message(arbitration_id=0x202, data=[data["byte1"]], is_extended_id=False)
-                elif data["cmd"] == "O":
-                    messageCan = can.Message(arbitration_id=0x206, data=[data["byte1"],data["byte2"]], is_extended_id=False)
+                commande = data["cmd"]
+                b1 = data["byte1"]
+                b2 = data["byte2"]
+                b3 = data["byte3"]
+                messageCAN = can.Message(arbitration_id=commande, data=[b1,b2,b3], is_extended_id=False)
                 
                 print(messageCan)
                 self.send(messageCan)

@@ -36,7 +36,7 @@ class IHM_Command:
             ("Y", (110, 100), (80, 30)),
             ("T", (210, 100), (80, 30)),
             ("S", (310, 100), (80, 30)),
-            ("CMD", (10, 180), (80, 30)),
+            ("CMD base10", (10, 180), (80, 30)),
             ("Byte1", (110, 180), (80, 30)),
             ("Byte2", (210, 180), (80, 30)),
             ("Byte3", (310, 180), (80, 30)),
@@ -133,6 +133,15 @@ class IHM_Command:
         self.command_CAN[1] = self.text_boxes[6].get_text()
         self.command_CAN[2] = self.text_boxes[7].get_text()
         self.command_CAN[3] = self.text_boxes[8].get_text()
+
+        # Vérifie la validité des données
+        for i in range(4):
+            try:
+                self.command_CAN[i] = int(self.command_CAN[i])
+            except ValueError:
+                self.command_CAN[i] = 0
+                self.text_boxes[5+i].set_text("0")
+        print(self.command_CAN)
         self.CAN_callback(self.command_CAN)
 
     def send_command_XYT(self):

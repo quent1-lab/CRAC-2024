@@ -106,6 +106,7 @@ class ComCAN:
                     self.client.add_to_send_list(self.client.create_message(0, "energie", {"Courant": {"Bat3" : i_bat}}))
                     print(f"I_Batterie_3 : {i_bat}")
             elif data[0] == 0x205:
+                print(data)
                 # Switch_Batterie : ID batterie (char), Switch_Batterie (short)
                 s_bat = struct.unpack('h', dataX[1:3])
                 id_bat = struct.unpack('c', dataX[0:1])

@@ -126,9 +126,6 @@ int main()
             case 0x200:
             {
                 int batteryID = request.data[0];
-                response_V.data[0] = 1;
-                response_V.data[1] = V_BatMain *10;
-                can1.write(response_V);
                 switch (batteryID)
                 {
                 case 1:
@@ -247,12 +244,6 @@ int main()
         switchControl2 = checkVoltage(V_Bat2, TensionMin, TensionMaxBAT2) ? 1 : 0;
         switchControl3 = checkVoltage(V_Bat3, TensionMin, TensionMaxBAT3) ? 1 : 0;
 
-        // Imprimer les valeurs des tensions
-        printf("V_BatMain: %.1f\n", V_BatMain);
-        printf("V_Bat1: %.1f\n", V_Bat1);
-        printf("V_Bat2: %.1f\n", V_Bat2);
-        printf("V_Bat3: %.1f\n", V_Bat3);
-
-        ThisThread::sleep_for(500ms);
+        ThisThread::sleep_for(100ms);
     }
 }

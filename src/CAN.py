@@ -67,7 +67,6 @@ class ComCAN:
             logging.error(f"Erreur lors de la réception du message : {str(e)}")
     
     def analyse_CAN(self, data):
-        print(data)
         try:
             dataX = data[2]
             if data[0] == 0x28:

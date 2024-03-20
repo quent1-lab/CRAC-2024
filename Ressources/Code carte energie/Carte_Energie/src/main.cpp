@@ -91,14 +91,6 @@ int main()
 
     while (1)
     {
-        /*// Attendre un court laps de temps avant la prochaine lecture
-        ThisThread::sleep_for(500ms);
-        led = 0;
-        ThisThread::sleep_for(500ms);
-        led = 1;
-        // printf("%.1f\n", temps);
-        temps += 0.5;*/
-
         float analogValue0 = analogInPin0.read(); // Lire la valeur analogique - Cap_courant1
         float analogValue1 = analogInPin1.read(); // Lire la valeur analogique - Cap_courant2
         float analogValue2 = analogInPin2.read(); // Lire la valeur analogique - Cap_courant3
@@ -128,16 +120,20 @@ int main()
         if (can1.read(request))
         {
 
+
             switch (request.id)
             {
             case 0x200:
             {
                 int batteryID = request.data[0];
+                response_V.data[0] = 1;
+                response_V.data[1] = V_BatMain *10;
+                can1.write(response_V);
                 switch (batteryID)
                 {
                 case 1:
                     response_V.data[0] = 1;
-                    response_V.data[1] = V_BatMain;
+                    response_V.data[1] = V_BatMain *10;
                     can1.write(response_V);
                     break;
                 case 2:
@@ -250,5 +246,13 @@ int main()
         switchControl1 = checkVoltage(V_Bat1, TensionMin, TensionMaxBAT1) ? 1 : 0;
         switchControl2 = checkVoltage(V_Bat2, TensionMin, TensionMaxBAT2) ? 1 : 0;
         switchControl3 = checkVoltage(V_Bat3, TensionMin, TensionMaxBAT3) ? 1 : 0;
+
+        // Imprimer les valeurs des tensions
+        printf("V_BatMain: %.1f\n", V_BatMain);
+        printf("V_Bat1: %.1f\n", V_Bat1);
+        printf("V_Bat2: %.1f\n", V_Bat2);
+        printf("V_Bat3: %.1f\n", V_Bat3);
+
+        ThisThread::sleep_for(500ms);
     }
 }

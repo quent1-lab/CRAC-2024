@@ -67,6 +67,7 @@ class ComCAN:
             logging.error(f"Erreur lors de la réception du message : {str(e)}")
     
     def analyse_CAN(self, data):
+        print(data)
         try:
             dataX = data[2]
             if data[0] == 0x28:
@@ -161,7 +162,7 @@ class ComCAN:
                 b1 = data["byte1"]
                 b2 = data["byte2"]
                 b3 = data["byte3"]
-                messageCAN = can.Message(arbitration_id=0x200, data=[b1,b2,b3], is_extended_id=False)
+                messageCAN = can.Message(arbitration_id=commande, data=[b1,b2,b3], is_extended_id=False)
                 
                 print("Envoie demande energie", commande)
                 self.send(messageCan)

@@ -498,6 +498,7 @@ class IHM:
         byte2 = message[2]
         byte3 = message[3]
         self.client_socket.send(self.client_socket.create_message(2, "CAN", {"cmd": commande, "byte1": byte1, "byte2": byte2, "byte3": byte3}))
+        print("message can envoyé")
 
     def valeur_de_test(self):
         scan = []
@@ -744,6 +745,7 @@ class IHM:
                     break
 
                 self.draw_background()
+                self.draw_list_position()
 
                 if self.ETAT == 0:
                     self.draw_text_center("INITIALISATION DU MATCH", self.WINDOW_SIZE[0] / 2, 35, self.RED)
@@ -763,6 +765,7 @@ class IHM:
                     elif self.ETAT == 1:
                         self.handle_mouse_click(event)
                     if self.ETAT == 1:
+                        self.go_to_position()
                         self.command_button.handle_event(event)
 
                 self.draw_robot()

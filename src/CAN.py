@@ -3,7 +3,6 @@ import os
 from client import Client
 import struct
 import logging
-import can
 import struct
 
 class ComCAN:
@@ -150,8 +149,10 @@ class ComCAN:
                 # Format des données : desa (char)
                 if data:
                     messageCan = can.Message(arbitration_id=0x1F7, data=[0], is_extended_id=False)
+                    print("CAN : moteur désactivé")
                 else:
                     messageCan = can.Message(arbitration_id=0x1F7, data=[1], is_extended_id=False)
+                    print("CAN : moteur activé")
             elif message["cmd"] == "CAN":
                 data = message["data"]
                 commande = data["cmd"]

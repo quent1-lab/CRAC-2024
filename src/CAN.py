@@ -154,17 +154,17 @@ class ComCAN:
                 else:
                     messageCan = can.Message(arbitration_id=0x1F7, data=[1], is_extended_id=False)
                     print("CAN : moteur activé")
+                self.send(messageCan)
             elif message["cmd"] == "CAN":
                 data = message["data"]
-                commande = data["cmd"]
+                commande = data["id"]
                 b1 = data["byte1"]
                 b2 = data["byte2"]
                 b3 = data["byte3"]
                 messageCAN = can.Message(arbitration_id=commande, data=[b1,b2,b3], is_extended_id=False)
                 
-                print("Envoie demande energie")
+                print("Envoie demande energie", commande)
                 self.send(messageCan)
-                print("BusCAN : Message de ", "désactivation" if data else "réactivation"," envoyé")
             elif message["cmd"] == "resta":
                 data = message["data"]
                 # Format des données : restart (char)

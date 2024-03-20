@@ -80,7 +80,7 @@ int main()
     order.id = 0x206;
 
     // Définition de la longueur des données (8 octets maximum)
-    request.len = 1;
+    request.len = 3;
     response_V.len = 2;
     response_I.len = 2;
     response_S.len = 2;

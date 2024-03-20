@@ -497,7 +497,7 @@ class IHM:
         byte1 = message[1]
         byte2 = message[2]
         byte3 = message[3]
-        self.client_socket.send(self.client_socket.create_message(2, "CAN", {"cmd": commande, "byte1": byte1, "byte2": byte2, "byte3": byte3}))
+        self.client_socket.send(self.client_socket.create_message(2, "CAN", {"id": commande, "byte1": byte1, "byte2": byte2, "byte3": byte3}))
         print("message can envoyé")
 
     def valeur_de_test(self):

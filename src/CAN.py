@@ -124,6 +124,7 @@ class ComCAN:
             logging.error(f"Erreur lors de l'analyse du message CAN : {str(e)}")
 
     def receive_to_server(self, message):
+        print(message)
         try:
             if message["cmd"] == "stop":
                 self.client.stop()
@@ -161,7 +162,7 @@ class ComCAN:
                 b3 = data["byte3"]
                 messageCAN = can.Message(arbitration_id=commande, data=[b1,b2,b3], is_extended_id=False)
                 
-                print(messageCan)
+                print("Envoie demande energie")
                 self.send(messageCan)
                 print("BusCAN : Message de ", "désactivation" if data else "réactivation"," envoyé")
             elif message["cmd"] == "resta":

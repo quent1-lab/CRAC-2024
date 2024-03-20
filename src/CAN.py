@@ -75,6 +75,7 @@ class ComCAN:
                 theta = struct.unpack('h', dataX[4:6])
                 self.client.add_to_send_list(self.client.create_message(0, "coord", {"x": x[0], "y": y[0], "theta": theta[0]}))
             elif data[0] == 0x203:
+                print(data)
                 # V_Batterie : ID batterie (char), V_Batterie (short)
                 v_bat = struct.unpack('h', dataX[1:3])
                 id_bat = struct.unpack('c', dataX[0:1])

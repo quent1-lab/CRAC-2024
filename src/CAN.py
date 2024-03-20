@@ -161,7 +161,7 @@ class ComCAN:
                 b1 = data["byte1"]
                 b2 = data["byte2"]
                 b3 = data["byte3"]
-                messageCAN = can.Message(arbitration_id=commande, data=[b1,b2,b3], is_extended_id=False)
+                messageCAN = can.Message(arbitration_id=0x200, data=[b1,b2,b3], is_extended_id=False)
                 
                 print("Envoie demande energie", commande)
                 self.send(messageCan)

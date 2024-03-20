@@ -125,7 +125,6 @@ class ComCAN:
             logging.error(f"Erreur lors de l'analyse du message CAN : {str(e)}")
 
     def receive_to_server(self, message):
-        print(message)
         try:
             if message["cmd"] == "stop":
                 self.client.stop()

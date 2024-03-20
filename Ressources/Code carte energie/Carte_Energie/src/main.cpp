@@ -14,8 +14,8 @@ AnalogIn analogInPin4(A3); // Utilisez le port analogique (A3) sur la carte F303
 AnalogIn analogInPin5(D3); // Utilisez le port analogique (D3) sur la carte F303K8  - V_Bat2
 AnalogIn analogInPin6(A0); // Utilisez le port analogique (A0) sur la carte F303K8  - V_Bat3
 
-DigitalOut switchControl1(D5); // Interrupteur 1 - D5
-DigitalOut switchControl2(D4); // Interrupteur 2 - D4
+DigitalOut switchControl1(D5);  // Interrupteur 1 - D5
+DigitalOut switchControl2(D4);  // Interrupteur 2 - D4
 DigitalOut switchControl3(D11); // Interrupteur 3 - D11
 
 void controlSwitch(DigitalOut &switchControl, bool on)
@@ -58,34 +58,29 @@ float calcul_courant1(float x)
     return y;
 }
 
-bool checkVoltage(float voltage, float min, float max) {
+bool checkVoltage(float voltage, float min, float max)
+{
     return voltage >= min && voltage <= max;
 }
 
 int main()
 {
-    double temps = 0;
     printf("CRAC stm32f303k8 démo\n");
 
     // Création d'un message CAN
-    CANMessage request_V, request_I, request_S; 
+    CANMessage request;
     CANMessage response_V, response_I, response_S;
     CANMessage order; // Ordre à exécuter
     // requetes (tension, courant, switch) / reponse (tension, courant, switch)
 
     // Définition de l'ID du message CAN (11 bits)
-    request_V.id = 0x200;
-    request_I.id = 0x201;
-    request_S.id = 0x202;
     response_V.id = 0x203;
     response_I.id = 0x204;
     response_S.id = 0x205;
     order.id = 0x206;
 
     // Définition de la longueur des données (8 octets maximum)
-    request_V.len = 1;
-    request_I.len = 1;
-    request_S.len = 1;
+    request.len = 1;
     response_V.len = 2;
     response_I.len = 2;
     response_S.len = 2;
@@ -130,98 +125,130 @@ int main()
         V_Bat3 = calcul_VBat3(analogValue6 * 3.3); // Supposons que la tension de référence est de 3.3V
 
         // Attendre une demande via CAN
-        if (can1.read(request_V))
+        if (can1.read(request))
         {
-            int batteryID = request_V.data[0];
 
-            // Récupérer les tensions des batteries
-            if (batteryID == 1){
-                response_V.data[0] = 1;
-                response_V.data[1] = V_BatMain;}
-            else if (batteryID == 2){
-                response_V.data[0] = 2;
-                response_V.data[1] = V_Bat1;}
-            else if (batteryID == 3){
-                response_V.data[0] = 3;
-                response_V.data[1] = V_Bat2;}
-            else if (batteryID == 4){
-                response_V.data[0] = 4;
-                response_V.data[1] = V_Bat3;}
-            else 
-                continue;
+            switch (request.id)
+            {
+            case 0x200:
+            {
+                int batteryID = request.data[0];
+                switch (batteryID)
+                {
+                case 1:
+                    response_V.data[0] = 1;
+                    response_V.data[1] = V_BatMain;
+                    can1.write(response_V);
+                    break;
+                case 2:
+                    response_V.data[0] = 2;
+                    response_V.data[1] = V_Bat1;
+                    can1.write(response_V);
+                    break;
+                case 3:
+                    response_V.data[0] = 3;
+                    response_V.data[1] = V_Bat2;
+                    can1.write(response_V);
+                    break;
+                case 4:
+                    response_V.data[0] = 4;
+                    response_V.data[1] = V_Bat3;
+                    can1.write(response_V);
+                    break;
+                default:
+                    continue;
+                }
+                break;
+            }
+            case 0x201:
+            {
+                int batteryID = request.data[0];
 
-            // Envoyer la réponse
-            can1.write(response_V);
-        }
+                switch (batteryID)
+                {
+                case 1:
+                    response_I.data[0] = 1;
+                    response_I.data[1] = Cap_I1;
+                    can1.write(response_I);
+                    break;
+                case 2:
+                    response_I.data[0] = 2;
+                    response_I.data[1] = Cap_Courant2;
+                    can1.write(response_I);
+                    break;
+                case 3:
+                    response_I.data[0] = 3;
+                    response_I.data[1] = Cap_Courant3;
+                    can1.write(response_I);
+                    break;
+                default:
+                    continue;
+                }
+                break;
+            }
+            case 0x202:
+            {
+                int batteryID = request.data[0];
 
-        if (can1.read(request_I))
-        {
-            int batteryID = request_I.data[0];
+                switch (batteryID)
+                {
+                case 1:
+                    response_S.data[0] = 1;
+                    response_S.data[1] = switchControl1;
+                    can1.write(response_S);
+                    break;
+                case 2:
+                    response_S.data[0] = 2;
+                    response_S.data[1] = switchControl2;
+                    can1.write(response_S);
+                    break;
+                case 3:
+                    response_S.data[0] = 3;
+                    response_S.data[1] = switchControl3;
+                    can1.write(response_S);
+                    break;
+                default:
+                    continue;
+                }
+                break;
+            }
+            case 0x206:
+            {
+                int OrderID = request.data[0];
+                float state = request.data[1];
 
-            // Récupérer les courants des batteries
-            if (batteryID == 1){
-                response_I.data[0] = 1;
-                response_I.data[1] = Cap_I1;}
-            else if (batteryID == 2){
-                response_I.data[0] = 2;
-                response_I.data[1] = Cap_Courant2;}
-            else if (batteryID == 3){
-                response_I.data[0] = 3;
-                response_I.data[1] = Cap_Courant3;}
-            else 
-                continue;
-
-            // Envoyer la réponse
-            can1.write(response_I);
-        }
-
-        if (can1.read(request_S))
-        {
-            int batteryID = request_S.data[0];
-
-            // Récupérer les états des interrupteurs
-            if (batteryID == 1){
-                response_S.data[0] = 1;
-                response_S.data[1] = switchControl1;}
-            else if (batteryID == 2){
-                response_S.data[0] = 2;
-                response_S.data[1] = switchControl2;}
-            else if (batteryID == 3){
-                response_S.data[0] = 3;
-                response_S.data[1] = switchControl3;}
-            else
-                continue;
-
-            // Envoyer la réponse
-            can1.write(response_S);
-        }
-
-        if (can1.read(order))
-        {
-            int OrderID = order.data[0];
-            float state = order.data[1];
-
-            // Activer ou désactiver les interrupteurs
-            if (OrderID == 1)
-                controlSwitch(switchControl1, state == 1.0f ? true : false);
-            else if (OrderID == 2)
-                controlSwitch(switchControl2, state == 1.0f ? true : false);
-            else if (OrderID == 3)
-                controlSwitch(switchControl3, state == 1.0f ? true : false);
-            else if (OrderID == 10)
-                TensionMin = state;
-            else if (OrderID == 11)
-                TensionMaxBAT1 = state;
-            else if (OrderID == 12)
-                TensionMaxBAT2 = state;
-            else if (OrderID == 13)
-                TensionMaxBAT3 = state;
+                switch (OrderID)
+                {
+                case 1:
+                    controlSwitch(switchControl1, state == 1.0f ? true : false);
+                    break;
+                case 2:
+                    controlSwitch(switchControl2, state == 1.0f ? true : false);
+                    break;
+                case 3:
+                    controlSwitch(switchControl3, state == 1.0f ? true : false);
+                    break;
+                case 10:
+                    TensionMin = state;
+                    break;
+                case 11:
+                    TensionMaxBAT1 = state;
+                    break;
+                case 12:
+                    TensionMaxBAT2 = state;
+                    break;
+                case 13:
+                    TensionMaxBAT3 = state;
+                    break;
+                }
+            }
+            break;
+            }
         }
 
         // Contrôle des seuils de tension
         switchControl1 = checkVoltage(V_Bat1, TensionMin, TensionMaxBAT1) ? 1 : 0;
         switchControl2 = checkVoltage(V_Bat2, TensionMin, TensionMaxBAT2) ? 1 : 0;
         switchControl3 = checkVoltage(V_Bat3, TensionMin, TensionMaxBAT3) ? 1 : 0;
-
     }
 }

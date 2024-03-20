@@ -125,6 +125,7 @@ int main()
             {
             case 0x200:
             {
+                printf("Id 0x200 \n");
                 int batteryID = request.data[0];
                 switch (batteryID)
                 {

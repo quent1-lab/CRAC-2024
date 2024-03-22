@@ -164,7 +164,7 @@ class ComCAN:
                 messageCAN = can.Message(arbitration_id=commande, data=[b1,b2,b3], is_extended_id=False)
                 
                 self.send(messageCAN)
-                print("Envoie demande energie", commande)
+                print("Envoie demande energie", messageCAN)
             elif message["cmd"] == "resta":
                 data = message["data"]
                 # Format des données : restart (char)

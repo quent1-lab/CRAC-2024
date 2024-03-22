@@ -254,6 +254,11 @@ int main()
     CANMessage request;
     CANMessage response_V;
 
+    response_V.id = 0x203;
+    response_V.len = 2;
+
+    request.len = 3;
+
     while (1)
     {
         if (can1.read(request))
@@ -263,7 +268,7 @@ int main()
             {
             case 0x200:
             {
-                int batteryID = request.data[0];
+                //int batteryID = request.data[0];
                 response_V.data[0] = 1;
                 response_V.data[1] = 10; // Convertir en dixièmes
                 can1.write(response_V);

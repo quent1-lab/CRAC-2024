@@ -51,9 +51,9 @@ float calcul_VBat3(float x)
     return y;
 }
 
-bool checkVoltage(float voltage, float min, float max)
+bool checkVoltage(float voltage, float max)
 {
-    return voltage >= min && voltage <= max;
+    return voltage >= max;
 }
 
 int main()
@@ -79,7 +79,7 @@ int main()
     order.len = 2;
 
     float V_BatMain, V_Bat1, V_Bat2, V_Bat3;
-    float TensionMin = 0, TensionMaxBAT1 = 20, TensionMaxBAT2 = 20, TensionMaxBAT3 = 20;
+    float TensionMaxBAT = 20.0;
 
     while (1)
     {
@@ -212,27 +212,20 @@ int main()
                 }
                 else if (OrderID == 10)
                 {
-                    TensionMin = state;
-                }
-                else if (OrderID == 11)
-                {
-                    TensionMaxBAT1 = state;
-                }
-                else if (OrderID == 12)
-                {
-                    TensionMaxBAT2 = state;
-                }
-                else if (OrderID == 13)
-                {
-                    TensionMaxBAT3 = state;
+                    TensionMaxBAT = state;
                 }
             }
         }
 
-        // Contrôle des seuils de tension
-        //switchControl1 = checkVoltage(V_Bat1, TensionMin, TensionMaxBAT1) ? 1 : 0;
-        //switchControl2 = checkVoltage(V_Bat2, TensionMin, TensionMaxBAT2) ? 1 : 0;
-        //switchControl3 = checkVoltage(V_Bat3, TensionMin, TensionMaxBAT3) ? 1 : 0;
+        if(checkVoltage(V_Bat1, TensionMaxBAT)){
+            controlSwitch(switchControl2, false);
+        }
+        if(checkVoltage(V_Bat2, TensionMaxBAT)){
+            controlSwitch(switchControl3, false);
+        }
+        if(checkVoltage(V_Bat3, TensionMaxBAT)){
+            controlSwitch(switchControl3, false);
+        }
 
         // ThisThread::sleep_for(100ms);
     }

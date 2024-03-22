@@ -76,9 +76,8 @@ class ComCAN:
                 self.client.add_to_send_list(self.client.create_message(0, "coord", {"x": x[0], "y": y[0], "theta": theta[0]}))
             elif data[0] == 0x203:
                 # V_Batterie : ID batterie (char), V_Batterie (short)
-                v_bat = struct.unpack('h', dataX[1:3])
-                id_bat = struct.unpack('c', dataX[0:1])
-                print("id_bat", dataX[0], "v_bat", dataX[1])
+                id_bat = dataX[0]
+                v_bat = dataX[1]
                 if id_bat == 1:
                     self.client.add_to_send_list(self.client.create_message(0, "energie", {"Tension": {"Main" : v_bat}}))
                     print(f"V_Main : {v_bat}")
@@ -93,8 +92,8 @@ class ComCAN:
                     print(f"V_Batterie_3 : {v_bat}")
             elif data[0] == 0x204:
                 # I_Batterie : ID batterie (char), I_Batterie (short)
-                i_bat = struct.unpack('h', dataX[1:3])
-                id_bat = struct.unpack('c', dataX[0:1])
+                id_bat = dataX[0]
+                i_bat = dataX[1]
                 if id_bat == 1:
                     self.client.add_to_send_list(self.client.create_message(0, "energie", {"Courant": {"Bat1" : i_bat}}))
                     print(f"I_Batterie_1 : {i_bat}")
@@ -106,8 +105,8 @@ class ComCAN:
                     print(f"I_Batterie_3 : {i_bat}")
             elif data[0] == 0x205:
                 # Switch_Batterie : ID batterie (char), Switch_Batterie (short)
-                s_bat = struct.unpack('h', dataX[1:3])
-                id_bat = struct.unpack('c', dataX[0:1])
+                id_bat = dataX[0]
+                s_bat = dataX[1]
                 if id_bat == 1:
                     self.client.add_to_send_list(self.client.create_message(0, "energie", {"Switch": {"Bat1" : s_bat}}))
                     print(f"Switch_Batterie_1 : {s_bat}")

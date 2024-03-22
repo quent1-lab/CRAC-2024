@@ -70,9 +70,9 @@ class ComCAN:
         try:
             dataX = data[2]
             if data[0] == 0x28:
-                x = struct.unpack('h', dataX[0:2])
-                y = struct.unpack('h', dataX[2:4])
-                theta = struct.unpack('h', dataX[4:6])
+                x = dataX[0]
+                y = dataX[1]
+                theta = dataX[2]
                 self.client.add_to_send_list(self.client.create_message(0, "coord", {"x": x[0], "y": y[0], "theta": theta[0]}))
             elif data[0] == 0x203:
                 # V_Batterie : ID batterie (char), V_Batterie (short)
@@ -162,7 +162,7 @@ class ComCAN:
                 messageCAN = can.Message(arbitration_id=commande, data=[b1,b2,b3], is_extended_id=False)
                 
                 self.send(messageCAN)
-                print("Envoie demande energie", messageCAN)
+                print("Envoie demande energie")
             elif message["cmd"] == "resta":
                 data = message["data"]
                 # Format des données : restart (char)

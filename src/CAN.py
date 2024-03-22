@@ -75,11 +75,11 @@ class ComCAN:
                 theta = struct.unpack('h', dataX[4:6])
                 self.client.add_to_send_list(self.client.create_message(0, "coord", {"x": x[0], "y": y[0], "theta": theta[0]}))
             elif data[0] == 0x203:
-                print(dataX[1])
+                print("message recu", dataX)
                 # V_Batterie : ID batterie (char), V_Batterie (short)
                 v_bat = struct.unpack('h', dataX[1:3])
                 id_bat = struct.unpack('c', dataX[0:1])
-                print(v_bat, id_bat)
+                print("v_bat", v_bat, "id_bat", id_bat)
                 if id_bat == 1:
                     self.client.add_to_send_list(self.client.create_message(0, "energie", {"Tension": {"Main" : v_bat}}))
                     print(f"V_Main : {v_bat}")

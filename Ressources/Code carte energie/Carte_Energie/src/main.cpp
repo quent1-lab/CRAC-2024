@@ -3,7 +3,7 @@
 
 DigitalOut led(LED1);
 
-CAN can1(PA_11, PA_12, 1000000); // CAN Rx pin name (PA11), CAN Tx pin name (PA12), Frequency = 500kbits
+CAN can1(PA_11, PA_12, 1000000); // CAN Rx pin name (PA11), CAN Tx pin name (PA12), Frequency = 1000kbits
 
 /*AnalogIn analogInPin0(A2); // Utilisez le port analogique (A2) sur la carte F303K8  - Cap_courant1
 AnalogIn analogInPin1(D6); // Utilisez le port analogique (D6) sur la carte F303K8  - Cap_courant2
@@ -255,7 +255,7 @@ int main()
     CANMessage response_V;
 
     response_V.id = 0x203;
-    response_V.len = 2;
+    response_V.len = 3;
 
     request.len = 3;
 
@@ -268,9 +268,9 @@ int main()
             {
             case 0x200:
             {
-                //int batteryID = request.data[0];
+                // int batteryID = request.data[0];
                 response_V.data[0] = 1;
-                response_V.data[1] = 10; // Convertir en dixièmes
+                response_V.data[1] = 11; // Convertir en dixièmes
                 can1.write(response_V);
                 // Les autres cas ne sont pas inclus pour concision
                 break;
@@ -279,6 +279,6 @@ int main()
             }
         }
 
-        ThisThread::sleep_for(500ms);
+        //ThisThread::sleep_for(500ms);
     }
 }

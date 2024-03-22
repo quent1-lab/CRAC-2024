@@ -5,17 +5,17 @@ DigitalOut led(LED1);
 
 CAN can1(PA_11, PA_12, 1000000); // CAN Rx pin name (PA11), CAN Tx pin name (PA12), Frequency = 1000kbits
 
-AnalogIn analogInPin0(A2); // Utilisez le port analogique (A2) sur la carte F303K8  - Cap_courant1
-AnalogIn analogInPin1(D6); // Utilisez le port analogique (D6) sur la carte F303K8  - Cap_courant2
-AnalogIn analogInPin2(A6); // Utilisez le port analogique (A6) sur la carte F303K8  - Cap_courant3
+AnalogIn analogInPin0(A6); // Utilisez le port analogique (A6) sur la carte F303K8  - Cap_courant1
+AnalogIn analogInPin1(A3); // Utilisez le port analogique (A3) sur la carte F303K8  - Cap_courant2
+AnalogIn analogInPin2(A1); // Utilisez le port analogique (A1) sur la carte F303K8  - Cap_courant3
 
-AnalogIn analogInPin3(A1); // Utilisez le port analogique (A1) sur la carte F303K8  - V_BatMain
-AnalogIn analogInPin4(A3); // Utilisez le port analogique (A3) sur la carte F303K8  - V_Bat1
-AnalogIn analogInPin5(D3); // Utilisez le port analogique (D3) sur la carte F303K8  - V_Bat2
-AnalogIn analogInPin6(A0); // Utilisez le port analogique (A0) sur la carte F303K8  - V_Bat3
+AnalogIn analogInPin3(A0); // Utilisez le port analogique (A0) sur la carte F303K8  - V_BatMain
+AnalogIn analogInPin4(D3); // Utilisez le port analogique (D3) sur la carte F303K8  - V_Bat1
+AnalogIn analogInPin5(D6); // Utilisez le port analogique (D6) sur la carte F303K8  - V_Bat2
+AnalogIn analogInPin6(A2); // Utilisez le port analogique (A2) sur la carte F303K8  - V_Bat3
 
-DigitalOut switchControl1(D5);  // Interrupteur 1 - D5
-DigitalOut switchControl2(D4);  // Interrupteur 2 - D4
+DigitalOut switchControl1(D4); // Interrupteur 1 - D4
+DigitalOut switchControl2(D5); // Interrupteur 2 - D5
 DigitalOut switchControl3(D11); // Interrupteur 3 - D11
 
 void controlSwitch(DigitalOut &switchControl, bool on)
@@ -26,35 +26,28 @@ void controlSwitch(DigitalOut &switchControl, bool on)
 float calcul_VBat_main(float x)
 {
     float y;
-    y = (-0.15 * pow(x, 6)) + (1.3883 * pow(x, 5)) - (5.1117 * pow(x, 4)) + (9.5784 * pow(x, 3)) - (9.83 * pow(x, 2)) + (16.839 * x) + 0.00495;
+    y = (0.0174 * pow(x, 6)) - (0.168 * pow(x, 5)) + (0.6307 * pow(x, 4)) - (1.1672 * pow(x, 3)) + (1.1073 * pow(x, 2)) + (7.6005 * x) + 0.0153;
     return y;
 }
 
 float calcul_VBat1(float x)
 {
     float y;
-    y = (-0.028 * pow(x, 6)) + (0.2332 * pow(x, 5)) - (0.7459 * pow(x, 4)) + (1.157 * pow(x, 3)) - (0.885 * pow(x, 2)) + (11.353 * x) + 0.0123;
+    y = (0.0204 * pow(x, 6)) - (0.1802 * pow(x, 5)) + (0.5803 * pow(x, 4)) - (0.832 * pow(x, 3)) + (0.5209 * pow(x, 2)) + (7.9712 * x) + 0.0115;
     return y;
 }
 
 float calcul_VBat2(float x)
 {
     float y;
-    y = (0.058 * pow(x, 6)) - (0.524 * pow(x, 5)) + (1.7346 * pow(x, 4)) - (2.516 * pow(x, 3)) + (1.4789 * pow(x, 2)) + (11.012 * x) + 0.0213;
+    y = (0.0199 * pow(x, 6)) - (0.179 * pow(x, 5)) + (0.5926 * pow(x, 4)) - (0.8866 * pow(x, 3)) + (0.5933 * pow(x, 2)) + (7.951 * x) + 0.0093;
     return y;
 }
 
 float calcul_VBat3(float x)
 {
     float y;
-    y = (0.0286 * pow(x, 6)) - (0.258 * pow(x, 5)) + (0.8607 * pow(x, 4)) - (1.2997 * pow(x, 3)) + (0.8741 * pow(x, 2)) + (10.989 * x) + 0.0138;
-    return y;
-}
-
-float calcul_courant1(float x)
-{
-    float y;
-    y = (-0.0023 * pow(x, 6)) + (0.0165 * pow(x, 5)) - (0.0396 * pow(x, 4)) + (0.0338 * pow(x, 3)) + (0.0134 * pow(x, 2)) + (0.8671 * x) + 0.1753;
+    y = (0.0199 * pow(x, 6)) - (0.1784 * pow(x, 5)) + (0.591 * pow(x, 4)) - (0.8979 * pow(x, 3)) + (0.6284 * pow(x, 2)) + (7.9408 * x) + 0.0095;
     return y;
 }
 
@@ -103,7 +96,6 @@ int main()
         // La sensibilité typique du ACS711 est de 50mV/A
 
         float Cap_Courant1 = (((analogValue0) * 3.3) - 1.66) * 20;
-        float Cap_I1 = calcul_courant1(Cap_Courant1);
         float Cap_Courant2 = (((analogValue1) * 3.3) - 1.66) * 20;
         float Cap_Courant3 = (((analogValue2) * 3.3) - 1.66) * 20;
 
@@ -132,19 +124,19 @@ int main()
                 else if (batteryID == 2)
                 {
                     response_V.data[0] = 2;
-                    response_V.data[1] = V_Bat1;
+                    response_V.data[1] = V_Bat1 *10;
                     can1.write(response_V);
                 }
                 else if (batteryID == 3)
                 {
                     response_V.data[0] = 3;
-                    response_V.data[1] = V_Bat2;
+                    response_V.data[1] = V_Bat2 *10;
                     can1.write(response_V);
                 }
                 else if (batteryID == 4)
                 {
                     response_V.data[0] = 4;
-                    response_V.data[1] = V_Bat3;
+                    response_V.data[1] = V_Bat3 *10;
                     can1.write(response_V);
                 }
             }
@@ -155,7 +147,7 @@ int main()
                 if (batteryID == 1)
                 {
                     response_I.data[0] = 1;
-                    response_I.data[1] = Cap_I1;
+                    response_I.data[1] = Cap_Courant1;
                     can1.write(response_I);
                 }
                 else if (batteryID == 2)

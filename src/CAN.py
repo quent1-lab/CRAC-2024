@@ -78,8 +78,7 @@ class ComCAN:
                 # V_Batterie : ID batterie (char), V_Batterie (short)
                 id_bat = dataX[0]
                 v_bat = dataX[1]
-
-                print("id_bat : ", id_bat, "v_bat : ", v_bat)
+                
                 if id_bat == 1:
                     self.client.add_to_send_list(self.client.create_message(0, "energie", {"Tension": {"Main" : v_bat}}))
                     print(f"V_Main : {v_bat}")

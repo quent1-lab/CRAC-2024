@@ -70,9 +70,9 @@ class ComCAN:
         try:
             dataX = data[2]
             if data[0] == 0x28:
-                x = dataX[0]
-                y = dataX[1]
-                theta = dataX[2]
+                x = struct.unpack('h', dataX[0:2])
+                y = struct.unpack('h', dataX[2:4])
+                theta = struct.unpack('h', dataX[4:6])
                 self.client.add_to_send_list(self.client.create_message(0, "coord", {"x": x[0], "y": y[0], "theta": theta[0]}))
             elif data[0] == 0x203:
                 # V_Batterie : ID batterie (char), V_Batterie (short)

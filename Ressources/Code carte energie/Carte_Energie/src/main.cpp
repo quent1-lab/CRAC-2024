@@ -119,123 +119,114 @@ int main()
         if (can1.read(request))
         {
 
-            switch (request.id)
+            if (request.id == 0x200)
             {
-            case 0x200:
-            {
-                printf("Id 0x200 \n");
                 int batteryID = request.data[0];
-                batteryID = 1;
-                switch (batteryID)
+
+                if (batteryID == 1)
                 {
-                case 1:
                     response_V.data[0] = 1;
                     response_V.data[1] = V_BatMain * 10;
                     can1.write(response_V);
-                    break;
-                case 2:
+                }
+                else if (batteryID == 2)
+                {
                     response_V.data[0] = 2;
                     response_V.data[1] = V_Bat1;
                     can1.write(response_V);
-                    break;
-                case 3:
+                }
+                else if (batteryID == 3)
+                {
                     response_V.data[0] = 3;
                     response_V.data[1] = V_Bat2;
                     can1.write(response_V);
-                    break;
-                case 4:
+                }
+                else if (batteryID == 4)
+                {
                     response_V.data[0] = 4;
                     response_V.data[1] = V_Bat3;
                     can1.write(response_V);
-                    break;
-                default:
-                    continue;
                 }
-                break;
             }
-            case 0x201:
+            else if (request.id == 0x201)
             {
                 int batteryID = request.data[0];
 
-                switch (batteryID)
+                if (batteryID == 1)
                 {
-                case 1:
                     response_I.data[0] = 1;
                     response_I.data[1] = Cap_I1;
                     can1.write(response_I);
-                    break;
-                case 2:
+                }
+                else if (batteryID == 2)
+                {
                     response_I.data[0] = 2;
                     response_I.data[1] = Cap_Courant2;
                     can1.write(response_I);
-                    break;
-                case 3:
+                }
+                else if (batteryID == 3)
+                {
                     response_I.data[0] = 3;
                     response_I.data[1] = Cap_Courant3;
                     can1.write(response_I);
-                    break;
-                default:
-                    continue;
                 }
-                break;
             }
-            case 0x202:
+            else if (request.id == 0x202)
             {
                 int batteryID = request.data[0];
 
-                switch (batteryID)
+                if (batteryID == 1)
                 {
-                case 1:
                     response_S.data[0] = 1;
                     response_S.data[1] = switchControl1;
                     can1.write(response_S);
-                    break;
-                case 2:
+                }
+                else if (batteryID == 2)
+                {
                     response_S.data[0] = 2;
                     response_S.data[1] = switchControl2;
                     can1.write(response_S);
-                    break;
-                case 3:
+                }
+                else if (batteryID == 3)
+                {
                     response_S.data[0] = 3;
                     response_S.data[1] = switchControl3;
                     can1.write(response_S);
-                    break;
-                default:
-                    continue;
                 }
-                break;
             }
-            case 0x206:
+            else if (request.id == 0x206)
             {
                 int OrderID = request.data[0];
                 int state = request.data[1];
 
-                switch (OrderID)
+                if (OrderID == 1)
                 {
-                case 1:
                     controlSwitch(switchControl1, state == 1 ? true : false);
-                    break;
-                case 2:
-                    controlSwitch(switchControl2, state == 1 ? true : false);
-                    break;
-                case 3:
-                    controlSwitch(switchControl3, state == 1 ? true : false);
-                    break;
-                case 10:
-                    TensionMin = state;
-                    break;
-                case 11:
-                    TensionMaxBAT1 = state;
-                    break;
-                case 12:
-                    TensionMaxBAT2 = state;
-                    break;
-                case 13:
-                    TensionMaxBAT3 = state;
-                    break;
                 }
-                break;
-            }
+                else if (OrderID == 2)
+                {
+                    controlSwitch(switchControl2, state == 1 ? true : false);
+                }
+                else if (OrderID == 3)
+                {
+                    controlSwitch(switchControl3, state == 1 ? true : false);
+                }
+                else if (OrderID == 10)
+                {
+                    TensionMin = state;
+                }
+                else if (OrderID == 11)
+                {
+                    TensionMaxBAT1 = state;
+                }
+                else if (OrderID == 12)
+                {
+                    TensionMaxBAT2 = state;
+                }
+                else if (OrderID == 13)
+                {
+                    TensionMaxBAT3 = state;
+                }
             }
         }
 

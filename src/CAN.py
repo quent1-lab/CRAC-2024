@@ -75,47 +75,47 @@ class ComCAN:
                 theta = struct.unpack('h', dataX[4:6])
                 self.client.add_to_send_list(self.client.create_message(0, "coord", {"x": x[0], "y": y[0], "theta": theta[0]}))
             elif data[0] == 0x203:
-                # V_Batterie : ID batterie (char), V_Batterie (short)
+                # V_Batterie : ID batterie (short), V_Batterie (short)
                 id_bat = dataX[0]
-                v_bat = dataX[1]
-                
+                v_bat = dataX[1] /10
+
                 if id_bat == 1:
-                    self.client.add_to_send_list(self.client.create_message(0, "energie", {"Tension": {"Main" : v_bat}}))
+                    self.client.add_to_send_list(self.client.create_message(10, "energie", {"Tension": {"Main" : v_bat}}))
                     print(f"V_Main : {v_bat}")
                 elif id_bat == 2:
-                    self.client.add_to_send_list(self.client.create_message(0, "energie", {"Tension": {"Bat1" : v_bat}}))
+                    self.client.add_to_send_list(self.client.create_message(10, "energie", {"Tension": {"Bat1" : v_bat}}))
                     print(f"V_Batterie_1 : {v_bat}")
                 elif id_bat == 3:
-                    self.client.add_to_send_list(self.client.create_message(0, "energie", {"Tension": {"Bat2" : v_bat}}))
+                    self.client.add_to_send_list(self.client.create_message(10, "energie", {"Tension": {"Bat2" : v_bat}}))
                     print(f"V_Batterie_2 : {v_bat}")
                 elif id_bat == 4:
-                    self.client.add_to_send_list(self.client.create_message(0, "energie", {"Tension": {"Bat3" : v_bat}}))
+                    self.client.add_to_send_list(self.client.create_message(10, "energie", {"Tension": {"Bat3" : v_bat}}))
                     print(f"V_Batterie_3 : {v_bat}")
             elif data[0] == 0x204:
-                # I_Batterie : ID batterie (char), I_Batterie (short)
+                # I_Batterie : ID batterie (short), I_Batterie (short)
                 id_bat = dataX[0]
-                i_bat = dataX[1]
+                i_bat = dataX[1] /100
                 if id_bat == 1:
-                    self.client.add_to_send_list(self.client.create_message(0, "energie", {"Courant": {"Bat1" : i_bat}}))
+                    self.client.add_to_send_list(self.client.create_message(10, "energie", {"Courant": {"Bat1" : i_bat}}))
                     print(f"I_Batterie_1 : {i_bat}")
                 elif id_bat == 2:
-                    self.client.add_to_send_list(self.client.create_message(0, "energie", {"Courant": {"Bat2" : i_bat}}))
+                    self.client.add_to_send_list(self.client.create_message(10, "energie", {"Courant": {"Bat2" : i_bat}}))
                     print(f"I_Batterie_2 : {i_bat}")
                 elif id_bat == 3:
-                    self.client.add_to_send_list(self.client.create_message(0, "energie", {"Courant": {"Bat3" : i_bat}}))
+                    self.client.add_to_send_list(self.client.create_message(10, "energie", {"Courant": {"Bat3" : i_bat}}))
                     print(f"I_Batterie_3 : {i_bat}")
             elif data[0] == 0x205:
-                # Switch_Batterie : ID batterie (char), Switch_Batterie (short)
+                # Switch_Batterie : ID batterie (short), Switch_Batterie (short)
                 id_bat = dataX[0]
                 s_bat = dataX[1]
                 if id_bat == 1:
-                    self.client.add_to_send_list(self.client.create_message(0, "energie", {"Switch": {"Bat1" : s_bat}}))
+                    self.client.add_to_send_list(self.client.create_message(10, "energie", {"Switch": {"Bat1" : s_bat}}))
                     print(f"Switch_Batterie_1 : {s_bat}")
                 elif id_bat == 2:
-                    self.client.add_to_send_list(self.client.create_message(0, "energie", {"Switch": {"Bat2" : s_bat}}))
+                    self.client.add_to_send_list(self.client.create_message(10, "energie", {"Switch": {"Bat2" : s_bat}}))
                     print(f"Switch_Batterie_2 : {s_bat}")
                 elif id_bat == 3:
-                    self.client.add_to_send_list(self.client.create_message(0, "energie", {"Switch": {"Bat3" : s_bat}}))
+                    self.client.add_to_send_list(self.client.create_message(10, "energie", {"Switch": {"Bat3" : s_bat}}))
                     print(f"Switch_Batterie_3 : {s_bat}")
             else:
                 logging.error(f"ID inconnu ; data : {data}")

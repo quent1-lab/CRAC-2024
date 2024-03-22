@@ -147,19 +147,19 @@ int main()
                 if (batteryID == 1)
                 {
                     response_I.data[0] = 1;
-                    response_I.data[1] = Cap_Courant1;
+                    response_I.data[1] = Cap_Courant1 * 100;
                     can1.write(response_I);
                 }
                 else if (batteryID == 2)
                 {
                     response_I.data[0] = 2;
-                    response_I.data[1] = Cap_Courant2;
+                    response_I.data[1] = Cap_Courant2 *100;
                     can1.write(response_I);
                 }
                 else if (batteryID == 3)
                 {
                     response_I.data[0] = 3;
-                    response_I.data[1] = Cap_Courant3;
+                    response_I.data[1] = Cap_Courant3 *100;
                     can1.write(response_I);
                 }
             }

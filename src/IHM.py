@@ -629,12 +629,14 @@ class IHM:
             self.client_socket.stop()
         
     def update_energie(self, _json):
+        print("Update energie")
         if _json is None:
             return
         if _json.type == str:
             data = _json.loads(json)
         else:
             data = _json
+        print(data)
         for key in data:
             if key in self.Energie:
                 for subkey in data[key]:

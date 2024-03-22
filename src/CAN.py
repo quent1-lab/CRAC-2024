@@ -75,11 +75,10 @@ class ComCAN:
                 theta = struct.unpack('h', dataX[4:6])
                 self.client.add_to_send_list(self.client.create_message(0, "coord", {"x": x[0], "y": y[0], "theta": theta[0]}))
             elif data[0] == 0x203:
-                print("message recu", dataX)
                 # V_Batterie : ID batterie (char), V_Batterie (short)
                 v_bat = struct.unpack('h', dataX[1:3])
                 id_bat = struct.unpack('c', dataX[0:1])
-                print("v_bat", v_bat, "id_bat", id_bat)
+                print("id_bat", dataX[0], "v_bat", dataX[1])
                 if id_bat == 1:
                     self.client.add_to_send_list(self.client.create_message(0, "energie", {"Tension": {"Main" : v_bat}}))
                     print(f"V_Main : {v_bat}")
@@ -137,7 +136,7 @@ class ComCAN:
                 dataCan = struct.pack('h', data["x"]) + struct.pack('h', data["y"]) + struct.pack('h', data["theta"]) + struct.pack('c', data["sens"].encode())
                 messageCan = can.Message(arbitration_id=0x20, data=dataCan, is_extended_id=False)
                 self.send(messageCan)
-                print("BusCAN : Message de clic envoyé", messageCan)
+                print("BusCAN : Message de clic envoyé")
             elif message["cmd"] == "recal":
                 data = message["data"]
                 # Format des données : zone (char)

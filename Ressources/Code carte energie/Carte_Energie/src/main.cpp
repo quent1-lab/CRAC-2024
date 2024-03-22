@@ -193,7 +193,14 @@ int main()
 
                 if (OrderID == 1)
                 {
-                    controlSwitch(switchControl1, state == 1 ? true : false);
+                    if (state == 1)
+                    {
+                        controlSwitch(switchControl1, true);
+                    }
+                    else if (state == 0)
+                    {
+                        controlSwitch(switchControl1, false);
+                    }
                 }
                 else if (OrderID == 2)
                 {
@@ -223,9 +230,9 @@ int main()
         }
 
         // Contrôle des seuils de tension
-        switchControl1 = checkVoltage(V_Bat1, TensionMin, TensionMaxBAT1) ? 1 : 0;
-        switchControl2 = checkVoltage(V_Bat2, TensionMin, TensionMaxBAT2) ? 1 : 0;
-        switchControl3 = checkVoltage(V_Bat3, TensionMin, TensionMaxBAT3) ? 1 : 0;
+        //switchControl1 = checkVoltage(V_Bat1, TensionMin, TensionMaxBAT1) ? 1 : 0;
+        //switchControl2 = checkVoltage(V_Bat2, TensionMin, TensionMaxBAT2) ? 1 : 0;
+        //switchControl3 = checkVoltage(V_Bat3, TensionMin, TensionMaxBAT3) ? 1 : 0;
 
         // ThisThread::sleep_for(100ms);
     }

@@ -5,7 +5,7 @@ DigitalOut led(LED1);
 
 CAN can1(PA_11, PA_12, 1000000); // CAN Rx pin name (PA11), CAN Tx pin name (PA12), Frequency = 500kbits
 
-AnalogIn analogInPin0(A2); // Utilisez le port analogique (A2) sur la carte F303K8  - Cap_courant1
+/*AnalogIn analogInPin0(A2); // Utilisez le port analogique (A2) sur la carte F303K8  - Cap_courant1
 AnalogIn analogInPin1(D6); // Utilisez le port analogique (D6) sur la carte F303K8  - Cap_courant2
 AnalogIn analogInPin2(A6); // Utilisez le port analogique (A6) sur la carte F303K8  - Cap_courant3
 
@@ -16,7 +16,7 @@ AnalogIn analogInPin6(A0); // Utilisez le port analogique (A0) sur la carte F303
 
 DigitalOut switchControl1(D5);  // Interrupteur 1 - D5
 DigitalOut switchControl2(D4);  // Interrupteur 2 - D4
-DigitalOut switchControl3(D11); // Interrupteur 3 - D11
+DigitalOut switchControl3(D11); // Interrupteur 3 - D11*/
 
 void controlSwitch(DigitalOut &switchControl, bool on)
 {
@@ -62,7 +62,7 @@ bool checkVoltage(float voltage, float min, float max)
 {
     return voltage >= min && voltage <= max;
 }
-
+/*
 int main()
 {
     printf("CRAC stm32f303k8 démo\n");
@@ -246,5 +246,34 @@ int main()
         switchControl3 = checkVoltage(V_Bat3, TensionMin, TensionMaxBAT3) ? 1 : 0;
 
         ThisThread::sleep_for(100ms);
+    }
+}*/
+
+int main()
+{
+    CANMessage request;
+    CANMessage response_V;
+
+    while (1)
+    {
+        if (can1.read(request))
+        {
+            printf("Id %d \n", request.id);
+            switch (request.id)
+            {
+            case 0x200:
+            {
+                int batteryID = request.data[0];
+                response_V.data[0] = 1;
+                response_V.data[1] = 10; // Convertir en dixièmes
+                can1.write(response_V);
+                // Les autres cas ne sont pas inclus pour concision
+                break;
+            }
+                // Les autres cas ne sont pas inclus pour concision
+            }
+        }
+
+        ThisThread::sleep_for(500ms);
     }
 }

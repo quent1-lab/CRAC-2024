@@ -80,7 +80,6 @@ int main()
     order.id = 0x206;
 
     // Définition de la longueur des données (8 octets maximum)
-    request.len = 3;
     response_V.len = 2;
     response_I.len = 2;
     response_S.len = 2;
@@ -120,18 +119,18 @@ int main()
         if (can1.read(request))
         {
 
-
             switch (request.id)
             {
             case 0x200:
             {
                 printf("Id 0x200 \n");
                 int batteryID = request.data[0];
+                batteryID = 1;
                 switch (batteryID)
                 {
                 case 1:
                     response_V.data[0] = 1;
-                    response_V.data[1] = V_BatMain *10;
+                    response_V.data[1] = V_BatMain * 10;
                     can1.write(response_V);
                     break;
                 case 2:
@@ -209,18 +208,18 @@ int main()
             case 0x206:
             {
                 int OrderID = request.data[0];
-                float state = request.data[1];
+                int state = request.data[1];
 
                 switch (OrderID)
                 {
                 case 1:
-                    controlSwitch(switchControl1, state == 1.0f ? true : false);
+                    controlSwitch(switchControl1, state == 1 ? true : false);
                     break;
                 case 2:
-                    controlSwitch(switchControl2, state == 1.0f ? true : false);
+                    controlSwitch(switchControl2, state == 1 ? true : false);
                     break;
                 case 3:
-                    controlSwitch(switchControl3, state == 1.0f ? true : false);
+                    controlSwitch(switchControl3, state == 1 ? true : false);
                     break;
                 case 10:
                     TensionMin = state;
@@ -235,8 +234,8 @@ int main()
                     TensionMaxBAT3 = state;
                     break;
                 }
+                break;
             }
-            break;
             }
         }
 
@@ -245,6 +244,6 @@ int main()
         switchControl2 = checkVoltage(V_Bat2, TensionMin, TensionMaxBAT2) ? 1 : 0;
         switchControl3 = checkVoltage(V_Bat3, TensionMin, TensionMaxBAT3) ? 1 : 0;
 
-        ThisThread::sleep_for(100ms);
+        // ThisThread::sleep_for(100ms);
     }
 }

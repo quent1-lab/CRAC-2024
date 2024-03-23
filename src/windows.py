@@ -106,23 +106,36 @@ class IHM_Command:
                 elif event.ui_element == self.restart_button:
                     if self.restart_callback:
                         self.restart_callback()
+        elif event.type == pygame_gui.UI_TEXT_ENTRY_CHANGED:
+
+            # Find the text box that triggered the event
+            for i, text_box in enumerate(self.text_boxes):
+                if event.ui_element == text_box:
+                    # Set the tab index to the index of the text box
+                    self.tab_index = i
+                    break
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_TAB:
                 # Déplacer le focus de la zone de texte suivante avec Tab
                 self.tab_index = (self.tab_index + 1) % len(self.text_boxes)
                 if self.tab_index == 0:
                     self.tab_line_index = 0
-                else:
+                elif self.tab_index >= 1 and self.tab_index <= 4:
                     self.tab_line_index = 1
+                elif self.tab_index >= 5 and self.tab_index <= 8:
+                    self.tab_line_index = 2
+
                 self.manager.set_focus_set(self.text_boxes[self.tab_index])
-            elif event.key == pygame.K_RETURN:
+            elif event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
                 # Envoyer la commande si toutes les zones de texte de la ligne actuelle sont remplies
                 current_line_text_boxes = self.text_boxes_lines[self.tab_line_index]
                 if all(box.get_text() for box in current_line_text_boxes):
                     if self.tab_index == 0:
                         self.send_command()
-                    else:
+                    elif self.tab_index >= 1 and self.tab_index <= 4:
                         self.send_command_XYT()
+                    elif self.tab_index >= 5 and self.tab_index <= 8:
+                        self.send_command_CAN()
 
     def send_command(self):
         self.command = self.text_boxes[0].get_text()

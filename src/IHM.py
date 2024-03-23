@@ -493,7 +493,7 @@ class IHM:
         if type(commande) == str:
             if commande[:2] != "0x":
                 commande = "0x" + commande
-            id = int(commande, 16)
+            commande = int(commande, 16)
         byte1 = message[1]
         byte2 = message[2]
         byte3 = message[3]

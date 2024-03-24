@@ -16,6 +16,8 @@ class Serveur:
         self.host = host
         self.port = port
         self.clients = []  # Liste pour stocker les informations sur les clients (socket, address, ID)
+        self.client_names = ["Broadcast", "Serveur", "BusCAN", "Lidar","","","","","","","IHM"]
+
         self.tasks = []
         self.stop_threads = False
         self.lock = threading.Lock()
@@ -35,6 +37,8 @@ class Serveur:
                 break
         if not self.stop_threads:
             self.deconnect_client(connection, address)
+            id = [_id for _id in range(1, 11) if address in [client[1] for client in self.clients]]
+            print(f"BusCOM : Déconnecté de {self.client_names[id[0]]} ({address})")
 
     def receive_messages(self, socket):
         buffer = ""
@@ -56,7 +60,6 @@ class Serveur:
                 with self.lock:
                     self.clients.append([connection, address, None])
                     self.tasks.append(thread)
-                logging.info(f"BusCOM : Connexion active : {threading.active_count()}")
             except socket.timeout:
                 pass
             except OSError as e:
@@ -112,15 +115,31 @@ class Serveur:
                     logging.error("BusCOM : Erreur de décodage JSON", exc_info=True)
         return messages
 
+    def init_connection(self, connection, id):
+        # Si la connexion est nouvelle, on met à jour l'ID
+        # Sinon, on le remplace par le nouvel ID
+        new_connection = False
+        for client in self.clients:
+            if client[0] == connection:
+                client[2] = id
+                new_connection = True
+                break
+        if not new_connection:
+            for client in self.clients:
+                if client[2] == id:
+                    try:
+                        client[0].close()
+                    except Exception:
+                        pass
+                    client[0] = connection
+                    break
+
     def handle_message(self, message, connection):
         if message["cmd"] == "stop":
             self.stop_threads = True
         elif message["cmd"] == "init":
             client_id = message["id_s"]
-            for client in self.clients:
-                if client[0] == connection:
-                    client[2] = client_id
-                    break
+            self.init_connection(connection, client_id)
         else:
             if message["id_r"] == 0:
                 # Envoie les coordonnées à tous les clients

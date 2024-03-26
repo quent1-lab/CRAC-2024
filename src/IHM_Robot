@@ -1,4 +1,5 @@
 import tkinter as tk
+import json
 
 class Application(tk.Tk):
     def __init__(self, *args, **kwargs):
@@ -13,6 +14,12 @@ class Application(tk.Tk):
         
         self.menu_frame = tk.Frame(self, bg="lightgray")
         self.menu_frame.pack(side="top", fill="x")
+
+        self.Energie = {
+            "Tension" : {"Main": 0, "Bat1" : 0, "Bat2" : 0, "Bat3" : 0},
+            "Courant" : {"Bat1" : 0, "Bat2" : 0, "Bat3" : 0},
+            "Switch" : {"Bat1" : False, "Bat2" : False, "Bat3" : False}
+        }
         
         self.buttons = []
 
@@ -48,6 +55,8 @@ class Application(tk.Tk):
         
         # Show widgets for current page
         label = tk.Label(self.pages_frame, text=f"Page: {self.current_page.get()}", font=("Arial", 30), bg="#f0f0f0")
+        if self.current_page.get() == "Favori":
+            self.display_energie()
         label.pack(pady=50)
 
     def change_page(self, page):
@@ -59,6 +68,48 @@ class Application(tk.Tk):
                 button.config(bg="#006400")
             else:
                 button.config(bg="#4CAF50")
+
+    def display_energie(self):
+        # Créer un nouveau cadre pour les labels
+        energie_frame = tk.Frame(self)
+        energie_frame.pack(side="top", fill="x")
+
+        colors = ["red", "green", "blue", "yellow"]
+
+        for i, (category, values) in enumerate(self.Energie.items()):
+            # Créer un cadre pour chaque catégorie
+            category_frame = tk.Frame(self, bg=colors[i], width=200, height=200)
+            category_frame.pack(side="left", padx=10, expand=True, fill="both")
+
+            for name, value in values.items():
+                # Créer un label pour le nom de la batterie
+                name_label = tk.Label(category_frame, text=f"{category} {name}", bg=colors[i])
+                name_label.pack()
+
+                # Créer un label pour la valeur de la batterie
+                value_label = tk.Label(category_frame, text=f"Valeur: {value}", bg=colors[i])
+                value_label.pack()
+
+    def receive_to_server(self, message):
+        if message["cmd"] == "energie":
+            energie = message["data"]
+            self.update_energie(energie)
+
+        elif message["cmd"] == "stop":
+            self.client_socket.stop()
+        
+    def update_energie(self, _json):
+        print("IHM : Update energie")
+        if _json is None:
+            return
+        else:
+            data = _json
+        print(data)
+        for key in data:
+            if key in self.Energie:
+                for subkey in data[key]:
+                    if subkey in self.Energie[key]:
+                        self.Energie[key][subkey] = data[key][subkey]
 
 if __name__ == "__main__":
     app = Application()

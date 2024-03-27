@@ -19,9 +19,9 @@ class IHM_Robot:
 
         # Initialisation de la fenêtre
         pygame.init()
-        self.screen = pygame.display.set_mode((800, 480))
+        #self.screen = pygame.display.set_mode((800, 480))
         # Fullscreen
-        #self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+        self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
         self.width, self.height = pygame.display.get_surface().get_size()
         pygame.display.set_caption("IHM Robot")
         # Icone
@@ -156,5 +156,12 @@ class IHM_Robot:
         pygame.quit()
 
 if __name__ == "__main__":
+    # Vérifie si un écran est connecté
+    if os.getenv('DISPLAY', None) is None:
+        os.putenv('SDL_VIDEODRIVER', 'fbcon')
+        os.putenv('SDL_FBDEV', '/dev/fb1')
+        os.putenv('SDL_MOUSEDRV', 'TSLIB')
+        os.putenv('SDL_MOUSEDEV', '/dev/input/touchscreen')
+
     ihm = IHM_Robot()
     ihm.run()

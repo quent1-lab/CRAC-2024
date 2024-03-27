@@ -219,3 +219,4 @@ while True:
     ecran.fill(couleur_fond)
     pygame.draw.rect(ecran, (0, 0, 0), bouton)  # Afficher le bouton
     pygame.display.flip()
+    print("test")

@@ -1,4 +1,4 @@
-import os
+"""import os
 from client import Client
 import pygame
 from pygame_UI import *
@@ -161,3 +161,57 @@ if __name__ == "__main__":
 
     ihm = IHM_Robot()
     ihm.run()
+"""
+
+import pygame
+import sys
+
+# Initialisation de Pygame
+pygame.init()
+
+# Définition des couleurs
+BLANC = (255, 255, 255)
+ROUGE = (255, 0, 0)
+VERT = (0, 255, 0)
+BLEU = (0, 0, 255)
+
+# Définition de la taille de l'écran
+largeur = 800
+hauteur = 600
+taille_ecran = (largeur, hauteur)
+
+# Initialisation de l'écran
+ecran = pygame.display.set_mode(taille_ecran)
+pygame.display.set_caption("Changer la couleur du fond d'écran")
+
+# Création du bouton
+taille_bouton = (200, 100)
+position_bouton = ((largeur - taille_bouton[0]) // 2, (hauteur - taille_bouton[1]) // 2)
+bouton = pygame.Rect(position_bouton, taille_bouton)
+
+# Couleur de fond initiale
+couleur_fond = BLANC
+
+# Boucle principale
+while True:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            # Vérifier si le clic est sur le bouton
+            if bouton.collidepoint(event.pos):
+                # Changer la couleur du fond
+                if couleur_fond == BLANC:
+                    couleur_fond = ROUGE
+                elif couleur_fond == ROUGE:
+                    couleur_fond = VERT
+                elif couleur_fond == VERT:
+                    couleur_fond = BLEU
+                else:
+                    couleur_fond = BLANC
+
+    # Affichage
+    ecran.fill(couleur_fond)
+    pygame.draw.rect(ecran, (0, 0, 0), bouton)  # Afficher le bouton
+    pygame.display.flip()

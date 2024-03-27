@@ -157,11 +157,11 @@ class IHM_Robot:
 
 if __name__ == "__main__":
     # Vérifie si un écran est connecté
-    if os.getenv('DISPLAY', None) is None:
+    """if os.getenv('DISPLAY', None) is None:
         os.putenv('SDL_VIDEODRIVER', 'fbcon')
         os.putenv('SDL_FBDEV', '/dev/fb1')
         os.putenv('SDL_MOUSEDRV', 'TSLIB')
-        os.putenv('SDL_MOUSEDEV', '/dev/input/touchscreen')
+        os.putenv('SDL_MOUSEDEV', '/dev/input/touchscreen')"""
 
     ihm = IHM_Robot()
     ihm.run()

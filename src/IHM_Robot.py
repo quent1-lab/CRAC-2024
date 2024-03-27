@@ -19,9 +19,9 @@ class IHM_Robot:
 
         # Initialisation de la fenêtre
         pygame.init()
-        #self.screen = pygame.display.set_mode((800, 480))
+        self.screen = pygame.display.set_mode((800, 480))
         # Fullscreen
-        self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+        #self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
         self.width, self.height = pygame.display.get_surface().get_size()
         pygame.display.set_caption("IHM Robot")
         # Icone
@@ -104,7 +104,6 @@ class IHM_Robot:
         try:
             if message["cmd"] == "stop":
                 self.client.stop()
-                self.is_running = False
             elif message["cmd"] == "energie":
                 energie = message["data"]
                 self.update_energie(energie)
@@ -125,7 +124,6 @@ class IHM_Robot:
                         self.Energie[key][subkey] = data[key][subkey]
 
     def deconnexion(self):
-        self.client.stop()
         self.is_running = False
 
     def run(self):

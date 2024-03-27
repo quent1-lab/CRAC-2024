@@ -182,7 +182,7 @@ hauteur = 400
 taille_ecran = (largeur, hauteur)
 
 # Initialisation de l'écran
-ecran = pygame.display.set_mode(taille_ecran)
+ecran = pygame.display.set_mode(taille_ecran, 0, 32, 0)
 pygame.display.set_caption("Changer la couleur du fond d'écran")
 
 # Création du bouton
@@ -219,4 +219,3 @@ while True:
     ecran.fill(couleur_fond)
     pygame.draw.rect(ecran, (0, 0, 0), bouton)  # Afficher le bouton
     pygame.display.flip()
-    print("test")

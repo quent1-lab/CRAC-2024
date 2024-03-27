@@ -154,12 +154,10 @@ class IHM_Robot:
         pygame.quit()
 
 if __name__ == "__main__":
-    # Vérifie si un écran est connecté
-    """if os.getenv('DISPLAY', None) is None:
-        os.putenv('SDL_VIDEODRIVER', 'fbcon')
-        os.putenv('SDL_FBDEV', '/dev/fb1')
-        os.putenv('SDL_MOUSEDRV', 'TSLIB')
-        os.putenv('SDL_MOUSEDEV', '/dev/input/touchscreen')"""
+    # Vérifie si la variable d'environnement DISPLAY est définie
+    if "DISPLAY" not in os.environ:
+        os.environ["DISPLAY"] = ":0"
+        print("Variable DISPLAY non définie, définition de DISPLAY à :0")
 
     ihm = IHM_Robot()
     ihm.run()

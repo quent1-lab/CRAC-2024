@@ -165,6 +165,7 @@ if __name__ == "__main__":
 
 import pygame
 import sys
+import os
 
 # Initialisation de Pygame
 pygame.init()
@@ -191,6 +192,9 @@ bouton = pygame.Rect(position_bouton, taille_bouton)
 
 # Couleur de fond initiale
 couleur_fond = BLANC
+
+if 'DISPLAY' not in os.environ:
+    os.environ['DISPLAY'] = ':0'
 
 # Boucle principale
 while True:

@@ -629,7 +629,6 @@ class IHM:
             self.client_socket.stop()
         
     def update_energie(self, _json):
-        print("Update energie")
         if _json is None:
             return
         else:

@@ -48,7 +48,6 @@ class Button:
             if event.button == 1 and self.rect.collidepoint(event.pos):
                 if self.on_click is not None:
                     self.on_click()
-                    print("Button clicked")
                 self.state = 'hover'
 
 
@@ -254,12 +253,28 @@ class UILabel:
         surface.blit(rendered_text, self.rect.topleft)
 
 
+def draw_text(screen, text, x, y, color=(0, 0, 0), font=None, bg = None):
+    """Draws text to the pygame screen, on up left corner"""
+    if bg is None:
+        _text = font.render(text, True, color)
+    else:
+        _text = font.render(text, True, color, pygame.Color(bg))
+    screen.blit(_text, (x, y))
+
+def draw_text_center(screen, text, x, y, color=(0, 0, 0), font=None, bg = None):
+    if bg is None:
+        text_surface = font.render(text, True, color)
+    else:
+        text_surface = font.render(text, True, color, pygame.Color(bg))
+    text_rect = text_surface.get_rect(center=(x, y))
+    screen.blit(text_surface, text_rect)
+
 # Exemple d'utilisation :
 if __name__ == '__main__':
     pygame.init()
     screen = pygame.display.set_mode((800, 600))
     clock = pygame.time.Clock()
-    theme_file = "src/theme.json"
+    theme_file = "data/theme.json"
 
     button = Button(screen, (50, 50, 100, 50), theme_file, text='Click Me', on_click=lambda: print('Button clicked'))
     slider = Slider(screen, (50, 125, 200, 20), theme_file, value_range=(0, 100),start_value = 50)
@@ -273,6 +288,10 @@ if __name__ == '__main__':
         button.draw()
         slider.draw()
         text_box.draw()
+
+        draw_text(screen, "Hello World", pygame.font.Font(None, 36), (0, 0, 0), (50, 200, 10, 10))
+
+        draw_text_center(screen, "Centered Text", pygame.font.Font(None, 36), (0, 0, 0), (50, 250, 200, 100))
 
         for event in pygame.event.get():
             if event.type == pg_constants.QUIT:

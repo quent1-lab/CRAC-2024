@@ -176,8 +176,8 @@ VERT = (0, 255, 0)
 BLEU = (0, 0, 255)
 
 # Définition de la taille de l'écran
-largeur = 800
-hauteur = 600
+largeur = 700
+hauteur = 400
 taille_ecran = (largeur, hauteur)
 
 # Initialisation de l'écran

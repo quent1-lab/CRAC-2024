@@ -38,7 +38,7 @@ class Serveur:
         if not self.stop_threads:
             self.deconnect_client(connection, address)
             id = [_id for _id in range(1, 11) if address in [client[1] for client in self.clients]]
-            print(f"BusCOM : Déconnecté de {self.client_names[id[0]]} ({address})")
+            print(f"BusCOM : Déconnecté de {self.client_names[id]} ({address})")
 
     def receive_messages(self, socket):
         buffer = ""

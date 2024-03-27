@@ -19,7 +19,7 @@ class IHM_Robot:
 
         # Initialisation de la fenêtre
         pygame.init()
-        self.screen = pygame.display.set_mode((800, 480))
+        self.screen = pygame.display.set_mode((800, 480), pygame.RESIZABLE, display=0)
         # Fullscreen
         #self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
         self.width, self.height = pygame.display.get_surface().get_size()
@@ -156,8 +156,7 @@ class IHM_Robot:
 if __name__ == "__main__":
     # Vérifie si la variable d'environnement DISPLAY est définie
     if "DISPLAY" not in os.environ:
-        os.environ["DISPLAY"] = "0"
-        print("Variable DISPLAY non définie, définition de DISPLAY à :0")
+        os.environ["SDL_VIDEODRIVER"] = "dummy"
 
     ihm = IHM_Robot()
     ihm.run()

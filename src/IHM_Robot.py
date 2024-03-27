@@ -124,8 +124,13 @@ class IHM_Robot:
                     if subkey in self.Energie[key]:
                         self.Energie[key][subkey] = data[key][subkey]
 
+    def deconnexion(self):
+        self.client.stop()
+        self.is_running = False
+
     def run(self):
-        #self.client.connect()
+        self.client.set_callback_stop(self.deconnexion)
+        self.client.connect()
         while self.is_running:
             # Gestion des événements
             for event in pygame.event.get():

@@ -156,7 +156,7 @@ class IHM_Robot:
 if __name__ == "__main__":
     # Vérifie si la variable d'environnement DISPLAY est définie
     if 'DISPLAY' not in os.environ:
-        os.environ['DISPLAY'] = ':1'
+        os.environ['DISPLAY'] = ':0'
 
 
     ihm = IHM_Robot()

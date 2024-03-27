@@ -194,7 +194,7 @@ bouton = pygame.Rect(position_bouton, taille_bouton)
 couleur_fond = BLANC
 
 if 'DISPLAY' not in os.environ:
-    os.environ['DISPLAY'] = ':0'
+    os.environ['DISPLAY'] = ':1'
 
 # Boucle principale
 while True:

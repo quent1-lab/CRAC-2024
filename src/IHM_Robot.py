@@ -113,6 +113,8 @@ class Application(tk.Tk):
 if __name__ == "__main__":
     # Vérifie si la variable $DISPLAY est définie
     if 'DISPLAY' not in os.environ:
+        print("No display found, using :0")
         os.environ['DISPLAY'] = ':0'
+    print("DISPLAY:", os.environ['DISPLAY'])
     app = Application()
     app.mainloop()

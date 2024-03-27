@@ -33,20 +33,19 @@ class Application(tk.Tk):
             # Utilisez grid au lieu de pack
             button.grid(row=0, column=i, padx=(20, 0), pady=10)
             self.buttons.append(button)
-
-        """# Configurez menu_frame pour centrer les boutons
-        self.menu_frame.grid_rowconfigure(0, weight=1)
-        self.menu_frame.grid_columnconfigure(0, weight=1)
-
-        # Pour chaque bouton, ajoutez une colonne vide de chaque côté avec un poids de 1
-        for i in range(1, total_buttons, 1):
-            self.menu_frame.grid_columnconfigure(i, weight=1)"""
+        
+        button = tk.Button(self.menu_frame, text="Quitter", font=("Arial", 18),
+                            command=self.quit, padx=20, pady=10, bg="#4CAF50", fg="white",
+                            activebackground="#2F6400", activeforeground="white", borderwidth=2, highlightthickness=5)
+        
+        button.grid(row=0, column=total_buttons, padx=(20, 0), pady=10)
+        self.buttons.append(button)
                 
         self.pages_frame = tk.Frame(self, bg="#f0f0f0")
         self.pages_frame.pack(expand=True, fill="both")
         
         self.change_page(self.current_page.get())
-        self.show_current_page()
+        #self.show_current_page()
     
     def show_current_page(self):
         # Clear previous page widgets

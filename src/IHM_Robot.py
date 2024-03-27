@@ -6,7 +6,7 @@ class Application(tk.Tk):
         super().__init__(*args, **kwargs)
         
         self.title("Application IHM")
-        self.geometry("800x480")
+        #self.geometry("800x480")
         self.attributes('-fullscreen', True)
         
         self.pages = ["Favori", "Stratégie", "Énergie", "Autre"]

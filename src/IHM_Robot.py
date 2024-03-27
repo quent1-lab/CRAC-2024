@@ -1,5 +1,5 @@
 import tkinter as tk
-import json
+import os
 
 class Application(tk.Tk):
     def __init__(self, *args, **kwargs):
@@ -111,5 +111,8 @@ class Application(tk.Tk):
                         self.Energie[key][subkey] = data[key][subkey]
 
 if __name__ == "__main__":
+    # Vérifie si la variable $DISPLAY est définie
+    if 'DISPLAY' not in os.environ:
+        os.environ['DISPLAY'] = ':0'
     app = Application()
     app.mainloop()

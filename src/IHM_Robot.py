@@ -8,7 +8,7 @@ class Application(tk.Tk):
 
         self.client_socket = Client("127.0.0.4", 22050, 9, self.receive_to_server)
         self.client_socket.set_callback_stop(self.quit)
-        self.client_socket.start()
+        self.client_socket.connect()
         
         self.title("Application IHM")
         #self.geometry("800x480")

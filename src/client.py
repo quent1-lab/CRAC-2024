@@ -25,7 +25,7 @@ class Client:
         self.send_queue = Queue()
         self.lock = threading.Lock()  # Verrou pour la synchronisation des threads
 
-        self.client_names = ["Broadcast", "Serveur", "BusCAN", "Lidar","","","","","","","IHM"]
+        self.client_names = ["Broadcast", "Serveur", "BusCAN", "Lidar","","","","","","IHM_R","IHM"]
         if _id_client == 2205:
             self.client_name = "Erreur"
         else:

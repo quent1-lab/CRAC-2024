@@ -1,9 +1,14 @@
 import tkinter as tk
+from client import Client
 import os
 
 class Application(tk.Tk):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        self.client_socket = Client("127.0.0.4", 22050, 9, self.receive_to_server)
+        self.client_socket.set_callback_stop(self.quit)
+        self.client_socket.start()
         
         self.title("Application IHM")
         #self.geometry("800x480")
@@ -115,6 +120,5 @@ if __name__ == "__main__":
     if 'DISPLAY' not in os.environ:
         print("No display found, using :0")
         os.environ['DISPLAY'] = ':0'
-    print("DISPLAY:", os.environ['DISPLAY'])
     app = Application()
     app.mainloop()

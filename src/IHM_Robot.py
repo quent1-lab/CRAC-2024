@@ -10,9 +10,9 @@ class IHM_Robot:
         self.client = Client("127.0.0.43", 22050, 9, self.receive_to_server)
 
         self.Energie = {
-            "Tension" : {"Main": 0, "Bat1" : 13, "Bat2" : 12, "Bat3" : 1},
+            "Tension" : {"Main": 6, "Bat1" : 3, "Bat2" : 12, "Bat3" : 0},
             "Courant" : {"Bat1" : 0, "Bat2" : 0, "Bat3" : 0},
-            "Switch" : {"Bat1" : False, "Bat2" : False, "Bat3" : False}
+            "Switch" : {"Bat1" : True, "Bat2" : False, "Bat3" : False}
         }
         self.ban_battery = []
 
@@ -78,16 +78,24 @@ class IHM_Robot:
         # Cette page comprend 4 grands rectangles correspondant aux batteries du robot
         # Chaque rectangle affichera les informations de la batterie
 
+        nb_batteries = 0
+        for key, value in self.Energie["Tension"].items():
+            if self.ETAT == 1 and value == 0:
+                continue
+            nb_batteries += 1
+
         # Création des rectangles
-        for i in range(2):
-            for j in range(2):
-                pygame.draw.rect(self.screen, (255, 255, 255), (10 + 390 * i, 80 + 200 * j, 380, 190), 2, 10)
+        for i in range(nb_batteries):
+            pygame.draw.rect(self.screen, (200, 200, 200), (10 + 390 * (i % 2), 80 + 200 * (i // 2), 380, 190), 0, 10)
+            pygame.draw.rect(self.screen, (0, 0, 0), (10 + 390 * (i % 2), 80 + 200 * (i // 2), 380, 190), 2, 10)
         
         # Affichage des informations
         # Affichage de la tension
         i = 0
         j = 0
         for key, value in self.Energie["Tension"].items():
+            if self.ETAT == 1 and value == 0:
+                continue
             if i == 2:
                 i = 0
                 j = 1
@@ -101,22 +109,27 @@ class IHM_Robot:
         i = 1
         j = 0
         for key, value in self.Energie["Courant"].items():
+            if self.ETAT == 1 and self.Energie["Tension"][key] == 0:
+                continue
             if i == 2:
                 i = 0
                 j = 1
             font_Valeur = pygame.font.SysFont("Arial", 24)
             draw_text(self.screen, f"Courant : {value} A",20 + 390 * i, 170 + 200 * j, (0,0,0), font_Valeur)
             i += 1
-        
+
         # Affichage de l'état des switchs
         i = 1
         j = 0
         for key, value in self.Energie["Switch"].items():
+            if self.ETAT == 1 and self.Energie["Tension"][key] == 0:
+                continue
             if i == 2:
                 i = 0
                 j = 1
             font_Valeur = pygame.font.SysFont("Arial", 24)
-            draw_text(self.screen, f"Switch : {value}",20 + 390 * i, 200 + 200 * j, (0,0,0), font_Valeur)
+            text = "Ouvert" if value == 0 else "Fermé"
+            draw_text(self.screen, f"Switch : {text}",20 + 390 * i, 200 + 200 * j, (0,0,0), font_Valeur)
             i += 1
 
     def zero_battery(self):

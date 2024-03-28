@@ -58,7 +58,6 @@ class IHM:
             "Courant" : {"Bat1" : 0, "Bat2" : 0, "Bat3" : 0},
             "Switch" : {"Bat1" : False, "Bat2" : False, "Bat3" : False}
         }
-        self.energie_recue = False
 
         self.pos_waiting_list = [] # Liste pour stocker les futurs positions positions du robot à atteindre 
         self.robot_move = False # Variable pour savoir si le robot est en mouvement
@@ -77,7 +76,14 @@ class IHM:
 
         self.callbacks = {}
 
-        self.client_socket = Client("192.168.22.101", 22050, 10)
+        self.BROADCAST = 0
+        self.SERVEUR = 1
+        self.CAN = 2
+        self.LIDAR = 3
+        self.STRATEGIE = 4
+        self.IHM_Robot = 9
+        self.IHM = 10
+        self.client_socket = Client("192.168.22.101", 22050, self.IHM)
 
         pygame.font.init()
         self.font = pygame.font.SysFont("Arial", 20)
@@ -639,7 +645,6 @@ class IHM:
                 for subkey in data[key]:
                     if subkey in self.Energie[key]:
                         self.Energie[key][subkey] = data[key][subkey]
-                        self.energie_recue = True
 
     def map_value(self,x, in_min, in_max, out_min, out_max):
         return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
@@ -658,7 +663,6 @@ class IHM:
                 y = int(y)
                 # Stockez les coordonnées du clic
                 self.clicked_position = (x, y)
-                print("Clicked position:", self.clicked_position)
                 # Envoie les coordonnées du clic au CAN
                 #self.client_socket.add_to_send_list(self.client_socket.create_message(
                 #    2, "clic", {"x": x, "y": y, "theta": int(self.ROBOT_ANGLE), "sens": "0"}))
@@ -684,7 +688,7 @@ class IHM:
                 pos = self.pos_waiting_list[0]
                 # Envoyez la position au CAN
                 self.client_socket.add_to_send_list(self.client_socket.create_message(
-                    2, "clic", {"x": pos[0], "y": pos[1], "theta": pos[2], "sens": pos[3]}))
+                    self.CAN, "clic", {"x": pos[0], "y": pos[1], "theta": pos[2], "sens": pos[3]}))
                 print("Going to position:", pos)
 
     def init_match(self):
@@ -700,11 +704,12 @@ class IHM:
                         ((0 + self.ROBOT_Dimension[0]/2), (0 + self.ROBOT_Dimension[1]/2)), 
                         ((0 + self.ROBOT_Dimension[0]/2), (self.FIELD_SIZE[1] - self.ROBOT_Dimension[1]/2)), 
                         ((self.FIELD_SIZE[0] - self.ROBOT_Dimension[0] / 2), (self.FIELD_SIZE[1] - self.ROBOT_Dimension[1]/2))]
+        
         self.start_button.draw()
-        self.energy_button.draw()
+
         for event in pygame.event.get():
             self.start_button.handle_event(event)
-            self.energy_button.handle_event(event)
+
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = event.pos
                 for i, rect in enumerate(start_positions):
@@ -723,7 +728,8 @@ class IHM:
 
     def start_match(self):
         self.ETAT = 1
-        self.client_socket.add_to_send_list(self.client_socket.create_message(0, "clic", {"zone": self.zone_depart}))
+        self.client_socket.add_to_send_list(self.client_socket.create_message(self.CAN, "zone", {"zone": self.zone_depart}))
+        self.client_socket.add_to_send_list(self.client_socket.create_message(self.IHM_Robot, "etat", {"etat": self.ETAT}))
 
     def run(self):
         #self.programme_simulation()
@@ -737,7 +743,7 @@ class IHM:
                 key = pygame.key.get_pressed()
                 quit = pygame.event.get(pygame.QUIT)
                 if key[pygame.K_ESCAPE] or key[pygame.K_SPACE] or quit:
-                    self.client_socket.add_to_send_list(self.client_socket.create_message(1, "stop", None))
+                    self.client_socket.add_to_send_list(self.client_socket.create_message(self.SERVEUR, "stop", None))
                     break
 
                 self.draw_background()
@@ -784,7 +790,7 @@ class IHM:
 
             except KeyboardInterrupt:
                 self.client_socket.add_to_send_list(
-                    self.client_socket.create_message(1, "stop", None))
+                    self.client_socket.create_message(self.SERVEUR, "stop", None))
                 break
         
         print("Fin du programme")

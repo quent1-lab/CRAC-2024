@@ -135,8 +135,8 @@ class IHM_Robot:
                 if index >= len(commande_energie):
                     index = 0
                     time.sleep(0.5)
+
                 self.client_socket.send(self.client_socket.create_message(2, "CAN", {"id": commande_energie[index][0], "byte1": commande_energie[index][1], "byte2": commande_energie[index][2], "byte3": commande_energie[index][3]}))
-                index += 1
                 while not self.energie_recue:
                     time.sleep(0.01)
                     if not self.is_running:

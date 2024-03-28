@@ -754,7 +754,7 @@ class IHM:
         #self.programme_simulation()
         
         self.client_socket.set_callback(self.receive_to_server)
-        self.client_socket.set_callback_stop(None)
+        self.client_socket.set_callback_stop(self.stop)
         self.client_socket.connect()
         print("Connecté au serveur")
         while self.scanning:
@@ -811,6 +811,7 @@ class IHM:
                 self.client_socket.add_to_send_list(
                     self.client_socket.create_message(1, "stop", None))
                 break
+        
         print("Fin du programme")
         exit(0)
 

@@ -98,8 +98,6 @@ class IHM:
                                                                                                    self.restart_motor,
                                                                                                    self.command_CAN
                                                                                                    )) if self.command_window is None else None)
-        self.energy_button = Button(self.lcd, pygame.Rect(250, self.WINDOW_SIZE[1]-55, 120, 40),"data/theme.json", "Start energie",
-                                    on_click= self.request_voltages)
 
         logging.basicConfig(filename='ihm.log', level=logging.INFO,
                             datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
@@ -642,29 +640,6 @@ class IHM:
                     if subkey in self.Energie[key]:
                         self.Energie[key][subkey] = data[key][subkey]
                         self.energie_recue = True
-    
-    def request_voltages(self):
-        commande_energie = [
-            [512,1,0,0],[512,2,0,0], [512,3,0,0], [512,4,0,0],
-            [513,1,0,0],[513,2,0,0], [513,3,0,0],
-            [514,1,0,0],[514,2,0,0], [514,3,0,0],
-        ]
-        def task():
-            index = 0
-            while self.scanning:
-                if index >= len(commande_energie):
-                    index = 0
-                    time.sleep(0.5)
-                self.client_socket.send(self.client_socket.create_message(2, "CAN", {"id": commande_energie[index][0], "byte1": commande_energie[index][1], "byte2": commande_energie[index][2], "byte3": commande_energie[index][3]}))
-                index += 1
-                while not self.energie_recue:
-                    time.sleep(0.01)
-                    if not self.scanning:
-                        break
-                self.energie_recue = False
-
-        thread = threading.Thread(target=task)
-        thread.start()
 
     def map_value(self,x, in_min, in_max, out_min, out_max):
         return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min

@@ -2,6 +2,8 @@ import os
 from client import Client
 import pygame
 from pygame_UI import *
+import threading
+import time
 
 class IHM_Robot:
     def __init__(self):
@@ -14,6 +16,9 @@ class IHM_Robot:
         }
 
         self.PAGE = 0
+        self.ETAT = 0
+        self.energie_recue = False
+        self.state_request_energy = False
 
         self.BACKGROUND_COLOR = (100, 100, 100)
 
@@ -58,11 +63,13 @@ class IHM_Robot:
         for i, name in enumerate(self.button_menu_names):
             x = 0
             if i == 4:
-                x = 190
+                x = 190 # Permet de décaler le bouton "Quitter" vers la droite
             self.button_menu.append(Button(self.screen, (10 + 120 * i + x, 10, 100, 50), self.theme_path, name, self.font, lambda i=i: self.button_menu_action(i), color=self.button_menu_colors[i]))
         
     def button_menu_action(self, index):
         self.PAGE = index
+        if index == 0:
+            self.request_energy()
         if index == 4:
             self.client.add_to_send_list(self.client.create_message(1, "stop", None))
     
@@ -111,6 +118,34 @@ class IHM_Robot:
             draw_text(self.screen, f"Switch : {value}",20 + 390 * i, 200 + 200 * j, (0,0,0), font_Valeur)
             i += 1
 
+    def request_energy(self):
+        if self.state_request_energy:
+            return
+        self.request_energy = True
+
+        commande_energie = [ # id, byte1, byte2, byte3 => commande CAN
+            [512,1,0,0],[512,2,0,0], [512,3,0,0], [512,4,0,0],  # Tension
+            [513,1,0,0],[513,2,0,0], [513,3,0,0],               # Courant
+            [514,1,0,0],[514,2,0,0], [514,3,0,0],               # Switch
+        ]
+
+        def task():
+            index = 0
+            while self.is_running:
+                if index >= len(commande_energie):
+                    index = 0
+                    time.sleep(0.5)
+                self.client_socket.send(self.client_socket.create_message(2, "CAN", {"id": commande_energie[index][0], "byte1": commande_energie[index][1], "byte2": commande_energie[index][2], "byte3": commande_energie[index][3]}))
+                index += 1
+                while not self.energie_recue:
+                    time.sleep(0.01)
+                    if not self.is_running:
+                        break
+                self.energie_recue = False
+
+        thread = threading.Thread(target=task)
+        thread.start()
+
     def receive_to_server(self, message):
         try:
             if message["cmd"] == "stop":
@@ -132,6 +167,7 @@ class IHM_Robot:
                 for subkey in data[key]:
                     if subkey in self.Energie[key]:
                         self.Energie[key][subkey] = data[key][subkey]
+                        self.energie_recue = True
 
     def deconnexion(self):
         self.is_running = False
@@ -139,6 +175,7 @@ class IHM_Robot:
     def run(self):
         self.client.set_callback_stop(self.deconnexion)
         #self.client.connect()
+        self.request_energy()
         while self.is_running:
             # Gestion des événements
             for event in pygame.event.get():

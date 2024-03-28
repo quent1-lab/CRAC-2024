@@ -14,6 +14,7 @@ class IHM_Robot:
             "Courant" : {"Bat1" : 0, "Bat2" : 0, "Bat3" : 0},
             "Switch" : {"Bat1" : False, "Bat2" : False, "Bat3" : False}
         }
+        self.ban_battery = []
 
         self.PAGE = 0
         self.ETAT = 0
@@ -118,6 +119,20 @@ class IHM_Robot:
             draw_text(self.screen, f"Switch : {value}",20 + 390 * i, 200 + 200 * j, (0,0,0), font_Valeur)
             i += 1
 
+    def zero_battery(self):
+        if self.Energie["Tension"]["Bat1"] == 0:
+            self.ban_battery.append(1)
+            self.ban_battery.append(4)
+            self.ban_battery.append(7)
+        if self.Energie["Tension"]["Bat2"] == 0:
+            self.ban_battery.append(2)
+            self.ban_battery.append(5)
+            self.ban_battery.append(8)
+        if self.Energie["Tension"]["Bat3"] == 0:
+            self.ban_battery.append(3)
+            self.ban_battery.append(6)
+            self.ban_battery.append(9)
+
     def request_energy(self):
         if self.state_request_energy:
             return
@@ -132,18 +147,24 @@ class IHM_Robot:
         def task():
             index = 0
             while self.is_running:
-                if index >= len(commande_energie):
+                if index >= len(commande_energie): # On a fini de demander les énergies des batteries, on attend 0.5s avant de recommencer
                     index = 0
                     time.sleep(0.5)
+                
+                if index in self.ban_battery: # On ne demande pas l'énergie des batteries à 0V
+                    index += 1
+                    continue
 
                 self.client_socket.send(self.client_socket.create_message(2, "CAN", {"id": commande_energie[index][0], "byte1": commande_energie[index][1], "byte2": commande_energie[index][2], "byte3": commande_energie[index][3]}))
-                while not self.energie_recue:
+
+                while not self.energie_recue: # On attend de recevoir les données
                     time.sleep(0.01)
                     if not self.is_running:
                         break
                 self.energie_recue = False
+                index += 1
 
-        thread = threading.Thread(target=task)
+        thread = threading.Thread(target=task) # On crée un thread pour ne pas bloquer le programme
         thread.start()
 
     def receive_to_server(self, message):
@@ -153,6 +174,10 @@ class IHM_Robot:
             elif message["cmd"] == "energie":
                 energie = message["data"]
                 self.update_energie(energie)
+            elif message["cmd"] == "etat":
+                data = message["data"]
+                self.ETAT = data["etat"]
+                self.zero_battery() # On bannit les batteries à 0V
         
         except Exception as e:
             print(f"Erreur lors de la réception du message : {str(e)}")

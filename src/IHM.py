@@ -98,7 +98,7 @@ class IHM:
                                                                                                    self.restart_motor,
                                                                                                    self.command_CAN
                                                                                                    )) if self.command_window is None else None)
-        self.energy_button = Button(self.lcd, pygame.Rect(250, self.WINDOW_SIZE[1]-55, 120, 60),"data/theme.json", "Start energie",
+        self.energy_button = Button(self.lcd, pygame.Rect(250, self.WINDOW_SIZE[1]-55, 120, 40),"data/theme.json", "Start energie",
                                     on_click= self.request_voltages)
 
         logging.basicConfig(filename='ihm.log', level=logging.INFO,

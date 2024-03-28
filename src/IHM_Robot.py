@@ -53,7 +53,7 @@ class IHM_Robot:
     def button_menu_action(self, index):
         self.PAGE = index
         if index == 4:
-            self.client_socket.add_to_send_list(self.client_socket.create_message(1, "stop", None))
+            self.client.add_to_send_list(self.client.create_message(1, "stop", None))
     
     def page_favori(self):
         # Cette page comprend 4 grands rectangles correspondant aux batteries du robot
@@ -112,7 +112,6 @@ class IHM_Robot:
             print(f"Erreur lors de la réception du message : {str(e)}")
         
     def update_energie(self, _json):
-        print("Update energie")
         if _json is None:
             return
         else:
@@ -133,7 +132,7 @@ class IHM_Robot:
             # Gestion des événements
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    self.client_socket.add_to_send_list(self.client_socket.create_message(1, "stop", None))
+                    self.client.add_to_send_list(self.client.create_message(1, "stop", None))
                 for button in self.button_menu:
                     button.handle_event(event)
 

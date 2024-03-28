@@ -197,6 +197,7 @@ if 'DISPLAY' not in os.environ:
     os.environ['DISPLAY'] = ':0'
 
 # Boucle principale
+print("IHM Robot started")
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:

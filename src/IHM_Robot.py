@@ -19,9 +19,9 @@ class IHM_Robot:
 
         # Initialisation de la fenêtre
         pygame.init()
-        self.screen = pygame.display.set_mode((700, 400))
+        #self.screen = pygame.display.set_mode((700, 400))
         # Fullscreen
-        #self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+        self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
         self.width, self.height = pygame.display.get_surface().get_size()
         pygame.display.set_caption("IHM Robot")
         # Icone

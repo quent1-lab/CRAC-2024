@@ -639,6 +639,7 @@ class IHM:
                 for subkey in data[key]:
                     if subkey in self.Energie[key]:
                         self.Energie[key][subkey] = data[key][subkey]
+                        print(f"{key} - {subkey} : {self.Energie[key][subkey]} V")
     
     def request_voltages(self, state):
         for battery_id in self.batteries:

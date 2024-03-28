@@ -177,8 +177,8 @@ VERT = (0, 255, 0)
 BLEU = (0, 0, 255)
 
 # Définition de la taille de l'écran
-largeur = 700
-hauteur = 400
+largeur = 400
+hauteur = 300
 taille_ecran = (largeur, hauteur)
 
 # Initialisation de l'écran
@@ -216,4 +216,4 @@ while True:
     # Affichage
     ecran.fill(couleur_fond)
     pygame.draw.rect(ecran, (0, 0, 0), bouton)  # Afficher le bouton
-    pygame.display.flip()
+    pygame.display.update()

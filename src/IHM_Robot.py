@@ -167,16 +167,11 @@ import pygame
 import sys
 import os
 
-# Vérifie si la variable d'environnement DISPLAY est définie
-if 'DISPLAY' not in os.environ:
-    os.environ['DISPLAY'] = ':0'
 
-#Vérifie si la variable d'environnement SDL_VIDEODRIVER est définie
-if 'SDL_VIDEODRIVER' not in os.environ:
-    os.environ['SDL_VIDEODRIVER'] = 'dummy'
 
 # Initialisation de Pygame
-pygame.display.init()
+pygame.init()
+pygame.font.init()
 
 # Définition des couleurs
 BLANC = (255, 255, 255)

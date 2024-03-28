@@ -58,6 +58,7 @@ class IHM:
             "Courant" : {"Bat1" : 0, "Bat2" : 0, "Bat3" : 0},
             "Switch" : {"Bat1" : False, "Bat2" : False, "Bat3" : False}
         }
+        self.energie_recue = False
 
         self.pos_waiting_list = [] # Liste pour stocker les futurs positions positions du robot à atteindre 
         self.robot_move = False # Variable pour savoir si le robot est en mouvement
@@ -97,6 +98,8 @@ class IHM:
                                                                                                    self.restart_motor,
                                                                                                    self.command_CAN
                                                                                                    )) if self.command_window is None else None)
+        self.energy_button = Button(self.lcd, pygame.Rect(250, self.WINDOW_SIZE[1]-55, 120, 60),"data/theme.json", "Start energie",
+                                    on_click= self.request_voltages)
 
         logging.basicConfig(filename='ihm.log', level=logging.INFO,
                             datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
@@ -633,18 +636,35 @@ class IHM:
             return
         else:
             data = _json
-        print(data)
         for key in data:
             if key in self.Energie:
                 for subkey in data[key]:
                     if subkey in self.Energie[key]:
                         self.Energie[key][subkey] = data[key][subkey]
-                        print(f"{key} - {subkey} : {self.Energie[key][subkey]} V")
+                        self.energie_recue = True
     
-    def request_voltages(self, state):
-        for battery_id in self.batteries:
-            if state == 0 or (state == 1 and self.get_battery_status(battery_id) != 0):
-                self.request_voltage(battery_id)
+    def request_voltages(self):
+        commande_energie = [
+            [512,1,0,0],[512,2,0,0], [512,3,0,0], [512,4,0,0],
+            [513,1,0,0],[513,2,0,0], [513,3,0,0],
+            [514,1,0,0],[514,2,0,0], [514,3,0,0],
+        ]
+        def task():
+            index = 0
+            while self.scanning:
+                if index >= len(commande_energie):
+                    index = 0
+                    time.sleep(0.5)
+                self.client_socket.send(self.client_socket.create_message(2, "CAN", {"id": commande_energie[index][0], "byte1": commande_energie[index][1], "byte2": commande_energie[index][2], "byte3": commande_energie[index][3]}))
+                index += 1
+                while not self.energie_recue:
+                    time.sleep(0.01)
+                    if not self.scanning:
+                        break
+                self.energie_recue = False
+
+        thread = threading.Thread(target=task)
+        thread.start()
 
     def map_value(self,x, in_min, in_max, out_min, out_max):
         return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
@@ -706,8 +726,10 @@ class IHM:
                         ((0 + self.ROBOT_Dimension[0]/2), (self.FIELD_SIZE[1] - self.ROBOT_Dimension[1]/2)), 
                         ((self.FIELD_SIZE[0] - self.ROBOT_Dimension[0] / 2), (self.FIELD_SIZE[1] - self.ROBOT_Dimension[1]/2))]
         self.start_button.draw()
+        self.energy_button.draw()
         for event in pygame.event.get():
             self.start_button.handle_event(event)
+            self.energy_button.handle_event(event)
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = event.pos
                 for i, rect in enumerate(start_positions):

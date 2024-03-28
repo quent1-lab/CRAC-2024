@@ -53,7 +53,7 @@ class IHM_Robot:
     def button_menu_action(self, index):
         self.PAGE = index
         if index == 4:
-            self.is_running = False
+            self.client_socket.add_to_send_list(self.client_socket.create_message(1, "stop", None))
     
     def page_favori(self):
         # Cette page comprend 4 grands rectangles correspondant aux batteries du robot
@@ -133,10 +133,7 @@ class IHM_Robot:
             # Gestion des événements
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    self.is_running = False
-                elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        self.is_running = False
+                    self.client_socket.add_to_send_list(self.client_socket.create_message(1, "stop", None))
                 for button in self.button_menu:
                     button.handle_event(event)
 
@@ -146,7 +143,14 @@ class IHM_Robot:
             for button in self.button_menu:
                 button.draw()
 
-            self.page_favori()
+            if self.PAGE == 0:
+                self.page_favori()
+            elif self.PAGE == 1:
+                pass
+            elif self.PAGE == 2:
+                pass
+            elif self.PAGE == 3:
+                pass
 
             pygame.display.flip()
             self.clock.tick(60)
@@ -156,63 +160,3 @@ class IHM_Robot:
 if __name__ == "__main__":
     ihm = IHM_Robot()
     ihm.run()
-
-
-"""import pygame
-import sys
-import os
-
-
-
-# Initialisation de Pygame
-pygame.init()
-pygame.font.init()
-
-# Définition des couleurs
-BLANC = (255, 255, 255)
-ROUGE = (255, 0, 0)
-VERT = (0, 255, 0)
-BLEU = (0, 0, 255)
-
-# Définition de la taille de l'écran
-largeur = 400
-hauteur = 300
-taille_ecran = (largeur, hauteur)
-
-# Initialisation de l'écran
-ecran = pygame.display.set_mode(taille_ecran, 0, 32, 0)
-pygame.display.set_caption("Changer la couleur du fond d'écran")
-
-# Création du bouton
-taille_bouton = (200, 100)
-position_bouton = ((largeur - taille_bouton[0]) // 2, (hauteur - taille_bouton[1]) // 2)
-bouton = pygame.Rect(position_bouton, taille_bouton)
-
-# Couleur de fond initiale
-couleur_fond = BLANC
-
-# Boucle principale
-print("IHM Robot started")
-while True:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-            # Vérifier si le clic est sur le bouton
-            if bouton.collidepoint(event.pos):
-                # Changer la couleur du fond
-                if couleur_fond == BLANC:
-                    couleur_fond = ROUGE
-                elif couleur_fond == ROUGE:
-                    couleur_fond = VERT
-                elif couleur_fond == VERT:
-                    couleur_fond = BLEU
-                else:
-                    couleur_fond = BLANC
-
-    # Affichage
-    ecran.fill(couleur_fond)
-    pygame.draw.rect(ecran, (0, 0, 0), bouton)  # Afficher le bouton
-    pygame.display.update()
-"""

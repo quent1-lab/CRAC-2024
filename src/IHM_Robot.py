@@ -1,4 +1,4 @@
-"""import os
+import os
 from client import Client
 import pygame
 from pygame_UI import *
@@ -154,16 +154,11 @@ class IHM_Robot:
         pygame.quit()
 
 if __name__ == "__main__":
-    # Vérifie si la variable d'environnement DISPLAY est définie
-    if 'DISPLAY' not in os.environ:
-        os.environ['DISPLAY'] = ':0'
-
-
     ihm = IHM_Robot()
     ihm.run()
-"""
 
-import pygame
+
+"""import pygame
 import sys
 import os
 
@@ -220,3 +215,4 @@ while True:
     ecran.fill(couleur_fond)
     pygame.draw.rect(ecran, (0, 0, 0), bouton)  # Afficher le bouton
     pygame.display.update()
+"""

@@ -19,9 +19,17 @@ class IHM_Robot:
 
         # Initialisation de la fenêtre
         pygame.init()
-        #self.screen = pygame.display.set_mode((700, 400))
+
+        # Vérifie si la taille de l'écran est 800x480
+        if pygame.display.Info().current_w == 800 and pygame.display.Info().current_h == 480:
+            self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+            pygame.mouse.set_visible(False)
+        else:
+            self.screen = pygame.display.set_mode((800, 480))
+            pygame.mouse.set_visible(True)
+
         # Fullscreen
-        self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+        #self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
         self.width, self.height = pygame.display.get_surface().get_size()
         pygame.display.set_caption("IHM Robot")
         # Icone
@@ -32,7 +40,6 @@ class IHM_Robot:
         # Police
         pygame.font.init()
         self.font = pygame.font.SysFont("Arial", 20)
-        pygame.mouse.set_visible(False)
         
         # Initialisation des variables
         self.is_running = True
@@ -45,10 +52,14 @@ class IHM_Robot:
 
         self.button_menu = []
         self.button_menu_names = ["Favori", "Stratégie", "Energie", "Autres", "Quitter"]
+        self.button_menu_colors = [None, None, None, None,(200, 0, 0)] # None = Couleur par défaut
 
 
         for i, name in enumerate(self.button_menu_names):
-            self.button_menu.append(Button(self.screen, (10 + 120 * i, 10, 100, 50), self.theme_path, name, self.font, lambda i=i: self.button_menu_action(i)))
+            x = 0
+            if i == 4:
+                x = 190
+            self.button_menu.append(Button(self.screen, (10 + 120 * i + x, 10, 100, 50), self.theme_path, name, self.font, lambda i=i: self.button_menu_action(i), color=self.button_menu_colors[i]))
         
     def button_menu_action(self, index):
         self.PAGE = index
@@ -127,7 +138,7 @@ class IHM_Robot:
 
     def run(self):
         self.client.set_callback_stop(self.deconnexion)
-        self.client.connect()
+        #self.client.connect()
         while self.is_running:
             # Gestion des événements
             for event in pygame.event.get():

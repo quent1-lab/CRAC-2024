@@ -18,7 +18,7 @@ class Button:
         if color is not None:
             self.theme['normal']['color'] = color
             # Hover color is 20% lighter than normal color
-            self.theme['hover']['color'] = (color[0] * 1.2, color[1] * 1.2, color[2] * 1.2)
+            self.theme['hover']['color'] = (min(255, int(color[0] * 1.2)), min(255, int(color[1] * 1.2)), min(255, int(color[2] * 1.2)))
             # Clicked color is 20% darker than normal color
             self.theme['clicked']['color'] = (color[0] * 0.8, color[1] * 0.8, color[2] * 0.8)
 

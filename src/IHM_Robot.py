@@ -10,9 +10,9 @@ class IHM_Robot:
         self.client = Client("127.0.0.43", 22050, 9, self.receive_to_server)
 
         self.Energie = {
-            "Tension" : {"Main": 6, "Bat1" : 3, "Bat2" : 12, "Bat3" : 0},
+            "Tension" : {"Main": 0, "Bat1" : 0, "Bat2" : 0, "Bat3" : 0},
             "Courant" : {"Bat1" : 0, "Bat2" : 0, "Bat3" : 0},
-            "Switch" : {"Bat1" : True, "Bat2" : False, "Bat3" : False}
+            "Switch" : {"Bat1" : False, "Bat2" : False, "Bat3" : False}
         }
         self.ban_battery = []
 
@@ -155,7 +155,7 @@ class IHM_Robot:
         commande_energie = [ # id, byte1, byte2, byte3 => commande CAN
             [512,1,0,0],[512,2,0,0], [512,3,0,0], [512,4,0,0],  # Tension
             [513,1,0,0],[513,2,0,0], [513,3,0,0],               # Courant
-            [514,1,0,0],[514,2,0,0], [514,3,0,0],               # Switch
+            [514,1,0,0],[514,2,0,0], [514,3,0,0]                # Switch
         ]
 
         def task():
@@ -168,12 +168,8 @@ class IHM_Robot:
                 if index in self.ban_battery: # On ne demande pas l'énergie des batteries à 0V
                     index += 1
                     continue
-
+                
                 self.client.send(self.client.create_message(2, "CAN", {"id": commande_energie[index][0], "byte1": commande_energie[index][1], "byte2": commande_energie[index][2], "byte3": commande_energie[index][3]}))
-
-                # Affiche l'index sur l'écran
-                font = pygame.font.SysFont("Arial", 24)
-                draw_text(self.screen, f"Index : {index}", 650, 10, (0,0,0), font)
 
                 temps = 0
                 while not self.energie_recue: # On attend de recevoir les données
@@ -223,13 +219,14 @@ class IHM_Robot:
 
     def run(self):
         self.client.set_callback_stop(self.deconnexion)
-        self.client.connect()
+        #self.client.connect()
         self.request_energy()
         while self.is_running:
             # Gestion des événements
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.client.add_to_send_list(self.client.create_message(1, "stop", None))
+                    self.is_running = False
                 for button in self.button_menu:
                     button.handle_event(event)
 
@@ -241,6 +238,7 @@ class IHM_Robot:
 
             if self.PAGE == 0:
                 self.page_favori()
+                self.Energie["Tension"]["Bat2"] += 1
             elif self.PAGE == 1:
                 pass
             elif self.PAGE == 2:

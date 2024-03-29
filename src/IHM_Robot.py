@@ -168,7 +168,7 @@ class IHM_Robot:
                     index += 1
                     continue
 
-                self.client_socket.send(self.client_socket.create_message(2, "CAN", {"id": commande_energie[index][0], "byte1": commande_energie[index][1], "byte2": commande_energie[index][2], "byte3": commande_energie[index][3]}))
+                self.client.send(self.client.create_message(2, "CAN", {"id": commande_energie[index][0], "byte1": commande_energie[index][1], "byte2": commande_energie[index][2], "byte3": commande_energie[index][3]}))
 
                 # Affiche l'index sur l'écran
                 font = pygame.font.SysFont("Arial", 24)

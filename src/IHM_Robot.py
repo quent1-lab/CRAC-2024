@@ -130,7 +130,8 @@ class IHM_Robot:
                 j = 1
             font_Valeur = pygame.font.SysFont("Arial", 24)
             text = "Ouvert" if value == 0 else "Fermé"
-            draw_text(self.screen, f"Switch : {text}",20 + 390 * i, 200 + 200 * j, (0,0,0), font_Valeur)
+            color = (200, 0, 0) if value == 0 else (0, 200, 0)
+            draw_text(self.screen, f"Switch : {text}",20 + 390 * i, 200 + 200 * j, color, font_Valeur)
             i += 1
 
     def zero_battery(self):
@@ -253,7 +254,6 @@ class IHM_Robot:
 
             if self.PAGE == 0:
                 self.page_favori()
-                self.Energie["Tension"]["Bat2"] += 1
             elif self.PAGE == 1:
                 pass
             elif self.PAGE == 2:

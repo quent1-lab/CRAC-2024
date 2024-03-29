@@ -147,6 +147,18 @@ class IHM_Robot:
             self.ban_battery.append(6)
             self.ban_battery.append(9)
 
+    def switch_on(self, num_switch):
+        self.client.send(self.client.create_message(2, "CAN", {"id": 518, "byte1": num_switch, "byte2": 1, "byte3": 0}))
+
+    def switch_off(self, num_switch):
+        self.client.send(self.client.create_message(2, "CAN", {"id": 518, "byte1": num_switch, "byte2": 0, "byte3": 0}))
+    
+    def switch(self, num_switch):
+        if self.Energie["Tenstion"][f"Bat{num_switch}"] != 0 and self.Energie["Switch"][f"Bat{num_switch}"] == 0:
+            self.switch_on(num_switch)
+        elif self.Energie["Tenstion"][f"Bat{num_switch}"] == 0 and self.Energie["Switch"][f"Bat{num_switch}"] == 1:
+            self.switch_off(num_switch)
+
     def request_energy(self):
         if self.state_request_energy:
             return
@@ -163,6 +175,9 @@ class IHM_Robot:
             while self.is_running:
                 if index >= len(commande_energie): # On a fini de demander les énergies des batteries, on attend 0.5s avant de recommencer
                     index = 0
+                    if self.ETAT == 0:
+                        for i in range(1, 4):
+                            self.switch(i)
                     time.sleep(0.5)
                 
                 if index in self.ban_battery: # On ne demande pas l'énergie des batteries à 0V

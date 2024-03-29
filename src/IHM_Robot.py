@@ -174,7 +174,6 @@ class IHM_Robot:
                 # Affiche l'index sur l'écran
                 font = pygame.font.SysFont("Arial", 24)
                 draw_text(self.screen, f"Index : {index}", 650, 10, (0,0,0), font)
-                print(f"Index : {index}")
 
                 temps = 0
                 while not self.energie_recue: # On attend de recevoir les données
@@ -184,6 +183,7 @@ class IHM_Robot:
                     temps += 0.01
                     if temps > 2:
                         self.client.send(self.client.create_message(2, "CAN", {"id": commande_energie[index][0], "byte1": commande_energie[index][1], "byte2": commande_energie[index][2], "byte3": commande_energie[index][3]}))
+                        temps = 0
 
                 self.energie_recue = False
                 index += 1

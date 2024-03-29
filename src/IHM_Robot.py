@@ -212,7 +212,7 @@ class IHM_Robot:
 
     def run(self):
         self.client.set_callback_stop(self.deconnexion)
-        #self.client.connect()
+        self.client.connect()
         self.request_energy()
         while self.is_running:
             # Gestion des événements

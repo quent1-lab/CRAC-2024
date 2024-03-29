@@ -2,6 +2,7 @@ import pygame
 import pygame_gui
 import pygame.locals as pg_constants
 import json
+import copy
 
 class Button:
     def __init__(self, surface, rect, theme_file, text='', font=None, on_click=None, color=None):
@@ -10,22 +11,22 @@ class Button:
         self.text = text
         self.font = font or pygame.font.Font(None, 30)
         self.on_click = on_click
+        self.enabled = True
 
         # Load theme from file
         with open(theme_file, 'r') as file:
             self.theme = json.load(file)
         
-        if color is not None:
-            self.theme['normal']['color'] = color
-            # Hover color is 20% lighter than normal color
-            self.theme['hover']['color'] = (min(255, int(color[0] * 1.2)), min(255, int(color[1] * 1.2)), min(255, int(color[2] * 1.2)))
-            # Clicked color is 20% darker than normal color
-            self.theme['clicked']['color'] = (color[0] * 0.8, color[1] * 0.8, color[2] * 0.8)
+        self.theme_default = copy.deepcopy(self.theme)
+        
+        self.update_color(color)
 
         self.state = 'normal'
         self.font = pygame.font.SysFont(self.theme['font'], self.theme['font_size'])
 
     def draw(self):
+        if not self.enabled:
+            return
         # Draw button based on current state
         button_color = self.theme[self.state]['color']
         pygame.draw.rect(self.surface, button_color, self.rect, border_radius=self.theme['border_radius'])
@@ -34,6 +35,25 @@ class Button:
         text_surface = self.font.render(self.text, True, self.theme['text_color'])
         text_rect = text_surface.get_rect(center=(self.rect.centerx, self.rect.centery *1))
         self.surface.blit(text_surface, text_rect)
+    
+    def update_color(self, color):
+        if color is None:
+            self.theme['normal']['color'] = self.theme_default['normal']['color']
+            self.theme['hover']['color'] = self.theme_default['hover']['color']
+            self.theme['clicked']['color'] = self.theme_default['clicked']['color']
+        else:
+            self.theme['normal']['color'] = color
+            self.theme['hover']['color'] = (min(255, int(color[0] * 1.2)), min(255, int(color[1] * 1.2)), min(255, int(color[2] * 1.2)))
+            self.theme['clicked']['color'] = (color[0] * 0.8, color[1] * 0.8, color[2] * 0.8)
+    
+    def update_text(self, text):
+        self.text = text
+
+    def disable(self):
+        self.enabled = False
+    
+    def enable(self):
+        self.enabled = True
 
     def handle_event(self, event):
         if event.type == pg_constants.MOUSEMOTION:
@@ -46,7 +66,7 @@ class Button:
                 self.state = 'clicked'
         elif event.type == pg_constants.MOUSEBUTTONUP:
             if event.button == 1 and self.rect.collidepoint(event.pos):
-                if self.on_click is not None:
+                if self.on_click is not None and self.enabled:
                     self.on_click()
                 self.state = 'hover'
 

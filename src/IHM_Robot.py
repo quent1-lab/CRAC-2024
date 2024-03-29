@@ -58,7 +58,7 @@ class IHM_Robot:
 
         self.button_menu = []
         self.button_menu_names = ["Favori", "Stratégie", "Energie", "Autres", "Quitter"]
-        self.button_menu_colors = [None, None, None, None,(200, 0, 0)] # None = Couleur par défaut
+        self.button_menu_colors = [(0,0,200), None, None, None,(200, 0, 0)] # None = Couleur par défaut
 
 
         for i, name in enumerate(self.button_menu_names):
@@ -68,10 +68,11 @@ class IHM_Robot:
             self.button_menu.append(Button(self.screen, (10 + 120 * i + x, 10, 100, 50), self.theme_path, name, self.font, lambda i=i: self.button_menu_action(i), color=self.button_menu_colors[i]))
         
     def button_menu_action(self, index):
+        self.button_menu[self.PAGE].update_color(None) # On remet la couleur par défaut du bouton actuel
         self.PAGE = index
+        self.button_menu[index].update_color((0, 0, 240)) # On met en vert le bouton cliqué
         if index == 0:
-            pass
-            #self.request_energy()
+            pass            
         if index == 4:
             self.client.add_to_send_list(self.client.create_message(1, "stop", None))
     

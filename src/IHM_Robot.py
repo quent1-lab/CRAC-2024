@@ -70,7 +70,8 @@ class IHM_Robot:
     def button_menu_action(self, index):
         self.PAGE = index
         if index == 0:
-            self.request_energy()
+            pass
+            #self.request_energy()
         if index == 4:
             self.client.add_to_send_list(self.client.create_message(1, "stop", None))
     
@@ -173,11 +174,17 @@ class IHM_Robot:
                 # Affiche l'index sur l'écran
                 font = pygame.font.SysFont("Arial", 24)
                 draw_text(self.screen, f"Index : {index}", 650, 10, (0,0,0), font)
+                print(f"Index : {index}")
 
+                temps = 0
                 while not self.energie_recue: # On attend de recevoir les données
-                    time.sleep(0.01)
                     if not self.is_running:
                         break
+                    time.sleep(0.01)
+                    temps += 0.01
+                    if temps > 2:
+                        self.client.send(self.client.create_message(2, "CAN", {"id": commande_energie[index][0], "byte1": commande_energie[index][1], "byte2": commande_energie[index][2], "byte3": commande_energie[index][3]}))
+
                 self.energie_recue = False
                 index += 1
 

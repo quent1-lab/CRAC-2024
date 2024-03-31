@@ -28,8 +28,10 @@ class Batterie:
     def is_connected(self):
         if self.etat_batterie['tension']['valeur'] > 0:
             self.connecter = True
+            self.interrupteur = True
         else:
             self.connecter = False
+            self.interrupteur = False
         return self.connecter
     
     def recuperer_valeurs(self, message):
@@ -79,7 +81,7 @@ class Batterie:
         
     def draw_info(self):
         # Code pour dessiner l'encadrement des informations de la batterie
-        color = (0,200,0) if self.is_connected() else (200,0,0)
+        color = (0,200,0) if self.interrupteur else (220,0,0)
         pygame.draw.rect(self.screen, color, self.rect, 0, 10)
         pygame.draw.rect(self.screen, (0, 0, 0), self.rect, 2, 10)
         

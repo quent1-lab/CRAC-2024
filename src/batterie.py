@@ -8,6 +8,11 @@ class Batterie:
         self.puissance = 0.0
         self.energie = 0.0
         self.qualite = 100
+    
+    def configuer_batterie(self, capteur_tension=False, capteur_courant=False, interrupteur=False):
+        self.capteur_tension = capteur_tension
+        self.capteur_courant = capteur_courant
+        self.interrupteur = interrupteur
 
     def recuperer_valeurs(self):
         if self.capteur_tension:

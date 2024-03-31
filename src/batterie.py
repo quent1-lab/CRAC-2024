@@ -18,15 +18,14 @@ class Batterie:
             'courant': {'valeur': 0, 'unite': 'A'},
             'puissance': {'valeur': 0, 'unite': 'W'},
             'energie': {'valeur': 0, 'unite': 'Wh'},
-            'qualite': {'valeur': 0, 'unite': '%'},
-            'interrupteur': 'Ouvert' if self.interrupteur else 'Fermé'
+            'qualite': {'valeur': 0, 'unite': '%'}
         }
         
     def update_position(self, position):
         self.position = position
 
     def is_connected(self):
-        if self.etat_batterie['tension'] > 0:
+        if self.etat_batterie['tension']['valeur'] > 0:
             self.connecter = True
         else:
             self.connecter = False
@@ -57,8 +56,13 @@ class Batterie:
             return 'Erreur'
     
     def draw(self):
+        self.draw_info()
+        
+        
+    def draw_info(self):
         # Code pour dessiner l'encadrement des informations de la batterie
-        pygame.draw.rect(self.screen, (200, 200, 200), self.rect, 0, 10)
+        color = (0,200,0) if self.is_connected() else (200,0,0)
+        pygame.draw.rect(self.screen, color, self.rect, 0, 10)
         pygame.draw.rect(self.screen, (0, 0, 0), self.rect, 2, 10)
         
         # Code pour dessiner les informations de la batterie
@@ -75,12 +79,6 @@ class Batterie:
                     break
                 # Dessiner les autres informations
                 self.screen.blit(font.render(self.afficher_info(info,True), True, (0, 0, 0)), (self.position[0] + 10, self.position[1] + 10 + i * 30))
-        
-        
-    
-    def draw_info(self):
-        # Code pour dessiner l'affichage des informations de la batterie
-        pass
     
     def draw_gestion_batterie(self):
         # Code pour dessiner l'affichage de la gestion de la batterie
@@ -100,7 +98,7 @@ if __name__ == '__main__':
         screen.fill((255, 255, 255))
         
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+            if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE):
                 running = False
         
         batterie.draw()

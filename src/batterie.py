@@ -36,11 +36,15 @@ class Batterie:
             self.interrupteur = False
         return self.connecter
 
-    def recuperer_valeurs(self, message):
-        if message is not None:
-            for info in self.etat_batterie:
-                if info in message:
-                    self.etat_batterie[info]['valeur'] = message[info]
+    def recuperer_valeurs(self, _json):
+        if _json is None:
+            return
+        else:
+            data = _json
+        for key in data:
+            if key in self.etat_batterie:
+                self.etat_batterie[key]['valeur'] = data[key]
+                return True
 
     def gerer_Puissance(self):
         # Code pour gérer la Puissance de la batterie

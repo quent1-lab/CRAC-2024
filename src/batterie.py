@@ -6,7 +6,6 @@ from pygame_UI import *
 class Batterie:
     def __init__(self, capteur=False, screen=None, position=(0, 0), nom='Batterie'):
         self.capteur = capteur
-        self.interrupteur = False
 
         self.screen = screen
         self.connecter = False
@@ -20,7 +19,8 @@ class Batterie:
             'Courant': {'valeur': 0, 'unite': 'A'},
             'Puissance': {'valeur': 0, 'unite': 'W'},
             'Energie': {'valeur': 0, 'unite': 'Wh'},
-            'Qualite': {'valeur': 0, 'unite': '%'}
+            'Qualite': {'valeur': 0, 'unite': '%'},
+            'Switch' : {'valeur': 0, 'unite': ''}
         }
 
     def update_position(self, position):
@@ -30,10 +30,10 @@ class Batterie:
     def is_connected(self):
         if self.etat_batterie['Tension']['valeur'] > 0:
             self.connecter = True
-            self.interrupteur = True
+            self.etat_batterie['Switch']['valeur'] = True
         else:
             self.connecter = False
-            self.interrupteur = False
+            self.etat_batterie['Switch']['valeur'] = False
         return self.connecter
 
     def recuperer_valeurs(self, _json):
@@ -87,7 +87,7 @@ class Batterie:
 
     def draw_info(self):
         # Code pour dessiner l'encadrement des informations de la batterie
-        color = (0, 200, 0) if self.interrupteur else (220, 0, 0)
+        color = (0, 200, 0) if self.etat_batterie['Switch']['valeur'] else (220, 0, 0)
         pygame.draw.rect(self.screen, color, self.rect, 0, 10)
         pygame.draw.rect(self.screen, (0, 0, 0), self.rect, 2, 10)
 
@@ -103,8 +103,8 @@ class Batterie:
                 self.screen.blit(text, text_rect)
 
             else:
-                if info == 'Courant' and not self.capteur:
-                    break # Si capteur est faux on ne dessine pas les infos sur l'énegie de la batterie
+                if (info == 'Courant' and not self.capteur) or info == 'Switch':
+                    break # Si capteur est faux on ne dessine pas les infos sur l'énegie de la batterie et le switch
                 
                 # Dessiner les autres informations
                 font = pygame.font.Font(None, 25)
@@ -115,7 +115,7 @@ class Batterie:
 
     def click(self, pos):
         if self.rect.collidepoint(pos):
-            self.interrupteur = not self.interrupteur
+            self.etat_batterie['Switch']['valeur'] = not self.etat_batterie['Switch']['valeur']
             self.is_connected()
 
     def event(self, event):

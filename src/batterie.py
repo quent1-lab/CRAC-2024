@@ -15,12 +15,12 @@ class Batterie:
         self.rect = pygame.Rect(self.position, self.taille)
 
         self.etat_batterie = {
-            'nom': {'valeur': nom, 'unite': ''},
-            'tension': {'valeur': 0, 'unite': 'V'},
-            'courant': {'valeur': 0, 'unite': 'A'},
-            'puissance': {'valeur': 0, 'unite': 'W'},
-            'energie': {'valeur': 0, 'unite': 'Wh'},
-            'qualite': {'valeur': 0, 'unite': '%'}
+            'Nom': {'valeur': nom, 'unite': ''},
+            'Tension': {'valeur': 0, 'unite': 'V'},
+            'Courant': {'valeur': 0, 'unite': 'A'},
+            'Puissance': {'valeur': 0, 'unite': 'W'},
+            'Energie': {'valeur': 0, 'unite': 'Wh'},
+            'Qualite': {'valeur': 0, 'unite': '%'}
         }
 
     def update_position(self, position):
@@ -28,7 +28,7 @@ class Batterie:
         self.rect = pygame.Rect(self.position, self.taille)
 
     def is_connected(self):
-        if self.etat_batterie['tension']['valeur'] > 0:
+        if self.etat_batterie['Tension']['valeur'] > 0:
             self.connecter = True
             self.interrupteur = True
         else:
@@ -37,26 +37,26 @@ class Batterie:
         return self.connecter
 
     def recuperer_valeurs(self, message):
+        if message is not None:
+            for info in self.etat_batterie:
+                if info in message:
+                    self.etat_batterie[info]['valeur'] = message[info]
+
+    def gerer_Puissance(self):
+        # Code pour gérer la Puissance de la batterie
         pass
 
-    def gerer_puissance(self):
-        # Code pour gérer la puissance de la batterie
-        pass
-
-    def gerer_energie(self):
+    def gerer_Energie(self):
         # Code pour gérer l'énergie consommée par la batterie
         pass
 
-    def gerer_qualite(self):
+    def gerer_Qualite(self):
         # Code pour gérer la qualité de la batterie
         pass
 
-    def afficher_info(self, info=None, majuscule=False):
+    def afficher_info(self, info=None):
         if info:
-            if majuscule:
-                return str(info).capitalize() + ' : ' + str(self.etat_batterie[info]['valeur']) + ' ' + str(self.etat_batterie[info]['unite'])
-            else:
-                return str(info) + ' : ' + str(self.etat_batterie[info]['valeur']) + ' ' + str(self.etat_batterie[info]['unite'])
+            return str(info) + ' : ' + str(self.etat_batterie[info]['valeur']) + ' ' + str(self.etat_batterie[info]['unite'])
         else:
             return 'Erreur'
 
@@ -89,22 +89,23 @@ class Batterie:
 
         # Code pour dessiner les informations de la batterie
         for i, info in enumerate(self.etat_batterie):
-            if info == 'nom':
-                # Dessiner le nom de la batterie centré et en gras
+            if info == 'Nom':
+                # Dessiner le Nom de la batterie centré et en gras
                 font = pygame.font.Font(None, 30)
                 text = font.render(
-                    self.etat_batterie['nom']['valeur'], False, (0, 0, 0))
+                    self.etat_batterie['Nom']['valeur'], False, (0, 0, 0))
                 text_rect = text.get_rect(
                     center=(self.position[0] + self.taille[0]/2, self.position[1] + 20))
                 self.screen.blit(text, text_rect)
 
             else:
-                if info == 'courant' and not self.capteur:
-                    break
+                if info == 'Courant' and not self.capteur:
+                    break # Si capteur est faux on ne dessine pas les infos sur l'énegie de la batterie
+                
                 # Dessiner les autres informations
                 font = pygame.font.Font(None, 25)
                 text = font.render(self.afficher_info(
-                    info, True), True, (0, 0, 0))
+                    info),True, (0, 0, 0))
                 self.screen.blit(
                     text, (self.position[0] + 10, self.position[1] + 50 + (i-1) * 30))
 
@@ -131,7 +132,7 @@ if __name__ == '__main__':
 
     batteries = [
         Batterie(screen=screen, position=(10, 10),capteur=False, nom='Batterie 1'),
-        Batterie(screen=screen, position=(10, 10),capteur=True, nom='Batterie 2'),
+        Batterie(screen=screen, position=(10, 10),capteur=True,  nom='Batterie 2'),
         Batterie(screen=screen, position=(10, 10),capteur=False, nom='Batterie 3'),
         Batterie(screen=screen, position=(10, 10),capteur=True, nom='Batterie 4')
     ]

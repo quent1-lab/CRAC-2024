@@ -3,6 +3,7 @@ class Batterie:
         self.capteur_tension = capteur_tension
         self.capteur_courant = capteur_courant
         self.interrupteur = interrupteur
+        self.position = (0, 0)
         self.tension = 0.0
         self.courant = 0.0
         self.puissance = 0.0
@@ -13,6 +14,9 @@ class Batterie:
         self.capteur_tension = capteur_tension
         self.capteur_courant = capteur_courant
         self.interrupteur = interrupteur
+        
+    def update_position(self, position):
+        self.position = position
 
     def recuperer_valeurs(self):
         if self.capteur_tension:
@@ -45,7 +49,15 @@ class Batterie:
             return f"Energie consommée: {self.energie} Wh"
         elif info == 'qualite':
             return f"Qualité de la batterie: {self.qualite}%"
-
-    def gestion_totale(self):
-        # Code pour gérer la page de gestion totale de la batterie
+    
+    def draw(self):
+        # Code pour dessiner l'affichage de la batterie
+        pass
+    
+    def draw_info(self):
+        # Code pour dessiner l'affichage des informations de la batterie
+        pass
+    
+    def draw_gestion_batterie(self):
+        # Code pour dessiner l'affichage de la gestion de la batterie
         pass

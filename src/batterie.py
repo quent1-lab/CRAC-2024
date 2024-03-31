@@ -9,8 +9,9 @@ class Batterie:
         
         self.screen = screen
         self.connecter = False
+        self.taille = self.taille_boite()
         self.position = position
-        self.rect = pygame.Rect(self.position, (380, 190))
+        self.rect = pygame.Rect(self.position, self.taille)
         
         self.etat_batterie = {
             'nom': {'valeur': nom, 'unite': ''},
@@ -55,9 +56,26 @@ class Batterie:
         else:
             return 'Erreur'
     
+    def taille_boite(self):
+        # Code pour déterminer la taille de la boite de l'interface en fonction des informations de la batterie à afficher
+        # et de la taille de la police
+        
+        # Calculer la hauteur de la boite
+        if not self.capteur:
+            hauteur = 25 + 30 + 25
+        else:
+            hauteur = 50 + 30 + (25*5)
+        
+        # Calculer la largeur de la boite
+        """largeur = 0
+        for info in self.etat_batterie:
+            largeur = max(largeur, len(self.afficher_info(info)))
+        largeur = 10 + largeur * 20"""
+        largeur = 190
+        return (largeur, hauteur)
+    
     def draw(self):
         self.draw_info()
-        
         
     def draw_info(self):
         # Code pour dessiner l'encadrement des informations de la batterie
@@ -70,15 +88,17 @@ class Batterie:
             if info == 'nom':
                 # Dessiner le nom de la batterie centré et en gras
                 font = pygame.font.Font(None, 30)
-                text = font.render(self.afficher_info(info), True, (0, 0, 0))
-                text_rect = text.get_rect(center=(self.position[0] + 190, self.position[1] + 20))
+                text = font.render(self.etat_batterie['nom']['valeur'], False, (0, 0, 0))
+                text_rect = text.get_rect(center=(self.position[0] + self.taille[0]/2, self.position[1] + 20))
                 self.screen.blit(text, text_rect)
             
             else:
                 if info == 'courant' and not self.capteur:
                     break
                 # Dessiner les autres informations
-                self.screen.blit(font.render(self.afficher_info(info,True), True, (0, 0, 0)), (self.position[0] + 10, self.position[1] + 10 + i * 30))
+                font = pygame.font.Font(None, 25)
+                text = font.render(self.afficher_info(info,True), True, (0, 0, 0))
+                self.screen.blit(text, (self.position[0] + 10, self.position[1] + 50 + (i-1) * 30))
     
     def draw_gestion_batterie(self):
         # Code pour dessiner l'affichage de la gestion de la batterie
@@ -91,7 +111,7 @@ if __name__ == '__main__':
     pygame.display.set_caption("Batterie")
     clock = pygame.time.Clock()
     
-    batterie = Batterie(screen=screen, position=(10, 10), capteur=True, nom='Batterie 2')
+    batterie = Batterie(screen=screen, position=(10, 10), capteur=False, nom='Batterie 2')
     
     running = True
     while running:

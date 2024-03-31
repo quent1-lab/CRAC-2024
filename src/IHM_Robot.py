@@ -10,9 +10,10 @@ class IHM_Robot:
         self.client = Client("127.0.0.43", 22050, 9, self.receive_to_server)
 
         self.Energie = {
-            "Tension" : {"Main": 0, "Bat1" : 0, "Bat2" : 0, "Bat3" : 0},
-            "Courant" : {"Bat1" : 0, "Bat2" : 0, "Bat3" : 0},
-            "Switch" : {"Bat1" : False, "Bat2" : False, "Bat3" : False}
+            "Batterie 1": {"Tension": 0, "Courant": 0, "Switch": 0},
+            "Batterie 2": {"Tension": 0, "Courant": 0, "Switch": 0},
+            "Batterie 3": {"Tension": 0, "Courant": 0, "Switch": 0},
+            "Batterie Main": {"Tension": 0, "Courant": 0, "Switch": 0}
         }
         self.ban_battery = []
 
@@ -136,15 +137,15 @@ class IHM_Robot:
             i += 1
 
     def zero_battery(self):
-        if self.Energie["Tension"]["Bat1"] == 0:
+        if self.Energie["Batterie 1"]["Tension"] == 0:
             self.ban_battery.append(1)
             self.ban_battery.append(4)
             self.ban_battery.append(7)
-        if self.Energie["Tension"]["Bat2"] == 0:
+        if self.Energie["Batterie 2"]["Tension"] == 0:
             self.ban_battery.append(2)
             self.ban_battery.append(5)
             self.ban_battery.append(8)
-        if self.Energie["Tension"]["Bat3"] == 0:
+        if self.Energie["Batterie 3"]["Tension"] == 0:
             self.ban_battery.append(3)
             self.ban_battery.append(6)
             self.ban_battery.append(9)
@@ -156,9 +157,9 @@ class IHM_Robot:
         self.client.send(self.client.create_message(2, "CAN", {"id": 518, "byte1": num_switch, "byte2": 0, "byte3": 0}))
     
     def switch(self, num_switch):
-        if self.Energie["Tenstion"][f"Bat{num_switch}"] != 0 and self.Energie["Switch"][f"Bat{num_switch}"] == 0:
+        if self.Energie[f"Batterie {num_switch}"]["Tenstion"] != 0 and self.Energie[f"Batterie {num_switch}"]["Switch"] == 0:
             self.switch_on(num_switch)
-        elif self.Energie["Tenstion"][f"Bat{num_switch}"] == 0 and self.Energie["Switch"][f"Bat{num_switch}"] == 1:
+        elif self.Energie[f"Batterie {num_switch}"]["Tenstion"] == 0 and self.Energie[f"Batterie {num_switch}"]["Switch"] == 1:
             self.switch_off(num_switch)
 
     def request_energy(self):

@@ -80,43 +80,23 @@ class ComCAN:
                 v_bat = dataX[1] /10
 
                 if id_bat == 1:
-                    self.client.add_to_send_list(self.client.create_message(0, "energie", {"Tension": {"Main" : v_bat}}))
-                    print(f"V_Main : {v_bat}")
-                elif id_bat == 2:
-                    self.client.add_to_send_list(self.client.create_message(0, "energie", {"Tension": {"Bat1" : v_bat}}))
-                    print(f"V_Batterie_1 : {v_bat}")
-                elif id_bat == 3:
-                    self.client.add_to_send_list(self.client.create_message(0, "energie", {"Tension": {"Bat2" : v_bat}}))
-                    print(f"V_Batterie_2 : {v_bat}")
-                elif id_bat == 4:
-                    self.client.add_to_send_list(self.client.create_message(0, "energie", {"Tension": {"Bat3" : v_bat}}))
-                    print(f"V_Batterie_3 : {v_bat}")
+                    self.client.add_to_send_list(self.client.create_message(0, "energie", {"Batterie Main": {"Tension" : v_bat}}))
+                    print(f"V_Batterie_Main : {v_bat}")
+                else:
+                    self.client.add_to_send_list(self.client.create_message(0, "energie", {f"Batterie {id_bat-1}": {"Tension" : v_bat}}))
+                    print(f"V_Batterie_{id_bat-1} : {v_bat}")
             elif data[0] == 0x204:
                 # I_Batterie : ID batterie (short), I_Batterie (short)
                 id_bat = dataX[0]
                 i_bat = dataX[1] /100
-                if id_bat == 1:
-                    self.client.add_to_send_list(self.client.create_message(0, "energie", {"Courant": {"Bat1" : i_bat}}))
-                    print(f"I_Batterie_1 : {i_bat}")
-                elif id_bat == 2:
-                    self.client.add_to_send_list(self.client.create_message(0, "energie", {"Courant": {"Bat2" : i_bat}}))
-                    print(f"I_Batterie_2 : {i_bat}")
-                elif id_bat == 3:
-                    self.client.add_to_send_list(self.client.create_message(0, "energie", {"Courant": {"Bat3" : i_bat}}))
-                    print(f"I_Batterie_3 : {i_bat}")
+                self.client.add_to_send_list(self.client.create_message(0, "energie", {f"Batterie {id_bat}": {"Courant" : i_bat}}))
+                print(f"I_Batterie_{id_bat} : {i_bat}")
             elif data[0] == 0x205:
                 # Switch_Batterie : ID batterie (short), Switch_Batterie (short)
                 id_bat = dataX[0]
                 s_bat = dataX[1]
-                if id_bat == 1:
-                    self.client.add_to_send_list(self.client.create_message(0, "energie", {"Switch": {"Bat1" : s_bat}}))
-                    print(f"Switch_Batterie_1 : {s_bat}")
-                elif id_bat == 2:
-                    self.client.add_to_send_list(self.client.create_message(0, "energie", {"Switch": {"Bat2" : s_bat}}))
-                    print(f"Switch_Batterie_2 : {s_bat}")
-                elif id_bat == 3:
-                    self.client.add_to_send_list(self.client.create_message(0, "energie", {"Switch": {"Bat3" : s_bat}}))
-                    print(f"Switch_Batterie_3 : {s_bat}")
+                self.client.add_to_send_list(self.client.create_message(0, "energie", {f"Batterie {id_bat}": {"Switch" : s_bat}}))
+                print(f"Switch_Batterie_{id_bat} : {s_bat}")
             else:
                 logging.error(f"ID inconnu ; data : {data}")
                 print(f"ID inconnu ; data : {data}")
@@ -163,7 +143,6 @@ class ComCAN:
                 messageCAN = can.Message(arbitration_id=commande, data=[b1,b2,b3], is_extended_id=False)
                 
                 self.send(messageCAN)
-                print("Envoie demande energie")
             elif message["cmd"] == "resta":
                 data = message["data"]
                 # Format des données : restart (char)

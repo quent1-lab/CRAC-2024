@@ -1,30 +1,37 @@
+import pygame
+import pygame_UI
+
 class Batterie:
-    def __init__(self, capteur_tension=False, capteur_courant=False, interrupteur=False):
-        self.capteur_tension = capteur_tension
-        self.capteur_courant = capteur_courant
-        self.interrupteur = interrupteur
-        self.position = (0, 0)
-        self.tension = 0.0
-        self.courant = 0.0
-        self.puissance = 0.0
-        self.energie = 0.0
-        self.qualite = 100
-    
-    def configuer_batterie(self, capteur_tension=False, capteur_courant=False, interrupteur=False):
+    def __init__(self, capteur_tension=False, capteur_courant=False, interrupteur=False, screen=None, position=(0, 0), nom='Batterie'):
         self.capteur_tension = capteur_tension
         self.capteur_courant = capteur_courant
         self.interrupteur = interrupteur
         
+        self.connecter = False
+        self.position = (0, 0)
+        self.rect = pygame.Rect(self.position, (380, 190))
+        
+        self.etat_batterie = {
+            'nom': nom,
+            'tension': 0,
+            'courant': 0,
+            'puissance': 0,
+            'energie': 0,
+            'qualite': 0
+        }
+        
     def update_position(self, position):
         self.position = position
 
-    def recuperer_valeurs(self):
-        if self.capteur_tension:
-            # Code pour récupérer la tension de la batterie
-            pass
-        if self.capteur_courant:
-            # Code pour récupérer le courant de la batterie
-            pass
+    def is_connected(self):
+        if self.etat_batterie['tension'] > 0:
+            self.connecter = True
+        else:
+            self.connecter = False
+        return self.connecter
+    
+    def recuperer_valeurs(self, message):
+        pass
 
     def gerer_puissance(self):
         # Code pour gérer la puissance de la batterie
@@ -51,8 +58,8 @@ class Batterie:
             return f"Qualité de la batterie: {self.qualite}%"
     
     def draw(self):
-        # Code pour dessiner l'affichage de la batterie
-        pass
+        pygame.draw.rect(self.screen, (200, 200, 200), self.rect, 0, 10)
+        pygame.draw.rect(self.screen, (0, 0, 0), self.rect, 2, 10)
     
     def draw_info(self):
         # Code pour dessiner l'affichage des informations de la batterie

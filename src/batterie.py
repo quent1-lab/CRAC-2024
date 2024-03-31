@@ -3,10 +3,9 @@ import pygame.font
 from pygame_UI import *
 
 class Batterie:
-    def __init__(self, capteur_tension=False, capteur_courant=False, interrupteur=False, screen=None, position=(0, 0), nom='Batterie'):
-        self.capteur_tension = capteur_tension
-        self.capteur_courant = capteur_courant
-        self.interrupteur = interrupteur
+    def __init__(self, capteur=False, screen=None, position=(0, 0), nom='Batterie'):
+        self.capteur= capteur
+        self.interrupteur = False
         
         self.screen = screen
         self.connecter = False
@@ -20,6 +19,7 @@ class Batterie:
             'puissance': {'valeur': 0, 'unite': 'W'},
             'energie': {'valeur': 0, 'unite': 'Wh'},
             'qualite': {'valeur': 0, 'unite': '%'},
+            'interrupteur': 'Ouvert' if self.interrupteur else 'Fermé'
         }
         
     def update_position(self, position):
@@ -71,7 +71,7 @@ class Batterie:
                 self.screen.blit(text, text_rect)
             
             else:
-                if info == 'courant' and not self.capteur_courant:
+                if info == 'courant' and not self.capteur:
                     break
                 # Dessiner les autres informations
                 self.screen.blit(font.render(self.afficher_info(info,True), True, (0, 0, 0)), (self.position[0] + 10, self.position[1] + 10 + i * 30))
@@ -93,7 +93,7 @@ if __name__ == '__main__':
     pygame.display.set_caption("Batterie")
     clock = pygame.time.Clock()
     
-    batterie = Batterie(screen=screen, position=(10, 10), capteur_courant=False, capteur_tension=True, interrupteur=True, nom='Batterie 2')
+    batterie = Batterie(screen=screen, position=(10, 10), capteur=True, nom='Batterie 2')
     
     running = True
     while running:

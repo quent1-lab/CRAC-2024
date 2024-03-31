@@ -54,9 +54,10 @@ class IHM:
         self.desactive_m = False
 
         self.Energie = {
-            "Tension" : {"Main": 0, "Bat1" : 13, "Bat2" : 12, "Bat3" : 1},
-            "Courant" : {"Bat1" : 0, "Bat2" : 0, "Bat3" : 0},
-            "Switch" : {"Bat1" : False, "Bat2" : False, "Bat3" : False}
+            "Batterie 1": {"Tension": 0, "Courant": 0, "Switch": 0},
+            "Batterie 2": {"Tension": 0, "Courant": 0, "Switch": 0},
+            "Batterie 3": {"Tension": 0, "Courant": 0, "Switch": 0},
+            "Batterie Main": {"Tension": 0, "Courant": 0, "Switch": 0}
         }
 
         self.pos_waiting_list = [] # Liste pour stocker les futurs positions positions du robot à atteindre 
@@ -202,12 +203,12 @@ class IHM:
         # Dessine les données liées à l'énergie
         # Tension si la batterie est connectée
         k = 0
-        for i, key in enumerate(self.Energie["Tension"]):
-            if self.Energie["Tension"][key] != 0:
+        for i, key in enumerate(self.Energie):
+            if self.Energie[key]["Tension"] != 0:
                 if k < 2:
-                    self.draw_text(key + ": " + "{:.2f}".format(self.Energie["Tension"][key]) + " V", window_width * 0.9, window_height * (0.92 + k*0.04))
+                    self.draw_text(key + ": " + "{:.2f}".format(self.Energie[key]["Tension"]) + " V", window_width * 0.9, window_height * (0.92 + k*0.04))
                 else :
-                    self.draw_text(key + ": " + "{:.2f}".format(self.Energie["Tension"][key]) + " V", window_width * 0.8, window_height * (0.92 + (k-2)*0.04))
+                    self.draw_text(key + ": " + "{:.2f}".format(self.Energie[key]["Tension"]) + " V", window_width * 0.8, window_height * (0.92 + (k-2)*0.04))
                 k += 1
 
     def draw_field(self):

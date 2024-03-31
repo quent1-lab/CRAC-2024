@@ -17,10 +17,10 @@ class Batterie:
             'Nom': {'valeur': nom, 'unite': ''},
             'Tension': {'valeur': 0, 'unite': 'V'},
             'Courant': {'valeur': 0, 'unite': 'A'},
+            'Switch' : {'valeur': 0, 'unite': ''},
             'Puissance': {'valeur': 0, 'unite': 'W'},
             'Energie': {'valeur': 0, 'unite': 'Wh'},
-            'Qualite': {'valeur': 0, 'unite': '%'},
-            'Switch' : {'valeur': 0, 'unite': ''}
+            'Qualite': {'valeur': 0, 'unite': '%'}
         }
 
     def update_position(self, position):
@@ -60,7 +60,11 @@ class Batterie:
 
     def afficher_info(self, info=None):
         if info:
-            return str(info) + ' : ' + str(self.etat_batterie[info]['valeur']) + ' ' + str(self.etat_batterie[info]['unite'])
+            if info == 'Switch':
+                valeur = 'ON' if self.etat_batterie[info]['valeur'] else 'OFF'
+                return str(info) + ' : ' + valeur
+            else:
+                return str(info) + ' : ' + str(self.etat_batterie[info]['valeur']) + ' ' + self.etat_batterie[info]['unite']
         else:
             return 'Erreur'
 
@@ -70,9 +74,9 @@ class Batterie:
 
         # Calculer la hauteur de la boite
         if not self.capteur:
-            hauteur = 25 + 30 + 25
+            hauteur = 20 + 26 + 20 # Marge + Nom + Tension
         else:
-            hauteur = 40 + 30 + (25*5)
+            hauteur = 20 + 26 + (20*4) # Marge + Nom + Tension + Courant + Switch
 
         # Calculer la largeur de la boite
         """largeur = 0
@@ -88,6 +92,7 @@ class Batterie:
     def draw_info(self):
         # Code pour dessiner l'encadrement des informations de la batterie
         color = (0, 200, 0) if self.etat_batterie['Switch']['valeur'] else (220, 0, 0)
+        color = (200,200,200) if not self.capteur else color
         pygame.draw.rect(self.screen, color, self.rect, 0, 10)
         pygame.draw.rect(self.screen, (0, 0, 0), self.rect, 2, 10)
 
@@ -95,7 +100,7 @@ class Batterie:
         for i, info in enumerate(self.etat_batterie):
             if info == 'Nom':
                 # Dessiner le Nom de la batterie centré et en gras
-                font = pygame.font.Font(None, 30)
+                font = pygame.font.SysFont("Arial", 26)
                 text = font.render(
                     self.etat_batterie['Nom']['valeur'], False, (0, 0, 0))
                 text_rect = text.get_rect(
@@ -103,18 +108,18 @@ class Batterie:
                 self.screen.blit(text, text_rect)
 
             else:
-                if (info == 'Courant' and not self.capteur) or info == 'Switch':
-                    break # Si capteur est faux on ne dessine pas les infos sur l'énegie de la batterie et le switch
+                if (info == 'Courant' and not self.capteur) or info == 'Puissance':
+                    break # Si capteur est faux on ne dessine pas les infos sur l'énegie de la batterie
                 
                 # Dessiner les autres informations
-                font = pygame.font.Font(None, 25)
+                font = pygame.font.SysFont("Arial", 20)
                 text = font.render(self.afficher_info(
                     info),True, (0, 0, 0))
                 self.screen.blit(
-                    text, (self.position[0] + 10, self.position[1] + 50 + (i-1) * 30))
+                    text, (self.position[0] + 10, self.position[1] + 40 + (i-1) * 30))
 
     def click(self, pos):
-        if self.rect.collidepoint(pos):
+        if self.rect.collidepoint(pos) and self.capteur:
             self.etat_batterie['Switch']['valeur'] = not self.etat_batterie['Switch']['valeur']
             self.is_connected()
 
@@ -137,7 +142,7 @@ if __name__ == '__main__':
     batteries = [
         Batterie(screen=screen, position=(10, 10),capteur=False, nom='Batterie 1'),
         Batterie(screen=screen, position=(10, 10),capteur=True,  nom='Batterie 2'),
-        Batterie(screen=screen, position=(10, 10),capteur=False, nom='Batterie 3'),
+        Batterie(screen=screen, position=(10, 10),capteur=True, nom='Batterie 3'),
         Batterie(screen=screen, position=(10, 10),capteur=True, nom='Batterie 4')
     ]
     

@@ -232,19 +232,23 @@ class IHM_Robot:
                 if event.type == pygame.QUIT:
                     self.client.add_to_send_list(self.client.create_message(1, "stop", None))
                     self.is_running = False
-                
-                if not self.desactiver_event:
-                    for button in self.button_menu:
-                        button.handle_event(event)
                     
                 for batterie in self.batteries:
-                    batterie.handle_event(event)
+                    batterie.handle_event(event)    
+                    
+                for button in self.button_menu:
+                    button.handle_event(event)
+                    
+
+            
 
             # Affichage
             self.screen.fill(self.BACKGROUND_COLOR)
 
             for button in self.button_menu:
                 button.draw()
+                
+            pygame.draw.line(self.screen, (50, 50, 50), (0, 70), (self.width, 70), 2)
 
             if self.PAGE == 0:
                 self.page_favori()

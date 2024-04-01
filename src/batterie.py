@@ -8,6 +8,7 @@ class Batterie:
         self.capteur = capteur
 
         self.screen = screen
+        self.is_running = True
         self.connecter = False
         self.taille = self.taille_boite()
         self.position = position
@@ -120,17 +121,79 @@ class Batterie:
 
     def click(self, pos):
         if self.rect.collidepoint(pos) and self.capteur:
-            self.etat_batterie['Switch']['valeur'] = not self.etat_batterie['Switch']['valeur']
-            self.is_connected()
+            #self.etat_batterie['Switch']['valeur'] = not self.etat_batterie['Switch']['valeur']
+            #self.is_connected()
+            self.draw_gestion_batterie()
 
+    def draw_gestion_batterie(self):
+        
+        rect = pygame.Rect((50, 50), (700, 380))
+        color = (200, 200, 200)
+        
+        rect_quit = pygame.Rect((700, 55), (45, 40))
+        color_quit = (255, 0, 0)
+        
+        page_batterie = True
+        while self.is_running and page_batterie:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.stop()
+                    return
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if rect_quit.collidepoint(event.pos) or not rect.collidepoint(event.pos):
+                        page_batterie = False
+                        break
+
+            pygame.draw.rect(self.screen, color, rect, 0, 10)
+            pygame.draw.rect(self.screen, (0, 0, 0), rect, 2, 10)
+            
+            pygame.draw.rect(self.screen, color_quit, rect_quit, 0, 10)
+            
+            # Dessiner les informations de la batterie
+            for i, info in enumerate(self.etat_batterie):
+                if info == 'Nom':
+                    # Dessiner le Nom de la batterie centré et en gras
+                    font = pygame.font.SysFont("Arial", 26)
+                    text = font.render(
+                        self.etat_batterie['Nom']['valeur'], False, (0, 0, 0))
+                    text_rect = text.get_rect(
+                        center=(50 + 700/2, 50 + 20))
+                    self.screen.blit(text, text_rect)
+
+                else:
+                    if (info == 'Courant' and not self.capteur):
+                        break
+                    
+                    # Dessiner les autres informations
+                    font = pygame.font.SysFont("Arial", 20)
+                    text = font.render(self.afficher_info(
+                        info),True, (0, 0, 0))
+                    self.screen.blit(
+                        text, (50 + 10, 50 + 50 + (i-1) * 35))
+                    
+            # Dessiner le bouton de gestion de la batterie
+            font = pygame.font.SysFont("Arial", 20)
+            text = font.render('Gestion de la batterie', True, (0, 0, 0))
+            marge = 10  # Définir la marge
+            text_rect = text.get_rect(center=(50 + 700/2, 50 + 25 + (i+1) * 35))
+            _rect = pygame.Rect(text_rect[0] - marge, text_rect[1] - marge, text_rect[2] + 2*marge, text_rect[3] + 2*marge)
+
+            pygame.draw.rect(self.screen, (200, 200, 200), _rect, 0, 4)
+            pygame.draw.rect(self.screen, (0, 0, 0), _rect, 2, 4)
+            self.screen.blit(text, text_rect)
+                        
+            
+                    
+                    
+            
+            pygame.display.flip()
+    
     def event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
             self.click(event.pos)
-
-    def draw_gestion_batterie(self):
-        # Code pour dessiner l'affichage de la gestion de la batterie
-        pass
-
+    
+    def stop(self):
+        self.is_running = False
 
 if __name__ == '__main__':
     pygame.init()

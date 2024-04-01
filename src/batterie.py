@@ -4,7 +4,7 @@ from pygame_UI import *
 
 
 class Batterie:
-    def __init__(self, capteur=False, screen=None, position=(0, 0), nom='Batterie'):
+    def __init__(self, capteur=False, screen=None, position=(0, 0), nom='Batterie', _callback_desactiver_event=None):
         self.capteur = capteur
 
         self.screen = screen
@@ -13,6 +13,8 @@ class Batterie:
         self.taille = self.taille_boite()
         self.position = position
         self.rect = pygame.Rect(self.position, self.taille)
+        
+        self.callback_desactiver_event = _callback_desactiver_event
 
         self.etat_batterie = {
             'Nom': {'valeur': nom, 'unite': ''},
@@ -42,11 +44,16 @@ class Batterie:
             return
         else:
             data = _json
+            
         for key in data:
-            if key in self.etat_batterie:
-                self.etat_batterie[key]['valeur'] = data[key]
-                return True
-
+            if key == self.etat_batterie['Nom']['valeur']:
+                for info in data[key]:
+                    if info in self.etat_batterie:
+                        self.etat_batterie[info]['valeur'] = data[key][info]
+                        return True
+            else:   
+                continue
+            
     def gerer_Puissance(self):
         # Code pour gérer la Puissance de la batterie
         pass
@@ -126,7 +133,9 @@ class Batterie:
             self.draw_gestion_batterie()
 
     def draw_gestion_batterie(self):
-        interrupteur = Interrupteur(self.screen, (325, 350), (150, 75), self.etat_batterie['Switch']['valeur'])        
+        interrupteur = Interrupteur(self.screen, (325, 350), (150, 75), self.etat_batterie['Switch']['valeur']) 
+        
+        self.callback_desactiver_event(True)       
         
         def callback_ON():
             self.etat_batterie['Switch']['valeur'] = True
@@ -159,6 +168,7 @@ class Batterie:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if rect_quit.collidepoint(event.pos) or not rect.collidepoint(event.pos):
                         page_batterie = False
+                        self.callback_desactiver_event(False)
                         break
 
             pygame.draw.rect(self.screen, color, rect, 0, 10)
@@ -205,7 +215,7 @@ class Batterie:
             
             pygame.display.flip()
     
-    def event(self, event):
+    def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
             self.click(event.pos)
     
@@ -254,7 +264,7 @@ if __name__ == '__main__':
             if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE):
                 running = False
             for batterie in batteries:
-                batterie.event(event)
+                batterie.handle_event(event)
 
         for batterie in batteries:
             batterie.draw()

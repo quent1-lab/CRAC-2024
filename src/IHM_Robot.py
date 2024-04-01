@@ -4,6 +4,7 @@ import pygame
 from pygame_UI import *
 import threading
 import time
+from batterie import Batterie
 
 class IHM_Robot:
     def __init__(self):
@@ -16,7 +17,7 @@ class IHM_Robot:
             "Batterie Main": {"Tension": 0, "Courant": 0, "Switch": 0}
         }
         self.ban_battery = []
-
+        
         self.PAGE = 0
         self.ETAT = 0
         self.energie_recue = False
@@ -48,6 +49,20 @@ class IHM_Robot:
         pygame.font.init()
         self.font = pygame.font.SysFont("Arial", 20)
         
+        self.desactiver_event = False
+        def desactiver_bouton(etat):
+            self.desactiver_event = etat
+        
+        # Initialisation des batteries
+        self.batteries = [
+            Batterie(capteur=False, screen=self.screen, nom='Batterie Main', _callback_desactiver_event= lambda etat: desactiver_bouton(etat)),
+            Batterie(capteur=True, screen=self.screen, nom='Batterie 1',_callback_desactiver_event= lambda etat: desactiver_bouton(etat)),
+            Batterie(capteur=True, screen=self.screen, nom='Batterie 2',_callback_desactiver_event= lambda etat: desactiver_bouton(etat)),
+            Batterie(capteur=True, screen=self.screen, nom='Batterie 3',_callback_desactiver_event= lambda etat: desactiver_bouton(etat))
+        ]
+        self.batteries_names = ["Batterie Main", "Batterie 1", "Batterie 2", "Batterie 3"]
+
+        
         # Initialisation des variables
         self.is_running = True
 
@@ -60,7 +75,6 @@ class IHM_Robot:
         self.button_menu = []
         self.button_menu_names = ["Favori", "Stratégie", "Energie", "Autres", "Quitter"]
         self.button_menu_colors = [(0,0,200), None, None, None,(200, 0, 0)] # None = Couleur par défaut
-
 
         for i, name in enumerate(self.button_menu_names):
             x = 0
@@ -81,60 +95,26 @@ class IHM_Robot:
         # Cette page comprend 4 grands rectangles correspondant aux batteries du robot
         # Chaque rectangle affichera les informations de la batterie
 
-        nb_batteries = 0
-        for key, value in self.Energie["Tension"].items():
-            if self.ETAT == 1 and value == 0:
-                continue
-            nb_batteries += 1
-
-        # Création des rectangles
-        for i in range(nb_batteries):
-            pygame.draw.rect(self.screen, (200, 200, 200), (10 + 390 * (i % 2), 80 + 200 * (i // 2), 380, 190), 0, 10)
-            pygame.draw.rect(self.screen, (0, 0, 0), (10 + 390 * (i % 2), 80 + 200 * (i // 2), 380, 190), 2, 10)
+        for batterie in self.batteries:
+            batterie.draw()
+    
+    def taille_auto_batterie(self):
+        nb_batteries_colonne = 0
+        somme_taille = 80
         
-        # Affichage des informations
-        # Affichage de la tension
-        i = 0
-        j = 0
-        for key, value in self.Energie["Tension"].items():
-            if self.ETAT == 1 and value == 0:
-                continue
-            if i == 2:
-                i = 0
-                j = 1
-            font_Titre = pygame.font.SysFont("Arial", 36)
-            font_Valeur = pygame.font.SysFont("Arial", 24)
-            draw_text_center(self.screen, key,(200 + 390 * i), (100 + 200 * j), (0,0,0), font_Titre)
-            draw_text(self.screen, f"Tension : {value} V",20 + 390 * i, 140 + 200 * j, (0,0,0), font_Valeur)
-            i += 1
-
-        # Affichage du courant
-        i = 1
-        j = 0
-        for key, value in self.Energie["Courant"].items():
-            if self.ETAT == 1 and self.Energie["Tension"][key] == 0:
-                continue
-            if i == 2:
-                i = 0
-                j = 1
-            font_Valeur = pygame.font.SysFont("Arial", 24)
-            draw_text(self.screen, f"Courant : {value} A",20 + 390 * i, 170 + 200 * j, (0,0,0), font_Valeur)
-            i += 1
-
-        # Affichage de l'état des switchs
-        i = 1
-        j = 0
-        for key, value in self.Energie["Switch"].items():
-            if self.ETAT == 1 and self.Energie["Tension"][key] == 0:
-                continue
-            if i == 2:
-                i = 0
-                j = 1
-            font_Valeur = pygame.font.SysFont("Arial", 24)
-            text = "Ouvert" if value == 0 else "Fermé"
-            color = (200, 0, 0) if value == 0 else (0, 200, 0)
-            draw_text(self.screen, f"Switch : {text}",20 + 390 * i, 200 + 200 * j, color, font_Valeur)
-            i += 1
+        while nb_batteries_colonne < len(self.batteries):
+            if somme_taille + self.batteries[nb_batteries_colonne].taille[1] + 10 > self.height:
+                break
+            somme_taille += self.batteries[nb_batteries_colonne].taille[1] + 10
+            nb_batteries_colonne += 1
+            
+        somme_taille = 0
+        for i, batterie in enumerate(self.batteries):
+            if i % nb_batteries_colonne == 0 and i != 0:
+                somme_taille = 0
+            batterie.update_position((10 + (i//nb_batteries_colonne) * (batterie.taille[0]+10), 80 + somme_taille))
+            
+            somme_taille += batterie.taille[1] + 10
 
     def zero_battery(self):
         if self.Energie["Batterie 1"]["Tension"] == 0:
@@ -225,17 +205,24 @@ class IHM_Robot:
             return
         else:
             data = _json
-        for key in data:
-            if key in self.Energie:
+        
+        for batterie in self.batteries:
+            if batterie.update_data(data):
+                self.energie_recue = True
+                break
+                
+            """if key in self.Energie:
                 for subkey in data[key]:
                     if subkey in self.Energie[key]:
                         self.Energie[key][subkey] = data[key][subkey]
-                        self.energie_recue = True
+                        self.energie_recue = True"""
 
     def deconnexion(self):
         self.is_running = False
 
     def run(self):
+        self.taille_auto_batterie()
+        
         self.client.set_callback_stop(self.deconnexion)
         #self.client.connect()
         self.request_energy()
@@ -245,8 +232,13 @@ class IHM_Robot:
                 if event.type == pygame.QUIT:
                     self.client.add_to_send_list(self.client.create_message(1, "stop", None))
                     self.is_running = False
-                for button in self.button_menu:
-                    button.handle_event(event)
+                
+                if not self.desactiver_event:
+                    for button in self.button_menu:
+                        button.handle_event(event)
+                    
+                for batterie in self.batteries:
+                    batterie.handle_event(event)
 
             # Affichage
             self.screen.fill(self.BACKGROUND_COLOR)

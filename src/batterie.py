@@ -126,6 +126,21 @@ class Batterie:
             self.draw_gestion_batterie()
 
     def draw_gestion_batterie(self):
+        interrupteur = Interrupteur(self.screen, (325, 350), (150, 75), self.etat_batterie['Switch']['valeur'])        
+        
+        def callback_ON():
+            self.etat_batterie['Switch']['valeur'] = True
+            self.is_connected()
+            if self.etat_batterie['Switch']['valeur'] == False:
+                interrupteur.set_on_OFF()
+        
+        def callback_OFF():
+            self.etat_batterie['Switch']['valeur'] = False
+        
+
+        interrupteur.set_callback_OFF(callback_OFF)
+        interrupteur.set_callback_ON(callback_ON)
+        
         
         rect = pygame.Rect((50, 50), (700, 380))
         color = (200, 200, 200)
@@ -135,7 +150,9 @@ class Batterie:
         
         page_batterie = True
         while self.is_running and page_batterie:
+            
             for event in pygame.event.get():
+                interrupteur.handle_event(event)
                 if event.type == pygame.QUIT:
                     self.stop()
                     return
@@ -182,7 +199,7 @@ class Batterie:
             pygame.draw.rect(self.screen, (0, 0, 0), _rect, 2, 4)
             self.screen.blit(text, text_rect)
                         
-            
+            interrupteur.draw()
                     
                     
             

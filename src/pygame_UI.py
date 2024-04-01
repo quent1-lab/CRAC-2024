@@ -273,14 +273,13 @@ class UILabel:
         surface.blit(rendered_text, self.rect.topleft)
 
 class Interrupteur:
-    def __init__(self,screen, x, y, width, height, color=(0, 255, 0), switch_color=(0, 220, 0)):
-        self.x = x
-        self.y = y
-        self.width = width
-        self.height = height
-        self.color = color
+    def __init__(self,screen,pos, size,state=False, switch_color=(0, 220, 0)):
+        self.x = pos[0]
+        self.y = pos[1]
+        self.width = size[0]
+        self.height = size[1]
         self.switch_color = switch_color
-        self.switched_on = False
+        self.switched_on = state
         
         self.screen = screen
         
@@ -372,7 +371,7 @@ if __name__ == '__main__':
     text_box = TextBox(screen, (100, 300, 300, 40), theme_file, send_button=True)
     
         # Initialiser l'interrupteur
-    interrupteur = Interrupteur(screen, 50, 420, 200, 100) # x, y, width, height = 2*width
+    interrupteur = Interrupteur(screen, 50, 420, 200, 100) # x, y, width, height = width//2
 
     running = True
     while running:

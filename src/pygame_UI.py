@@ -272,9 +272,77 @@ class UILabel:
         rendered_text = self.font.render(self.text, True, self.theme['text_color'])
         surface.blit(rendered_text, self.rect.topleft)
 
+class Interrupteur:
+    def __init__(self,screen, x, y, width, height, color=(0, 255, 0), switch_color=(0, 220, 0)):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.color = color
+        self.switch_color = switch_color
+        self.switched_on = False
+        
+        self.screen = screen
+        
+        self.callback_ON = None
+        self.callback_OFF = None
+
+    def draw(self):
+        # Dessine le fond de l'interrupteur en gris
+        pygame.draw.rect(self.screen, (200, 200, 200), (self.x, self.y, self.width, self.height), 0, self.height // 2)
+        pygame.draw.rect(self.screen, (100, 100, 100), (self.x, self.y, self.width, self.height), 2, self.height // 2)
+
+        # Dessine ON ou OFF
+        font = pygame.font.SysFont("Arial", int(self.height * 0.4))
+        if self.switched_on:
+            draw_text(self.screen, "ON", self.x + int(self.width * 0.15), self.y + int(self.height * 0.35), (0, 0, 0), font=font)
+        else:
+            draw_text(self.screen, "OFF", self.x + int(self.width * 0.5), self.y + int(self.height * 0.35), (0, 0, 0), font=font)
+
+        # Dessine l'interrupteur en position ON ou OFF
+        if self.switched_on:
+            pygame.draw.circle(self.screen, self.switch_color, (self.x + self.width - self.height//2, self.y + self.height//2), self.height//2-4)
+            pygame.draw.rect(self.screen, (150, 150, 150), (self.x + self.width//2 +2, self.y +2,self.height-4, self.height-4),2,self.height//2)
+        else:
+            pygame.draw.circle(self.screen, (220, 0, 0), (self.x + self.height//2, self.y + self.height//2), self.height//2-2)
+            pygame.draw.rect(self.screen, (150, 150, 150), (self.x + 2, self.y + 2, self.height-4, self.height-4),2,self.height//2)
+
+
+    def toggle(self):
+        self.switched_on = not self.switched_on
+        
+        if self.switched_on and self.callback_ON is not None:
+            self.callback_ON()
+        elif not self.switched_on and self.callback_OFF is not None:
+            self.callback_OFF()
+        
+    def get_switched_on(self):
+        return self.switched_on
+    
+    def set_on_ON(self):
+        self.switched_on = True
+        
+    def set_on_OFF(self):
+        self.switched_on = False
+        
+    def set_callback_ON(self, callback):
+        self.callback_ON = callback
+        
+    def set_callback_OFF(self, callback):
+        self.callback_OFF = callback
+
+    def handle_event(self, event):
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            mouse_pos = pygame.mouse.get_pos()
+            if self.x < mouse_pos[0] < self.x + self.width and self.y < mouse_pos[1] < self.y + self.height:
+                self.toggle()
+
 
 def draw_text(screen, text, x, y, color=(0, 0, 0), font=None, bg = None):
     """Draws text to the pygame screen, on up left corner"""
+    if font is None:
+        font = pygame.font.Font(None, 36)
+
     if bg is None:
         _text = font.render(text, True, color)
     else:
@@ -282,6 +350,8 @@ def draw_text(screen, text, x, y, color=(0, 0, 0), font=None, bg = None):
     screen.blit(_text, (x, y))
 
 def draw_text_center(screen, text, x, y, color=(0, 0, 0), font=None, bg = None):
+    if font is None:
+        font = pygame.font.Font(None, 36)
     if bg is None:
         text_surface = font.render(text, True, color)
     else:
@@ -300,6 +370,9 @@ if __name__ == '__main__':
     slider = Slider(screen, (50, 125, 200, 20), theme_file, value_range=(0, 100),start_value = 50)
 
     text_box = TextBox(screen, (100, 300, 300, 40), theme_file, send_button=True)
+    
+        # Initialiser l'interrupteur
+    interrupteur = Interrupteur(screen, 50, 420, 200, 100) # x, y, width, height = 2*width
 
     running = True
     while running:
@@ -308,10 +381,11 @@ if __name__ == '__main__':
         button.draw()
         slider.draw()
         text_box.draw()
+        interrupteur.draw()
 
-        draw_text(screen, "Hello World", pygame.font.Font(None, 36), (0, 0, 0), (50, 200, 10, 10))
+        draw_text(screen, "Hello World", 400, 100, (0, 0, 0))
 
-        draw_text_center(screen, "Centered Text", pygame.font.Font(None, 36), (0, 0, 0), (50, 250, 200, 100))
+        draw_text_center(screen, "Centered Text", 400, 200, (0, 0, 0))
 
         for event in pygame.event.get():
             if event.type == pg_constants.QUIT:
@@ -319,6 +393,7 @@ if __name__ == '__main__':
             button.handle_event(event)
             slider.handle_event(event)
             text_box.handle_event(event)
+            interrupteur.handle_event(event)
 
         pygame.display.flip()
         clock.tick(60)

@@ -82,9 +82,9 @@ class Batterie:
 
         # Calculer la hauteur de la boite
         if not self.capteur:
-            hauteur = 20 + 26 + 20 # Marge + Nom + Tension
+            hauteur = 30 + 26 + 20 # Marge + Nom + Tension
         else:
-            hauteur = 20 + 26 + (20*4) # Marge + Nom + Tension + Courant + Switch
+            hauteur = 30 + 26 + (20*4) # Marge + Nom + Tension + Courant + Switch
 
         # Calculer la largeur de la boite
         """largeur = 0
@@ -124,7 +124,7 @@ class Batterie:
                 text = font.render(self.afficher_info(
                     info),True, (0, 0, 0))
                 self.screen.blit(
-                    text, (self.position[0] + 10, self.position[1] + 40 + (i-1) * 30))
+                    text, (self.position[0] + 10, self.position[1] + 45 + (i-1) * 30))
 
     def click(self, pos):
         if self.rect.collidepoint(pos) and self.capteur:

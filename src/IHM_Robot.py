@@ -100,7 +100,7 @@ class IHM_Robot:
     
     def taille_auto_batterie(self):
         nb_batteries_colonne = 0
-        somme_taille = 80
+        somme_taille = 90
         
         while nb_batteries_colonne < len(self.batteries):
             if somme_taille + self.batteries[nb_batteries_colonne].taille[1] + 10 > self.height:
@@ -112,7 +112,7 @@ class IHM_Robot:
         for i, batterie in enumerate(self.batteries):
             if i % nb_batteries_colonne == 0 and i != 0:
                 somme_taille = 0
-            batterie.update_position((10 + (i//nb_batteries_colonne) * (batterie.taille[0]+10), 80 + somme_taille))
+            batterie.update_position((10 + (i//nb_batteries_colonne) * (batterie.taille[0]+10), 90 + somme_taille))
             
             somme_taille += batterie.taille[1] + 10
 

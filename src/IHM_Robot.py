@@ -224,7 +224,7 @@ class IHM_Robot:
         self.taille_auto_batterie()
         
         self.client.set_callback_stop(self.deconnexion)
-        #self.client.connect()
+        self.client.connect()
         self.request_energy()
         while self.is_running:
             # Gestion des événements

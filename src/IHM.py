@@ -629,7 +629,7 @@ class IHM:
         elif message["cmd"] == "energie":
             energie = message["data"]
             self.update_energie(energie)
-        elif message["cmd"] == "akn_p":
+        elif message["cmd"] == "akn_m":
             self.robot_move = False
             self.pos_waiting_list.pop(0)
 

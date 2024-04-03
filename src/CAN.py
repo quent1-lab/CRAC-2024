@@ -81,22 +81,22 @@ class ComCAN:
 
                 if id_bat == 1:
                     self.client.add_to_send_list(self.client.create_message(0, "energie", {"Batterie Main": {"Tension" : v_bat}}))
-                    print(f"V_Batterie_Main : {v_bat}")
                 else:
                     self.client.add_to_send_list(self.client.create_message(0, "energie", {f"Batterie {id_bat-1}": {"Tension" : v_bat}}))
-                    print(f"V_Batterie_{id_bat-1} : {v_bat}")
             elif data[0] == 0x204:
                 # I_Batterie : ID batterie (short), I_Batterie (short)
                 id_bat = dataX[0]
                 i_bat = dataX[1] /100
                 self.client.add_to_send_list(self.client.create_message(0, "energie", {f"Batterie {id_bat}": {"Courant" : i_bat}}))
-                print(f"I_Batterie_{id_bat} : {i_bat}")
             elif data[0] == 0x205:
                 # Switch_Batterie : ID batterie (short), Switch_Batterie (short)
                 id_bat = dataX[0]
                 s_bat = dataX[1]
                 self.client.add_to_send_list(self.client.create_message(0, "energie", {f"Batterie {id_bat}": {"Switch" : s_bat}}))
-                print(f"Switch_Batterie_{id_bat} : {s_bat}")
+
+            elif data[0] == 0x101:
+                # Acknowledge Moteur : ID moteur (short)
+                self.client.add_to_send_list(self.client.create_message(0, "ack", None))
             else:
                 logging.error(f"ID inconnu ; data : {data}")
                 print(f"ID inconnu ; data : {data}")

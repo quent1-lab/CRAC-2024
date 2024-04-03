@@ -158,9 +158,9 @@ class IHM_Robot:
             while self.is_running:
                 if index >= len(commande_energie): # On a fini de demander les énergies des batteries, on attend 0.5s avant de recommencer
                     index = 0
-                    if self.ETAT == 0:
-                        for i in range(1, 4):
-                            self.switch(i)
+                    #if self.ETAT == 0:
+                        #for i in range(1, 4):
+                        #    self.switch(i)
                     time.sleep(0.5)
                 
                 if index in self.ban_battery: # On ne demande pas l'énergie des batteries à 0V

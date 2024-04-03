@@ -136,11 +136,20 @@ class IHM_Robot:
     def switch_off(self, num_switch):
         self.client.send(self.client.create_message(2, "CAN", {"id": 518, "byte1": num_switch, "byte2": 0, "byte3": 0}))
     
-    def switch(self, num_switch):
-        if self.Energie[f"Batterie {num_switch}"]["Tenstion"] != 0 and self.Energie[f"Batterie {num_switch}"]["Switch"] == 0:
+    def set_switch(self, num_switch, etat):
+        if etat == 1:
             self.switch_on(num_switch)
-        elif self.Energie[f"Batterie {num_switch}"]["Tenstion"] == 0 and self.Energie[f"Batterie {num_switch}"]["Switch"] == 1:
+        elif etat == 0:
             self.switch_off(num_switch)
+    
+    def switch(self, num_switch):
+        try :
+            if self.Energie[f"Batterie {num_switch}"]["Tenstion"] != 0 and self.Energie[f"Batterie {num_switch}"]["Switch"] == 0:
+                self.switch_on(num_switch)
+            elif self.Energie[f"Batterie {num_switch}"]["Tenstion"] == 0 and self.Energie[f"Batterie {num_switch}"]["Switch"] == 1:
+                self.switch_off(num_switch)
+        except Exception as e:
+            print(f"Erreur lors de l'activation/désactivation du switch : {str(e)}")
 
     def request_energy(self):
         if self.state_request_energy:

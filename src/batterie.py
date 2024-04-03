@@ -4,7 +4,7 @@ from pygame_UI import *
 
 
 class Batterie:
-    def __init__(self, capteur=False, screen=None, position=(0, 0), nom='Batterie', _callback_desactiver_event=None):
+    def __init__(self, capteur=False, screen=None, position=(0, 0), nom='Batterie', _callback_desactiver_event=None, _callback_switch=None):
         self.capteur = capteur
 
         self.screen = screen
@@ -15,6 +15,7 @@ class Batterie:
         self.rect = pygame.Rect(self.position, self.taille)
         
         self.callback_desactiver_event = _callback_desactiver_event
+        self.callback_switch = _callback_switch
 
         self.etat_batterie = {
             'Nom': {'valeur': nom, 'unite': ''},
@@ -25,6 +26,7 @@ class Batterie:
             'Energie': {'valeur': 0, 'unite': 'Wh'},
             'Qualite': {'valeur': 0, 'unite': '%'}
         }
+        self.numero_batterie = nom.split(' ')[-1]
 
     def update_position(self, position):
         self.position = position
@@ -142,9 +144,13 @@ class Batterie:
             self.is_connected()
             if self.etat_batterie['Switch']['valeur'] == False:
                 interrupteur.set_on_OFF()
+            if self.callback_switch:
+                self.callback_switch(self.numero_batterie, self.etat_batterie['Switch']['valeur'])
         
         def callback_OFF():
             self.etat_batterie['Switch']['valeur'] = False
+            if self.callback_switch:
+                self.callback_switch(self.numero_batterie, self.etat_batterie['Switch']['valeur'])
         
 
         interrupteur.set_callback_OFF(callback_OFF)

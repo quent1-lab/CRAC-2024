@@ -96,7 +96,7 @@ class ComCAN:
 
             elif data[0] == 0x101:
                 # Acknowledge Moteur : ID moteur (short)
-                self.client.add_to_send_list(self.client.create_message(0, "ack", None))
+                self.client.add_to_send_list(self.client.create_message(0, "ack_mgi", None))
             else:
                 logging.error(f"ID inconnu ; data : {data}")
                 print(f"ID inconnu ; data : {data}")

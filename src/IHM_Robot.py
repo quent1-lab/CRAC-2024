@@ -131,10 +131,10 @@ class IHM_Robot:
             self.ban_battery.append(9)
 
     def switch_on(self, num_switch):
-        self.client.send(self.client.create_message(2, "CAN", {"id": 518, "byte1": num_switch, "byte2": 1, "byte3": 0}))
+        self.client.send(self.client.create_message(2, "CAN", {"id": 518, "byte1": 2, "byte2": 1, "byte3": 0}))
 
     def switch_off(self, num_switch):
-        self.client.send(self.client.create_message(2, "CAN", {"id": 518, "byte1": num_switch, "byte2": 0, "byte3": 0}))
+        self.client.send(self.client.create_message(2, "CAN", {"id": 518, "byte1": 2, "byte2": 0, "byte3": 0}))
     
     def set_switch(self, num_switch, etat):
         if etat == 1:

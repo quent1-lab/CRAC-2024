@@ -55,10 +55,10 @@ class IHM_Robot:
         
         # Initialisation des batteries
         self.batteries = [
-            Batterie(capteur=False, screen=self.screen, nom='Batterie Main', _callback_desactiver_event= lambda etat: desactiver_bouton(etat)),
-            Batterie(capteur=True, screen=self.screen, nom='Batterie 1',_callback_desactiver_event= lambda etat: desactiver_bouton(etat)),
-            Batterie(capteur=True, screen=self.screen, nom='Batterie 2',_callback_desactiver_event= lambda etat: desactiver_bouton(etat)),
-            Batterie(capteur=True, screen=self.screen, nom='Batterie 3',_callback_desactiver_event= lambda etat: desactiver_bouton(etat))
+            Batterie(capteur=False, screen=self.screen, nom='Batterie Main', _callback_desactiver_event=lambda etat: desactiver_bouton(etat), _callback_switch=lambda num_switch, etat: self.set_switch(num_switch, etat)),
+            Batterie(capteur=True, screen=self.screen, nom='Batterie 1', _callback_desactiver_event=lambda etat: desactiver_bouton(etat), _callback_switch=lambda num_switch, etat: self.set_switch(num_switch, etat)),
+            Batterie(capteur=True, screen=self.screen, nom='Batterie 2', _callback_desactiver_event=lambda etat: desactiver_bouton(etat), _callback_switch=lambda num_switch, etat: self.set_switch(num_switch, etat)),
+            Batterie(capteur=True, screen=self.screen, nom='Batterie 3', _callback_desactiver_event=lambda etat: desactiver_bouton(etat), _callback_switch=lambda num_switch, etat: self.set_switch(num_switch, etat))
         ]
         self.batteries_names = ["Batterie Main", "Batterie 1", "Batterie 2", "Batterie 3"]
 

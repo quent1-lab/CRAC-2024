@@ -729,7 +729,7 @@ class IHM:
 
     def start_match(self):
         self.ETAT = 1
-        self.client_socket.add_to_send_list(self.client_socket.create_message(self.CAN, "zone", {"zone": self.zone_depart}))
+        self.client_socket.add_to_send_list(self.client_socket.create_message(self.CAN, "recal", {"zone": self.zone_depart}))
         self.client_socket.add_to_send_list(self.client_socket.create_message(self.IHM_Robot, "etat", {"etat": self.ETAT}))
 
     def run(self):

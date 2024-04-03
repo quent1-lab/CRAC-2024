@@ -5,6 +5,9 @@ import struct
 import logging
 import struct
 
+# Configuration du logger
+logging.basicConfig(filename='buscan.log', level=logging.INFO, datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
+
 class ComCAN:
     def __init__(self, channel, bustype):
         self.channel = channel
@@ -156,9 +159,6 @@ class ComCAN:
 
 
     def run(self):
-        # Configuration du logger
-        logging.basicConfig(filename='buscan.log', level=logging.INFO, datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
-        
         print("BusCAN : Lancement du programme")
         try:
             self.client.set_callback_stop(self.disconnect)

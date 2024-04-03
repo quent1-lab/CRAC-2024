@@ -125,7 +125,9 @@ class ComCAN:
                 #messageCan = can.Message(arbitration_id=0x24, data=dataCan, is_extended_id=False)
 
                 if data["zone"] == 1:
-                    messageCan = can.Message(arbitration_id=0x28, data=[260,260], is_extended_id=False)
+                    # X (double), Y (double), Theta (double)
+                    dataCan = struct.pack('d', 200) + struct.pack('d', 200) + struct.pack('d', 0)
+                    messageCan = can.Message(arbitration_id=0x28, data=dataCan, is_extended_id=False)
                 #self.send(messageCan)
                 print("BusCAN : Message de recalage envoyé")
             elif message["cmd"] == "desa":
@@ -177,4 +179,5 @@ class ComCAN:
 
 if __name__ == "__main__":
     com = ComCAN('can0', 'socketcan')
+    logging.info("BusCAN : Lancement du programme")
     com.run()

@@ -142,14 +142,6 @@ class IHM_Robot:
         elif etat == 0:
             self.switch_off(num_switch)
     
-    def switch(self, num_switch):
-        try :
-            if self.Energie[f"Batterie {num_switch}"]["Tenstion"] != 0 and self.Energie[f"Batterie {num_switch}"]["Switch"] == 0:
-                self.switch_on(num_switch)
-            elif self.Energie[f"Batterie {num_switch}"]["Tenstion"] == 0 and self.Energie[f"Batterie {num_switch}"]["Switch"] == 1:
-                self.switch_off(num_switch)
-        except Exception as e:
-            print(f"Erreur lors de l'activation/désactivation du switch : {str(e)}")
 
     def request_energy(self):
         if self.state_request_energy:
@@ -167,9 +159,6 @@ class IHM_Robot:
             while self.is_running:
                 if index >= len(commande_energie): # On a fini de demander les énergies des batteries, on attend 0.5s avant de recommencer
                     index = 0
-                    #if self.ETAT == 0:
-                        #for i in range(1, 4):
-                        #    self.switch(i)
                     time.sleep(0.5)
                 
                 if index in self.ban_battery: # On ne demande pas l'énergie des batteries à 0V
@@ -204,7 +193,7 @@ class IHM_Robot:
             elif message["cmd"] == "etat":
                 data = message["data"]
                 self.ETAT = data["etat"]
-                self.zero_battery() # On bannit les batteries à 0V
+                #self.zero_battery() # On bannit les batteries à 0V
         
         except Exception as e:
             print(f"Erreur lors de la réception du message : {str(e)}")

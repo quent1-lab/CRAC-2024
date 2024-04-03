@@ -96,7 +96,7 @@ class ComCAN:
 
             elif data[0] == 0x101:
                 # Acknowledge Moteur : ID moteur (short)
-                self.client.add_to_send_list(self.client.create_message(0, "ack_mgi", None))
+                self.client.add_to_send_list(self.client.create_message(0, "ack_m", None))
             else:
                 logging.error(f"ID inconnu ; data : {data}")
                 print(f"ID inconnu ; data : {data}")
@@ -120,8 +120,11 @@ class ComCAN:
             elif message["cmd"] == "recal":
                 data = message["data"]
                 # Format des données : zone (char)
-                dataCan = struct.pack('c', data["zone"])
-                messageCan = can.Message(arbitration_id=0x24, data=dataCan, is_extended_id=False)
+                #dataCan = struct.pack('c', data["zone"])
+                #messageCan = can.Message(arbitration_id=0x24, data=dataCan, is_extended_id=False)
+
+                if data["zone"] == 1:
+                    messageCan = can.Message(arbitration_id=0x28, data=[260,260], is_extended_id=False)
                 #self.send(messageCan)
                 print("BusCAN : Message de recalage envoyé")
             elif message["cmd"] == "desa":

@@ -145,12 +145,12 @@ class Batterie:
             if self.etat_batterie['Switch']['valeur'] == False:
                 interrupteur.set_on_OFF()
             if self.callback_switch:
-                self.callback_switch(self.numero_batterie, self.etat_batterie['Switch']['valeur'])
+                self.callback_switch(self.etat_batterie['Switch']['valeur'])
         
         def callback_OFF():
             self.etat_batterie['Switch']['valeur'] = False
             if self.callback_switch:
-                self.callback_switch(self.numero_batterie, False)
+                self.callback_switch(False)
         
 
         interrupteur.set_callback_OFF(callback_OFF)

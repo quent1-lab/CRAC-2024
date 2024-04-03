@@ -56,9 +56,9 @@ class IHM_Robot:
         # Initialisation des batteries
         self.batteries = [
             Batterie(capteur=False, screen=self.screen, nom='Batterie Main', _callback_desactiver_event=lambda etat: desactiver_bouton(etat), _callback_switch=lambda num_switch, etat: self.set_switch(num_switch, etat)),
-            Batterie(capteur=True, screen=self.screen, nom='Batterie 1', _callback_desactiver_event=lambda etat: desactiver_bouton(etat), _callback_switch=lambda num_switch, etat: self.set_switch(num_switch, etat)),
-            Batterie(capteur=True, screen=self.screen, nom='Batterie 2', _callback_desactiver_event=lambda etat: desactiver_bouton(etat), _callback_switch=lambda num_switch, etat: self.set_switch(num_switch, etat)),
-            Batterie(capteur=True, screen=self.screen, nom='Batterie 3', _callback_desactiver_event=lambda etat: desactiver_bouton(etat), _callback_switch=lambda num_switch, etat: self.set_switch(num_switch, etat))
+            Batterie(capteur=True, screen=self.screen, nom='Batterie 1', _callback_desactiver_event=lambda etat: desactiver_bouton(etat), _callback_switch=lambda  etat: self.set_switch(1, etat)),
+            Batterie(capteur=True, screen=self.screen, nom='Batterie 2', _callback_desactiver_event=lambda etat: desactiver_bouton(etat), _callback_switch=lambda etat: self.set_switch(2, etat)),
+            Batterie(capteur=True, screen=self.screen, nom='Batterie 3', _callback_desactiver_event=lambda etat: desactiver_bouton(etat), _callback_switch=lambda etat: self.set_switch(3, etat))
         ]
         self.batteries_names = ["Batterie Main", "Batterie 1", "Batterie 2", "Batterie 3"]
 
@@ -131,10 +131,10 @@ class IHM_Robot:
             self.ban_battery.append(9)
 
     def switch_on(self, num_switch):
-        self.client.send(self.client.create_message(2, "CAN", {"id": 518, "byte1": 2, "byte2": 1, "byte3": 0}))
+        self.client.send(self.client.create_message(2, "CAN", {"id": 518, "byte1": num_switch, "byte2": 1, "byte3": 0}))
 
     def switch_off(self, num_switch):
-        self.client.send(self.client.create_message(2, "CAN", {"id": 518, "byte1": 2, "byte2": 0, "byte3": 0}))
+        self.client.send(self.client.create_message(2, "CAN", {"id": 518, "byte1": num_switch, "byte2": 0, "byte3": 0}))
     
     def set_switch(self, num_switch, etat):
         if etat == 1:

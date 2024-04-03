@@ -207,7 +207,7 @@ class IHM_Robot:
             data = _json
         
         for batterie in self.batteries:
-            if batterie.update_data(data):
+            if batterie.recuperer_valeurs(data):
                 self.energie_recue = True
                 break
                 

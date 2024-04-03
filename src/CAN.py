@@ -128,7 +128,7 @@ class ComCAN:
                     # X (double), Y (double), Theta (double)
                     dataCan = struct.pack('d', 200) + struct.pack('d', 200) + struct.pack('d', 0)
                     messageCan = can.Message(arbitration_id=0x28, data=dataCan, is_extended_id=False)
-                #self.send(messageCan)
+                    self.send(messageCan)
                 print("BusCAN : Message de recalage envoyé")
             elif message["cmd"] == "desa":
                 data = message["data"]

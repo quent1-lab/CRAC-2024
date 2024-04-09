@@ -179,8 +179,9 @@ class IHM_Robot:
                         pygame.draw.rect(self.screen, (255, 0, 0), (self.width//2 - 200, self.height//2 - 100, 400, 200))
                         font = pygame.font.SysFont("Arial", 30)
                         draw_text_center(self.screen, "Erreur de réception des données des batteries", x=self.width//2, y=self.height//2 - 50, font=font, color=(255, 255, 255))
-                        draw_text_center(self.screen, "La carte énergie est-elle alimenté ?", self.font, (255, 0, 0), x=self.width//2, y=self.height//2 + 50, font=font, color=(255, 255, 255))
+                        draw_text_center(self.screen, "La carte énergie est-elle alimenté ?", x=self.width//2, y=self.height//2 + 50, font=font, color=(255, 255, 255))
                         pygame.display.flip()
+                        
                         time.sleep(10)
                         nb_tentatives = 0
 

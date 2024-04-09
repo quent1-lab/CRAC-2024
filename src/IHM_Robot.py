@@ -187,7 +187,7 @@ class IHM_Robot:
                         nb_tentatives += 1
                         temps = 0
                     
-                    if nb_tentatives > 5: # On a essayé 5 fois de recevoir les données, on affiche un message d'erreur
+                    if nb_tentatives > 2: # On a essayé 5 fois de recevoir les données, on affiche un message d'erreur
                         self.error.append(0x10)
                 
                 if 0x10 in self.error:

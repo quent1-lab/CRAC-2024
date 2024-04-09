@@ -144,17 +144,13 @@ class Batterie:
         self.callback_desactiver_event(True)       
         
         def callback_ON():
-            self.etat_batterie['Switch']['valeur'] = True
-            self.is_connected()
+            self.etat_batterie['Switch']['valeur'] = self.is_connected()
+            
             if self.etat_batterie['Switch']['valeur'] == False:
                 interrupteur.set_on_OFF()
-            if self.callback_switch:
-                self.callback_switch(self.etat_batterie['Switch']['valeur'])
         
         def callback_OFF():
-            self.etat_batterie['Switch']['valeur'] = False
-            if self.callback_switch:
-                self.callback_switch(False)
+            self.etat_batterie['Switch']['valeur'] = self.is_connected()
         
 
         interrupteur.set_callback_OFF(callback_OFF)

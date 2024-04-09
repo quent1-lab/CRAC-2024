@@ -133,7 +133,7 @@ class IHM_Robot:
         for i, batterie in enumerate(self.batteries):
             if i == 0:
                 continue
-            if batterie.is_connected == False:
+            if batterie.is_connected() == False:
                 self.ban_battery.append(i)
                 self.ban_battery.append(i+3)
                 self.ban_battery.append(i+6)

@@ -33,7 +33,7 @@ class Batterie:
         self.position = position
         self.rect = pygame.Rect(self.position, self.taille)
 
-    def is_connected(self):
+    def is_connected(self): # BUG : Si switch on,puis error 0x10 (donc switch off ?), puis alive et start -> switch reste off
         if self.etat_batterie['Tension']['valeur'] > 1:
             self.connecter = True
             if not self.etat_batterie['Switch']['valeur']:

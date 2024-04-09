@@ -652,8 +652,8 @@ class IHM:
 
     def handle_mouse_click(self, event):
         key = pygame.key.get_pressed()
-        # Si la touche MAJ droit est enfoncée et que l'on clique
-        if event.type == MOUSEBUTTONDOWN and key[pygame.K_RSHIFT]:
+        # Si la touche MAJ gauche est enfoncée et que l'on clique
+        if event.type == MOUSEBUTTONDOWN and key[pygame.K_LSHIFT]:
             # Vérifiez si le clic a eu lieu dans la zone de jeu
             if self.is_within_game_area(event.pos):
                 # Convertissez les coordonnées de la souris en coordonnées du terrain de jeu

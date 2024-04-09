@@ -191,6 +191,8 @@ class IHM_Robot:
                     if nb_tentatives > 1: # On a essayé 5 fois de recevoir les données, on affiche un message d'erreur
                         if 0x10 not in self.error:
                             self.error.append(0x10)
+                            for batterie in self.batteries:
+                                batterie.mode_error()
                 
                 if 0x10 in self.error:
                     self.error.remove(0x10)
@@ -242,8 +244,6 @@ class IHM_Robot:
             # Si une erreur est survenue lors de la réception des données des batteries
             if len(self.error) > 0:
                 self.PAGE = 4
-                for batterie in self.batteries:
-                    batterie.mode_error()
             else:
                 self.PAGE = 0
             

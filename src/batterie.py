@@ -33,12 +33,16 @@ class Batterie:
         self.rect = pygame.Rect(self.position, self.taille)
 
     def is_connected(self):
-        if self.etat_batterie['Tension']['valeur'] > 0:
+        if self.etat_batterie['Tension']['valeur'] > 1:
             self.connecter = True
-            self.etat_batterie['Switch']['valeur'] = True
+            if not self.etat_batterie['Switch']['valeur']:
+                self.etat_batterie['Switch']['valeur'] = True
+                self.callback_switch(True)
         else:
             self.connecter = False
-            self.etat_batterie['Switch']['valeur'] = False
+            if self.etat_batterie['Switch']['valeur']:
+                self.etat_batterie['Switch']['valeur'] = False
+                self.callback_switch(False)
         return self.connecter
 
     def recuperer_valeurs(self, _json):

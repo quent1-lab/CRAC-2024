@@ -131,6 +131,8 @@ class IHM_Robot:
 
     def zero_battery(self):
         for i, batterie in enumerate(self.batteries):
+            if i == 0:
+                continue
             if batterie.is_connected == False:
                 self.ban_battery.append(i)
                 self.ban_battery.append(i+3)
@@ -218,7 +220,7 @@ class IHM_Robot:
                 data = message["data"]
                 self.ETAT = data["etat"]
                 self.zero_battery() # On bannit les batteries à 0V
-                self.auto_switch() # On allume les batteries connectées
+                #self.auto_switch() # On allume les batteries connectées
         
         except Exception as e:
             print(f"Erreur lors de la réception du message : {str(e)}")

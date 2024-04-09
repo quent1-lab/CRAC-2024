@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"name": "Carte_Energie",
+			"path": "Ressources/Code carte energie/Carte_Energie"
+		}
+	],
+	"settings": {}
+}

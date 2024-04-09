@@ -117,18 +117,11 @@ class IHM_Robot:
             somme_taille += batterie.taille[1] + 10
 
     def zero_battery(self):
-        if self.Energie["Batterie 1"]["Tension"] == 0:
-            self.ban_battery.append(1)
-            self.ban_battery.append(4)
-            self.ban_battery.append(7)
-        if self.Energie["Batterie 2"]["Tension"] == 0:
-            self.ban_battery.append(2)
-            self.ban_battery.append(5)
-            self.ban_battery.append(8)
-        if self.Energie["Batterie 3"]["Tension"] == 0:
-            self.ban_battery.append(3)
-            self.ban_battery.append(6)
-            self.ban_battery.append(9)
+        for i, batterie in enumerate(self.batteries):
+            if not batterie.is_connected:
+                self.ban_battery.append(i)
+                self.ban_battery.append(i+3)
+                self.ban_battery.append(i+6)
 
     def switch_on(self, num_switch):
         self.client.send(self.client.create_message(2, "CAN", {"id": 518, "byte1": num_switch, "byte2": 1, "byte3": 0}))
@@ -147,14 +140,17 @@ class IHM_Robot:
         if self.state_request_energy:
             return
         self.request_energy = True
-
+        
+        # Variable contenant les commandes pour demander l'énergie des batteries
         commande_energie = [ # id, byte1, byte2, byte3 => commande CAN
             [512,1,0,0],[512,2,0,0], [512,3,0,0], [512,4,0,0],  # Tension
             [513,1,0,0],[513,2,0,0], [513,3,0,0],               # Courant
             [514,1,0,0],[514,2,0,0], [514,3,0,0]                # Switch
         ]
-
+        
         def task():
+            # Variable comptant le nombre de tentatives pour recevoir les données
+            nb_tentatives = 0
             index = 0
             while self.is_running:
                 if index >= len(commande_energie): # On a fini de demander les énergies des batteries, on attend 0.5s avant de recommencer
@@ -175,7 +171,17 @@ class IHM_Robot:
                     temps += 0.01
                     if temps > 2:
                         self.client.send(self.client.create_message(2, "CAN", {"id": commande_energie[index][0], "byte1": commande_energie[index][1], "byte2": commande_energie[index][2], "byte3": commande_energie[index][3]}))
+                        nb_tentatives += 1
                         temps = 0
+                    
+                    if nb_tentatives > 5: # On a essayé 5 fois de recevoir les données, on affiche un message d'erreur
+                        # Dessiner un message d'erreur sur l'écran$
+                        pygame.draw.rect(self.screen, (255, 0, 0), (self.width//2 - 100, self.height//2 - 50, 200, 100))
+                        draw_text_center(self.screen, "Erreur de réception des données des batteries", self.font, (0, 0, 0), self.width//2, self.height//2 - 20)
+                        draw_text_center(self.screen, "La carte énergie est-elle alimenté ?", self.font, (0, 0, 0), self.width//2, self.height//2 + 20)
+                        pygame.display.flip()
+                        time.sleep(2)
+                        nb_tentatives = 0
 
                 self.energie_recue = False
                 index += 1
@@ -193,7 +199,7 @@ class IHM_Robot:
             elif message["cmd"] == "etat":
                 data = message["data"]
                 self.ETAT = data["etat"]
-                #self.zero_battery() # On bannit les batteries à 0V
+                self.zero_battery() # On bannit les batteries à 0V
         
         except Exception as e:
             print(f"Erreur lors de la réception du message : {str(e)}")

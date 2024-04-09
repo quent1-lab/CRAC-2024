@@ -242,6 +242,8 @@ class IHM_Robot:
             # Si une erreur est survenue lors de la réception des données des batteries
             if len(self.error) > 0:
                 self.PAGE = 4
+                for batterie in self.batteries:
+                    batterie.page_batterie = False
             else:
                 self.PAGE = 0
             

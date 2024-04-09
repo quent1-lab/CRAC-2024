@@ -9,6 +9,7 @@ class Batterie:
 
         self.screen = screen
         self.is_running = True
+        self.page_batterie = False
         self.connecter = False
         self.taille = self.taille_boite()
         self.position = position
@@ -165,8 +166,8 @@ class Batterie:
         rect_quit = pygame.Rect((700, 55), (45, 40))
         color_quit = (255, 0, 0)
         
-        page_batterie = True
-        while self.is_running and page_batterie:
+        self.page_batterie = True
+        while self.is_running and self.page_batterie:
             
             for event in pygame.event.get():
                 interrupteur.handle_event(event)
@@ -175,7 +176,7 @@ class Batterie:
                     return
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if rect_quit.collidepoint(event.pos) or not rect.collidepoint(event.pos):
-                        page_batterie = False
+                        self.page_batterie = False
                         self.callback_desactiver_event(False)
                         break
 

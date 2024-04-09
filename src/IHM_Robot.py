@@ -101,8 +101,8 @@ class IHM_Robot:
     
     def page_erreur(self):
         # Cette page affiche un message d'erreur si une erreur est survenue lors de la réception des données des batteries
-        pygame.draw.rect(self.screen, (255, 0, 0), (self.width//2 - 350, self.height//2 - 50, 700, 300), 0, 10)
-        pygame.draw.rect(self.screen, (0, 0, 0), (self.width//2 - 350, self.height//2 - 50, 700, 300), 2, 10)
+        pygame.draw.rect(self.screen, (255, 0, 0), (self.width//2 - 350, 90, 700, 300), 0, 10)
+        pygame.draw.rect(self.screen, (0, 0, 0), (self.width//2 - 350, 90, 700, 300), 2, 10)
         
         font = pygame.font.SysFont("Arial", 30)
         
@@ -131,7 +131,7 @@ class IHM_Robot:
 
     def zero_battery(self):
         for i, batterie in enumerate(self.batteries):
-            if not batterie.is_connected:
+            if batterie.is_connected == False:
                 self.ban_battery.append(i)
                 self.ban_battery.append(i+3)
                 self.ban_battery.append(i+6)
@@ -148,7 +148,13 @@ class IHM_Robot:
         elif etat == 0:
             self.switch_off(num_switch)
     
-
+    def auto_switch(self):
+        for i, batterie in enumerate(self.batteries):
+            if i == 0:
+                continue
+            if batterie.is_connected:
+                self.switch_on(i)
+        
     def request_energy(self):
         if self.state_request_energy:
             return
@@ -212,6 +218,7 @@ class IHM_Robot:
                 data = message["data"]
                 self.ETAT = data["etat"]
                 self.zero_battery() # On bannit les batteries à 0V
+                self.auto_switch() # On allume les batteries connectées
         
         except Exception as e:
             print(f"Erreur lors de la réception du message : {str(e)}")

@@ -224,6 +224,9 @@ class Batterie:
             
             pygame.display.flip()
     
+    def mode_error(self):
+        self.page_batterie = False
+
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
             self.click(event.pos)

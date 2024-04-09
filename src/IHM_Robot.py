@@ -243,7 +243,7 @@ class IHM_Robot:
             if len(self.error) > 0:
                 self.PAGE = 4
                 for batterie in self.batteries:
-                    batterie.page_batterie = False
+                    batterie.mode_error()
             else:
                 self.PAGE = 0
             

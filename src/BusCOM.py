@@ -51,6 +51,7 @@ class Serveur:
             while "\n" in buffer:
                 line, buffer = buffer.split("\n", 1)
                 yield line
+            time.sleep(0.005)  # Attendre 5 ms avant de vérifier à nouveau
 
     def handle_connection(self):
         while not self.stop_threads:
@@ -69,6 +70,7 @@ class Serveur:
                     break
                 else:
                     logging.error("BusCOM : Erreur de connexion", exc_info=True)
+            time.sleep(0.005)  # Attendre 5 ms avant de vérifier à nouveau
 
     def send(self, client_socket, message):
         messageJSON = json.dumps(message) + "\n"

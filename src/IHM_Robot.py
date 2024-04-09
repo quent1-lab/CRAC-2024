@@ -189,9 +189,11 @@ class IHM_Robot:
                     
                     if nb_tentatives > 5: # On a essayé 5 fois de recevoir les données, on affiche un message d'erreur
                         self.error.append(0x10)
-                        nb_tentatives = 0
-                        
-                self.error.remove(0x10)
+                
+                if 0x10 in self.error:
+                    self.error.remove(0x10)
+                    
+                nb_tentatives = 0
                 self.energie_recue = False
                 index += 1
 

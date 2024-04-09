@@ -22,7 +22,7 @@ class IHM_Robot:
         self.ETAT = 0
         self.energie_recue = False
         self.state_request_energy = False
-        self.error = 0x00
+        self.error = []
 
         self.BACKGROUND_COLOR = (100, 100, 100)
 
@@ -98,6 +98,18 @@ class IHM_Robot:
 
         for batterie in self.batteries:
             batterie.draw()
+    
+    def page_erreur(self):
+        # Cette page affiche un message d'erreur si une erreur est survenue lors de la réception des données des batteries
+        pygame.draw.rect(self.screen, (255, 0, 0), (self.width//2 - 300, self.height//2 - 200, 600, 300), 0, 10)
+        pygame.draw.rect(self.screen, (0, 0, 0), (self.width//2 - 300, self.height//2 - 200, 600, 300), 2, 10)
+        
+        font = pygame.font.SysFont("Arial", 30)
+        
+        for error in self.error:
+            if error == 0x10:
+                draw_text_center(self.screen, "Erreur de réception des données des batteries", x=self.width//2, y=self.height//2 - 15, font=font, color=(255, 255, 255))
+                draw_text_center(self.screen, "La carte énergie est-elle alimenté ?", x=self.width//2, y=self.height//2 + 15, font=font, color=(255, 255, 255))
     
     def taille_auto_batterie(self):
         nb_batteries_colonne = 0
@@ -176,19 +188,10 @@ class IHM_Robot:
                         temps = 0
                     
                     if nb_tentatives > 5: # On a essayé 5 fois de recevoir les données, on affiche un message d'erreur
-                        self.error = 0x10
-                        
-                        # Dessiner un message d'erreur sur l'écran$
-                        pygame.draw.rect(self.screen, (255, 0, 0), (self.width//2 - 200, self.height//2 - 100, 400, 200))
-                        font = pygame.font.SysFont("Arial", 30)
-                        draw_text_center(self.screen, "Erreur de réception des données des batteries", x=self.width//2, y=self.height//2 - 50, font=font, color=(255, 255, 255))
-                        draw_text_center(self.screen, "La carte énergie est-elle alimenté ?", x=self.width//2, y=self.height//2 + 50, font=font, color=(255, 255, 255))
-                        pygame.display.flip()
-                        
-                        time.sleep(10)
+                        self.error.append(0x10)
                         nb_tentatives = 0
-                        self.error = 0x00
-
+                        
+                self.error.remove(0x10)
                 self.energie_recue = False
                 index += 1
 
@@ -233,17 +236,10 @@ class IHM_Robot:
         while self.is_running:
             
             # Si une erreur est survenue lors de la réception des données des batteries
-            if self.error == 0x10:
-                while self.error == 0x10 and self.is_running:
-                    for event in pygame.event.get():
-                        if event.type == pygame.QUIT:
-                            self.client.add_to_send_list(self.client.create_message(1, "stop", None))
-                            self.is_running = False
-                            break
-                        
-                        self.button_menu[4].handle_event(event)
-                    
-                    time.sleep(0.01)
+            if len(self.error) > 0:
+                self.PAGE = 4
+            else:
+                self.PAGE = 0
             
             # Gestion des événements
             for event in pygame.event.get():
@@ -276,6 +272,8 @@ class IHM_Robot:
                 pass
             elif self.PAGE == 3:
                 pass
+            elif self.PAGE == 4:
+                self.page_erreur()
 
             pygame.display.flip()
             self.clock.tick(60)

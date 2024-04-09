@@ -101,8 +101,8 @@ class IHM_Robot:
     
     def page_erreur(self):
         # Cette page affiche un message d'erreur si une erreur est survenue lors de la réception des données des batteries
-        pygame.draw.rect(self.screen, (255, 0, 0), (self.width//2 - 350, self.height//2 + 230, 700, 300), 0, 10)
-        pygame.draw.rect(self.screen, (0, 0, 0), (self.width//2 - 350, self.height//2 + 230, 700, 300), 2, 10)
+        pygame.draw.rect(self.screen, (255, 0, 0), (self.width//2 - 350, self.height//2 - 90, 700, 300), 0, 10)
+        pygame.draw.rect(self.screen, (0, 0, 0), (self.width//2 - 350, self.height//2 - 90, 700, 300), 2, 10)
         
         font = pygame.font.SysFont("Arial", 30)
         

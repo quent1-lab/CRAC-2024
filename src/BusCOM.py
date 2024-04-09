@@ -35,9 +35,10 @@ class Serveur:
             except Exception as e:
                 logging.error(f"Erreur lors de la manipulation du client : {str(e)}")
                 break
+            time.sleep(0.005)  # Attendre 5 ms avant de vérifier à nouveau
         if not self.stop_threads:
             self.deconnect_client(connection, address)
-            id = [_id for _id in range(1, 11) if address in [client[1] for client in self.clients]]
+            #id = [_id for _id in range(1, 11) if address in [client[1] for client in self.clients]]
             print(f"BusCOM : Déconnecté de ({address})")
 
     def receive_messages(self, socket):

@@ -22,6 +22,7 @@ class IHM_Robot:
         self.ETAT = 0
         self.energie_recue = False
         self.state_request_energy = False
+        self.error = 0x00
 
         self.BACKGROUND_COLOR = (100, 100, 100)
 
@@ -175,6 +176,8 @@ class IHM_Robot:
                         temps = 0
                     
                     if nb_tentatives > 5: # On a essayé 5 fois de recevoir les données, on affiche un message d'erreur
+                        self.error = 0x10
+                        
                         # Dessiner un message d'erreur sur l'écran$
                         pygame.draw.rect(self.screen, (255, 0, 0), (self.width//2 - 200, self.height//2 - 100, 400, 200))
                         font = pygame.font.SysFont("Arial", 30)
@@ -184,6 +187,7 @@ class IHM_Robot:
                         
                         time.sleep(10)
                         nb_tentatives = 0
+                        self.error = 0x00
 
                 self.energie_recue = False
                 index += 1
@@ -216,12 +220,6 @@ class IHM_Robot:
             if batterie.recuperer_valeurs(data):
                 self.energie_recue = True
                 break
-                
-            """if key in self.Energie:
-                for subkey in data[key]:
-                    if subkey in self.Energie[key]:
-                        self.Energie[key][subkey] = data[key][subkey]
-                        self.energie_recue = True"""
 
     def deconnexion(self):
         self.is_running = False
@@ -233,6 +231,10 @@ class IHM_Robot:
         self.client.connect()
         self.request_energy()
         while self.is_running:
+            if self.error == 0x10:
+                while self.error == 0x10:
+                    pass
+            
             # Gestion des événements
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:

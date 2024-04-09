@@ -231,9 +231,19 @@ class IHM_Robot:
         self.client.connect()
         self.request_energy()
         while self.is_running:
+            
+            # Si une erreur est survenue lors de la réception des données des batteries
             if self.error == 0x10:
-                while self.error == 0x10:
-                    pass
+                while self.error == 0x10 and self.is_running:
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            self.client.add_to_send_list(self.client.create_message(1, "stop", None))
+                            self.is_running = False
+                            break
+                        
+                        self.button_menu[4].handle_event(event)
+                    
+                    time.sleep(0.01)
             
             # Gestion des événements
             for event in pygame.event.get():

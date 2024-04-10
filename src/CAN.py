@@ -42,7 +42,7 @@ class ComCAN:
     def send(self, data):
         try:
             self.can.send(data)
-            logging.info("Message envoyé sur le bus CAN")
+            #logging.info("Message envoyé sur le bus CAN")
         except Exception as e:
             logging.error(f"Erreur lors de l'envoi du message : {str(e)}")
     
@@ -154,13 +154,14 @@ class ComCAN:
                 if data:
                     messageCan = can.Message(arbitration_id=0x34, data=[1], is_extended_id=False)
                 self.send(messageCan)
-                print("BusCAN : Message de restart envoyé")
+                #print("BusCAN : Message de restart envoyé")
         except Exception as e:
             logging.error(f"Erreur lors du traitement du message serveur : {str(e)}")
 
 
     def run(self):
         print("BusCAN : Lancement du programme")
+        logging.info("BusCAN : Lancement du programme")
         try:
             self.client.set_callback_stop(self.disconnect)
             self.client.set_callback(self.receive_to_server)

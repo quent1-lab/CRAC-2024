@@ -9,7 +9,7 @@ class ClientException(Exception):
     """Classe pour les exceptions du client"""
 
 # Configuration du logger
-logging.basicConfig(filename='client.log', level=logging.INFO,datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
+#logging.basicConfig(filename='client.log', level=logging.INFO,datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
 
 class Client:
     def __init__(self, _ip, _port, _id_client=2205, _callback=None, _test=False):

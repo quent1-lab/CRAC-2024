@@ -28,7 +28,7 @@ class ComCAN:
             else:
                 logging.error("BusCAN : Le système d'exploitation n'est pas compatible avec le CAN")
         except Exception as e:
-            logging.error(f"Erreur lors de la connexion : {str(e)}")
+            logging.error(f"BusCAN : Erreur lors de la connexion : {str(e)}")
 
     def disconnect(self):
         try:
@@ -37,14 +37,14 @@ class ComCAN:
             self.is_connected = False
             logging.info("BusCAN : Connexion fermée")
         except Exception as e:
-            logging.error(f"Erreur lors de la déconnexion : {str(e)}")
+            logging.error(f"BusCAN : Erreur lors de la déconnexion : {str(e)}")
 
     def send(self, data):
         try:
             self.can.send(data)
             #logging.info("Message envoyé sur le bus CAN")
         except Exception as e:
-            logging.error(f"Erreur lors de l'envoi du message : {str(e)}")
+            logging.error(f"BusCAN : Erreur lors de l'envoi du message : {str(e)}")
     
     def packed(self, id, data):
         dataCan = None
@@ -55,7 +55,7 @@ class ComCAN:
                 else:
                     dataCan += struct.pack(data[i][1], data[i])
         except Exception as e:
-            logging.error(f"Erreur lors de l'emballage des données : {str(e)}")
+            logging.error(f"BusCAN : Erreur lors de l'emballage des données : {str(e)}")
         return can.Message(arbitration_id=id, data=dataCan, is_extended_id=False)
     
     def receive(self):
@@ -66,7 +66,7 @@ class ComCAN:
             else:
                 return None
         except Exception as e:
-            logging.error(f"Erreur lors de la réception du message : {str(e)}")
+            logging.error(f"BusCan : Erreur lors de la réception du message : {str(e)}")
     
     def analyse_CAN(self, data):
         try:
@@ -103,42 +103,39 @@ class ComCAN:
                 # Fin d'instruction de positionnement
                 self.client.add_to_send_list(self.client.create_message(0, "akn_m", None))
             else:
-                logging.error(f"ID inconnu ; data : {data}")
+                logging.error(f"BusCAN : ID inconnu -> data : {data}")
                 print(f"ID inconnu ; data : {data}")
         except Exception as e:
-            logging.error(f"Erreur lors de l'analyse du message CAN : {str(e)}")
+            logging.error(f"BusCAN : Erreur lors de l'analyse du message CAN : {str(e)}")
 
     def receive_to_server(self, message):
         try:
             if message["cmd"] == "stop":
                 self.client.stop()
-            elif message["cmd"] == "data":
-                messageCAN = message["data"]
-                self.send(messageCAN)
+
             elif message["cmd"] == "clic":
                 data = message["data"]
                 # Format des données : x (short), y (short), theta (short), sens(char)
                 dataCan = struct.pack('h', data["x"]) + struct.pack('h', data["y"]) + struct.pack('h', data["theta"]) + struct.pack('c', data["sens"].encode())
                 messageCan = can.Message(arbitration_id=0x20, data=dataCan, is_extended_id=False)
                 self.send(messageCan)
-                print("BusCAN : Message de clic envoyé")
+
             elif message["cmd"] == "recal":
                 data = message["data"]
                 # Format des données : zone (char)
                 dataCan = struct.pack('c', data["zone"])
                 messageCan = can.Message(arbitration_id=0x24, data=dataCan, is_extended_id=False)
                 #self.send(messageCan)
-                print("BusCAN : Message de recalage envoyé")
+
             elif message["cmd"] == "desa":
                 data = message["data"]
                 # Format des données : desa (char)
                 if data:
                     messageCan = can.Message(arbitration_id=0x1F7, data=[0], is_extended_id=False)
-                    print("CAN : moteur désactivé")
                 else:
                     messageCan = can.Message(arbitration_id=0x1F7, data=[1], is_extended_id=False)
-                    print("CAN : moteur activé")
                 self.send(messageCan)
+
             elif message["cmd"] == "CAN":
                 data = message["data"]
                 commande = data["id"]

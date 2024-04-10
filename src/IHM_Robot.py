@@ -25,6 +25,8 @@ class IHM_Robot:
         self.error = []
 
         self.BACKGROUND_COLOR = (100, 100, 100)
+        
+        self.temp_raspberry = 0
 
         # Initialisation de la fenêtre
         pygame.init()
@@ -231,13 +233,19 @@ class IHM_Robot:
                 break
 
     def get_temp_raspberry(self):
-        return os.popen("vcgencmd measure_temp").readline().replace("temp=", "").replace("'C\n", "")
+        path_exists = os.path.exists("/sys/class/thermal/thermal_zone0/temp")
+        while self.is_running:
+            if path_exists:
+                with open("/sys/class/thermal/thermal_zone0/temp", "r") as f:
+                    temp = f.readline()
+                    temp = int(temp) / 1000
+                    self.temp_raspberry = temp
+            time.sleep(1)
     
     def draw_temp_raspberry(self):
         # Affichage de la température du Raspberry
-        temp = self.get_temp_raspberry()
         font = pygame.font.SysFont("Arial", 26)
-        draw_text_center(self.screen, f"Température : {temp}°C", x=600, y=10, font=font, color=(255, 255, 255))            
+        draw_text_center(self.screen, f"Temp : {self.temp_raspberry}°C", x=600, y=30, font=font, color=(255, 255, 255))            
     
     def deconnexion(self):
         self.is_running = False
@@ -248,6 +256,10 @@ class IHM_Robot:
         self.client.set_callback_stop(self.deconnexion)
         self.client.connect()
         self.request_energy()
+        
+        handle_temp_raspberry = threading.Thread(target=self.get_temp_raspberry)
+        handle_temp_raspberry.start()
+        
         while self.is_running:
             
             # Si une erreur est survenue lors de la réception des données des batteries

@@ -246,7 +246,7 @@ class IHM_Robot:
         # Affichage de la température du Raspberry
         font = pygame.font.SysFont("Arial", 26)
         color = (255, 255, 255) if self.temp_raspberry < 60 else (255, 0, 0)
-        draw_text_center(self.screen, f"Temp : {self.temp_raspberry}°C", x=580, y=30, font=font, color=color)            
+        draw_text_center(self.screen, f"Temp : {self.temp_raspberry}°C", x=580, y=40, font=font, color=color)            
     
     def deconnexion(self):
         self.is_running = False

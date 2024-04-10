@@ -10,7 +10,6 @@ class Batterie:
         self.screen = screen
         self.is_running = True
         self.page_batterie = False
-        self.connecter = False
         self.taille = self.taille_boite()
         self.position = position
         self.rect = pygame.Rect(self.position, self.taille)
@@ -35,16 +34,16 @@ class Batterie:
 
     def is_connected(self): # BUG : Si switch on,puis error 0x10 (donc switch off ?), puis alive et start -> switch reste off
         if self.etat_batterie['Tension']['valeur'] > 1:
-            self.connecter = True
+            connecter = True
             if not self.etat_batterie['Switch']['valeur']:
                 self.etat_batterie['Switch']['valeur'] = True
                 self.callback_switch(True)
         else:
-            self.connecter = False
+            connecter = False
             if self.etat_batterie['Switch']['valeur']:
                 self.etat_batterie['Switch']['valeur'] = False
                 self.callback_switch(False)
-        return self.connecter
+        return connecter
 
     def recuperer_valeurs(self, _json):
         if _json is None:

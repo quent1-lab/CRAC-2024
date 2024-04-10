@@ -101,7 +101,7 @@ class IHM_Robot:
     
     def page_erreur(self):
         # Cette page affiche un message d'erreur si une erreur est survenue lors de la réception des données des batteries
-        pygame.draw.rect(self.screen, (255, 0, 255), (self.width//2 - 350, 90, 700, 370), 0, 10)
+        pygame.draw.rect(self.screen, (255, 0, 0), (self.width//2 - 350, 90, 700, 370), 0, 10)
         pygame.draw.rect(self.screen, (0, 0, 0), (self.width//2 - 350, 90, 700, 370), 2, 10)
         
         font = pygame.font.SysFont("Arial", 30)
@@ -230,6 +230,15 @@ class IHM_Robot:
                 self.energie_recue = True
                 break
 
+    def get_temp_raspberry(self):
+        return os.popen("vcgencmd measure_temp").readline().replace("temp=", "").replace("'C\n", "")
+    
+    def draw_temp_raspberry(self):
+        # Affichage de la température du Raspberry
+        temp = self.get_temp_raspberry()
+        font = pygame.font.SysFont("Arial", 26)
+        draw_text_center(self.screen, f"Température : {temp}°C", x=600, y=10, font=font, color=(255, 255, 255))            
+    
     def deconnexion(self):
         self.is_running = False
 
@@ -265,10 +274,14 @@ class IHM_Robot:
             # Affichage
             self.screen.fill(self.BACKGROUND_COLOR)
 
+            # ------------------- Affichage des éléments graphiques du menu -------------------
             for button in self.button_menu:
                 button.draw()
+
+            self.draw_temp_raspberry()
                 
             pygame.draw.line(self.screen, (50, 50, 50), (0, 70), (self.width, 70), 2)
+            # --------------------------------------------------------------------------------
 
             if self.PAGE == 0:
                 self.page_favori()

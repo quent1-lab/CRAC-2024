@@ -101,8 +101,8 @@ class IHM_Robot:
     
     def page_erreur(self):
         # Cette page affiche un message d'erreur si une erreur est survenue lors de la réception des données des batteries
-        pygame.draw.rect(self.screen, (255, 0, 0), (self.width//2 - 350, 90, 700, 360), 0, 10)
-        pygame.draw.rect(self.screen, (0, 0, 0), (self.width//2 - 350, 90, 700, 360), 2, 10)
+        pygame.draw.rect(self.screen, (255, 0, 255), (self.width//2 - 350, 90, 700, 370), 0, 10)
+        pygame.draw.rect(self.screen, (0, 0, 0), (self.width//2 - 350, 90, 700, 370), 2, 10)
         
         font = pygame.font.SysFont("Arial", 30)
         
@@ -181,8 +181,8 @@ class IHM_Robot:
                 while not self.energie_recue: # On attend de recevoir les données
                     if not self.is_running:
                         break
-                    time.sleep(0.01)
-                    temps += 0.01
+                    time.sleep(0.05)
+                    temps += 0.05
                     if temps > 2:
                         self.client.send(self.client.create_message(2, "CAN", {"id": commande_energie[index][0], "byte1": commande_energie[index][1], "byte2": commande_energie[index][2], "byte3": commande_energie[index][3]}))
                         nb_tentatives += 1

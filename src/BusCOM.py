@@ -35,7 +35,7 @@ class Serveur:
             except Exception as e:
                 logging.error(f"Erreur lors de la manipulation du client : {str(e)}")
                 break
-            time.sleep(0.005)  # Attendre 5 ms avant de vérifier à nouveau
+            time.sleep(0.01)  # Attendre 5 ms avant de vérifier à nouveau
         if not self.stop_threads:
             self.deconnect_client(connection, address)
             #id = [_id for _id in range(1, 11) if address in [client[1] for client in self.clients]]
@@ -51,7 +51,7 @@ class Serveur:
             while "\n" in buffer:
                 line, buffer = buffer.split("\n", 1)
                 yield line
-            time.sleep(0.005)  # Attendre 5 ms avant de vérifier à nouveau
+            time.sleep(0.01)  # Attendre 5 ms avant de vérifier à nouveau
 
     def handle_connection(self):
         while not self.stop_threads:
@@ -70,7 +70,7 @@ class Serveur:
                     break
                 else:
                     logging.error("BusCOM : Erreur de connexion", exc_info=True)
-            time.sleep(0.005)  # Attendre 5 ms avant de vérifier à nouveau
+            time.sleep(0.01)  # Attendre 5 ms avant de vérifier à nouveau
 
     def send(self, client_socket, message):
         messageJSON = json.dumps(message) + "\n"

@@ -30,7 +30,7 @@ class IHM_Command:
         self.command_CAN = [None,None,None,None]
 
         # Ajouter des zones de texte et des labels correspondants
-        text_box_info = [
+        box_infos = [
             ("Command", (10, 50), (380, 30)),
             ("X", (10, 100), (80, 30)),
             ("Y", (110, 100), (80, 30)),
@@ -42,7 +42,7 @@ class IHM_Command:
             ("Byte3", (310, 180), (80, 30)),
         ]
 
-        for label_text, box_position, box_size in text_box_info:
+        for label_text, box_position, box_size in box_infos:
             label = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((box_position[0], box_position[1] - 20), (box_size[0],box_size[1]-10) ),
                                                  text=label_text,
                                                  manager=self.manager,
@@ -174,6 +174,104 @@ class IHM_Command:
     def set_desactive_callback(self, callback):
         self.desactive_callback = callback
 
+class IHM_Action_Aux:
+    def __init__(self, manager,_action_numero,_pos_actuelle, _callback_json=None):    
+        self.manager = manager
+        theme = pygame_gui.themes.THEME_DARK
+        self.size = (610, 500)
+
+        self.callback_json = _callback_json
+        self.action_numero = _action_numero
+        self.pos_actuelle = _pos_actuelle
+
+        self.window = pygame_gui.elements.UIWindow(rect=pygame.Rect((100, 100), self.size),
+                                                   manager=self.manager,
+                                                   window_display_title="Action Auxiliaire Manager")
+
+        self.labels = []
+        self.texts = []
+        self.buttons = []
+
+        # Ajouter des zones de texte et des labels correspondants
+        box_infos = {
+            "Numero_action": {"box1": {"type": "label", "position": (20, 5), "size": (150, 30), "text": f"Action numéro : {_action_numero}"}},
+            "Pos_actuelle":  {"box1": {"type": "label", "position": (340, 5), "size": (240, 30), "text": f"X: {_pos_actuelle[0]}  Y: {_pos_actuelle[1]}  T: {_pos_actuelle[2]} °"}},
+            "Angle_arrivee": {"box1": {"type": "label", "position": (20, 50), "size": (150, 30), "text": "Angle d'arrivée"},
+                              "box2": {"type": "text", "position": (20, 80), "size": (155, 30)}},
+            
+            "Cote_a_controler": {"box1": {"type": "label", "position": (340, 50), "size": (230, 30), "text": "Côté à contrôler"},
+                                "box2": {"type": "button", "position": (345, 80), "size": (105, 30), "text": "Avant"},
+                                "box3": {"type": "button", "position": (455, 80), "size": (105, 30), "text": "Arrière"}},
+            
+            "Moteur_pas_a_pas": {"box1": {"type": "label", "position": (0, 130), "size": (200, 30), "text": "Moteur pas à pas"},
+                                "box2": {"type": "void", "position": (20, 160), "size": (160, 30)},
+                                "box3": {"type": "button", "position": (20, 200), "size": (160, 30), "text": "Haut"},
+                                "box4": {"type": "button", "position": (20, 240), "size": (160, 30), "text": "Milieu"},
+                                "box5": {"type": "button", "position": (20, 280), "size": (160, 30), "text": "Bas"},
+                                "box6": {"type": "void", "position": (20, 320), "size": (160, 30)}},
+            
+            "Peigne": {"box1": {"type": "label", "position": (200, 130), "size": (200, 30), "text": "Peigne"},
+                    "box2": {"type": "void", "position": (220, 160), "size": (160, 30)},
+                    "box3": {"type": "button", "position": (220, 200), "size": (160, 30), "text": "Lever"},
+                    "box4": {"type": "button", "position": (220, 240), "size": (160, 30), "text": "Milieu"},
+                    "box5": {"type": "button", "position": (220, 280), "size": (160, 30), "text": "Baisser"},
+                    "box6": {"type": "void", "position": (220, 320), "size": (160, 30)}},
+            
+            "Pinces": { "box1": {"type": "label", "position": (400, 130), "size": (180, 30), "text": "Pinces (D/G)"},
+                        "box2": {"type": "button", "position": (410, 160), "size": (75, 30), "text": "Max"},
+                        "box3": {"type": "button", "position": (490, 160), "size": (75, 30), "text": "Max"},
+                        "box4": {"type": "button", "position": (410, 200), "size": (75, 30), "text": "Ouvert"},
+                        "box5": {"type": "button", "position": (490, 200), "size": (75, 30), "text": "Ouvert"},
+                        "box6": {"type": "button", "position": (410, 240), "size": (75, 30), "text": "Milieu"},
+                        "box7": {"type": "button", "position": (490, 240), "size": (75, 30), "text": "Milieu"},
+                        "box8": {"type": "button", "position": (410, 280), "size": (75, 30), "text": "Fermé"},
+                        "box9": {"type": "button", "position": (490, 280), "size": (75, 30), "text": "Fermé"},
+                        "box10": {"type": "button", "position": (410, 320), "size": (75, 30), "text": "Min"},
+                        "box11": {"type": "button", "position": (490, 320), "size": (75, 30), "text": "Min"}},
+
+        }
+
+        for label_text, box_info in box_infos.items():
+            for box_name, box_data in box_info.items():
+                if box_data["type"] == "label":
+                    label = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((box_data["position"][0], box_data["position"][1]), (box_data["size"][0],box_data["size"][1]) ),
+                                                        text=box_data["text"],
+                                                        manager=self.manager,
+                                                        container=self.window)
+                    self.labels.append(label)
+                    
+                elif box_data["type"] == "text":
+                    text_box = pygame_gui.elements.UITextEntryLine(relative_rect=pygame.Rect((box_data["position"], box_data["size"])),
+                                                                manager=self.manager,
+                                                                container=self.window)
+                    self.texts.append(text_box)
+                    
+                elif box_data["type"] == "button":
+                    button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect(box_data["position"], box_data["size"]),
+                                                                                        text=box_data["text"],
+                                                                                        manager=self.manager,
+                                                                                        container=self.window)
+                    self.buttons.append(button)
+                
+                elif box_data["type"] == "void":
+                    pass
+        
+    def process_events(self, event):
+        if event.type == pygame.USEREVENT:
+            if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
+                for button in self.buttons:
+                    if event.ui_element == button:
+                        pass
+                                                    
+                
+        elif event.type == pygame_gui.UI_TEXT_ENTRY_CHANGED:
+            # Find the text box that triggered the event
+            pass
+
+    
+    def set_callback_json(self, callback):
+        self.desactive_callback = callback
+
 class MainWindow:
     def __init__(self):
         pygame.init()
@@ -197,7 +295,7 @@ class MainWindow:
                 if event.type == pygame.USEREVENT:
                     if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
                         if event.ui_element == self.button:
-                            self.new_window = IHM_Command(self.manager)
+                            self.new_window = IHM_Action_Aux(self.manager,1,(3000,1500,360))
                 self.manager.process_events(event)
                 if self.new_window:
                     self.new_window.process_events(event)

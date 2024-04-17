@@ -211,10 +211,10 @@ class IHM_Action_Aux:
             
             "Pinces": { "box1": {"type": "label", "position": (400, 130), "size": (180, 30), "text": "Pinces (D/G)"},
                         "box2": {"type": "list", "position": (410, 160), "size": (75, 30), "text": ["max","Ouvert","Milieu","Fermé","Min"]},
-                        "box3": {"type": "list", "position": (495, 160), "size": s(75, 30), "text": ["max","Ouvert","Milieu","Fermé","Min"]}},
+                        "box3": {"type": "list", "position": (495, 160), "size": (75, 30), "text": ["max","Ouvert","Milieu","Fermé","Min"]}},
             
             "Test": {"box1": {"type": "label", "position": (20, 350), "size": (150, 30), "text": "Test"},
-                    "box2": {"type": "list", "position": (20, 375), "size": (150, 30), "text": ["-","1","2","3","4","5","6","7","8","9","10"]},
+                    "box2": {"type": "list", "position": (20, 375), "size": (150, 30), "text": ["-","1","2","3","4","5","6","7","8","9","10"]}
                     }
 
         }

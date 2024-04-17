@@ -177,7 +177,6 @@ class IHM_Command:
 class IHM_Action_Aux:
     def __init__(self, manager,_action_numero,_pos_actuelle, _callback_json=None):    
         self.manager = manager
-        theme = pygame_gui.themes.THEME_DARK
         self.size = (610, 500)
 
         self.callback_json = _callback_json
@@ -191,6 +190,7 @@ class IHM_Action_Aux:
         self.labels = []
         self.texts = []
         self.buttons = []
+        self.listes = []
 
         # Ajouter des zones de texte et des labels correspondants
         box_infos = {
@@ -204,30 +204,18 @@ class IHM_Action_Aux:
                                 "box3": {"type": "button", "position": (455, 80), "size": (105, 30), "text": "Arrière"}},
             
             "Moteur_pas_a_pas": {"box1": {"type": "label", "position": (0, 130), "size": (200, 30), "text": "Moteur pas à pas"},
-                                "box2": {"type": "void", "position": (20, 160), "size": (160, 30)},
-                                "box3": {"type": "button", "position": (20, 200), "size": (160, 30), "text": "Haut"},
-                                "box4": {"type": "button", "position": (20, 240), "size": (160, 30), "text": "Milieu"},
-                                "box5": {"type": "button", "position": (20, 280), "size": (160, 30), "text": "Bas"},
-                                "box6": {"type": "void", "position": (20, 320), "size": (160, 30)}},
+                                "box2": {"type": "list", "position": (20, 160), "size": (160, 30), "text": ["-","Haut","Milieu","Bas"]}},
             
             "Peigne": {"box1": {"type": "label", "position": (200, 130), "size": (200, 30), "text": "Peigne"},
-                    "box2": {"type": "void", "position": (220, 160), "size": (160, 30)},
-                    "box3": {"type": "button", "position": (220, 200), "size": (160, 30), "text": "Lever"},
-                    "box4": {"type": "button", "position": (220, 240), "size": (160, 30), "text": "Milieu"},
-                    "box5": {"type": "button", "position": (220, 280), "size": (160, 30), "text": "Baisser"},
-                    "box6": {"type": "void", "position": (220, 320), "size": (160, 30)}},
+                    "box2": {"type": "list", "position": (220, 160), "size": (160, 30), "text": ["-","Lever","Milieu","Baisser"]}},
             
             "Pinces": { "box1": {"type": "label", "position": (400, 130), "size": (180, 30), "text": "Pinces (D/G)"},
-                        "box2": {"type": "button", "position": (410, 160), "size": (75, 30), "text": "Max"},
-                        "box3": {"type": "button", "position": (490, 160), "size": (75, 30), "text": "Max"},
-                        "box4": {"type": "button", "position": (410, 200), "size": (75, 30), "text": "Ouvert"},
-                        "box5": {"type": "button", "position": (490, 200), "size": (75, 30), "text": "Ouvert"},
-                        "box6": {"type": "button", "position": (410, 240), "size": (75, 30), "text": "Milieu"},
-                        "box7": {"type": "button", "position": (490, 240), "size": (75, 30), "text": "Milieu"},
-                        "box8": {"type": "button", "position": (410, 280), "size": (75, 30), "text": "Fermé"},
-                        "box9": {"type": "button", "position": (490, 280), "size": (75, 30), "text": "Fermé"},
-                        "box10": {"type": "button", "position": (410, 320), "size": (75, 30), "text": "Min"},
-                        "box11": {"type": "button", "position": (490, 320), "size": (75, 30), "text": "Min"}},
+                        "box2": {"type": "list", "position": (410, 160), "size": (75, 30), "text": ["max","Ouvert","Milieu","Fermé","Min"]},
+                        "box3": {"type": "list", "position": (495, 160), "size": s(75, 30), "text": ["max","Ouvert","Milieu","Fermé","Min"]}},
+            
+            "Test": {"box1": {"type": "label", "position": (20, 350), "size": (150, 30), "text": "Test"},
+                    "box2": {"type": "list", "position": (20, 375), "size": (150, 30), "text": ["-","1","2","3","4","5","6","7","8","9","10"]},
+                    }
 
         }
 
@@ -250,8 +238,15 @@ class IHM_Action_Aux:
                     button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect(box_data["position"], box_data["size"]),
                                                                                         text=box_data["text"],
                                                                                         manager=self.manager,
-                                                                                        container=self.window)
+                                                                                        container=self.window,)
                     self.buttons.append(button)
+                elif box_data["type"] == "list":
+                    liste = pygame_gui.elements.UIDropDownMenu(relative_rect=pygame.Rect(box_data["position"], box_data["size"]),
+                                                                    options_list=box_data["text"],
+                                                                    starting_option=box_data["text"][0],
+                                                                    manager=self.manager,
+                                                                    container=self.window)
+                    self.listes.append(liste)
                 
                 elif box_data["type"] == "void":
                     pass
@@ -262,6 +257,10 @@ class IHM_Action_Aux:
                 for button in self.buttons:
                     if event.ui_element == button:
                         pass
+            elif event.user_type == pygame_gui.UI_SELECTION_LIST_NEW_SELECTION:
+                for liste in self.listes:
+                    if event.ui_element == liste:
+                        print(liste.get_single_selection())
                                                     
                 
         elif event.type == pygame_gui.UI_TEXT_ENTRY_CHANGED:
@@ -276,7 +275,7 @@ class MainWindow:
     def __init__(self):
         pygame.init()
         self.screen = pygame.display.set_mode((800, 600))
-        self.manager = pygame_gui.UIManager((800, 600))
+        self.manager = pygame_gui.UIManager((800, 600), 'data/theme_button.json')
 
         self.button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((50, 50), (150, 50)),
                                                     text='Open Window',

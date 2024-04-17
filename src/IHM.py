@@ -13,7 +13,7 @@ from sklearn.cluster import DBSCAN
 from client import *
 import json
 
-from windows import IHM_Command
+from windows import IHM_Command, IHM_Action_Aux
 
 class IHM:
     def __init__(self, port=None):
@@ -97,6 +97,7 @@ class IHM:
 
         self.manager = pygame_gui.UIManager(self.WINDOW_SIZE)
         self.command_window = None
+        self.action_window = None
 
         self.start_button = Button(self.lcd, pygame.Rect(self.WINDOW_SIZE[0]/2-50, self.WINDOW_SIZE[1]-55, 100, 40),"data/theme.json", "Démarrer", color=(20,200,20),on_click= self.start_match)
         self.command_button = Button(self.lcd, pygame.Rect(100, self.WINDOW_SIZE[1]-55, 120, 40),"data/theme.json", "Commandes",
@@ -560,9 +561,14 @@ class IHM:
                 self.manager.process_events(event)
                 
                 if event.type == UI_WINDOW_CLOSE:
-                    self.command_window = None
+                    if self.command_window:
+                        self.command_window = None
+                    elif self.action_window:
+                        self.action_window = None
                 if self.command_window:
                     self.command_window.process_events(event)
+                elif self.action_window:
+                    self.action_window.process_events(event)
                 elif self.ETAT == 1:
                     self.handle_mouse_click(event)
 
@@ -669,7 +675,9 @@ class IHM:
                 # Envoie les coordonnées du clic au CAN
                 #self.client_socket.add_to_send_list(self.client_socket.create_message(
                 #    2, "clic", {"x": x, "y": y, "theta": int(self.ROBOT_ANGLE), "sens": "0"}))
-
+                if self.action_window is None:
+                    self.action_window = IHM_Action_Aux(self.manager, 1, (self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE))
+                    
                 self.pos_waiting_list.append((x,y, int(self.ROBOT_ANGLE), "0"))
 
     def is_within_game_area(self, pos):
@@ -764,9 +772,14 @@ class IHM:
                     self.manager.process_events(event)
                     
                     if event.type == UI_WINDOW_CLOSE:
-                        self.command_window = None
+                        if self.command_window:
+                            self.command_window = None
+                        elif self.action_window:
+                            self.action_window = None
                     if self.command_window:
                         self.command_window.process_events(event)
+                    elif self.action_window:
+                        self.action_window.process_events(event)
                     elif self.ETAT == 1:
                         self.handle_mouse_click(event)
                     if self.ETAT == 1:

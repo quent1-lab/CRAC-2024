@@ -194,29 +194,38 @@ class IHM_Action_Aux:
 
         # Ajouter des zones de texte et des labels correspondants
         box_infos = {
-            "Numero_action": {"box1": {"type": "label", "position": (20, 5), "size": (150, 30), "text": f"Action numéro : {_action_numero}"}},
-            "Pos_actuelle":  {"box1": {"type": "label", "position": (340, 5), "size": (240, 30), "text": f"X: {_pos_actuelle[0]}  Y: {_pos_actuelle[1]}  T: {_pos_actuelle[2]} °"}},
-            "Angle_arrivee": {"box1": {"type": "label", "position": (20, 50), "size": (150, 30), "text": "Angle d'arrivée"},
-                              "box2": {"type": "text", "position": (20, 80), "size": (155, 30)}},
+            "Numero_action": {"box1": {"type": "label", "position": (60, 5), "size": (150, 30), "text": f"Action numéro : {_action_numero}"}},
+            "Pos_actuelle":  {"box1": {"type": "label", "position": (300, 5), "size": (240, 30), "text": f"X: {_pos_actuelle[0]}  Y: {_pos_actuelle[1]}  T: {_pos_actuelle[2]} °"}},
+            "Angle_arrivee": {"box1": {"type": "label", "position": (60, 50), "size": (150, 30), "text": "Angle d'arrivée"},
+                              "box2": {"type": "text", "position": (60, 80), "size": (155, 30)}},
             
-            "Cote_a_controler": {"box1": {"type": "label", "position": (340, 50), "size": (230, 30), "text": "Côté à contrôler"},
-                                "box2": {"type": "button", "position": (345, 80), "size": (105, 30), "text": "Avant"},
-                                "box3": {"type": "button", "position": (455, 80), "size": (105, 30), "text": "Arrière"}},
+            "Cote_a_controler": {"box1": {"type": "label", "position": (310, 50), "size": (230, 30), "text": "Côté à contrôler"},
+                                "box2": {"type": "button", "position": (315, 80), "size": (105, 30), "text": "Avant"},
+                                "box3": {"type": "button", "position": (425, 80), "size": (105, 30), "text": "Arrière"}},
             
-            "Moteur_pas_a_pas": {"box1": {"type": "label", "position": (0, 130), "size": (200, 30), "text": "Moteur pas à pas"},
-                                "box2": {"type": "list", "position": (20, 160), "size": (160, 30), "text": ["-","Haut","Milieu","Bas"]}},
+            "Moteur_pas_a_pas": {"box1": {"type": "label", "position": (0, 130), "size": (170, 30), "text": "Moteur pas à pas"},
+                                "box2": {"type": "list", "position": (20, 160), "size": (130, 30), "text": ["-","Haut","Milieu","Bas"]}},
             
-            "Peigne": {"box1": {"type": "label", "position": (200, 130), "size": (200, 30), "text": "Peigne"},
-                    "box2": {"type": "list", "position": (220, 160), "size": (160, 30), "text": ["-","Lever","Milieu","Baisser"]}},
+            "Peigne": {"box1": {"type": "label", "position": (160, 130), "size": (190, 30), "text": "Peigne"},
+                    "box2": {"type": "list", "position": (190, 160), "size": (130, 30), "text": ["-","Lever","Milieu","Baisser"]}},
             
-            "Pinces": { "box1": {"type": "label", "position": (400, 130), "size": (180, 30), "text": "Pinces (D/G)"},
-                        "box2": {"type": "list", "position": (410, 160), "size": (75, 30), "text": ["max","Ouvert","Milieu","Fermé","Min"]},
-                        "box3": {"type": "list", "position": (495, 160), "size": (75, 30), "text": ["max","Ouvert","Milieu","Fermé","Min"]}},
+            "Pinces": { "box1": {"type": "label", "position": (340, 130), "size": (220, 30), "text": "Pinces (D/G)"},
+                        "box2": {"type": "list", "position": (350, 160), "size": (100, 30), "text": ["-","Max","Ouvert","Milieu","Fermé","Min"]},
+                        "box3": {"type": "list", "position": (460, 160), "size": (100, 30), "text": ["-","Max","Ouvert","Milieu","Fermé","Min"]}},
             
-            "Test": {"box1": {"type": "label", "position": (20, 350), "size": (150, 30), "text": "Test"},
-                    "box2": {"type": "list", "position": (20, 375), "size": (150, 30), "text": ["-","1","2","3","4","5","6","7","8","9","10"]}
-                    }
-
+            "New_coord": {"box1": {"type": "label", "position": (20, 250), "size": (270, 30), "text": "Nouvelle coordonnée (optionnel) :"},
+                        "box2": {"type": "label", "position": (20, 270), "size": (130, 30), "text": "X"},
+                        "box3": {"type": "text", "position": (20, 300), "size": (130, 30)},
+                        "box4": {"type": "label", "position": (160, 270), "size": (130, 30), "text": "Y"},
+                        "box5": {"type": "text", "position": (160, 300), "size": (130, 30)},
+                        "box6": {"type": "label", "position": (300, 270), "size": (130, 30), "text": "T"},
+                        "box7": {"type": "text", "position": (300, 300), "size": (130, 30)},
+                        "box8": {"type": "label", "position": (440, 270), "size": (130, 30), "text": "S"},
+                        "box9": {"type": "text", "position": (440, 300), "size": (130, 30)}},
+            
+            "Back": {"box1": {"type": "button", "position": (20, 370), "size": (150, 30), "text": "Retour"}},
+            "Save": {"box1": {"type": "button", "position": (180, 370), "size": (220, 30), "text": "Enregistrer"}},
+            "Next": {"box1": {"type": "button", "position": (410, 370), "size": (150, 30), "text": "Suivant"}},
         }
 
         for label_text, box_info in box_infos.items():

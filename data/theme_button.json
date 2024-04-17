@@ -3,11 +3,11 @@
     {
         "colours":
         {
-            "normal_bg":"#444333",
+            "normal_bg":"#444444",
             "hovered_bg":"#444555",
             "disabled_bg":"#222222",
             "selected_bg":"#0000FF",
-            "dark_bg":"#222222",
+            "dark_bg":"#333333",
             "normal_text":"#FFFFFF",
             "hovered_text":"#CCCCCC",
             "selected_text":"#FFFFFF",

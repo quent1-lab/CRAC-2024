@@ -1,6 +1,7 @@
 import pygame
 import pygame_gui
 from pygame_UI import *
+from pygame_gui.core import ObjectID
 
 class IHM_Command:
     def __init__(self, manager, desactive_callback=None, restart_callback=None, CAN_callback=None):    
@@ -182,6 +183,10 @@ class IHM_Action_Aux:
         self.callback_json = _callback_json
         self.action_numero = _action_numero
         self.pos_actuelle = _pos_actuelle
+        
+        self.back_callback = None
+        self.save_callback = self.save_data
+        self.next_callback = None
 
         self.window = pygame_gui.elements.UIWindow(rect=pygame.Rect((100, 100), self.size),
                                                    manager=self.manager,
@@ -227,6 +232,15 @@ class IHM_Action_Aux:
             "Save": {"box1": {"type": "button", "position": (180, 370), "size": (220, 30), "text": "Enregistrer"}},
             "Next": {"box1": {"type": "button", "position": (410, 370), "size": (150, 30), "text": "Suivant"}},
         }
+        
+        self.data = {
+            "Angle_arrivee": {"value": ""},
+            "Cote_a_controler": {"value_avant": "", "value_arriere": ""},
+            "Moteur_pas_a_pas": {"value": ""},
+            "Peigne": {"value": ""},
+            "Pinces": {"value_droite": "", "value_gauche": ""},
+            "New_coord": {"X": "", "Y": "", "T": "", "S": ""},
+        }
 
         for label_text, box_info in box_infos.items():
             for box_name, box_data in box_info.items():
@@ -247,7 +261,8 @@ class IHM_Action_Aux:
                     button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect(box_data["position"], box_data["size"]),
                                                                                         text=box_data["text"],
                                                                                         manager=self.manager,
-                                                                                        container=self.window,)
+                                                                                        container=self.window,
+                                                                                        object_id=ObjectID(object_id="#b_"+box_data["text"]))
                     self.buttons.append(button)
                 elif box_data["type"] == "list":
                     liste = pygame_gui.elements.UIDropDownMenu(relative_rect=pygame.Rect(box_data["position"], box_data["size"]),
@@ -265,20 +280,50 @@ class IHM_Action_Aux:
             if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
                 for button in self.buttons:
                     if event.ui_element == button:
-                        pass
+                        id = button.get_object_ids()[1]
+                        if id == "#b_Avant":
+                            self.data["Cote_a_controler"]["value_avant"] = "Avant"
+                        elif id == "#b_Arrière":
+                            self.data["Cote_a_controler"]["value_arriere"] = "Arrière"
+                        elif id == "#b_Retour":
+                            self.back_callback()
+                        elif id == "#b_Enregistrer":
+                            self.save_data()
+                        elif id == "#b_Suivant":
+                            self.next_callback()
             elif event.user_type == pygame_gui.UI_SELECTION_LIST_NEW_SELECTION:
                 for liste in self.listes:
                     if event.ui_element == liste:
-                        print(liste.get_single_selection())
-                                                    
-                
-        elif event.type == pygame_gui.UI_TEXT_ENTRY_CHANGED:
-            # Find the text box that triggered the event
-            pass
-
+                        if liste.get_relative_rect().topleft == (20, 160):
+                            self.data["Moteur_pas_a_pas"]["value"] = liste.selected_option
+                        elif liste.get_relative_rect().topleft == (190, 160):
+                            self.data["Peigne"]["value"] = liste.selected_option
+                        elif liste.get_relative_rect().topleft == (350, 160):
+                            self.data["Pinces"]["value_droite"] = liste.selected_option
+                        elif liste.get_relative_rect().topleft == (460, 160):
+                            self.data["Pinces"]["value_gauche"] = liste.selected_option
+            elif event.user_type == pygame_gui.UI_TEXT_ENTRY_CHANGED:
+                for text in self.texts:
+                    if event.ui_element == text:
+                        if text.get_relative_rect().topleft == (60, 80):
+                            self.data["Angle_arrivee"]["value"] = text.get_text()
+                        elif text.get_relative_rect().topleft == (20, 300):
+                            self.data["New_coord"]["X"] = text.get_text()
+                        elif text.get_relative_rect().topleft == (160, 300):
+                            self.data["New_coord"]["Y"] = text.get_text()
+                        elif text.get_relative_rect().topleft == (300, 300):
+                            self.data["New_coord"]["T"] = text.get_text()
+                        elif text.get_relative_rect().topleft == (440, 300):
+                            self.data["New_coord"]["S"] = text.get_text()
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_TAB:
+                pass
     
     def set_callback_json(self, callback):
         self.desactive_callback = callback
+    
+    def save_data(self):
+            print(self.data)
 
 class MainWindow:
     def __init__(self):

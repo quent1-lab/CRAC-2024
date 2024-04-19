@@ -54,10 +54,10 @@ class IHM:
         self.desactive_m = False
 
         self.Energie = {
-            "Batterie 1": {"Tension": 0, "Courant": 0, "Switch": 0},
-            "Batterie 2": {"Tension": 0, "Courant": 0, "Switch": 0},
-            "Batterie 3": {"Tension": 0, "Courant": 0, "Switch": 0},
-            "Batterie Main": {"Tension": 0, "Courant": 0, "Switch": 0}
+            "Batterie 1": {"Tension": 10, "Courant": 0, "Switch": 0},
+            "Batterie 2": {"Tension": 20, "Courant": 0, "Switch": 0},
+            "Batterie 3": {"Tension": 10, "Courant": 0, "Switch": 0},
+            "Batterie Main": {"Tension": 30, "Courant": 0, "Switch": 0}
         }
 
         self.pos_waiting_list = [] # Liste pour stocker les futurs positions positions du robot à atteindre 
@@ -101,13 +101,21 @@ class IHM:
         self.action_window = None
 
         self.start_button = Button(self.lcd, pygame.Rect(self.WINDOW_SIZE[0]/2-50, self.WINDOW_SIZE[1]-55, 100, 40),"data/theme.json", "Démarrer", color=(20,200,20),on_click= self.start_match)
-        self.command_button = Button(self.lcd, pygame.Rect(100, self.WINDOW_SIZE[1]-55, 120, 40),"data/theme.json", "Commandes",
+        self.command_button = Button(self.lcd, pygame.Rect(70, self.WINDOW_SIZE[1]-65, 120, 40),"data/theme.json", "Commandes",
                                     on_click= lambda : setattr(self, "command_window", IHM_Command(self.manager, 
                                                                                                    self.desactive_motor, 
                                                                                                    self.restart_motor,
                                                                                                    self.command_CAN
                                                                                                    )) if self.command_window is None else None)
-
+        
+        # Bouton pour enregistrer la stratégie en cours
+        self.save_strategie_button = Button(self.lcd, pygame.Rect(self.WINDOW_SIZE[0]/2-210, self.WINDOW_SIZE[1]-65, 200, 40),"data/theme.json", "Enregistrer Stratégie",
+                                    on_click= self.save_strategie)
+        
+        # Bouton pour charger une stratégie
+        self.load_strategie_button = Button(self.lcd, pygame.Rect(self.WINDOW_SIZE[0]/2+10, self.WINDOW_SIZE[1]-65, 200, 40),"data/theme.json", "Charger Stratégie",
+                                    on_click= self.load_strategie)
+        
         logging.basicConfig(filename='ihm.log', level=logging.INFO,
                             datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -208,9 +216,9 @@ class IHM:
         for i, key in enumerate(self.Energie):
             if self.Energie[key]["Tension"] != 0:
                 if k < 2:
-                    self.draw_text(key + ": " + "{:.2f}".format(self.Energie[key]["Tension"]) + " V", window_width * 0.9, window_height * (0.92 + k*0.04))
+                    self.draw_text(key + ": " + "{:.2f}".format(self.Energie[key]["Tension"]) + " V", window_width * 0.88, window_height * (0.92 + k*0.04))
                 else :
-                    self.draw_text(key + ": " + "{:.2f}".format(self.Energie[key]["Tension"]) + " V", window_width * 0.8, window_height * (0.92 + (k-2)*0.04))
+                    self.draw_text(key + ": " + "{:.2f}".format(self.Energie[key]["Tension"]) + " V", window_width * 0.73, window_height * (0.92 + (k-2)*0.04))
                 k += 1
 
     def draw_field(self):
@@ -557,6 +565,8 @@ class IHM:
                 self.draw_text_center("MATCH EN COURS", self.WINDOW_SIZE[0] / 2, 35, self.RED)
 
                 self.command_button.draw()
+                self.save_strategie_button.draw()
+                self.load_strategie_button.draw()
 
             for event in pygame.event.get():
                 self.manager.process_events(event)
@@ -577,6 +587,8 @@ class IHM:
                 if self.ETAT == 1:
                     self.go_to_position()
                     self.command_button.handle_event(event)
+                    self.save_strategie_button.handle_event(event)
+                    self.load_strategie_button.handle_event(event)
             self.draw_robot()
 
             for objet in self.objets:
@@ -720,17 +732,17 @@ class IHM:
             angle = math.degrees(math.atan2(coord["Y"] - coord_prec[1], coord["X"] - coord_prec[0]))
             theta["value"] = int(angle)
         
-        new_pos = (coord["X"], coord["Y"], theta["value"], "0")
+        new_pos = (int(coord["X"]), int(coord["Y"]), int(theta["value"]), "0")
         self.pos_waiting_list.append(new_pos)
         
         new_window = None
         
+        # Gérer la commandes de nouvelles coordonnées
         if action["New_coord"]["X"] !=  "" and action["New_coord"]["Y"] != "" and action["New_coord"]["T"] != "": 
             if action["New_coord"]["S"] != "":
                 new_pos = (int(action["New_coord"]["X"]), int(action["New_coord"]["Y"]), int(action["New_coord"]["T"]), action["New_coord"]["S"])
             else:
                 new_pos = (int(action["New_coord"]["X"]), int(action["New_coord"]["Y"]), int(action["New_coord"]["T"]), "0")
-            self.pos_waiting_list.append(new_pos)
             new_window = IHM_Action_Aux(self.manager, self.numero_strategie+1, (int(action["New_coord"]["X"]), int(action["New_coord"]["Y"]), int(action["New_coord"]["T"])), _callback_save=self.save_action,_id="New_coord")
         
         # Retirer New_coord et New_angle de l'action
@@ -755,6 +767,61 @@ class IHM:
         
         self.action_window.close()
         self.action_window = new_window
+    
+    def save_action_live(self):
+        # Permet de sauvegarder la position actuelle du robot
+          
+        new_pos = (self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE, "0")
+        self.pos_waiting_list.append(new_pos)
+    
+    def save_strategie(self):
+        # Permet de sauvegarder la stratégie en cours
+        # Chargement de la stratégie actuelle
+        if self.numero_strategie > 0:
+            with open("data/strategie.json", "r") as file:
+                strategie = json.load(file)
+            
+            # Lire tous les fichier du dosser strategies
+            files = os.listdir("data/strategies")
+            
+            numero = len(files) + 1
+            # Sauvegarde de la stratégie
+            with open(f"data/strategies/strategie_{numero}.json", "w") as file:
+                json.dump(strategie, file, indent=4)
+        else:
+            print("Aucune stratégie à sauvegarder")
+    
+    def load_strategie(self):
+        # Permet de charger une stratégie sauvegardée
+        # Charger les fichiers de stratégies
+        files = os.listdir("data/strategies")
+
+        if len(files) > 0:
+            # Afficher les fichiers de stratégies
+            for i, file in enumerate(files):
+                print(f"{i+1}: {file}")
+            # Demander à l'utilisateur de choisir une stratégie
+            choix = int(input("Choisir une stratégie: "))
+            # Charger la stratégie
+            with open(f"data/strategies/{files[choix-1]}", "r") as file:
+                strategie = json.load(file)
+            # Charger la stratégie dans le programme
+            with open("data/strategie.json", "w") as file:
+                json.dump(strategie, file, indent=4)
+                
+            self.pos_waiting_list = []
+        
+            for key in strategie:
+                action = strategie[key]
+                coord = action["Coord"]
+                theta = action["Angle_arrivee"]
+                new_pos = (int(coord["X"]), int(coord["Y"]), int(theta["value"]), "0")
+            
+                self.pos_waiting_list.append(new_pos)
+        else:
+            print("Aucune stratégie sauvegardée")
+            
+        
     
     def init_match(self):
         # Définir les rectangles de départ

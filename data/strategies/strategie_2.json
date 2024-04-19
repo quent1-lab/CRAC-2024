@@ -159,28 +159,5 @@
             "value_droite": "",
             "value_gauche": ""
         }
-    },
-    "1": {
-        "Coord": {
-            "X": 900,
-            "Y": 323
-        },
-        "Angle_arrivee": {
-            "value": -131
-        },
-        "Cote_a_controler": {
-            "value_avant": false,
-            "value_arriere": false
-        },
-        "Moteur_pas_a_pas": {
-            "value": ""
-        },
-        "Peigne": {
-            "value": ""
-        },
-        "Pinces": {
-            "value_droite": "",
-            "value_gauche": ""
-        }
     }
 }

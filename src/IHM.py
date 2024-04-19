@@ -109,12 +109,16 @@ class IHM:
                                                                                                    )) if self.command_window is None else None)
         
         # Bouton pour enregistrer la stratégie en cours
-        self.save_strategie_button = Button(self.lcd, pygame.Rect(self.WINDOW_SIZE[0]/2-210, self.WINDOW_SIZE[1]-65, 200, 40),"data/theme.json", "Enregistrer Stratégie",
+        self.save_strategie_button = Button(self.lcd, pygame.Rect(self.WINDOW_SIZE[0]/2-300, self.WINDOW_SIZE[1]-65, 180, 40),"data/theme.json", "Enregistrer Stratégie",
                                     on_click= self.save_strategie)
         
         # Bouton pour charger une stratégie
-        self.load_strategie_button = Button(self.lcd, pygame.Rect(self.WINDOW_SIZE[0]/2+10, self.WINDOW_SIZE[1]-65, 200, 40),"data/theme.json", "Charger Stratégie",
+        self.load_strategie_button = Button(self.lcd, pygame.Rect(self.WINDOW_SIZE[0]/2+100, self.WINDOW_SIZE[1]-65, 160, 40),"data/theme.json", "Charger Stratégie",
                                     on_click= self.load_strategie)
+        
+        # Bouton pour ajouter la position actuelle du robot à la stratégie
+        self.add_position_button = Button(self.lcd, pygame.Rect(self.WINDOW_SIZE[0]/2-110, self.WINDOW_SIZE[1]-65, 200, 40),"data/theme.json", "Ajouter Position",
+                                    on_click= self.add_position)
         
         logging.basicConfig(filename='ihm.log', level=logging.INFO,
                             datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
@@ -172,15 +176,39 @@ class IHM:
         self.draw_data()
         # Afficher l'image en fond d'écran, dans l'emplacement du terrain de jeu
 
+    def draw_mouse_coordinates(self):
+        # Créer une police
+        font = pygame.font.Font(None, 26)
+
+        # Obtenir les coordonnées de la souris
+        pos = pygame.mouse.get_pos()
+
+        if self.is_within_game_area(pos):
+            # Convertissez les coordonnées de la souris en coordonnées du terrain de jeu
+            #On recalibre les coordonnées pour que le 0,0 soit en bas à droite
+            x = self.map_value(pos[0], self.WINDOW_SIZE[0]-5-self.BORDER_DISTANCE*self.X_RATIO, self.BORDER_DISTANCE*self.X_RATIO+5, 0, self.FIELD_SIZE[0])
+            y = self.map_value(pos[1], self.BORDER_DISTANCE*self.Y_RATIO+5 ,self.WINDOW_SIZE[1]-5-self.BORDER_DISTANCE*self.Y_RATIO, 0, self.FIELD_SIZE[1])
+
+            # Créer un texte avec les coordonnées transformées
+            self.draw_text_center(f"( {x:.0f}, {y:.0f} )", pos[0], pos[1]-20, font=font, bg=None)
+            
+            # Dessiner un petit cercle rouge sur la pointe de la souris
+            pygame.draw.circle(self.lcd, pygame.Color(255, 0, 0), pos, 5)
+
     def draw_text(self, text, x, y, color=(0, 0, 0)):
         """Draws text to the pygame screen, on up left corner"""
         text = self.font.render(
             text, True, color, pygame.Color(self.BACKGROUND_COLOR))
         self.lcd.blit(text, (x, y))
 
-    def draw_text_center(self, text, x, y, color=(0, 0, 0)):
-        text_surface = self.font.render(
-            text, True, color, pygame.Color(self.BACKGROUND_COLOR))
+    def draw_text_center(self, text, x, y, color=(0, 0, 0),font=None, bg =(200, 200, 200)):
+        if font is None:
+            font = pygame.font.Font(None, 36)
+        if bg is None:
+            text_surface = font.render(text, True, color)
+        else:
+            text_surface = font.render(text, True, color, pygame.Color(bg))
+            
         text_rect = text_surface.get_rect(center=(x, y))
         self.lcd.blit(text_surface, text_rect)
 
@@ -567,6 +595,7 @@ class IHM:
                 self.command_button.draw()
                 self.save_strategie_button.draw()
                 self.load_strategie_button.draw()
+                self.add_position_button.draw()
 
             for event in pygame.event.get():
                 self.manager.process_events(event)
@@ -589,6 +618,7 @@ class IHM:
                     self.command_button.handle_event(event)
                     self.save_strategie_button.handle_event(event)
                     self.load_strategie_button.handle_event(event)
+                    self.add_position_button.handle_event(event)
             self.draw_robot()
 
             for objet in self.objets:
@@ -600,6 +630,8 @@ class IHM:
 
             for point in new_scan:
                 self.draw_point(point[0], point[1])
+            
+            self.draw_mouse_coordinates()
 
             # Affiche les fps sur l'écran (en bas a gauche)
             self.draw_text(
@@ -810,6 +842,7 @@ class IHM:
                 json.dump(strategie, file, indent=4)
                 
             self.pos_waiting_list = []
+            self.numero_strategie = 1
         
             for key in strategie:
                 action = strategie[key]
@@ -818,10 +851,12 @@ class IHM:
                 new_pos = (int(coord["X"]), int(coord["Y"]), int(theta["value"]), "0")
             
                 self.pos_waiting_list.append(new_pos)
+                self.numero_strategie += 1
         else:
             print("Aucune stratégie sauvegardée")
             
-        
+    def add_position(self):
+        pass
     
     def init_match(self):
         # Définir les rectangles de départ

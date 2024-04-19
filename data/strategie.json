@@ -1,18 +1,18 @@
 {
     "1": {
         "Coord": {
-            "X": 760,
-            "Y": 377
+            "X": 885,
+            "Y": 438
         },
         "Angle_arrivee": {
-            "value": "14"
+            "value": -137
         },
         "Cote_a_controler": {
-            "value_avant": true,
+            "value_avant": false,
             "value_arriere": false
         },
         "Moteur_pas_a_pas": {
-            "value": ""
+            "value": "Milieu"
         },
         "Peigne": {
             "value": ""
@@ -24,11 +24,11 @@
     },
     "2": {
         "Coord": {
-            "X": 100,
-            "Y": 1000
+            "X": 905,
+            "Y": 1301
         },
         "Angle_arrivee": {
-            "value": "47"
+            "value": 88
         },
         "Cote_a_controler": {
             "value_avant": false,
@@ -38,7 +38,30 @@
             "value": "Milieu"
         },
         "Peigne": {
+            "value": "Lever"
+        },
+        "Pinces": {
+            "value_droite": "",
+            "value_gauche": ""
+        }
+    },
+    "3": {
+        "Coord": {
+            "X": 2216,
+            "Y": 1593
+        },
+        "Angle_arrivee": {
+            "value": "40"
+        },
+        "Cote_a_controler": {
+            "value_avant": true,
+            "value_arriere": false
+        },
+        "Moteur_pas_a_pas": {
             "value": "Milieu"
+        },
+        "Peigne": {
+            "value": ""
         },
         "Pinces": {
             "value_droite": "",

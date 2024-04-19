@@ -709,6 +709,17 @@ class IHM:
         
         coord = action["Coord"]
         theta = action["Angle_arrivee"]
+        
+        if theta["value"] == "":
+            # Si l'angle d'arrivée n'est pas renseigné, on calcule l'angle entre le robot et la position d'arrivée
+            # Récupérer les coordonnées précédentes
+            if len(self.pos_waiting_list) > 0:
+                coord_prec = self.pos_waiting_list[-1]
+            else:
+                coord_prec = (self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE, "0")
+            angle = math.degrees(math.atan2(coord["Y"] - coord_prec[1], coord["X"] - coord_prec[0]))
+            theta["value"] = int(angle)
+        
         new_pos = (coord["X"], coord["Y"], theta["value"], "0")
         self.pos_waiting_list.append(new_pos)
         

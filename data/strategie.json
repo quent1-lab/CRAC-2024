@@ -1,0 +1,48 @@
+{
+    "1": {
+        "Coord": {
+            "X": 760,
+            "Y": 377
+        },
+        "Angle_arrivee": {
+            "value": "14"
+        },
+        "Cote_a_controler": {
+            "value_avant": true,
+            "value_arriere": false
+        },
+        "Moteur_pas_a_pas": {
+            "value": ""
+        },
+        "Peigne": {
+            "value": ""
+        },
+        "Pinces": {
+            "value_droite": "",
+            "value_gauche": ""
+        }
+    },
+    "2": {
+        "Coord": {
+            "X": 100,
+            "Y": 1000
+        },
+        "Angle_arrivee": {
+            "value": "47"
+        },
+        "Cote_a_controler": {
+            "value_avant": false,
+            "value_arriere": true
+        },
+        "Moteur_pas_a_pas": {
+            "value": "Milieu"
+        },
+        "Peigne": {
+            "value": "Milieu"
+        },
+        "Pinces": {
+            "value_droite": "",
+            "value_gauche": ""
+        }
+    }
+}

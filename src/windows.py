@@ -176,17 +176,18 @@ class IHM_Command:
         self.desactive_callback = callback
 
 class IHM_Action_Aux:
-    def __init__(self, manager,_action_numero,_pos_actuelle, _callback_json=None):    
+    def __init__(self, manager,_action_numero,_pos_actuelle, _callback_json=None, _callback_save=None, _callback_next=None, _callback_back=None,_id=""):    
         self.manager = manager
         self.size = (610, 500)
+        self.id = _id
 
         self.callback_json = _callback_json
         self.action_numero = _action_numero
         self.pos_actuelle = _pos_actuelle
         
-        self.back_callback = None
-        self.save_callback = self.save_data
-        self.next_callback = None
+        self.back_callback = _callback_back
+        self.save_callback = _callback_save
+        self.next_callback = _callback_next
 
         self.window = pygame_gui.elements.UIWindow(rect=pygame.Rect((100, 100), self.size),
                                                    manager=self.manager,
@@ -202,31 +203,31 @@ class IHM_Action_Aux:
             "Numero_action": {"box1": {"type": "label", "position": (60, 5), "size": (150, 30), "text": f"Action numéro : {_action_numero}"}},
             "Pos_actuelle":  {"box1": {"type": "label", "position": (300, 5), "size": (240, 30), "text": f"X: {_pos_actuelle[0]}  Y: {_pos_actuelle[1]}  T: {_pos_actuelle[2]} °"}},
             "Angle_arrivee": {"box1": {"type": "label", "position": (60, 50), "size": (150, 30), "text": "Angle d'arrivée"},
-                              "box2": {"type": "text", "position": (60, 80), "size": (155, 30)}},
+                              "box2": {"type": "text", "position": (60, 80), "size": (155, 30), "id":"#t_Angle_arrivee"}},
             
             "Cote_a_controler": {"box1": {"type": "label", "position": (310, 50), "size": (230, 30), "text": "Côté à contrôler"},
                                 "box2": {"type": "button", "position": (315, 80), "size": (105, 30), "text": "Avant"},
                                 "box3": {"type": "button", "position": (425, 80), "size": (105, 30), "text": "Arrière"}},
             
             "Moteur_pas_a_pas": {"box1": {"type": "label", "position": (0, 130), "size": (170, 30), "text": "Moteur pas à pas"},
-                                "box2": {"type": "list", "position": (20, 160), "size": (130, 30), "text": ["-","Haut","Milieu","Bas"]}},
+                                "box2": {"type": "list", "position": (20, 160), "size": (130, 30), "text": ["-","Haut","Milieu","Bas"], "id":"#l_Moteur"}},
             
             "Peigne": {"box1": {"type": "label", "position": (160, 130), "size": (190, 30), "text": "Peigne"},
-                    "box2": {"type": "list", "position": (190, 160), "size": (130, 30), "text": ["-","Lever","Milieu","Baisser"]}},
+                    "box2": {"type": "list", "position": (190, 160), "size": (130, 30), "text": ["-","Lever","Milieu","Baisser"],"id":"#l_Peigne"},},
             
-            "Pinces": { "box1": {"type": "label", "position": (340, 130), "size": (220, 30), "text": "Pinces (D/G)"},
-                        "box2": {"type": "list", "position": (350, 160), "size": (100, 30), "text": ["-","Max","Ouvert","Milieu","Fermé","Min"]},
-                        "box3": {"type": "list", "position": (460, 160), "size": (100, 30), "text": ["-","Max","Ouvert","Milieu","Fermé","Min"]}},
+            "Pinces": { "box1": {"type": "label", "position": (340, 130), "size": (220, 30), "text": "Pinces (G/D)"},
+                        "box2": {"type": "list", "position": (350, 160), "size": (100, 30), "text": ["-","Max","Ouvert","Milieu","Fermé","Min"],"id":"#l_Pince_G"},
+                        "box3": {"type": "list", "position": (460, 160), "size": (100, 30), "text": ["-","Max","Ouvert","Milieu","Fermé","Min"],"id":"#l_Pince_D"}},
             
             "New_coord": {"box1": {"type": "label", "position": (20, 250), "size": (270, 30), "text": "Nouvelle coordonnée (optionnel) :"},
                         "box2": {"type": "label", "position": (20, 270), "size": (130, 30), "text": "X"},
-                        "box3": {"type": "text", "position": (20, 300), "size": (130, 30)},
+                        "box3": {"type": "text", "position": (20, 300), "size": (130, 30), "id":"#t_X"},
                         "box4": {"type": "label", "position": (160, 270), "size": (130, 30), "text": "Y"},
-                        "box5": {"type": "text", "position": (160, 300), "size": (130, 30)},
+                        "box5": {"type": "text", "position": (160, 300), "size": (130, 30), "id":"#t_Y"},
                         "box6": {"type": "label", "position": (300, 270), "size": (130, 30), "text": "T"},
-                        "box7": {"type": "text", "position": (300, 300), "size": (130, 30)},
+                        "box7": {"type": "text", "position": (300, 300), "size": (130, 30), "id":"#t_T"},
                         "box8": {"type": "label", "position": (440, 270), "size": (130, 30), "text": "S"},
-                        "box9": {"type": "text", "position": (440, 300), "size": (130, 30)}},
+                        "box9": {"type": "text", "position": (440, 300), "size": (130, 30), "id":"#t_S"},},
             
             "Back": {"box1": {"type": "button", "position": (20, 370), "size": (150, 30), "text": "Retour"}},
             "Save": {"box1": {"type": "button", "position": (180, 370), "size": (220, 30), "text": "Enregistrer"}},
@@ -234,8 +235,9 @@ class IHM_Action_Aux:
         }
         
         self.data = {
+            "Coord": {"X": _pos_actuelle[0], "Y": _pos_actuelle[1]},
             "Angle_arrivee": {"value": ""},
-            "Cote_a_controler": {"value_avant": "", "value_arriere": ""},
+            "Cote_a_controler": {"value_avant": False, "value_arriere": False},
             "Moteur_pas_a_pas": {"value": ""},
             "Peigne": {"value": ""},
             "Pinces": {"value_droite": "", "value_gauche": ""},
@@ -248,13 +250,15 @@ class IHM_Action_Aux:
                     label = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((box_data["position"][0], box_data["position"][1]), (box_data["size"][0],box_data["size"][1]) ),
                                                         text=box_data["text"],
                                                         manager=self.manager,
-                                                        container=self.window)
+                                                        container=self.window,
+                                                        object_id=ObjectID(object_id="#l_"+label_text))
                     self.labels.append(label)
                     
                 elif box_data["type"] == "text":
                     text_box = pygame_gui.elements.UITextEntryLine(relative_rect=pygame.Rect((box_data["position"], box_data["size"])),
                                                                 manager=self.manager,
-                                                                container=self.window)
+                                                                container=self.window,
+                                                                object_id=ObjectID(object_id=box_data["id"]))
                     self.texts.append(text_box)
                     
                 elif box_data["type"] == "button":
@@ -269,7 +273,8 @@ class IHM_Action_Aux:
                                                                     options_list=box_data["text"],
                                                                     starting_option=box_data["text"][0],
                                                                     manager=self.manager,
-                                                                    container=self.window)
+                                                                    container=self.window,
+                                                                    object_id=ObjectID(object_id=box_data["id"]))
                     self.listes.append(liste)
                 
                 elif box_data["type"] == "void":
@@ -278,43 +283,45 @@ class IHM_Action_Aux:
     def process_events(self, event):
         if event.type == pygame.USEREVENT:
             if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
-                for button in self.buttons:
-                    if event.ui_element == button:
-                        id = button.get_object_ids()[1]
-                        if id == "#b_Avant":
-                            self.data["Cote_a_controler"]["value_avant"] = "Avant"
-                        elif id == "#b_Arrière":
-                            self.data["Cote_a_controler"]["value_arriere"] = "Arrière"
-                        elif id == "#b_Retour":
-                            self.back_callback()
-                        elif id == "#b_Enregistrer":
-                            self.save_data()
-                        elif id == "#b_Suivant":
-                            self.next_callback()
-            elif event.user_type == pygame_gui.UI_SELECTION_LIST_NEW_SELECTION:
-                for liste in self.listes:
-                    if event.ui_element == liste:
-                        if liste.get_relative_rect().topleft == (20, 160):
-                            self.data["Moteur_pas_a_pas"]["value"] = liste.selected_option
-                        elif liste.get_relative_rect().topleft == (190, 160):
-                            self.data["Peigne"]["value"] = liste.selected_option
-                        elif liste.get_relative_rect().topleft == (350, 160):
-                            self.data["Pinces"]["value_droite"] = liste.selected_option
-                        elif liste.get_relative_rect().topleft == (460, 160):
-                            self.data["Pinces"]["value_gauche"] = liste.selected_option
+                if len(event.ui_element.get_object_ids()) > 1:
+                    id = event.ui_element.get_object_ids()[1]
+                else:
+                    id = ""
+                if id == "#b_Avant":
+                    self.data["Cote_a_controler"]["value_avant"] = not self.data["Cote_a_controler"]["value_avant"]
+                elif id == "#b_Arrière":
+                    self.data["Cote_a_controler"]["value_arriere"] = not self.data["Cote_a_controler"]["value_arriere"]
+                elif id == "#b_Retour":
+                    self.back_callback()
+                elif id == "#b_Enregistrer":
+                    self.save_callback(self.data)
+                elif id == "#b_Suivant":
+                    self.next_callback()
+
+            elif event.user_type == pygame_gui.UI_DROP_DOWN_MENU_CHANGED:
+                id = event.ui_element.get_object_ids()[1]
+                if id == "#l_Moteur":
+                    self.data["Moteur_pas_a_pas"]["value"] = event.text
+                elif id == "#l_Peigne":
+                    self.data["Peigne"]["value"] = event.text
+                elif id == "#l_Pince_G":
+                    self.data["Pinces"]["value_gauche"] = event.text
+                elif id == "#l_Pince_D":
+                    self.data["Pinces"]["value_droite"] = event.text
+                                                        
             elif event.user_type == pygame_gui.UI_TEXT_ENTRY_CHANGED:
-                for text in self.texts:
-                    if event.ui_element == text:
-                        if text.get_relative_rect().topleft == (60, 80):
-                            self.data["Angle_arrivee"]["value"] = text.get_text()
-                        elif text.get_relative_rect().topleft == (20, 300):
-                            self.data["New_coord"]["X"] = text.get_text()
-                        elif text.get_relative_rect().topleft == (160, 300):
-                            self.data["New_coord"]["Y"] = text.get_text()
-                        elif text.get_relative_rect().topleft == (300, 300):
-                            self.data["New_coord"]["T"] = text.get_text()
-                        elif text.get_relative_rect().topleft == (440, 300):
-                            self.data["New_coord"]["S"] = text.get_text()
+                id = event.ui_element.get_object_ids()[1]
+                if id == "#t_Angle_arrivee":
+                    self.data["Angle_arrivee"]["value"] = event.text
+                elif id == "#t_X":
+                    self.data["New_coord"]["X"] = event.text 
+                elif id == "#t_Y":
+                    self.data["New_coord"]["Y"] = event.text
+                elif id == "#t_T":
+                    self.data["New_coord"]["T"] = event.text
+                elif id == "#t_S":
+                    self.data["New_coord"]["S"] = event.text
+                            
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_TAB:
                 pass
@@ -323,7 +330,13 @@ class IHM_Action_Aux:
         self.desactive_callback = callback
     
     def save_data(self):
-            print(self.data)
+        print(self.data)
+        
+    def get_id(self):
+        return self.id
+    
+    def close(self):
+        self.window.kill()
 
 class MainWindow:
     def __init__(self):

@@ -62,6 +62,7 @@ class IHM:
 
         self.pos_waiting_list = [] # Liste pour stocker les futurs positions positions du robot à atteindre 
         self.robot_move = False # Variable pour savoir si le robot est en mouvement
+        self.numero_strategie = 0 # Numéro de la stratégie en cours
 
         # Initialisation de Pygame et ajustement de la taille de la fenêtre
         pygame.init()
@@ -560,11 +561,12 @@ class IHM:
             for event in pygame.event.get():
                 self.manager.process_events(event)
                 
-                if event.type == UI_WINDOW_CLOSE:
+                if event.type == UI_WINDOW_CLOSE: # BUG: Fermeture de la fenêtre non personnalisée
                     if self.command_window:
                         self.command_window = None
                     elif self.action_window:
-                        self.action_window = None
+                        if self.action_window.get_id() != "New_coord":
+                            self.action_window = None
                 if self.command_window:
                     self.command_window.process_events(event)
                 elif self.action_window:
@@ -676,9 +678,9 @@ class IHM:
                 #self.client_socket.add_to_send_list(self.client_socket.create_message(
                 #    2, "clic", {"x": x, "y": y, "theta": int(self.ROBOT_ANGLE), "sens": "0"}))
                 if self.action_window is None:
-                    self.action_window = IHM_Action_Aux(self.manager, 1, (self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE))
+                    self.action_window = IHM_Action_Aux(self.manager, self.numero_strategie+1, (x, y, self.ROBOT_ANGLE), _callback_save=self.save_action)
                     
-                self.pos_waiting_list.append((x,y, int(self.ROBOT_ANGLE), "0"))
+                #self.pos_waiting_list.append((x,y, int(self.ROBOT_ANGLE), "0"))
 
     def is_within_game_area(self, pos):
         # Vérifie si les coordonnées du clic sont dans la zone de jeu
@@ -702,6 +704,47 @@ class IHM:
                     self.CAN, "clic", {"x": pos[0], "y": pos[1], "theta": pos[2], "sens": pos[3]}))
                 print("Going to position:", pos)
 
+    def save_action(self, action):
+        self.numero_strategie += 1
+        
+        coord = action["Coord"]
+        theta = action["Angle_arrivee"]
+        new_pos = (coord["X"], coord["Y"], theta["value"], "0")
+        self.pos_waiting_list.append(new_pos)
+        
+        new_window = None
+        
+        if action["New_coord"]["X"] !=  "" and action["New_coord"]["Y"] != "" and action["New_coord"]["T"] != "": 
+            if action["New_coord"]["S"] != "":
+                new_pos = (int(action["New_coord"]["X"]), int(action["New_coord"]["Y"]), int(action["New_coord"]["T"]), action["New_coord"]["S"])
+            else:
+                new_pos = (int(action["New_coord"]["X"]), int(action["New_coord"]["Y"]), int(action["New_coord"]["T"]), "0")
+            self.pos_waiting_list.append(new_pos)
+            new_window = IHM_Action_Aux(self.manager, self.numero_strategie+1, (int(action["New_coord"]["X"]), int(action["New_coord"]["Y"]), int(action["New_coord"]["T"])), _callback_save=self.save_action,_id="New_coord")
+        
+        # Retirer New_coord et New_angle de l'action
+        action.pop("New_coord")
+        
+        strategie = {self.numero_strategie: action}
+        
+        with open("data/strategie.json", "r") as file:
+            try:
+                data = json.load(file)
+            except:
+                data = {}
+            try :
+                if data[str(self.numero_strategie)]:
+                    # Si la stratégie existe déjà, on l'écrase
+                    data[self.numero_strategie] = action   
+            except KeyError:
+                data.update(strategie)
+                
+        with open("data/strategie.json", "w") as file:
+            json.dump(data, file, indent=4)
+        
+        self.action_window.close()
+        self.action_window = new_window
+    
     def init_match(self):
         # Définir les rectangles de départ
         shape_x = 400

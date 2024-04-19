@@ -788,9 +788,9 @@ class IHM:
             except:
                 data = {}
             try :
-                if data[str(self.numero_strategie)]:
+                #if data[str(self.numero_strategie)]:
                     # Si la stratégie existe déjà, on l'écrase
-                    data[self.numero_strategie] = action   
+                data[self.numero_strategie] = action   
             except KeyError:
                 data.update(strategie)
                 

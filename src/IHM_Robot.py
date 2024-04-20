@@ -85,7 +85,7 @@ class IHM_Robot:
                 x = 190 # Permet de décaler le bouton "Quitter" vers la droite
             self.button_menu.append(Button(self.screen, (10 + 120 * i + x, 10, 100, 50), self.theme_path, name, self.font, lambda i=i: self.button_menu_action(i), color=self.button_menu_colors[i]))
         
-        self.button_recalage = Button(self.screen, (10, 70, 100, 50), self.theme_path, "Recalage", self.font, self.recalage)
+        self.button_recalage = Button(self.screen, (410, 90, 100, 50), self.theme_path, "Recalage", self.font, self.recalage)
         
     def button_menu_action(self, index):
         self.button_menu[self.PAGE].update_color(None) # On remet la couleur par défaut du bouton actuel

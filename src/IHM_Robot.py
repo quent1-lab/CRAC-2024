@@ -85,6 +85,8 @@ class IHM_Robot:
                 x = 190 # Permet de décaler le bouton "Quitter" vers la droite
             self.button_menu.append(Button(self.screen, (10 + 120 * i + x, 10, 100, 50), self.theme_path, name, self.font, lambda i=i: self.button_menu_action(i), color=self.button_menu_colors[i]))
         
+        self.button_recalage = Button(self.screen, (10, 70, 100, 50), self.theme_path, "Recalage", self.font, self.recalage)
+        
     def button_menu_action(self, index):
         self.button_menu[self.PAGE].update_color(None) # On remet la couleur par défaut du bouton actuel
         self.PAGE = index
@@ -93,6 +95,9 @@ class IHM_Robot:
             pass            
         if index == 4:
             self.client.add_to_send_list(self.client.create_message(1, "stop", None))
+    
+    def recalage(self):
+        self.client.send(self.client.create_message(2, "CAN", {"id": 36, "byte1": 0, "byte2": 20, "byte3": 1}))
     
     def page_favori(self):
         # Cette page comprend 4 grands rectangles correspondant aux batteries du robot
@@ -274,15 +279,14 @@ class IHM_Robot:
                 if event.type == pygame.QUIT:
                     self.client.add_to_send_list(self.client.create_message(1, "stop", None))
                     self.is_running = False
+                
+                self.button_recalage.handle_event(event)
                     
                 for batterie in self.batteries:
                     batterie.handle_event(event)    
                     
                 for button in self.button_menu:
                     button.handle_event(event)
-                    
-
-            
 
             # Affichage
             self.screen.fill(self.BACKGROUND_COLOR)
@@ -290,6 +294,8 @@ class IHM_Robot:
             # ------------------- Affichage des éléments graphiques du menu -------------------
             for button in self.button_menu:
                 button.draw()
+            
+            self.button_recalage.draw()
 
             self.draw_temp_raspberry()
                 

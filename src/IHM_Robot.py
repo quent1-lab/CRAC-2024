@@ -97,7 +97,7 @@ class IHM_Robot:
             self.client.add_to_send_list(self.client.create_message(1, "stop", None))
     
     def recalage(self):
-        self.client.send(self.client.create_message(2, "CAN", {"id": 36, "byte1": 0, "byte2": 20, "byte3": 1}))
+        self.client.send(self.client.create_message(2, "recal", None))
     
     def page_favori(self):
         # Cette page comprend 4 grands rectangles correspondant aux batteries du robot

@@ -123,9 +123,9 @@ class ComCAN:
             elif message["cmd"] == "recal":
                 data = message["data"]
                 # Format des données : zone (char)
-                dataCan = struct.pack('c', data["zone"])
-                messageCan = can.Message(arbitration_id=0x24, data=dataCan, is_extended_id=False)
-                #self.send(messageCan)
+                #dataCan = struct.pack('c', data["zone"])
+                messageCan = can.Message(arbitration_id=0x24, data=[0,20,0,0,0,1,5,2], is_extended_id=False)
+                self.send(messageCan)
 
             elif message["cmd"] == "desa":
                 data = message["data"]

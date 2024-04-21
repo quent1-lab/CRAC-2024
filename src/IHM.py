@@ -61,7 +61,7 @@ class IHM:
         }
 
         self.pos_waiting_list = [] # Liste pour stocker les futurs positions positions du robot à atteindre 
-        self.robot_move = False # Variable pour savoir si le robot est en mouvement
+        self.robot_move = True # Variable pour savoir si le robot est en mouvement
         self.numero_strategie = 0 # Numéro de la stratégie en cours
 
         # Initialisation de Pygame et ajustement de la taille de la fenêtre
@@ -753,13 +753,16 @@ class IHM:
                 self.client_socket.add_to_send_list(self.client_socket.create_message(
                     self.CAN, "clic", {"x": pos[0], "y": pos[1], "theta": pos[2], "sens": pos[3]}))
                 print("Going to position:", pos)
+        elif len(self.pos_waiting_list) == 0 and not self.robot_move:
+            self.robot_move = True
+            print("Fin du trajet")
 
     def save_action(self, action):
         self.numero_strategie += 1
         
         coord = action["Coord"]
-        
-        if coord["T"] == "":
+        print("Coord:", coord)
+        if coord["T"] == 0:
             # Si l'angle d'arrivée n'est pas renseigné, on calcule l'angle entre le robot et la position d'arrivée
             # Récupérer les coordonnées précédentes
             if len(self.pos_waiting_list) > 0:
@@ -767,9 +770,10 @@ class IHM:
             else:
                 coord_prec = (self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE, "0")
             angle = math.degrees(math.atan2(coord["Y"] - coord_prec[1], coord["X"] - coord_prec[0]))
-            coord["T"] = int(angle)
+            coord["T"] = angle
+            print("Angle:", angle)
         
-        new_pos = (int(coord["X"]), int(coord["Y"]), int(coord["T"]), "0")
+        new_pos = (int(coord["X"]), int(coord["Y"]), int(coord["T"]*10), "0")
         self.pos_waiting_list.append(new_pos)
         
         new_window = None
@@ -867,7 +871,7 @@ class IHM:
         pass
 
     def play_strategie(self):
-        pass
+        self.robot_move = False
     
     def init_match(self):
         # Définir les rectangles de départ
@@ -910,7 +914,7 @@ class IHM:
         self.client_socket.add_to_send_list(self.client_socket.create_message(self.IHM_Robot, "etat", {"etat": self.ETAT}))
 
     def run(self):
-        self.programme_simulation()
+        #self.programme_simulation()
         
         self.client_socket.set_callback(self.receive_to_server)
         self.client_socket.set_callback_stop(self.stop)
@@ -934,29 +938,43 @@ class IHM:
                     self.draw_text_center("MATCH EN COURS", self.WINDOW_SIZE[0] / 2, 35, self.RED)
 
                     self.command_button.draw()
+                    self.command_button.draw()
+                    self.save_strategie_button.draw()
+                    self.load_strategie_button.draw()
+                    self.add_position_button.draw()
+                    self.play_strategie_button.draw()
+                    
+                    self.go_to_position()
 
                 for event in pygame.event.get():
                     self.manager.process_events(event)
                     
-                    if event.type == UI_WINDOW_CLOSE:
+                    if event.type == UI_WINDOW_CLOSE: # BUG: Fermeture de la fenêtre non personnalisée
                         if self.command_window:
                             self.command_window = None
                         elif self.action_window:
-                            self.action_window = None
+                            if self.action_window.get_id() != "New_coord":
+                                self.action_window = None
                     if self.command_window:
                         self.command_window.process_events(event)
                     elif self.action_window:
                         self.action_window.process_events(event)
                     elif self.ETAT == 1:
                         self.handle_mouse_click(event)
+
                     if self.ETAT == 1:
-                        self.go_to_position()
                         self.command_button.handle_event(event)
+                        self.save_strategie_button.handle_event(event)
+                        self.load_strategie_button.handle_event(event)
+                        self.add_position_button.handle_event(event)
+                        self.play_strategie_button.handle_event(event)
 
                 self.draw_robot()
 
                 for point in self.new_scan:
                     self.draw_point(point[0], point[1])
+                    
+                self.draw_mouse_coordinates()
 
                 if len(self.new_scan) > 0:
                     new_objets = self.detect_object(self.new_scan)

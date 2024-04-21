@@ -188,6 +188,8 @@ class IHM_Action_Aux:
         self.back_callback = _callback_back
         self.save_callback = _callback_save
         self.next_callback = _callback_next
+        
+        self.cote_actif = ""
 
         self.window = pygame_gui.elements.UIWindow(rect=pygame.Rect((100, 100), self.size),
                                                    manager=self.manager,
@@ -200,8 +202,9 @@ class IHM_Action_Aux:
 
         # Ajouter des zones de texte et des labels correspondants
         box_infos = {
-            "Numero_action": {"box1": {"type": "label", "position": (60, 5), "size": (150, 30), "text": f"Action numéro : {_action_numero}"}},
-            "Pos_actuelle":  {"box1": {"type": "label", "position": (300, 5), "size": (240, 30), "text": f"X: {_pos_actuelle[0]}  Y: {_pos_actuelle[1]}  T: {_pos_actuelle[2]} °"}},
+            "Numero_action": {"box1": {"type": "label", "position": (20, 5), "size": (150, 30), "text": f"Action numéro : {_action_numero}"}},
+            "Cote_Actif": {"box1": {"type": "label", "position": (190, 5), "size": (200, 30), "text": f"Côté actif : Non défini"},},
+            "Pos_actuelle":  {"box1": {"type": "label", "position": (370, 5), "size": (240, 30), "text": f"X: {_pos_actuelle[0]}  Y: {_pos_actuelle[1]}"}},
             "Angle_arrivee": {"box1": {"type": "label", "position": (60, 50), "size": (150, 30), "text": "Angle d'arrivée"},
                               "box2": {"type": "text", "position": (60, 80), "size": (155, 30), "id":"#t_Angle_arrivee"}},
             
@@ -235,13 +238,10 @@ class IHM_Action_Aux:
         }
         
         self.data = {
-            "Coord": {"X": _pos_actuelle[0], "Y": _pos_actuelle[1]},
-            "Angle_arrivee": {"value": ""},
-            "Cote_a_controler": {"value_avant": False, "value_arriere": False},
-            "Moteur_pas_a_pas": {"value": ""},
-            "Peigne": {"value": ""},
-            "Pinces": {"value_droite": "", "value_gauche": ""},
-            "New_coord": {"X": "", "Y": "", "T": "", "S": ""},
+            "Coord": {"X": _pos_actuelle[0], "Y": _pos_actuelle[1], "T": 0},
+            "Action" : {
+                
+            }
         }
 
         for label_text, box_info in box_infos.items():
@@ -280,47 +280,120 @@ class IHM_Action_Aux:
                 elif box_data["type"] == "void":
                     pass
         
+        if self.cote_actif == "":
+            self.disable_listes()
+        
     def process_events(self, event):
         if event.type == pygame.USEREVENT:
-            if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
+            if event.user_type == pygame_gui.UI_BUTTON_PRESSED: # Si un bouton est pressé
                 if len(event.ui_element.get_object_ids()) > 1:
                     id = event.ui_element.get_object_ids()[1]
                 else:
                     id = ""
                 if id == "#b_Avant":
-                    self.data["Cote_a_controler"]["value_avant"] = not self.data["Cote_a_controler"]["value_avant"]
+                    changement = True if self.cote_actif != "avant" else False
+                    self.cote_actif = "avant"
+                    # Mettre à jour le label
+                    self.labels[1].set_text(f"Côté actif : {self.cote_actif.capitalize()}")
+                    
+                    # Activer les listes
+                    if self.cote_actif != "":
+                        self.enable_listes()
+                    
+                    if changement:
+                        self.update_listes()
+                        
                 elif id == "#b_Arrière":
-                    self.data["Cote_a_controler"]["value_arriere"] = not self.data["Cote_a_controler"]["value_arriere"]
+                    changement = True if self.cote_actif != "arriere" else False
+                    self.cote_actif = "arriere"
+                    # Mettre à jour le label
+                    self.labels[1].set_text(f"Côté actif : {self.cote_actif.capitalize()}")
+                    
+                    # Activer les listes
+                    if self.cote_actif != "":
+                        self.enable_listes()
+                    
+                    if changement:
+                        self.update_listes()
+                        
                 elif id == "#b_Retour":
                     self.back_callback()
                 elif id == "#b_Enregistrer":
-                    self.save_callback(self.data)
+                    self.save_data(self.data)
                 elif id == "#b_Suivant":
                     self.next_callback()
 
-            elif event.user_type == pygame_gui.UI_DROP_DOWN_MENU_CHANGED:
+            elif event.user_type == pygame_gui.UI_DROP_DOWN_MENU_CHANGED: # Si la liste change
                 id = event.ui_element.get_object_ids()[1]
-                if id == "#l_Moteur":
-                    self.data["Moteur_pas_a_pas"]["value"] = event.text
-                elif id == "#l_Peigne":
-                    self.data["Peigne"]["value"] = event.text
-                elif id == "#l_Pince_G":
-                    self.data["Pinces"]["value_gauche"] = event.text
-                elif id == "#l_Pince_D":
-                    self.data["Pinces"]["value_droite"] = event.text
+                texte = event.text
+                if self.cote_actif != "":
+                    if id == "#l_Moteur":
+                        try:
+                            if texte == "-":
+                                if self.cote_actif in self.data["Action"]["Moteur"]["ordre"]:
+                                    if len(self.data["Action"]["Moteur"]["ordre"]) == 2:
+                                        self.data["Action"]["Moteur"]["ordre"].pop(self.cote_actif)
+                                    else:
+                                        self.data["Action"].pop("Moteur")             
+                            else:
+                                self.data["Action"]["Moteur"]["ordre"][self.cote_actif] = texte
+                        except KeyError:
+                            self.data.setdefault("Action", {}).setdefault("Moteur", {}).setdefault("ordre", {})[self.cote_actif] = texte
+                            
+                    elif id == "#l_Peigne":
+                        try:
+                            if texte == "-":
+                                if self.cote_actif in self.data["Action"]["HerkuleX"]["Peigne"]["ordre"]:
+                                    if len(self.data["Action"]["HerkuleX"]["Peigne"]["ordre"]) == 2:
+                                        self.data["Action"]["HerkuleX"]["Peigne"]["ordre"].pop(self.cote_actif)
+                                    else:
+                                        self.data["Action"]["HerkuleX"].pop("Peigne")
+                            else:
+                                self.data["Action"]["HerkuleX"]["Peigne"]["ordre"][self.cote_actif] = texte
+                        except KeyError:
+                            self.data.setdefault("Action", {}).setdefault("HerkuleX", {}).setdefault("Peigne", {}).setdefault("ordre", {})[self.cote_actif] = texte
+                            
+                    elif id == "#l_Pince_G":
+                        try:
+                            if texte == "-":
+                                if self.cote_actif in self.data["Action"]["HerkuleX"]["Pinces"]["gauche"]["ordre"]:
+                                    if len(self.data["Action"]["HerkuleX"]["Pinces"]["gauche"]["ordre"]) == 2:
+                                        self.data["Action"]["HerkuleX"]["Pinces"]["gauche"]["ordre"].pop(self.cote_actif)
+                                    else:
+                                        self.data["Action"]["HerkuleX"]["Pinces"].pop("gauche")
+                            else:
+                                self.data["Action"]["HerkuleX"]["Pinces"]["gauche"]["ordre"][self.cote_actif] = texte
+                        except KeyError:
+                            self.data.setdefault("Action", {}).setdefault("HerkuleX", {}).setdefault("Pinces", {}).setdefault("gauche", {}).setdefault("ordre", {})[self.cote_actif] = texte
+                            
+                    elif id == "#l_Pince_D":
+                        try:
+                            if texte == "-":
+                                if self.cote_actif in self.data["Action"]["HerkuleX"]["Pinces"]["droite"]["ordre"]:
+                                    if len(self.data["Action"]["HerkuleX"]["Pinces"]["droite"]["ordre"]) == 2:
+                                        self.data["Action"]["HerkuleX"]["Pinces"]["droite"]["ordre"].pop(self.cote_actif)
+                                    else:
+                                        self.data["Action"]["HerkuleX"]["Pinces"].pop("droite")
+                            else:
+                                self.data["Action"]["HerkuleX"]["Pinces"]["droite"]["ordre"][self.cote_actif] = texte
+                        except KeyError:
+                            self.data.setdefault("Action", {}).setdefault("HerkuleX", {}).setdefault("Pinces", {}).setdefault("droite", {}).setdefault("ordre", {})[self.cote_actif] = texte
                                                         
-            elif event.user_type == pygame_gui.UI_TEXT_ENTRY_CHANGED:
+            elif event.user_type == pygame_gui.UI_TEXT_ENTRY_CHANGED: # Si le texte change
                 id = event.ui_element.get_object_ids()[1]
-                if id == "#t_Angle_arrivee":
-                    self.data["Angle_arrivee"]["value"] = event.text
-                elif id == "#t_X":
-                    self.data["New_coord"]["X"] = event.text 
-                elif id == "#t_Y":
-                    self.data["New_coord"]["Y"] = event.text
-                elif id == "#t_T":
-                    self.data["New_coord"]["T"] = event.text
-                elif id == "#t_S":
-                    self.data["New_coord"]["S"] = event.text
+                try:
+                    if id == "#t_Angle_arrivee":
+                        self.data["Coord"]["T"] = int(event.text)
+                    elif id == "#t_X":
+                        self.data["New_coord"]["X"] = int(event.text) 
+                    elif id == "#t_Y":
+                        self.data["New_coord"]["Y"] = int(event.text)
+                    elif id == "#t_T":
+                        self.data["New_coord"]["T"] = int(event.text)
+                    elif id == "#t_S":
+                        self.data["New_coord"]["S"] = int(event.text)
+                except Exception as e:
+                    print(e)
                             
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_TAB:
@@ -329,11 +402,56 @@ class IHM_Action_Aux:
     def set_callback_json(self, callback):
         self.desactive_callback = callback
     
-    def save_data(self):
-        print(self.data)
+    def save_data(self,data):
+        if self.save_callback:
+            self.save_callback(data)
+        else:
+            print(data)
         
     def get_id(self):
         return self.id
+    
+    def disable_listes(self):
+        for liste in self.listes:
+            liste.disable()
+    
+    def enable_listes(self):
+        for liste in self.listes:
+            liste.enable()
+    
+    def update_listes(self):
+        action = self.data.get("Action", {})
+        moteur_ordre = action.get("Moteur", {}).get("ordre", {})
+        herkulex_peigne_ordre = action.get("HerkuleX", {}).get("Peigne", {}).get("ordre", {})
+        herkulex_pince_gauche = action.get("HerkuleX", {}).get("Pinces", {}).get("gauche", {}).get("ordre", {})
+        herkulex_pince_droite = action.get("HerkuleX", {}).get("Pinces", {}).get("droite", {}).get("ordre", {})
+        
+        if self.cote_actif in moteur_ordre:
+            self.rebuild_liste(self.listes[0],moteur_ordre[self.cote_actif])
+        else:
+            self.rebuild_liste(self.listes[0],"-")
+        
+        if self.cote_actif in herkulex_peigne_ordre:
+            self.rebuild_liste(self.listes[1],herkulex_peigne_ordre[self.cote_actif])
+        else:
+            self.rebuild_liste(self.listes[1],"-")
+        
+        if self.cote_actif in herkulex_pince_gauche:
+            self.rebuild_liste(self.listes[2],herkulex_pince_gauche[self.cote_actif])
+        else:
+            self.rebuild_liste(self.listes[2],"-")
+            
+        if self.cote_actif in herkulex_pince_droite:
+            self.rebuild_liste(self.listes[3],herkulex_pince_droite[self.cote_actif])
+        else:
+            self.rebuild_liste(self.listes[3],"-")       
+    
+    def rebuild_liste(self,liste,option):
+        liste.selected_option = option
+        liste.menu_states['closed'].selected_option = option
+        liste.menu_states['closed'].finish()
+        liste.menu_states['closed'].start()
+        liste.rebuild()
     
     def close(self):
         self.window.kill()

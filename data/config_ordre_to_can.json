@@ -1,0 +1,78 @@
+{
+    "Moteur": {
+        "ordre": {
+            "avant": {
+                "-": 0,
+                "Haut": 0,
+                "Milieu": 0,
+                "Bas": 0
+            },
+            "arriere": {
+                "-": 0,
+                "Haut": 0,
+                "Milieu": 0,
+                "Bas": 0
+            }
+        }
+    },
+    "HerkuleX": {
+        "Peigne": {
+            "ordre": {
+                "avant": {
+                    "-": 0,
+                    "Lever": 0,
+                    "Milieu": 0,
+                    "Baisser": 0
+                },
+                "arriere": {
+                    "-": 0,
+                    "Lever": 0,
+                    "Milieu": 0,
+                    "Baisser": 0
+                }
+            }
+        },
+        "Pinces": {
+            "droite": {
+                "ordre": {
+                    "avant": {
+                        "-": 0,
+                        "Max": 0,
+                        "Ouvert": 0,
+                        "Milieu": 0,
+                        "Ferme": 0,
+                        "Min": 0
+                    },
+                    "arriere": {
+                        "-": 0,
+                        "Max": 0,
+                        "Ouvert": 0,
+                        "Milieu": 0,
+                        "Ferme": 0,
+                        "Min": 0
+                    }
+                }
+            },
+            "gauche": {
+                "ordre": {
+                    "avant": {
+                        "-": 0,
+                        "Max": 0,
+                        "Ouvert": 0,
+                        "Milieu": 0,
+                        "Ferme": 0,
+                        "Min": 0
+                    },
+                    "arriere": {
+                        "-": 0,
+                        "Max": 0,
+                        "Ouvert": 0,
+                        "Milieu": 0,
+                        "Ferme": 0,
+                        "Min": 0
+                    }
+                }
+            }
+        }
+    }
+}

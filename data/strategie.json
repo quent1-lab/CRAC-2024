@@ -1,117 +1,58 @@
 {
     "1": {
         "Coord": {
-            "X": 745,
-            "Y": 574
+            "X": 716,
+            "Y": 590,
+            "T": 0
         },
-        "Angle_arrivee": {
-            "value": -150
-        },
-        "Cote_a_controler": {
-            "value_avant": false,
-            "value_arriere": false
-        },
-        "Moteur_pas_a_pas": {
-            "value": ""
-        },
-        "Peigne": {
-            "value": ""
-        },
-        "Pinces": {
-            "value_droite": "",
-            "value_gauche": ""
+        "Action": {
+            "HerkuleX": {
+                "Peigne": {
+                    "ordre": {
+                        "avant": "Lever"
+                    }
+                },
+                "Pinces": {
+                    "gauche": {
+                        "ordre": {
+                            "avant": "Ferm\u00e9"
+                        }
+                    },
+                    "droite": {
+                        "ordre": {
+                            "avant": "Ferm\u00e9"
+                        }
+                    }
+                }
+            }
         }
     },
     "2": {
         "Coord": {
-            "X": 2225,
-            "Y": 453
+            "X": 1683,
+            "Y": 450,
+            "T": "20"
         },
-        "Angle_arrivee": {
-            "value": -4
-        },
-        "Cote_a_controler": {
-            "value_avant": false,
-            "value_arriere": false
-        },
-        "Moteur_pas_a_pas": {
-            "value": ""
-        },
-        "Peigne": {
-            "value": "Milieu"
-        },
-        "Pinces": {
-            "value_droite": "",
-            "value_gauche": ""
-        }
-    },
-    "3": {
-        "Coord": {
-            "X": 2094,
-            "Y": 1425
-        },
-        "Angle_arrivee": {
-            "value": 97
-        },
-        "Cote_a_controler": {
-            "value_avant": false,
-            "value_arriere": false
-        },
-        "Moteur_pas_a_pas": {
-            "value": ""
-        },
-        "Peigne": {
-            "value": ""
-        },
-        "Pinces": {
-            "value_droite": "",
-            "value_gauche": ""
-        }
-    },
-    "4": {
-        "Coord": {
-            "X": 841,
-            "Y": 1431
-        },
-        "Angle_arrivee": {
-            "value": 179
-        },
-        "Cote_a_controler": {
-            "value_avant": false,
-            "value_arriere": false
-        },
-        "Moteur_pas_a_pas": {
-            "value": ""
-        },
-        "Peigne": {
-            "value": ""
-        },
-        "Pinces": {
-            "value_droite": "",
-            "value_gauche": ""
-        }
-    },
-    "5": {
-        "Coord": {
-            "X": 751,
-            "Y": 577
-        },
-        "Angle_arrivee": {
-            "value": -96
-        },
-        "Cote_a_controler": {
-            "value_avant": false,
-            "value_arriere": false
-        },
-        "Moteur_pas_a_pas": {
-            "value": ""
-        },
-        "Peigne": {
-            "value": ""
-        },
-        "Pinces": {
-            "value_droite": "",
-            "value_gauche": ""
+        "Action": {
+            "HerkuleX": {
+                "Pinces": {
+                    "gauche": {
+                        "ordre": {
+                            "arriere": "Ouvert"
+                        }
+                    },
+                    "droite": {
+                        "ordre": {
+                            "arriere": "Max"
+                        }
+                    }
+                },
+                "Peigne": {
+                    "ordre": {
+                        "arriere": "Lever"
+                    }
+                }
+            }
         }
     }
 }

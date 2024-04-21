@@ -109,16 +109,20 @@ class IHM:
                                                                                                    )) if self.command_window is None else None)
         
         # Bouton pour enregistrer la stratégie en cours
-        self.save_strategie_button = Button(self.lcd, pygame.Rect(self.WINDOW_SIZE[0]/2-300, self.WINDOW_SIZE[1]-65, 180, 40),"data/theme.json", "Enregistrer Stratégie",
+        self.save_strategie_button = Button(self.lcd, pygame.Rect(210, self.WINDOW_SIZE[1]-65, 180, 40),"data/theme.json", "Enregistrer Stratégie",
                                     on_click= self.save_strategie)
         
         # Bouton pour charger une stratégie
-        self.load_strategie_button = Button(self.lcd, pygame.Rect(self.WINDOW_SIZE[0]/2+100, self.WINDOW_SIZE[1]-65, 160, 40),"data/theme.json", "Charger Stratégie",
+        self.load_strategie_button = Button(self.lcd, pygame.Rect(410, self.WINDOW_SIZE[1]-65, 160, 40),"data/theme.json", "Charger Stratégie",
                                     on_click= self.load_strategie)
         
         # Bouton pour ajouter la position actuelle du robot à la stratégie
-        self.add_position_button = Button(self.lcd, pygame.Rect(self.WINDOW_SIZE[0]/2-110, self.WINDOW_SIZE[1]-65, 200, 40),"data/theme.json", "Ajouter Position",
+        self.add_position_button = Button(self.lcd, pygame.Rect(590, self.WINDOW_SIZE[1]-65, 200, 40),"data/theme.json", "Ajouter Position",
                                     on_click= self.add_position)
+        
+        # Bouton pour play pour lancer la stratégie
+        self.play_strategie_button = Button(self.lcd, pygame.Rect(810, self.WINDOW_SIZE[1]-65, 40, 40),"data/theme.json", "Play", #▶︎
+                                    on_click= self.play_strategie)
         
         logging.basicConfig(filename='ihm.log', level=logging.INFO,
                             datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
@@ -596,6 +600,7 @@ class IHM:
                 self.save_strategie_button.draw()
                 self.load_strategie_button.draw()
                 self.add_position_button.draw()
+                self.play_strategie_button.draw()
 
             for event in pygame.event.get():
                 self.manager.process_events(event)
@@ -619,6 +624,7 @@ class IHM:
                     self.save_strategie_button.handle_event(event)
                     self.load_strategie_button.handle_event(event)
                     self.add_position_button.handle_event(event)
+                    self.play_strategie_button.handle_event(event)
             self.draw_robot()
 
             for objet in self.objets:
@@ -752,9 +758,8 @@ class IHM:
         self.numero_strategie += 1
         
         coord = action["Coord"]
-        theta = action["Angle_arrivee"]
         
-        if theta["value"] == "":
+        if coord["T"] == "":
             # Si l'angle d'arrivée n'est pas renseigné, on calcule l'angle entre le robot et la position d'arrivée
             # Récupérer les coordonnées précédentes
             if len(self.pos_waiting_list) > 0:
@@ -762,23 +767,26 @@ class IHM:
             else:
                 coord_prec = (self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE, "0")
             angle = math.degrees(math.atan2(coord["Y"] - coord_prec[1], coord["X"] - coord_prec[0]))
-            theta["value"] = int(angle)
+            coord["T"] = int(angle)
         
-        new_pos = (int(coord["X"]), int(coord["Y"]), int(theta["value"]), "0")
+        new_pos = (int(coord["X"]), int(coord["Y"]), int(coord["T"]), "0")
         self.pos_waiting_list.append(new_pos)
         
         new_window = None
         
         # Gérer la commandes de nouvelles coordonnées
-        if action["New_coord"]["X"] !=  "" and action["New_coord"]["Y"] != "" and action["New_coord"]["T"] != "": 
-            if action["New_coord"]["S"] != "":
-                new_pos = (int(action["New_coord"]["X"]), int(action["New_coord"]["Y"]), int(action["New_coord"]["T"]), action["New_coord"]["S"])
-            else:
-                new_pos = (int(action["New_coord"]["X"]), int(action["New_coord"]["Y"]), int(action["New_coord"]["T"]), "0")
-            new_window = IHM_Action_Aux(self.manager, self.numero_strategie+1, (int(action["New_coord"]["X"]), int(action["New_coord"]["Y"]), int(action["New_coord"]["T"])), _callback_save=self.save_action,_id="New_coord")
-        
-        # Retirer New_coord et New_angle de l'action
-        action.pop("New_coord")
+        try:
+            if action["New_coord"]["X"] !=  "" and action["New_coord"]["Y"] != "" and action["New_coord"]["T"] != "": 
+                if action["New_coord"]["S"] != "":
+                    new_pos = (int(action["New_coord"]["X"]), int(action["New_coord"]["Y"]), int(action["New_coord"]["T"]), action["New_coord"]["S"])
+                else:
+                    new_pos = (int(action["New_coord"]["X"]), int(action["New_coord"]["Y"]), int(action["New_coord"]["T"]), "0")
+                new_window = IHM_Action_Aux(self.manager, self.numero_strategie+1, (int(action["New_coord"]["X"]), int(action["New_coord"]["Y"]), int(action["New_coord"]["T"])), _callback_save=self.save_action,_id="New_coord")
+            
+           # Retirer New_coord et New_angle de l'action
+            action.pop("New_coord") 
+        except KeyError:
+            pass
         
         strategie = {self.numero_strategie: action}
         
@@ -847,8 +855,8 @@ class IHM:
             for key in strategie:
                 action = strategie[key]
                 coord = action["Coord"]
-                theta = action["Angle_arrivee"]
-                new_pos = (int(coord["X"]), int(coord["Y"]), int(theta["value"]), "0")
+
+                new_pos = (int(coord["X"]), int(coord["Y"]), int(coord["T"]), "0")
             
                 self.pos_waiting_list.append(new_pos)
                 self.numero_strategie += 1
@@ -856,6 +864,9 @@ class IHM:
             print("Aucune stratégie sauvegardée")
             
     def add_position(self):
+        pass
+
+    def play_strategie(self):
         pass
     
     def init_match(self):

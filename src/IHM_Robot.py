@@ -99,10 +99,11 @@ class IHM_Robot:
         x_depart = 10
         y_depart = 90
         
-        font = pygame.font.SysFont("Arial", 30)
+        font = pygame.font.SysFont("Arial", 40)
         
         for i, strategy in enumerate(liste_strategies):
-            button = Button(self.screen, (x_depart + 405 * int(nombre_strategies/6), y_depart + i * 60, 385, 60), self.theme_path, strategy, font, lambda i=i: self.strategie_action(i))
+            texte = strategy.split(".")[0]
+            button = Button(self.screen, (x_depart + 405 * int(nombre_strategies/6), y_depart + i * 70, 385, 60), self.theme_path, texte, font, lambda i=i: self.strategie_action(i))
             self.button_strategie.append(button)
         
         self.strategie = None

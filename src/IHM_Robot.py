@@ -128,6 +128,10 @@ class IHM_Robot:
         with open(f"data/strategies/strategie_{index}.json", "r") as f:
             self.strategie = json.load(f)
         
+        if self.ETAT == 0:
+            self.zero_battery() # On bannit les batteries à 0V
+            self.ETAT = 1
+        
         self.play_strategie()
     
     def recalage(self):
@@ -316,8 +320,9 @@ class IHM_Robot:
                 self.update_energie(energie)
             elif message["cmd"] == "etat":
                 data = message["data"]
+                if data["etat"] == 1 and self.ETAT == 0: 
+                    self.zero_battery() # On bannit les batteries à 0V
                 self.ETAT = data["etat"]
-                self.zero_battery() # On bannit les batteries à 0V
         
         except Exception as e:
             print(f"Erreur lors de la réception du message : {str(e)}")

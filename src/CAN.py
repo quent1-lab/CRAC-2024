@@ -4,7 +4,7 @@ from client import Client
 import struct
 import logging
 import struct
-import select
+import time
 
 # Configuration du logger
 logging.basicConfig(filename='buscan.log', level=logging.INFO, datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
@@ -61,9 +61,10 @@ class ComCAN:
     
     def receive(self):
         try:
-            ready, _, _ = select.select([self.can], [], [], 10.0)
-            if ready:
-                messageCan = self.can.recv()
+            time.sleep(0.05)
+            messageCan = self.can.recv(2.0)
+            if messageCan is not None:
+                logging.debug(f"BusCAN : Message reçu : {messageCan}")
                 return messageCan.arbitration_id, messageCan.dlc, messageCan.data
             else:
                 return None

@@ -376,7 +376,7 @@ class IHM_Robot:
             if len(self.error) > 0:
                 self.PAGE = 4
             else:
-                self.PAGE = 0
+                self.PAGE = self.PAGE
             
             # Gestion des événements
             for event in pygame.event.get():

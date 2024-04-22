@@ -13,6 +13,10 @@
                 "Milieu": 0,
                 "Bas": 0
             }
+        },
+        "aknowledge": {
+            "avant": 0,
+            "arriere": 0
         }
     },
     "HerkuleX": {
@@ -30,6 +34,10 @@
                     "Milieu": 0,
                     "Baisser": 0
                 }
+            },
+            "aknowledge": {
+                "avant": 0,
+                "arriere": 0
             }
         },
         "Pinces": {
@@ -51,6 +59,10 @@
                         "Ferme": 0,
                         "Min": 0
                     }
+                },
+                "aknowledge": {
+                    "avant": 0,
+                    "arriere": 0
                 }
             },
             "gauche": {
@@ -71,6 +83,10 @@
                         "Ferme": 0,
                         "Min": 0
                     }
+                },
+                "aknowledge": {
+                    "avant": 0,
+                    "arriere": 0
                 }
             }
         }

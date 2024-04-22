@@ -92,7 +92,7 @@ class IHM_Robot:
         self.strategie_is_running = False    
         
         self.button_strategie = []
-        self.strategie = None
+        
         path = "data/strategies"
         liste_strategies = os.listdir(path)
         nombre_strategies = len(liste_strategies)
@@ -104,6 +104,12 @@ class IHM_Robot:
         for i, strategy in enumerate(liste_strategies):
             button = Button(self.screen, (x_depart + 405 * int(nombre_strategies/7), y_depart + i * 60, 385, 50), self.theme_path, strategy, font, lambda i=i: self.strategie_action(i))
             self.button_strategie.append(button)
+        
+        self.strategie = None
+        self.config_strategie = None
+        self.liste_aknowledge = []
+        with open("data/config_ordre_to_can.json", "r",encoding="utf-8") as f:
+            self.config_strategie = json.load(f)
         
     def button_menu_action(self, index):
         self.button_menu[self.PAGE].update_color(None) # On remet la couleur par défaut du bouton actuel
@@ -144,6 +150,39 @@ class IHM_Robot:
 
                     while self.robot_move and self.strategie_is_running and self.is_running:
                         time.sleep(0.1)
+                    
+                    if self.strategie_is_running == False or self.is_running == False:
+                        break
+                        
+                    # Gérer les actions à effectuer
+                    for key, value in action.items():
+                        commande = []
+                        aknowledge = []
+                        if key == "Moteur":
+                            for ordre, cmd in action["Moteur"]["ordre"].items():
+                                commande.append(self.config_strategie["Moteur"]["ordre"][ordre][cmd])
+                                aknowledge.append(self.config_strategie["Moteur"]["aknowledge"][ordre])
+                        elif key == "HerkuleX":
+                            for key2, value2 in action["HerkuleX"].items():
+                                if key2 == "Peigne":
+                                    for ordre, cmd in action["HerkuleX"]["Peigne"]["ordre"].items():
+                                        commande.append(self.config_strategie["HerkuleX"]["Peigne"]["ordre"][ordre][cmd])
+                                        aknowledge.append(self.config_strategie["HerkuleX"]["Peigne"]["aknowledge"][ordre])
+                                elif key2 == "Pinces":
+                                    for cote, value3 in action["HerkuleX"]["Pinces"].items():
+                                        for ordre, cmd in action["HerkuleX"]["Pinces"][cote]["ordre"].items():
+                                            commande.append(self.config_strategie["HerkuleX"]["Pinces"][cote]["ordre"][ordre][cmd])
+                                            aknowledge.append(self.config_strategie["HerkuleX"]["Pinces"][cote]["aknowledge"][ordre])
+                        
+                        # Envoyer les commandes au CAN
+                        for i, cmd in enumerate(commande):
+                            self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": cmd, "byte1": 0, "byte2": 0, "byte3": 0}))
+                            
+                            while not self.robot_move and self.strategie_is_running and self.is_running:
+                                time.sleep(0.1)
+                                if aknowledge[i] in self.liste_aknowledge:
+                                    break
+
             
             self.strategie_is_running = False
             

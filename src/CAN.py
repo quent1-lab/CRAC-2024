@@ -61,10 +61,10 @@ class ComCAN:
     
     def receive(self):
         try:
-            time.sleep(0.05)
+            #time.sleep(0.05)
             messageCan = self.can.recv(2.0)
             if messageCan is not None:
-                logging.debug(f"BusCAN : Message reçu : {messageCan}")
+                logging.info(f"BusCAN : Message reçu : {messageCan}")
                 return messageCan.arbitration_id, messageCan.dlc, messageCan.data
             else:
                 return None

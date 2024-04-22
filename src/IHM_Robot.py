@@ -102,7 +102,7 @@ class IHM_Robot:
         font = pygame.font.SysFont("Arial", 30)
         
         for i, strategy in enumerate(liste_strategies):
-            button = Button(self.screen, (x_depart + 405 * int(nombre_strategies/7), y_depart + i * 60, 385, 50), self.theme_path, strategy, font, lambda i=i: self.strategie_action(i))
+            button = Button(self.screen, (x_depart + 405 * int(nombre_strategies/6), y_depart + i * 60, 385, 60), self.theme_path, strategy, font, lambda i=i: self.strategie_action(i))
             self.button_strategie.append(button)
         
         self.strategie = None
@@ -195,21 +195,12 @@ class IHM_Robot:
 
         for batterie in self.batteries:
             batterie.draw()
-        
-        for event in events:
-            for batterie in self.batteries:
-                batterie.handle_event(event)   
-            self.button_recalage.handle_event(event) 
     
     def page_strategie(self,events):
         # Cette page affiche les différentes stratégies possibles
         for button in self.button_strategie:
             button.draw()
-        
-        for event in events:
-            for button in self.button_strategie:
-                button.handle_event(event)
-    
+
     def page_erreur(self):
         # Cette page affiche un message d'erreur si une erreur est survenue lors de la réception des données des batteries
         pygame.draw.rect(self.screen, (255, 0, 0), (self.width//2 - 350, 90, 700, 370), 0, 10)
@@ -386,6 +377,14 @@ class IHM_Robot:
                     
                 for button in self.button_menu:
                     button.handle_event(event)
+                
+                if self.PAGE == 0:
+                    for batterie in self.batteries:
+                        batterie.handle_event(event)
+                    self.button_recalage.handle_event(event)
+                elif self.PAGE == 1:
+                    for button in self.button_strategie:
+                        button.handle_event(event)
 
             # Affichage
             self.screen.fill(self.BACKGROUND_COLOR)

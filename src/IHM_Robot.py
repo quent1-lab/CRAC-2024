@@ -85,7 +85,25 @@ class IHM_Robot:
                 x = 190 # Permet de décaler le bouton "Quitter" vers la droite
             self.button_menu.append(Button(self.screen, (10 + 120 * i + x, 10, 100, 50), self.theme_path, name, self.font, lambda i=i: self.button_menu_action(i), color=self.button_menu_colors[i]))
         
-        self.button_recalage = Button(self.screen, (410, 90, 100, 50), self.theme_path, "Recalage", self.font, self.recalage)
+        font = pygame.font.SysFont("Arial", 36)
+        self.button_recalage = Button(self.screen, (420, 90, 360, 60), self.theme_path, "Recalage", font, self.recalage)
+        
+        self.robot_move = False
+        self.strategie_is_running = False    
+        
+        self.button_strategie = []
+        self.strategie = None
+        path = "data/strategies"
+        liste_strategies = os.listdir(path)
+        nombre_strategies = len(liste_strategies)
+        x_depart = 10
+        y_depart = 90
+        
+        font = pygame.font.SysFont("Arial", 30)
+        
+        for i, strategy in enumerate(liste_strategies):
+            button = Button(self.screen, (x_depart + 405 * int(nombre_strategies/7), y_depart + i * 60, 385, 50), self.theme_path, strategy, font, lambda i=i: self.strategie_action(i))
+            self.button_strategie.append(button)
         
     def button_menu_action(self, index):
         self.button_menu[self.PAGE].update_color(None) # On remet la couleur par défaut du bouton actuel
@@ -96,15 +114,62 @@ class IHM_Robot:
         if index == 4:
             self.client.add_to_send_list(self.client.create_message(1, "stop", None))
     
+    def strategie_action(self, index):
+        self.client.send(self.client.create_message(2, "strategie", {"strategie": index}))
+        
+        # Charger la stratégie
+        with open(f"data/strategies/strategie_{index}.json", "r") as f:
+            self.strategie = json.load(f)
+        
+        self.play_strategie()
+    
     def recalage(self):
         self.client.send(self.client.create_message(2, "recal", None))
     
-    def page_favori(self):
+    def play_strategie(self):
+        # Jouer la stratégie
+        self.strategie_is_running = True
+        
+        def task(): # Fonction pour jouer la stratégie dans un thread
+            for action in self.strategie:
+                if not self.robot_move:
+                    self.robot_move = True
+                    
+                    pos = (action["Coord"]["X"], action["Coord"]["Y"], action["Coord"]["T"], "0")
+                    
+                    # Envoyez la position au CAN
+                    self.client.add_to_send_list(self.client_socket.create_message(
+                        self.CAN, "clic", {"x": pos[0], "y": pos[1], "theta": pos[2], "sens": pos[3]}))
+                    print("Going to position:", pos)
+
+                    while self.robot_move and self.strategie_is_running and self.is_running:
+                        time.sleep(0.1)
+            
+            self.strategie_is_running = False
+            
+        thread = threading.Thread(target=task)
+        thread.start()
+    
+    def page_favori(self,events):
         # Cette page comprend 4 grands rectangles correspondant aux batteries du robot
         # Chaque rectangle affichera les informations de la batterie
 
         for batterie in self.batteries:
             batterie.draw()
+        
+        for event in events:
+            for batterie in self.batteries:
+                batterie.handle_event(event)   
+            self.button_recalage.handle_event(event) 
+    
+    def page_strategie(self,events):
+        # Cette page affiche les différentes stratégies possibles
+        for button in self.button_strategie:
+            button.draw()
+        
+        for event in events:
+            for button in self.button_strategie:
+                button.handle_event(event)
     
     def page_erreur(self):
         # Cette page affiche un message d'erreur si une erreur est survenue lors de la réception des données des batteries
@@ -279,11 +344,6 @@ class IHM_Robot:
                 if event.type == pygame.QUIT:
                     self.client.add_to_send_list(self.client.create_message(1, "stop", None))
                     self.is_running = False
-                
-                self.button_recalage.handle_event(event)
-                    
-                for batterie in self.batteries:
-                    batterie.handle_event(event)    
                     
                 for button in self.button_menu:
                     button.handle_event(event)
@@ -294,8 +354,6 @@ class IHM_Robot:
             # ------------------- Affichage des éléments graphiques du menu -------------------
             for button in self.button_menu:
                 button.draw()
-            
-            self.button_recalage.draw()
 
             self.draw_temp_raspberry()
                 
@@ -303,9 +361,9 @@ class IHM_Robot:
             # --------------------------------------------------------------------------------
 
             if self.PAGE == 0:
-                self.page_favori()
+                self.page_favori(pygame.event.get())
             elif self.PAGE == 1:
-                pass
+                self.page_strategie(pygame.event.get())
             elif self.PAGE == 2:
                 pass
             elif self.PAGE == 3:
@@ -314,7 +372,7 @@ class IHM_Robot:
                 self.page_erreur()
 
             pygame.display.flip()
-            self.clock.tick(60)
+            self.clock.tick(30)
         
         pygame.quit()
 

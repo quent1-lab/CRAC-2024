@@ -946,7 +946,7 @@ class IHM:
                     
                     self.go_to_position()
 
-                for event in pygame.event.get():
+                for event in pygame.event.get(): # ATTENTION : s'active uniquement lors d'un évènement utilisateur
                     self.manager.process_events(event)
                     
                     if event.type == UI_WINDOW_CLOSE: # BUG: Fermeture de la fenêtre non personnalisée

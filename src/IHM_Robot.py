@@ -154,12 +154,12 @@ class IHM_Robot:
                 if not self.robot_move:
                     self.robot_move = True
 
-                    pos = (action["Coord"]["X"], action["Coord"]["Y"], action["Coord"]["T"], "0")
+                    pos = (action["Coord"]["X"], action["Coord"]["Y"], action["Coord"]["T"], 0)
                     logging.info(f"Instruction de positionnement {pos}")
                     # Envoyez la position au CAN
                     self.client.add_to_send_list(self.client.create_message(
                         2, "clic", {"x": pos[0], "y": pos[1], "theta": pos[2], "sens": pos[3]}))
-                    logging.info(f"Position envoyée : {pos}")
+                    logging.info(f"Position envoyée : x={pos[0]}, y={pos[1]}, theta={pos[2]}")
                     while self.robot_move and self.strategie_is_running and self.is_running:
                         time.sleep(0.1)
                     

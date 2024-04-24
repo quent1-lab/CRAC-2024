@@ -122,6 +122,7 @@ class ComCAN:
                 dataCan = struct.pack('h', data["x"]) + struct.pack('h', data["y"]) + struct.pack('h', data["theta"]) + struct.pack('c', data["sens"].encode())
                 messageCan = can.Message(arbitration_id=0x20, data=dataCan, is_extended_id=False)
                 self.send(messageCan)
+                logging.info(f"BusCAN : Message de clic envoyé : {messageCan}")
 
             elif message["cmd"] == "recal":
                 data = message["data"]

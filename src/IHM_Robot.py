@@ -155,7 +155,7 @@ class IHM_Robot:
                     self.robot_move = True
 
                     pos = (action["Coord"]["X"], action["Coord"]["Y"], action["Coord"]["T"], 0)
-                    logging.info(f"Instruction de positionnement {pos}")
+
                     # Envoyez la position au CAN
                     self.client.add_to_send_list(self.client.create_message(
                         2, "clic", {"x": pos[0], "y": pos[1], "theta": pos[2], "sens": pos[3]}))

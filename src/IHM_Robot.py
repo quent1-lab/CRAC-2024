@@ -150,16 +150,16 @@ class IHM_Robot:
         
         def task(): # Fonction pour jouer la stratégie dans un thread
             for key, action in self.strategie.items():
-                logging.info(f"Action : {action}")
+
                 if not self.robot_move:
                     self.robot_move = True
-                    logging.info("Début de l'instruction de positionnement")
+
                     pos = (action["Coord"]["X"], action["Coord"]["Y"], action["Coord"]["T"], "0")
-                    logging.info(f"Position : {pos}")
+                    logging.info(f"Instruction de positionnement {pos}")
                     # Envoyez la position au CAN
                     self.client.add_to_send_list(self.client.create_message(
                         2, "clic", {"x": pos[0], "y": pos[1], "theta": pos[2], "sens": pos[3]}))
-
+                    logging.info(f"Position envoyée : {pos}")
                     while self.robot_move and self.strategie_is_running and self.is_running:
                         time.sleep(0.1)
                     

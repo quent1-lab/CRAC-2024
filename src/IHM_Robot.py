@@ -149,9 +149,8 @@ class IHM_Robot:
                     pos = (action["Coord"]["X"], action["Coord"]["Y"], action["Coord"]["T"], "0")
                     
                     # Envoyez la position au CAN
-                    self.client.add_to_send_list(self.client_socket.create_message(
-                        self.CAN, "clic", {"x": pos[0], "y": pos[1], "theta": pos[2], "sens": pos[3]}))
-                    print("Going to position:", pos)
+                    self.client.add_to_send_list(self.client.create_message(
+                        2, "clic", {"x": pos[0], "y": pos[1], "theta": pos[2], "sens": pos[3]}))
 
                     while self.robot_move and self.strategie_is_running and self.is_running:
                         time.sleep(0.1)
@@ -323,6 +322,11 @@ class IHM_Robot:
                 if data["etat"] == 1 and self.ETAT == 0: 
                     self.zero_battery() # On bannit les batteries à 0V
                 self.ETAT = data["etat"]
+            elif message["cmd"] == "akn_m":
+                self.robot_move = False
+            elif message["cmd"] == "akn":
+                data = message["data"]
+                self.liste_aknowledge.append(data["akn"])
         
         except Exception as e:
             print(f"Erreur lors de la réception du message : {str(e)}")
@@ -346,7 +350,7 @@ class IHM_Robot:
                     temp = f.readline()
                     temp = int(temp) / 1000
                     self.temp_raspberry = temp
-            time.sleep(1)
+            time.sleep(2)
     
     def draw_temp_raspberry(self):
         # Affichage de la température du Raspberry

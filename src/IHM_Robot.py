@@ -116,7 +116,6 @@ class IHM_Robot:
         self.liste_aknowledge = []
         with open("data/config_ordre_to_can.json", "r",encoding="utf-8") as f:
             self.config_strategie = json.load(f)
-            logging.info("Chargement du fichier de configuration des ordres vers le CAN")
         
     def button_menu_action(self, index):
         self.button_menu[self.PAGE].update_color(None) # On remet la couleur par défaut du bouton actuel
@@ -133,6 +132,7 @@ class IHM_Robot:
         # Charger la stratégie
         with open(f"data/strategies/strategie_{index}.json", "r") as f:
             self.strategie = json.load(f)
+            logging.info(f"Stratégie chargée : {self.strategie}")
         
         if self.ETAT == 0:
             self.zero_battery() # On bannit les batteries à 0V
@@ -149,11 +149,11 @@ class IHM_Robot:
         self.PAGE = 5
         
         def task(): # Fonction pour jouer la stratégie dans un thread
-            for action in self.strategie:
+            for key, action in self.strategie.items():
                 logging.info(f"Action : {action}")
                 if not self.robot_move:
                     self.robot_move = True
-                    
+                    logging.info("Début de l'instruction de positionnement")
                     pos = (action["Coord"]["X"], action["Coord"]["Y"], action["Coord"]["T"], "0")
                     logging.info(f"Position : {pos}")
                     # Envoyez la position au CAN
@@ -303,7 +303,7 @@ class IHM_Robot:
                         nb_tentatives += 1
                         temps = 0
                     
-                    if nb_tentatives > 1: # On a essayé 5 fois de recevoir les données, on affiche un message d'erreur
+                    if nb_tentatives > 1: # On a essayé 1 fois de recevoir les données, on affiche un message d'erreur
                         if 0x10 not in self.error:
                             self.error.append(0x10)
                             for batterie in self.batteries:
@@ -311,6 +311,7 @@ class IHM_Robot:
                 
                 if 0x10 in self.error:
                     self.error.remove(0x10)
+                    self.PAGE = 0
                     
                 nb_tentatives = 0
                 self.energie_recue = False

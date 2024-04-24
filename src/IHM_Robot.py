@@ -154,7 +154,7 @@ class IHM_Robot:
                 if not self.robot_move:
                     self.robot_move = True
 
-                    pos = (action["Coord"]["X"], action["Coord"]["Y"], int(action["Coord"]["T"]), 0)
+                    pos = (action["Coord"]["X"], action["Coord"]["Y"], int(action["Coord"]["T"]), "0")
 
                     # Envoyez la position au CAN
                     self.client.add_to_send_list(self.client.create_message(

@@ -5,6 +5,11 @@ from pygame_UI import *
 import threading
 import time
 from batterie import Batterie
+import logging
+
+# Configuration du logger
+logging.basicConfig(filename='ihm_robot.log', level=logging.INFO, datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
+
 
 class IHM_Robot:
     def __init__(self):
@@ -111,6 +116,7 @@ class IHM_Robot:
         self.liste_aknowledge = []
         with open("data/config_ordre_to_can.json", "r",encoding="utf-8") as f:
             self.config_strategie = json.load(f)
+            logging.info("Chargement du fichier de configuration des ordres vers le CAN")
         
     def button_menu_action(self, index):
         self.button_menu[self.PAGE].update_color(None) # On remet la couleur par défaut du bouton actuel
@@ -140,14 +146,16 @@ class IHM_Robot:
     def play_strategie(self):
         # Jouer la stratégie
         self.strategie_is_running = True
+        self.PAGE = 5
         
         def task(): # Fonction pour jouer la stratégie dans un thread
             for action in self.strategie:
+                logging.info(f"Action : {action}")
                 if not self.robot_move:
                     self.robot_move = True
                     
                     pos = (action["Coord"]["X"], action["Coord"]["Y"], action["Coord"]["T"], "0")
-                    
+                    logging.info(f"Position : {pos}")
                     # Envoyez la position au CAN
                     self.client.add_to_send_list(self.client.create_message(
                         2, "clic", {"x": pos[0], "y": pos[1], "theta": pos[2], "sens": pos[3]}))
@@ -157,7 +165,7 @@ class IHM_Robot:
                     
                     if self.strategie_is_running == False or self.is_running == False:
                         break
-                        
+                    logging.info("Fin de l'instruction de positionnement")
                     # Gérer les actions à effectuer
                     for key, value in action.items():
                         commande = []
@@ -178,6 +186,7 @@ class IHM_Robot:
                                             commande.append(self.config_strategie["HerkuleX"]["Pinces"][cote]["ordre"][ordre][cmd])
                                             aknowledge.append(self.config_strategie["HerkuleX"]["Pinces"][cote]["aknowledge"][ordre])
                         
+                        logging.info(f"Commande : {commande}")
                         # Envoyer les commandes au CAN
                         for i, cmd in enumerate(commande):
                             self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": cmd, "byte1": 0, "byte2": 0, "byte3": 0}))
@@ -187,7 +196,7 @@ class IHM_Robot:
                                 if aknowledge[i] in self.liste_aknowledge:
                                     break
 
-            
+            logging.info("Fin de la stratégie")
             self.strategie_is_running = False
             
         thread = threading.Thread(target=task)

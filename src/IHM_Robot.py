@@ -198,7 +198,7 @@ class IHM_Robot:
 
             logging.info("Fin de la stratégie")
             self.strategie_is_running = False
-            self.PAGE = 0
+            self.PAGE = 1
             
         thread_play = threading.Thread(target=task_play)
         thread_play.start()

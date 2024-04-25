@@ -198,6 +198,7 @@ class IHM_Robot:
 
             logging.info("Fin de la stratégie")
             self.strategie_is_running = False
+            self.PAGE = 0
             
         thread_play = threading.Thread(target=task_play)
         thread_play.start()
@@ -268,7 +269,7 @@ class IHM_Robot:
     def request_energy(self):
         if self.state_request_energy:
             return
-        self.request_energy = True
+        self.state_request_energy = True
         
         # Variable contenant les commandes pour demander l'énergie des batteries
         commande_energie = [ # id, byte1, byte2, byte3 => commande CAN

@@ -89,6 +89,17 @@
                     "arriere": 0
                 }
             }
+        },
+        "Bras": {
+            "ordre": {
+                "-": 0,
+                "Max": 0,
+                "Haut": 0,
+                "Milieu": 0,
+                "Bas": 0,
+                "Min": 0
+            },
+            "aknowledge": 0
         }
     }
 }

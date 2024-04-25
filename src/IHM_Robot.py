@@ -183,8 +183,12 @@ class IHM_Robot:
                                 elif key2 == "Pinces":
                                     for cote, value3 in action["HerkuleX"]["Pinces"].items():
                                         for ordre, cmd in action["HerkuleX"]["Pinces"][cote]["ordre"].items():
-                                            commande.append(self.config_strategie["HerkuleX"]["Pinces"][cote]["ordre"][ordre][cmd])
-                                            aknowledge.append(self.config_strategie["HerkuleX"]["Pinces"][cote]["aknowledge"][ordre])
+                                            commande.append(self.config_strategie["HerkuleX"]["Pinces"][cote]["ordre"][cmd])
+                                            aknowledge.append(self.config_strategie["HerkuleX"]["Pinces"][cote]["aknowledge"])
+                                elif key2 == "Bras":
+                                    for ordre, cmd in action["HerkuleX"]["Bras"]["ordre"].items():
+                                        commande.append(self.config_strategie["HerkuleX"]["Bras"]["ordre"][ordre][cmd])
+                                        aknowledge.append(self.config_strategie["HerkuleX"]["Bras"]["aknowledge"][ordre])
                         
                         logging.info(f"Commande : {commande}")
                         # Envoyer les commandes au CAN

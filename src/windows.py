@@ -199,6 +199,26 @@ class IHM_Action_Aux:
         self.texts = []
         self.buttons = []
         self.listes = []
+        
+        # Charger la configuration des actions
+        with open("data/config_ordre_to_can.json", "r") as file:
+            self.config = json.load(file)
+        
+        self.name_action_Moteur = []
+        self.name_action_Pince = []
+        self.name_action_Peigne = []
+        self.name_action_Bras = []
+        
+        # Récupérer les ordres des actions pour les listes
+        for ordre in self.config["Moteur"]["ordre"]["avant"]:
+            self.name_action_Moteur.append(ordre)
+        for ordre in self.config["HerkuleX"]["Pinces"]["gauche"]["ordre"]["avant"]:
+            self.name_action_Pince.append(ordre)
+        for ordre in self.config["HerkuleX"]["Peigne"]["ordre"]["avant"]:
+            self.name_action_Peigne.append(ordre)
+        for ordre in self.config["HerkuleX"]["Bras"]["ordre"]:
+            self.name_action_Bras.append(ordre)
+        
 
         # Ajouter des zones de texte et des labels correspondants
         box_infos = {
@@ -212,15 +232,19 @@ class IHM_Action_Aux:
                                 "box2": {"type": "button", "position": (315, 80), "size": (105, 30), "text": "Avant"},
                                 "box3": {"type": "button", "position": (425, 80), "size": (105, 30), "text": "Arrière"}},
             
-            "Moteur_pas_a_pas": {"box1": {"type": "label", "position": (0, 130), "size": (170, 30), "text": "Moteur pas à pas"},
-                                "box2": {"type": "list", "position": (20, 160), "size": (130, 30), "text": ["-","Haut","Milieu","Bas"], "id":"#l_Moteur"}},
+            "Moteur_pas_a_pas": {"box1": {"type": "label", "position": (0, 130), "size": (120, 30), "text": "Moteur p.à.p"},
+                                "box2": {"type": "list", "position": (10, 160), "size": (100, 30), "text": self.name_action_Moteur, "id":"#l_Moteur"}},
             
-            "Peigne": {"box1": {"type": "label", "position": (160, 130), "size": (190, 30), "text": "Peigne"},
-                    "box2": {"type": "list", "position": (190, 160), "size": (130, 30), "text": ["-","Lever","Milieu","Baisser"],"id":"#l_Peigne"},},
+            "Peigne": {"box1": {"type": "label", "position": (110, 130), "size": (120, 30), "text": "Peigne"},
+                    "box2": {"type": "list", "position": (120, 160), "size": (100, 30), "text": self.name_action_Peigne,"id":"#l_Peigne"},},
             
-            "Pinces": { "box1": {"type": "label", "position": (340, 130), "size": (220, 30), "text": "Pinces (G/D)"},
-                        "box2": {"type": "list", "position": (350, 160), "size": (100, 30), "text": ["-","Max","Ouvert","Milieu","Fermé","Min"],"id":"#l_Pince_G"},
-                        "box3": {"type": "list", "position": (460, 160), "size": (100, 30), "text": ["-","Max","Ouvert","Milieu","Fermé","Min"],"id":"#l_Pince_D"}},
+            "Pinces": { "box1": {"type": "label", "position": (220, 130), "size": (220, 30), "text": "Pinces (G/D)"},
+                        "box2": {"type": "list", "position": (230, 160), "size": (100, 30), "text": self.name_action_Pince,"id":"#l_Pince_G"},
+                        "box3": {"type": "list", "position": (340, 160), "size": (100, 30), "text": self.name_action_Pince,"id":"#l_Pince_D"}},
+            
+            "Bras": {"box1": {"type": "label", "position": (450, 130), "size": (100, 30), "text": "Bras"},
+                    "box2": {"type": "list", "position": (450, 160), "size": (100, 30), "text": self.name_action_Bras,"id":"#l_Bras"},},
+            
             
             "New_coord": {"box1": {"type": "label", "position": (20, 250), "size": (270, 30), "text": "Nouvelle coordonnée (optionnel) :"},
                         "box2": {"type": "label", "position": (20, 270), "size": (130, 30), "text": "X"},
@@ -378,6 +402,17 @@ class IHM_Action_Aux:
                                 self.data["Action"]["HerkuleX"]["Pinces"]["droite"]["ordre"][self.cote_actif] = texte
                         except KeyError:
                             self.data.setdefault("Action", {}).setdefault("HerkuleX", {}).setdefault("Pinces", {}).setdefault("droite", {}).setdefault("ordre", {})[self.cote_actif] = texte
+                            
+                    elif id == "#l_Bras":
+                        try:
+                            if texte == "-":
+                                if self.cote_actif in self.data["Action"]["HerkuleX"]["Bras"]["ordre"]:
+                                    if len(self.data["Action"]["HerkuleX"]["Bras"]["ordre"]) == 1:
+                                        self.data["Action"]["HerkuleX"].pop("Bras")
+                            else:
+                                self.data["Action"]["HerkuleX"]["Bras"]["ordre"] = texte
+                        except KeyError:
+                            self.data.setdefault("Action", {}).setdefault("HerkuleX", {}).setdefault("Bras", {}).setdefault("ordre", {})["ordre"] = texte
                                                         
             elif event.user_type == pygame_gui.UI_TEXT_ENTRY_CHANGED: # Si le texte change
                 id = event.ui_element.get_object_ids()[1]
@@ -412,7 +447,7 @@ class IHM_Action_Aux:
         return self.id
     
     def disable_listes(self):
-        for liste in self.listes:
+        for liste in self.listes[:4]:
             liste.disable()
     
     def enable_listes(self):
@@ -425,6 +460,7 @@ class IHM_Action_Aux:
         herkulex_peigne_ordre = action.get("HerkuleX", {}).get("Peigne", {}).get("ordre", {})
         herkulex_pince_gauche = action.get("HerkuleX", {}).get("Pinces", {}).get("gauche", {}).get("ordre", {})
         herkulex_pince_droite = action.get("HerkuleX", {}).get("Pinces", {}).get("droite", {}).get("ordre", {})
+        herkulex_bras_ordre = action.get("HerkuleX", {}).get("Bras", {}).get("ordre", {})
         
         if self.cote_actif in moteur_ordre:
             self.rebuild_liste(self.listes[0],moteur_ordre[self.cote_actif])
@@ -444,7 +480,12 @@ class IHM_Action_Aux:
         if self.cote_actif in herkulex_pince_droite:
             self.rebuild_liste(self.listes[3],herkulex_pince_droite[self.cote_actif])
         else:
-            self.rebuild_liste(self.listes[3],"-")       
+            self.rebuild_liste(self.listes[3],"-")   
+            
+        if self.cote_actif in herkulex_bras_ordre:
+            self.rebuild_liste(self.listes[4],herkulex_bras_ordre[self.cote_actif])
+        else:
+            self.rebuild_liste(self.listes[4],"-")    
     
     def rebuild_liste(self,liste,option):
         liste.selected_option = option

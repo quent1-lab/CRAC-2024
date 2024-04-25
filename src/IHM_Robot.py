@@ -148,7 +148,7 @@ class IHM_Robot:
         self.strategie_is_running = True
         self.PAGE = 5
         
-        def task(): # Fonction pour jouer la stratégie dans un thread
+        def task_play(): # Fonction pour jouer la stratégie dans un thread
             for key, action in self.strategie.items():
 
                 if not self.robot_move:
@@ -159,12 +159,12 @@ class IHM_Robot:
                     # Envoyez la position au CAN
                     self.client.add_to_send_list(self.client.create_message(
                         2, "clic", {"x": pos[0], "y": pos[1], "theta": pos[2], "sens": pos[3]}))
-                    logging.info(f"Position envoyée : x={pos[0]}, y={pos[1]}, theta={pos[2]}")
-                    while self.robot_move and self.strategie_is_running and self.is_running:
+
+                    while self.robot_move and self.strategie_is_running:
                         time.sleep(0.1)
                     
-                    if self.strategie_is_running == False or self.is_running == False:
-                        break
+                    if self.strategie_is_running == False:
+                        break                  
                     logging.info("Fin de l'instruction de positionnement")
                     # Gérer les actions à effectuer
                     for key, value in action.items():
@@ -199,17 +199,17 @@ class IHM_Robot:
             logging.info("Fin de la stratégie")
             self.strategie_is_running = False
             
-        thread = threading.Thread(target=task)
-        thread.start()
+        thread_play = threading.Thread(target=task_play)
+        thread_play.start()
     
-    def page_favori(self,events):
+    def page_favori(self):
         # Cette page comprend 4 grands rectangles correspondant aux batteries du robot
         # Chaque rectangle affichera les informations de la batterie
 
         for batterie in self.batteries:
             batterie.draw()
     
-    def page_strategie(self,events):
+    def page_strategie(self):
         # Cette page affiche les différentes stratégies possibles
         for button in self.button_strategie:
             button.draw()
@@ -370,6 +370,7 @@ class IHM_Robot:
     
     def deconnexion(self):
         self.is_running = False
+        self.strategie_is_running = False
 
     def run(self):
         self.taille_auto_batterie()
@@ -394,6 +395,7 @@ class IHM_Robot:
                 if event.type == pygame.QUIT:
                     self.client.add_to_send_list(self.client.create_message(1, "stop", None))
                     self.is_running = False
+                    self.strategie_is_running = False
                     
                 for button in self.button_menu:
                     button.handle_event(event)
@@ -419,9 +421,9 @@ class IHM_Robot:
             # --------------------------------------------------------------------------------
 
             if self.PAGE == 0:
-                self.page_favori(pygame.event.get())
+                self.page_favori()
             elif self.PAGE == 1:
-                self.page_strategie(pygame.event.get())
+                self.page_strategie()
             elif self.PAGE == 2:
                 pass
             elif self.PAGE == 3:

@@ -199,6 +199,7 @@ class IHM_Action_Aux:
         self.texts = []
         self.buttons = []
         self.listes = []
+        self.checkboxes = []
         
         # Charger la configuration des actions
         with open("data/config_ordre_to_can.json", "r") as file:
@@ -233,18 +234,25 @@ class IHM_Action_Aux:
                                 "box3": {"type": "button", "position": (425, 80), "size": (105, 30), "text": "Arrière"}},
             
             "Moteur_pas_a_pas": {"box1": {"type": "label", "position": (0, 130), "size": (120, 30), "text": "Moteur p.à.p"},
-                                "box2": {"type": "list", "position": (10, 160), "size": (100, 30), "text": self.name_action_Moteur, "id":"#l_Moteur"}},
+                                "box2": {"type": "list", "position": (10, 160), "size": (100, 30), "text": self.name_action_Moteur, "id":"#l_Moteur"},
+                                "box3": {"type": "label", "position": (10, 190), "size": (70, 35), "text": "Deplac"},
+                                "box4": {"type": "checkbox", "position": (75, 190), "size": (35, 35), "text": "Moteur", "id":"#c_Moteur"}},
             
             "Peigne": {"box1": {"type": "label", "position": (110, 130), "size": (120, 30), "text": "Peigne"},
-                    "box2": {"type": "list", "position": (120, 160), "size": (100, 30), "text": self.name_action_Peigne,"id":"#l_Peigne"},},
+                    "box2": {"type": "list", "position": (120, 160), "size": (100, 30), "text": self.name_action_Peigne,"id":"#l_Peigne"},
+                    "box3": {"type": "label", "position": (120, 190), "size": (70, 35), "text": "Deplac"},
+                    "box4": {"type": "checkbox", "position": (185, 190), "size": (35, 35), "text": "Peigne", "id":"#c_Peigne"}},
             
             "Pinces": { "box1": {"type": "label", "position": (220, 130), "size": (220, 30), "text": "Pinces (G/D)"},
                         "box2": {"type": "list", "position": (230, 160), "size": (100, 30), "text": self.name_action_Pince,"id":"#l_Pince_G"},
-                        "box3": {"type": "list", "position": (340, 160), "size": (100, 30), "text": self.name_action_Pince,"id":"#l_Pince_D"}},
+                        "box3": {"type": "list", "position": (340, 160), "size": (100, 30), "text": self.name_action_Pince,"id":"#l_Pince_D"},
+                        "box4": {"type": "label", "position": (270, 190), "size": (70, 35), "text": "Deplac"},
+                        "box5": {"type": "checkbox", "position": (335, 190), "size": (35, 35), "text": "Pince G", "id":"#c_Pinces"}},
             
             "Bras": {"box1": {"type": "label", "position": (450, 130), "size": (100, 30), "text": "Bras"},
-                    "box2": {"type": "list", "position": (450, 160), "size": (100, 30), "text": self.name_action_Bras,"id":"#l_Bras"},},
-            
+                    "box2": {"type": "list", "position": (450, 160), "size": (100, 30), "text": self.name_action_Bras,"id":"#l_Bras"},
+                    "box3": {"type": "label", "position": (450, 190), "size": (70, 35), "text": "Deplac"},
+                    "box4": {"type": "checkbox", "position": (515, 190), "size": (35, 35), "text": "Bras", "id":"#c_Bras"}},            
             
             "New_coord": {"box1": {"type": "label", "position": (20, 250), "size": (270, 30), "text": "Nouvelle coordonnée (optionnel) :"},
                         "box2": {"type": "label", "position": (20, 270), "size": (130, 30), "text": "X"},
@@ -262,7 +270,7 @@ class IHM_Action_Aux:
         }
         
         self.data = {
-            "Coord": {"X": _pos_actuelle[0], "Y": _pos_actuelle[1], "T": 0},
+            "Coord": {"X": _pos_actuelle[0], "Y": _pos_actuelle[1], "T": 0, "S": "0"},
             "Action" : {
                 
             }
@@ -300,6 +308,11 @@ class IHM_Action_Aux:
                                                                     container=self.window,
                                                                     object_id=ObjectID(object_id=box_data["id"]))
                     self.listes.append(liste)
+                    
+                elif box_data["type"] == "checkbox":
+                    checkbox = CheckBox(self.manager,self.window, box_data["position"], box_data["size"], box_data["id"])
+                    
+                    self.checkboxes.append(checkbox)
                 
                 elif box_data["type"] == "void":
                     pass
@@ -323,9 +336,11 @@ class IHM_Action_Aux:
                     # Activer les listes
                     if self.cote_actif != "":
                         self.enable_listes()
+                        self.update_checkboxes()
                     
                     if changement:
                         self.update_listes()
+                        self.update_checkboxes()
                         
                 elif id == "#b_Arrière":
                     changement = True if self.cote_actif != "arriere" else False
@@ -336,9 +351,11 @@ class IHM_Action_Aux:
                     # Activer les listes
                     if self.cote_actif != "":
                         self.enable_listes()
+                        self.update_checkboxes()
                     
                     if changement:
                         self.update_listes()
+                        self.update_checkboxes()
                         
                 elif id == "#b_Retour":
                     self.back_callback()
@@ -346,6 +363,11 @@ class IHM_Action_Aux:
                     self.save_data(self.data)
                 elif id == "#b_Suivant":
                     self.next_callback()
+                
+                elif id.split("_")[0] == "#c":
+                    for checkbox in self.checkboxes:
+                        if checkbox.get_id() == id:
+                            checkbox.toggle()
 
             elif event.user_type == pygame_gui.UI_DROP_DOWN_MENU_CHANGED: # Si la liste change
                 id = event.ui_element.get_object_ids()[1]
@@ -357,12 +379,15 @@ class IHM_Action_Aux:
                                 if self.cote_actif in self.data["Action"]["Moteur"]["ordre"]:
                                     if len(self.data["Action"]["Moteur"]["ordre"]) == 2:
                                         self.data["Action"]["Moteur"]["ordre"].pop(self.cote_actif)
+                                        self.data["Action"]["Moteur"]["deplacement"].pop(self.cote_actif)
                                     else:
                                         self.data["Action"].pop("Moteur")             
                             else:
                                 self.data["Action"]["Moteur"]["ordre"][self.cote_actif] = texte
+                                self.data["Action"]["Moteur"]["deplacement"][self.cote_actif] = self.checkboxes[0].get_checked()
                         except KeyError:
                             self.data.setdefault("Action", {}).setdefault("Moteur", {}).setdefault("ordre", {})[self.cote_actif] = texte
+                            self.data.setdefault("Action", {}).setdefault("Moteur", {}).setdefault("deplacement", {})[self.cote_actif] = self.checkboxes[0].get_checked()
                             
                     elif id == "#l_Peigne":
                         try:
@@ -370,12 +395,15 @@ class IHM_Action_Aux:
                                 if self.cote_actif in self.data["Action"]["HerkuleX"]["Peigne"]["ordre"]:
                                     if len(self.data["Action"]["HerkuleX"]["Peigne"]["ordre"]) == 2:
                                         self.data["Action"]["HerkuleX"]["Peigne"]["ordre"].pop(self.cote_actif)
+                                        self.data["Action"]["HerkuleX"]["Peigne"]["deplacement"].pop(self.cote_actif)
                                     else:
                                         self.data["Action"]["HerkuleX"].pop("Peigne")
                             else:
                                 self.data["Action"]["HerkuleX"]["Peigne"]["ordre"][self.cote_actif] = texte
+                                self.data["Action"]["HerkuleX"]["Peigne"]["deplacement"][self.cote_actif] = self.checkboxes[1].get_checked()
                         except KeyError:
                             self.data.setdefault("Action", {}).setdefault("HerkuleX", {}).setdefault("Peigne", {}).setdefault("ordre", {})[self.cote_actif] = texte
+                            self.data.setdefault("Action", {}).setdefault("HerkuleX", {}).setdefault("Peigne", {}).setdefault("deplacement", {})[self.cote_actif] = self.checkboxes[1].get_checked()
                             
                     elif id == "#l_Pince_G":
                         try:
@@ -383,12 +411,15 @@ class IHM_Action_Aux:
                                 if self.cote_actif in self.data["Action"]["HerkuleX"]["Pinces"]["gauche"]["ordre"]:
                                     if len(self.data["Action"]["HerkuleX"]["Pinces"]["gauche"]["ordre"]) == 2:
                                         self.data["Action"]["HerkuleX"]["Pinces"]["gauche"]["ordre"].pop(self.cote_actif)
+                                        self.data["Action"]["HerkuleX"]["Pinces"]["gauche"]["deplacement"].pop(self.cote_actif)
                                     else:
                                         self.data["Action"]["HerkuleX"]["Pinces"].pop("gauche")
                             else:
                                 self.data["Action"]["HerkuleX"]["Pinces"]["gauche"]["ordre"][self.cote_actif] = texte
+                                self.data["Action"]["HerkuleX"]["Pinces"]["gauche"]["deplacement"][self.cote_actif] = self.checkboxes[2].get_checked()
                         except KeyError:
                             self.data.setdefault("Action", {}).setdefault("HerkuleX", {}).setdefault("Pinces", {}).setdefault("gauche", {}).setdefault("ordre", {})[self.cote_actif] = texte
+                            self.data.setdefault("Action", {}).setdefault("HerkuleX", {}).setdefault("Pinces", {}).setdefault("gauche", {}).setdefault("deplacement", {})[self.cote_actif] = self.checkboxes[2].get_checked()
                             
                     elif id == "#l_Pince_D":
                         try:
@@ -396,12 +427,15 @@ class IHM_Action_Aux:
                                 if self.cote_actif in self.data["Action"]["HerkuleX"]["Pinces"]["droite"]["ordre"]:
                                     if len(self.data["Action"]["HerkuleX"]["Pinces"]["droite"]["ordre"]) == 2:
                                         self.data["Action"]["HerkuleX"]["Pinces"]["droite"]["ordre"].pop(self.cote_actif)
+                                        self.data["Action"]["HerkuleX"]["Pinces"]["droite"]["deplacement"].pop(self.cote_actif)
                                     else:
                                         self.data["Action"]["HerkuleX"]["Pinces"].pop("droite")
                             else:
                                 self.data["Action"]["HerkuleX"]["Pinces"]["droite"]["ordre"][self.cote_actif] = texte
+                                self.data["Action"]["HerkuleX"]["Pinces"]["droite"]["deplacement"][self.cote_actif] = self.checkboxes[2].get_checked()
                         except KeyError:
                             self.data.setdefault("Action", {}).setdefault("HerkuleX", {}).setdefault("Pinces", {}).setdefault("droite", {}).setdefault("ordre", {})[self.cote_actif] = texte
+                            self.data.setdefault("Action", {}).setdefault("HerkuleX", {}).setdefault("Pinces", {}).setdefault("droite", {}).setdefault("deplacement", {})[self.cote_actif] = self.checkboxes[2].get_checked()
                             
                     elif id == "#l_Bras":
                         try:
@@ -411,8 +445,10 @@ class IHM_Action_Aux:
                                         self.data["Action"]["HerkuleX"].pop("Bras")
                             else:
                                 self.data["Action"]["HerkuleX"]["Bras"]["ordre"] = texte
+                                self.data["Action"]["HerkuleX"]["Bras"]["deplacement"] = self.checkboxes[3].get_checked()
                         except KeyError:
                             self.data.setdefault("Action", {}).setdefault("HerkuleX", {}).setdefault("Bras", {}).setdefault("ordre", {})["ordre"] = texte
+                            self.data.setdefault("Action", {}).setdefault("HerkuleX", {}).setdefault("Bras", {}).setdefault("deplacement", {})["deplacement"] = self.checkboxes[3].get_checked()
                                                         
             elif event.user_type == pygame_gui.UI_TEXT_ENTRY_CHANGED: # Si le texte change
                 id = event.ui_element.get_object_ids()[1]
@@ -460,7 +496,6 @@ class IHM_Action_Aux:
         herkulex_peigne_ordre = action.get("HerkuleX", {}).get("Peigne", {}).get("ordre", {})
         herkulex_pince_gauche = action.get("HerkuleX", {}).get("Pinces", {}).get("gauche", {}).get("ordre", {})
         herkulex_pince_droite = action.get("HerkuleX", {}).get("Pinces", {}).get("droite", {}).get("ordre", {})
-        herkulex_bras_ordre = action.get("HerkuleX", {}).get("Bras", {}).get("ordre", {})
         
         if self.cote_actif in moteur_ordre:
             self.rebuild_liste(self.listes[0],moteur_ordre[self.cote_actif])
@@ -480,12 +515,28 @@ class IHM_Action_Aux:
         if self.cote_actif in herkulex_pince_droite:
             self.rebuild_liste(self.listes[3],herkulex_pince_droite[self.cote_actif])
         else:
-            self.rebuild_liste(self.listes[3],"-")   
+            self.rebuild_liste(self.listes[3],"-")
             
-        if self.cote_actif in herkulex_bras_ordre:
-            self.rebuild_liste(self.listes[4],herkulex_bras_ordre[self.cote_actif])
+    def update_checkboxes(self):
+        action = self.data.get("Action", {})
+        moteur_deplacement = action.get("Moteur", {}).get("deplacement", {})
+        herkulex_peigne_deplacement = action.get("HerkuleX", {}).get("Peigne", {}).get("deplacement", {})
+        herkulex_pince_gauche_deplacement = action.get("HerkuleX", {}).get("Pinces", {}).get("gauche", {}).get("deplacement", {})
+        
+        if self.cote_actif in moteur_deplacement:
+            self.checkboxes[0].set_checked(moteur_deplacement[self.cote_actif])
         else:
-            self.rebuild_liste(self.listes[4],"-")    
+            self.checkboxes[0].set_checked(False)
+        
+        if self.cote_actif in herkulex_peigne_deplacement:
+            self.checkboxes[1].set_checked(herkulex_peigne_deplacement[self.cote_actif])
+        else:
+            self.checkboxes[1].set_checked(False)
+        
+        if self.cote_actif in herkulex_pince_gauche_deplacement:
+            self.checkboxes[2].set_checked(herkulex_pince_gauche_deplacement[self.cote_actif])
+        else:
+            self.checkboxes[2].set_checked(False)
     
     def rebuild_liste(self,liste,option):
         liste.selected_option = option

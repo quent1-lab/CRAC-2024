@@ -337,6 +337,38 @@ class Interrupteur:
                 self.toggle()
 
 
+from pygame_gui.elements import UIButton
+
+class CheckBox:
+    def __init__(self, manager,screen, xy: tuple, wh: tuple, _id: str, _state=False):
+        self.checked = _state
+        self.id = _id
+        self.button = UIButton(relative_rect=pygame.Rect(xy, wh),
+                               text='✓' if self.checked else 'X',
+                               manager=manager,
+                               container=screen,
+                               object_id=_id)
+
+    def toggle(self):
+        self.checked = not self.checked
+        self.button.set_text('✓' if self.checked else 'X')
+
+    def get_checked(self):
+        return self.checked
+
+    def set_checked(self, state):
+        self.checked = state
+        self.button.set_text('✓' if self.checked else 'X')
+        
+    def get_id(self):
+        return self.id
+
+    def handle_event(self, event):
+        if event.type == pygame.USEREVENT:
+            if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
+                if event.ui_element == self.button:
+                    self.toggle()
+
 def draw_text(screen, text, x, y, color=(0, 0, 0), font=None, bg = None):
     """Draws text to the pygame screen, on up left corner"""
     if font is None:

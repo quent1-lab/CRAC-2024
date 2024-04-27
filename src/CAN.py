@@ -85,6 +85,7 @@ class ComCAN:
         try:
             messageCan = self.can.recv(10.0)
             if messageCan is not None:
+                logging.info(f"BusCAN : Message reçu : {messageCan}")
                 return messageCan.arbitration_id, messageCan.dlc, messageCan.data
             else:
                 return None

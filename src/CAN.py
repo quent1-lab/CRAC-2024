@@ -27,11 +27,12 @@ class ComCAN:
             try:
                 for key, value in d.items():
                     new_path = path + [key]
-                    logging.info(f"BusCAN : new_path : {new_path} | value : {value}")
                     if key == "aknowledge":
                         if isinstance(value, dict):
-                            value = str(value)  # convert the dictionary to a string
-                        result[value] = ".".join(new_path)
+                            for key, value in value.items():
+                                result[value] = ".".join(new_path + [key])
+                        else:
+                            result[value] = ".".join(new_path)
                     elif isinstance(value, dict):
                         find_aknowledge(value, new_path, result)
             except Exception as e:

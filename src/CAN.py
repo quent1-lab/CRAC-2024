@@ -133,6 +133,9 @@ class ComCAN:
             elif data[0] == 0x114:
                 # Fin d'instruction de positionnement
                 self.client.add_to_send_list(self.client.create_message(0, "akn_m", None))
+            elif data[0] in self.liste_ack:
+                # Message d'acquittement
+                self.client.add_to_send_list(self.client.create_message(0, "akn", {"id": data[0], "name": self.liste_ack[data[0]]}))
             else:
                 logging.info(f"BusCAN : ID inconnu -> data : {data}")
                 #print(f"ID inconnu ; data : {data}")

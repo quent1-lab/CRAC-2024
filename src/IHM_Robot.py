@@ -198,6 +198,7 @@ class IHM_Robot:
                             while not self.robot_move and self.strategie_is_running and self.is_running:
                                 time.sleep(0.1)
                                 if aknowledge[i] in self.liste_aknowledge:
+                                    self.liste_aknowledge.remove(aknowledge[i])
                                     break
 
             logging.info("Fin de la stratégie")
@@ -341,7 +342,7 @@ class IHM_Robot:
                 self.robot_move = False
             elif message["cmd"] == "akn":
                 data = message["data"]
-                self.liste_aknowledge.append(data["akn"])
+                self.liste_aknowledge.append(data["id"])
         
         except Exception as e:
             print(f"Erreur lors de la réception du message : {str(e)}")

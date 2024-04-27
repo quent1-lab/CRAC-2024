@@ -15,8 +15,8 @@
             }
         },
         "aknowledge": {
-            "avant": 1,
-            "arriere": 2
+            "avant": 901,
+            "arriere": 902
         }
     },
     "HerkuleX": {
@@ -36,8 +36,8 @@
                 }
             },
             "aknowledge": {
-                "avant": 3,
-                "arriere": 4
+                "avant": 903,
+                "arriere": 904
             }
         },
         "Pinces": {
@@ -61,8 +61,8 @@
                     }
                 },
                 "aknowledge": {
-                    "avant": 5,
-                    "arriere": 6
+                    "avant": 905,
+                    "arriere": 906
                 }
             },
             "gauche": {
@@ -85,8 +85,8 @@
                     }
                 },
                 "aknowledge": {
-                    "avant": 7,
-                    "arriere": 8
+                    "avant": 907,
+                    "arriere": 908
                 }
             }
         },
@@ -99,7 +99,7 @@
                 "Bas": 0,
                 "Min": 0
             },
-            "aknowledge": 9
+            "aknowledge": 909
         }
     }
 }

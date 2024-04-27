@@ -23,6 +23,7 @@ class ComCAN:
         with open("data/config_ordre_to_can.json","r",encoding="utf-8") as file:
             config_json = json.load(file)
         
+        # Recherche des messages d'acquittement
         def find_aknowledge(d, path, result):
             try:
                 for key, value in d.items():
@@ -33,6 +34,8 @@ class ComCAN:
                                 result[value] = ".".join(new_path + [key])
                         else:
                             result[value] = ".".join(new_path)
+                    elif key == "ordre":
+                        return
                     elif isinstance(value, dict):
                         find_aknowledge(value, new_path, result)
             except Exception as e:

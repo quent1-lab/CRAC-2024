@@ -1,10 +1,12 @@
-import can
-import os
-from client import Client
-import struct
-import logging
-import struct
-import json
+import  can
+import  os
+import  struct
+import  logging
+import  struct
+import  json
+import  select
+
+from    client  import  Client
 
 # Configuration du logger
 logging.basicConfig(filename='buscan.log', level=logging.INFO, datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
@@ -76,9 +78,9 @@ class ComCAN:
     
     def receive(self):
         try:
-            #time.sleep(0.05)
-            messageCan = self.can.recv(2.0)
-            if messageCan is not None:
+            ready, _, _ = select.select([self.can], [], [], 10.0)
+            if ready:
+                messageCan = self.can.recv()
                 return messageCan.arbitration_id, messageCan.dlc, messageCan.data
             else:
                 return None

@@ -21,28 +21,28 @@
 #define COMBDOWN 0x01FC // 512
 
 // ! Constantes pour les servos des peignes avant & arrière
-#define FRONTCOMB 0x05
-#define BACKCOMB 0x06
+#define COMB 0x05
 
 // ! Constantes pour le CAN
-#define FRONTCLOSE 0x01
-#define BCLOSE 0x02
-#define FRONTOPEN 0x03
-#define BOPEN 0x04
-#define FRONTPLANT 0x05
-#define BPLANT 0x06
-#define FRONTCOMBUP 0x07
-#define FRONTCOMBDOWN 0x08
-#define BCOMBUP 0x09
-#define BCOMBDOWN 0x0A
-#define FRONTSHAKING 0x0B
-#define BSHAKING 0x0C
+#define CLOSE 0x01
+#define OPEN 0x03
+#define PLANT 0x05
+#define COMBUP 0x07
+#define COMBDOWN 0x08
+#define SHAKING 0x0B
 #define ELEVATORUP 0x0D
 #define ELEVATORDOWN 0x0E
 
 // ! Constantes pour le moteur pas-à-pas
 #define CLOCKWISE 1
 #define COUNTERCLOCKWISE 0
+
+// ! Constantes CAN pour les aknowledge
+#define ACK_RGRABBER 0x300 // Aknowledge pour la pince droite
+#define ACK_LGRABBER 0x301 // Aknowledge pour la pince gauche
+#define ACK_COMB 0x302 // Aknowledge pour le peigne
+#define ACK_ELEVATOR 0x303 // Aknowledge pour l'ascenseur
+
 
 #ifdef CARTEDEF
 DigitalOut STBY(D7);
@@ -81,20 +81,11 @@ void printCANMsg(CAN *can, CANMessage &msg);
 //* Fonction pour ouvrir les pinces avant
 void openingFrontGrabber();
 
-//* Fonction pour ouvrir les pinces arrière
-void openingBackGrabber();
-
 //* Fonction pour fermer les pinces avant
 void closingFrontGrabber();
 
-//* Fonction pour fermer les pinces arrière
-void closingBackGrabber();
-
 //* Fonction pour fermer les pinces avant en position plant
 void plantClosingFrontGrabber();
-
-//* Fonction pour fermer les pinces arrière en position plant
-void plantClosingBackGrabber();
 
 //* Fonction pour lever le peigne avant
 void frontCombUp();
@@ -105,20 +96,8 @@ void frontCombDown();
 //* Fonction pour baisser le peigne avant à mi-hauteur
 void frontCombMid();
 
-//* Fonction pour lever le peigne arrière
-void backCombUp();
-
-//* Fonction pour baisser le peigne arrière
-void backCombDown();
-
-//* Fonction pour baisser le peigne arrière à mi-hauteur
-void backCombMid();
-
 //* Fonction pour secouer le peigne avant
 void frontCombShaking();
-
-//* Fonction pour secouer le peigne arrière
-void backCombShaking();
 
 //* Fonction pour monter l'ascenseur
 void elevatorUp();
@@ -151,52 +130,28 @@ int main()
     {
       switch (RXMsg.data[0])
       {
-      case FRONTCLOSE:
+      case CLOSE:
         closingFrontGrabber();
         break;
 
-      case BCLOSE:
-        closingBackGrabber();
-        break;
-
-      case FRONTOPEN:
+      case OPEN:
         openingFrontGrabber();
         break;
 
-      case BOPEN:
-        openingBackGrabber();
-        break;
-
-      case FRONTPLANT:
+      case PLANT:
         plantClosingFrontGrabber();
         break;
 
-      case BPLANT:
-        plantClosingBackGrabber();
-        break;
-
-      case FRONTCOMBUP:
+      case COMBUP:
         frontCombUp();
         break;
 
-      case FRONTCOMBDOWN:
+      case COMBDOWN:
         frontCombDown();
         break;
 
-      case BCOMBUP:
-        backCombUp();
-        break;
-
-      case BCOMBDOWN:
-        backCombDown();
-        break;
-
-      case FRONTSHAKING:
+      case SHAKING:
         frontCombShaking();
-        break;
-
-      case BSHAKING:
-        backCombShaking();
         break;
 
       case ELEVATORUP:
@@ -282,22 +237,6 @@ void openingFrontGrabber()
   servo.clear(BROADCAST_ID);
 }
 
-void openingBackGrabber()
-{
-  servo.clear(BROADCAST_ID);
-  servo.positionControl(0x04, RGRABBERMAX, 35, GLED_ON);
-  servo.positionControl(0x03, LGRABBERMAX, 20, GLED_ON);
-  servo.clear(BROADCAST_ID);
-}
-
-void closingBackGrabber()
-{
-  servo.clear(BROADCAST_ID);
-  servo.positionControl(0x04, RGRABBERMIN, 35, GLED_ON);
-  servo.positionControl(0x03, LGRABBERMIN, 20, GLED_ON);
-  servo.clear(BROADCAST_ID);
-}
-
 void closingFrontGrabber()
 {
   servo.clear(BROADCAST_ID);
@@ -314,40 +253,18 @@ void plantClosingFrontGrabber()
   servo.clear(BROADCAST_ID);
 }
 
-void plantClosingBackGrabber()
-{
-  servo.clear(BROADCAST_ID);
-  servo.positionControl(0x04, RGRABBERCENTER, 45, GLED_ON);
-  servo.positionControl(0x03, LGRABBERCENTER, 35, GLED_ON);
-  servo.clear(BROADCAST_ID);
-}
-
 void frontCombUp()
 {
-  servo.clear(FRONTCOMB);
-  servo.positionControl(FRONTCOMB, COMBUP, 45, GLED_ON);
-  servo.clear(FRONTCOMB);
+  servo.clear(COMB);
+  servo.positionControl(COMB, COMBUP, 45, GLED_ON);
+  servo.clear(COMB);
 }
 
 void frontCombDown()
 {
-  servo.clear(FRONTCOMB);
-  servo.positionControl(FRONTCOMB, COMBDOWN, 45, GLED_ON);
-  servo.clear(FRONTCOMB);
-}
-
-void backCombUp()
-{
-  servo.clear(BACKCOMB);
-  servo.positionControl(BACKCOMB, COMBUP, 45, GLED_ON);
-  servo.clear(BACKCOMB);
-}
-
-void backCombDown()
-{
-  servo.clear(BACKCOMB);
-  servo.positionControl(BACKCOMB, COMBDOWN, 60, GLED_ON);
-  servo.clear(BACKCOMB);
+  servo.clear(COMB);
+  servo.positionControl(COMB, COMBDOWN, 45, GLED_ON);
+  servo.clear(COMB);
 }
 
 void frontCombShaking()
@@ -355,18 +272,8 @@ void frontCombShaking()
   int count = 50;
   for (int i = 0; i < count; i++)
   {
-    servo.positionControl(FRONTCOMB, COMBDOWN - 5, 1, GLED_ON);
-    servo.positionControl(FRONTCOMB, COMBDOWN + 5, 1, GLED_ON);
-  }
-}
-
-void backCombShaking()
-{
-  int count = 50;
-  for (int i = 0; i < count; i++)
-  {
-    servo.positionControl(BACKCOMB, COMBDOWN - 5, 1, GLED_ON);
-    servo.positionControl(BACKCOMB, COMBDOWN + 5, 1, GLED_ON);
+    servo.positionControl(COMB, COMBDOWN - 5, 1, GLED_ON);
+    servo.positionControl(COMB, COMBDOWN + 5, 1, GLED_ON);
   }
 }
 

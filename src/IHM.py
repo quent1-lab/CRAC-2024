@@ -34,7 +34,7 @@ class IHM:
         self.FONT_COLOR = self.BLACK
 
         # Initialisation du robot virtuel
-        self.ROBOT_Dimension = (264, 268)
+        self.ROBOT_Dimension = (264, 269)
         self.ROBOT = Objet(0, self.ROBOT_Dimension[0], self.ROBOT_Dimension[1], 20)
         self.ROBOT_ANGLE = 0
 

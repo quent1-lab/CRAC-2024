@@ -27,6 +27,7 @@ class ComCAN:
             try:
                 for key, value in d.items():
                     new_path = path + [key]
+                    logging.debug(f"BusCAN : new_path : {new_path} | value : {value}")
                     if key == "aknowledge":
                         if isinstance(value, dict):
                             value = str(value)  # convert the dictionary to a string

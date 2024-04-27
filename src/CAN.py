@@ -28,6 +28,8 @@ class ComCAN:
                 for key, value in d.items():
                     new_path = path + [key]
                     if key == "aknowledge":
+                        if isinstance(value, dict):
+                            value = str(value)  # convert the dictionary to a string
                         result[value] = ".".join(new_path)
                     elif isinstance(value, dict):
                         find_aknowledge(value, new_path, result)

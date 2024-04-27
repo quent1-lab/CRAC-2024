@@ -83,12 +83,15 @@ class ComCAN:
     
     def receive(self):
         try:
-            ready, _, _ = select.select([self.can], [], [], 10.0)
-            if ready:
-                messageCan = self.can.recv()
-                return messageCan.arbitration_id, messageCan.dlc, messageCan.data
+            if self.can.fileno() != -1:  # Check if the socket is connected
+                ready, _, _ = select.select([self.can], [], [], 10.0)
+                if ready:
+                    messageCan = self.can.recv()
+                    return messageCan.arbitration_id, messageCan.dlc, messageCan.data
+                else:
+                    return None
             else:
-                return None
+                logging.error("BusCan : Le socket CAN n'est pas connecté.")
         except Exception as e:
             logging.error(f"BusCan : Erreur lors de la réception du message : {str(e)}")
     

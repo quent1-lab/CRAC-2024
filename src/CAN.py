@@ -128,9 +128,10 @@ class ComCAN:
                 # Fin d'instruction de positionnement
                 self.client.add_to_send_list(self.client.create_message(0, "akn_m", None))
             else:
-                logging.DEBUG(f"BusCAN : ID inconnu -> data : {data}")
-                print(f"ID inconnu ; data : {data}")
+                logging.debug(f"BusCAN : ID inconnu -> data : {data}")
+                #print(f"ID inconnu ; data : {data}")
         except Exception as e:
+            logging.debug(f"BusCAN : ID inconnu -> data : {data}")
             logging.error(f"BusCAN : Erreur lors de l'analyse du message CAN : {str(e)}")
 
     def receive_to_server(self, message):

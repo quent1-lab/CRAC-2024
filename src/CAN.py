@@ -85,12 +85,12 @@ class ComCAN:
         try:
             messageCan = self.can.recv(10.0)
             if messageCan is not None:
-                logging.info(f"BusCAN : Message reçu : {messageCan}")
+                #logging.info(f"BusCAN : Message reçu : {messageCan}")
                 return messageCan.arbitration_id, messageCan.dlc, messageCan.data
             else:
                 return None
         except Exception as e:
-            time.sleep(0.01)
+            time.sleep(0.001)
             logging.error(f"BusCan : Erreur lors de la réception du message : {str(e)}")
     
     def analyse_CAN(self, data):

@@ -140,38 +140,6 @@ void Herkulex::reset(uint8_t id)
     txPacket(MIN_PACKET_SIZE, txBuf);
 }
 
-//------------------------------------------------------------------------------
-int Herkulex::getId(void)
-{
-    uint8_t txBuf[MIN_PACKET_SIZE];
-    uint8_t rxBuf[MIN_PACKET_SIZE + 2];
-
-    for (int id = 1; id < 0xFE; id++)
-    {
-        txBuf[0] = HEADER;          // Packet Header (0xFF)
-        txBuf[1] = HEADER;          // Packet Header (0xFF)
-        txBuf[2] = MIN_PACKET_SIZE; // Packet Size
-        txBuf[3] = id;              // Servo ID
-        txBuf[4] = ROM_ACK_POLICY;  // Command Ram Read (0x04)
-        txBuf[5] = 0;               // Checksum1
-        txBuf[6] = 0;
-
-        // Checksum1 = (PacketSize ^ pID ^ CMD ^ Data[0] ^ Data[1] ^ ... ^ Data[n]) & 0xFE
-        // Checksum2 = (~Checksum1)&0xFE
-        txBuf[5] = (txBuf[2] ^ txBuf[3] ^ txBuf[4]) & 0xFE;
-        txBuf[6] = (~(txBuf[5])) & 0xFE;
-
-        txPacket(MIN_PACKET_SIZE, txBuf);
-        ThisThread::sleep_for(200ms);
-        rxPacket(MIN_PACKET_SIZE + 2, rxBuf);
-
-        if ((rxBuf[0] == HEADER) && (rxBuf[1] == HEADER) && (rxBuf[2] == MIN_PACKET_SIZE + 2) && (rxBuf[3] == id) && (rxBuf[4] == ROM_STOP_DETECTION_PERIOD) && (rxBuf[5] == ((rxBuf[2] ^ rxBuf[3] ^ rxBuf[4] ^ rxBuf[7] ^ rxBuf[8]) & 0xFE)) && (rxBuf[6] == ((~(rxBuf[5])) & 0xFE)) && (rxBuf[7] == 0) && (rxBuf[8] == 0))
-        {
-            printf("ID = %d", id);
-            return id;
-        }
-    }
-}
 /*
 +Send : FF FF [07] 01 (07) {00 FE}
 -Recv : FF FF [09] 01 (47) {4E B0} 00 00
@@ -205,8 +173,71 @@ int Herkulex::getId(void)
 -Recv : FF FF [09] 01 (47) {4E B0} 00 00
 -Recv : FF FF [09] 01 (47) {4E B0} 00 00
 */
+
 //------------------------------------------------------------------------------
-void Herkulex::setTorque(uint8_t id, uint8_t cmdTorue)
+int Herkulex::getId(void)
+{
+    uint8_t txBuf[7];
+    uint8_t rxBuf[9];
+
+    txBuf[0] = HEADER;          // Packet Header (0xFF)
+    txBuf[1] = HEADER;          // Packet Header (0xFF)
+    txBuf[2] = MIN_PACKET_SIZE; // Packet Size
+    txBuf[3] = 0;               // Servo ID
+    txBuf[4] = ROM_ACK_POLICY;  // Command ID request
+    txBuf[5] = 0;               // Checksum1
+    txBuf[6] = 0;               // Checksum2
+
+    // Checksum1 = (PacketSize ^ pID ^ CMD ^ Data[0] ^ Data[1] ^ ... ^ Data[n]) & 0xFE
+    // Checksum2 = (~Checksum1)&0xFE
+    txBuf[5] = (txBuf[2] ^ txBuf[3] ^ txBuf[4]) & 0xFE;
+    txBuf[6] = (~(txBuf[5])) & 0xFE;
+
+    // send packet (mbed -> herkulex)
+    txPacket(7, txBuf);
+    ThisThread::sleep_for(1s);
+    rxPacket(9, rxBuf);
+
+    // Checksum1
+    uint8_t chksum1 = (rxBuf[2] ^ rxBuf[3] ^ rxBuf[4] ^ rxBuf[7] ^ rxBuf[8]) & 0xFE;
+    if (chksum1 != rxBuf[5])
+    {
+        return -1;
+    }
+
+    // Checksum2
+    uint8_t chksum2 = checksum2(chksum1);
+    if (chksum2 != rxBuf[6])
+    {
+        return -1;
+    }
+
+    return rxBuf[7];
+}
+
+void Herkulex::setLedColor(uint8_t id, uint8_t color)
+{
+    uint8_t txBuf[10];
+    txBuf[0] = HEADER;              // Packet Header (0xFF)
+    txBuf[1] = HEADER;              // Packet Header (0xFF)
+    txBuf[2] = MIN_PACKET_SIZE + 2; // Packet Size
+    txBuf[3] = id;                  // Servo ID
+    txBuf[4] = CMD_RAM_WRITE;       // Command Ram Write (0x03)
+    txBuf[5] = 0;                   // Checksum1
+    txBuf[6] = 0;                   // Checksum2
+    txBuf[7] = RAM_LED_CONTROL;     // Address 48
+    txBuf[8] = BYTE1;               // Length
+    txBuf[9] = color;               // Clear RAM_STATUS_ERROR
+    // Checksum1 = (PacketSize ^ pID ^ CMD ^ Data[0] ^ Data[1] ^ ... ^ Data[n]) & 0xFE
+    // Checksum2 = (~Checksum1)&0xFE
+    txBuf[5] = (txBuf[2] ^ txBuf[3] ^ txBuf[4] ^ txBuf[7] ^ txBuf[8] ^ txBuf[9]) & 0xFE;
+    txBuf[6] = (~(txBuf[5])) & 0xFE;
+
+    // send packet (mbed -> herkulex)
+    txPacket(MIN_PACKET_SIZE + 3, txBuf);
+}
+//------------------------------------------------------------------------------
+void Herkulex::setTorque(uint8_t id, uint8_t cmdTorque)
 {
     uint8_t txBuf[10];
 
@@ -219,7 +250,7 @@ void Herkulex::setTorque(uint8_t id, uint8_t cmdTorue)
     txBuf[6] = 0;                   // Checksum2
     txBuf[7] = RAM_TORQUE_CONTROL;  // Address 52
     txBuf[8] = BYTE1;               // Length
-    txBuf[9] = cmdTorue;            // Torque ON
+    txBuf[9] = cmdTorque;           // Torque ON
 
     // Checksum1 = (PacketSize ^ pID ^ CMD ^ Data[0] ^ Data[1] ^ ... ^ Data[n]) & 0xFE
     // Checksum2 = (~Checksum1)&0xFE

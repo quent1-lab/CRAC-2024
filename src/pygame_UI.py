@@ -403,7 +403,7 @@ if __name__ == '__main__':
     text_box = TextBox(screen, (100, 300, 300, 40), theme_file, send_button=True)
     
         # Initialiser l'interrupteur
-    interrupteur = Interrupteur(screen, 50, 420, 200, 100) # x, y, width, height = width//2
+    interrupteur = Interrupteur(screen,( 50, 420), (200, 100)) # x, y, width, height = width//2
 
     running = True
     while running:

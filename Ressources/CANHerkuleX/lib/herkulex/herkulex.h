@@ -309,9 +309,9 @@ public:
     /** Set torque setting
      *
      * @param id The herkulex servo ID.
-     * @param cmdTorue The Command for setting of torque (TORQUE_FREE 0x00, BREAK_ON 0x40, TORQUE_ON 0x60)
+     * @param cmdTorque The Command for setting of torque (TORQUE_FREE 0x00, BREAK_ON 0x40, TORQUE_ON 0x60)
      */
-    void setTorque(uint8_t id, uint8_t cmdTorue);
+    void setTorque(uint8_t id, uint8_t cmdTorque);
 
     /** Position Control
      *
@@ -338,6 +338,13 @@ public:
      * @return -1 is getStatus failed. other is servo`s status error value.
      */
     int8_t getStatus(uint8_t id);
+
+    /** Get Status
+     *
+     * @param id The herkulex servo ID.
+     * @return -1 is getStatus failed. other is servo`s status error value.
+     */
+    void setLedColor(uint8_t id, uint8_t color);
 
     /** Get Position
      *

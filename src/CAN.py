@@ -35,7 +35,7 @@ class ComCAN:
                         else:
                             result[value] = ".".join(new_path)
                     elif key == "ordre":
-                        return
+                        continue
                     elif isinstance(value, dict):
                         find_aknowledge(value, new_path, result)
             except Exception as e:

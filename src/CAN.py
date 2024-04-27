@@ -90,7 +90,7 @@ class ComCAN:
             else:
                 return None
         except Exception as e:
-            time.sleep(0.1)
+            time.sleep(0.01)
             logging.error(f"BusCan : Erreur lors de la réception du message : {str(e)}")
     
     def analyse_CAN(self, data):

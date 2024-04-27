@@ -24,12 +24,15 @@ class ComCAN:
             config_json = json.load(file)
         
         def find_aknowledge(d, path, result):
-            for key, value in d.items():
-                new_path = path + [key]
-                if key == "aknowledge":
-                    result[value] = ".".join(new_path)
-                elif isinstance(value, dict):
-                    find_aknowledge(value, new_path, result)
+            try:
+                for key, value in d.items():
+                    new_path = path + [key]
+                    if key == "aknowledge":
+                        result[value] = ".".join(new_path)
+                    elif isinstance(value, dict):
+                        find_aknowledge(value, new_path, result)
+            except Exception as e:
+                logging.error(f"BusCAN : Erreur lors de la recherche des messages d'acquittement : {str(e)}")
         
         find_aknowledge(config_json, [], self.liste_ack)
         logging.info(f"BusCAN : Liste des messages d'acquittement : {self.liste_ack}")

@@ -4,7 +4,7 @@ import  struct
 import  logging
 import  struct
 import  json
-import  select
+import  time
 
 from    client  import  Client
 
@@ -90,6 +90,7 @@ class ComCAN:
             else:
                 return None
         except Exception as e:
+            time.sleep(0.1)
             logging.error(f"BusCan : Erreur lors de la réception du message : {str(e)}")
     
     def analyse_CAN(self, data):

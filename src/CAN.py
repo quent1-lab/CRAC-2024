@@ -4,7 +4,7 @@ from client import Client
 import struct
 import logging
 import struct
-import time
+import json
 
 # Configuration du logger
 logging.basicConfig(filename='buscan.log', level=logging.INFO, datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
@@ -16,6 +16,21 @@ class ComCAN:
         self.can = None
         self.is_connected = False
         self.client = Client("127.0.0.2", 22050, 2, self.disconnect)
+        
+        self.liste_ack = {}
+        with open("data/config_ordre_to_can.json","r",encoding="utf-8") as file:
+            config_json = json.load(file)
+        
+        def find_aknowledge(d, path, result):
+            for key, value in d.items():
+                new_path = path + [key]
+                if key == "aknowledge":
+                    result[value] = ".".join(new_path)
+                elif isinstance(value, dict):
+                    find_aknowledge(value, new_path, result)
+        
+        find_aknowledge(config_json, [], self.liste_ack)
+        logging.info(f"BusCAN : Liste des messages d'acquittement : {self.liste_ack}")
         
 
     def connect(self):

@@ -28,6 +28,7 @@ class ComCAN:
             try:
                 for key, value in d.items():
                     new_path = path + [key]
+                    logging.info(f"BusCAN : new_path : {new_path}")
                     if key == "aknowledge":
                         if isinstance(value, dict):
                             for key, value in value.items():

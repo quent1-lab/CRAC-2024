@@ -186,10 +186,8 @@ class ComCAN:
             elif message["cmd"] == "CAN":
                 data = message["data"]
                 commande = data["id"]
-                b1 = data["byte1"]
-                b2 = data["byte2"]
-                b3 = data["byte3"]
-                messageCAN = can.Message(arbitration_id=commande, data=[b1,b2,b3], is_extended_id=False)
+                byte = data[1:]
+                messageCAN = can.Message(arbitration_id=commande, data=byte, is_extended_id=False)
                 
                 self.send(messageCAN)
             elif message["cmd"] == "resta":

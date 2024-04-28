@@ -169,7 +169,7 @@ class IHM_Robot:
                     self.client.send(self.client.create_message(2, "recalage", {"distance": distance, "mode": mode, "recalage": recalage}))
                 
                 is_arrived = False
-                
+                logging.info(f"Attente de l'aknowledge {akn}")
                 while recalage_is_playing and self.is_running and not is_arrived:
                     time.sleep(0.1)
                     if akn in self.liste_aknowledge:
@@ -386,6 +386,7 @@ class IHM_Robot:
             elif message["cmd"] == "akn":
                 data = message["data"]
                 self.liste_aknowledge.append(data["id"])
+                logging.info(f"Liste des aknowledge : {self.liste_aknowledge}")
         
         except Exception as e:
             print(f"Erreur lors de la réception du message : {str(e)}")

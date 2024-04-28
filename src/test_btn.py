@@ -1,7 +1,7 @@
 import time
 import gpiozero
 
-button = gpiozero.Button(16)
+button = gpiozero.Button(16, pull_up=True)
 
 if __name__ == '__main__':
     while True:

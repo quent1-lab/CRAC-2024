@@ -85,7 +85,7 @@ class IHM:
         self.STRATEGIE = 4
         self.IHM_Robot = 9
         self.IHM = 10
-        self.client_socket = Client("192.168.22.109", 22050, self.IHM)
+        self.client_socket = Client("192.168.22.101", 22050, self.IHM)
 
         pygame.font.init()
         self.font = pygame.font.SysFont("Arial", 20)

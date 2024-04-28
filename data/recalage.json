@@ -2,7 +2,7 @@
     "1" : {
         "id" : 0,
         "ordre" : {
-            "distance" : 300,
+            "distance" : 150,
             "mode" : 1,
             "recalage" : 0
         },
@@ -11,7 +11,7 @@
     "2" : {
         "id": 0,
         "ordre" : {
-            "distance" : -300,
+            "distance" : -150,
             "mode" : 0,
             "recalage" : 0
         },
@@ -27,7 +27,7 @@
     "4" : {
         "id": 0,
         "ordre" : {
-            "distance" : 300,
+            "distance" : 150,
             "mode" : 2,
             "recalage" : 0
         },
@@ -36,7 +36,7 @@
     "5" : {
         "id": 0,
         "ordre" : {
-            "distance" : -300,
+            "distance" : -150,
             "mode" : 0,
             "recalage" : 0
         },

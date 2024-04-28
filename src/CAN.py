@@ -186,7 +186,7 @@ class ComCAN:
             elif message["cmd"] == "CAN":
                 data = message["data"]
                 commande = data["id"]
-                byte = data[1:]
+                byte = list(data.items())[1:]  # Convert dictionary items to a list and skip the first item
                 messageCAN = can.Message(arbitration_id=commande, data=byte, is_extended_id=False)
                 
                 self.send(messageCAN)

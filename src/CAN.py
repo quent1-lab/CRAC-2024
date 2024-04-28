@@ -51,7 +51,7 @@ class ComCAN:
                 os.system('sudo ip link set can0 type can bitrate 1000000')
                 os.system('sudo ifconfig can0 up')
                 self.can = can.interface.Bus(channel=self.channel, bustype=self.bustype)
-                self.can.state = can.BusState.ACTIVE
+                #self.can.state = can.BusState.ACTIVE
                 self.is_connected = True
                 logging.info("BusCAN : Connexion établie")
             else:

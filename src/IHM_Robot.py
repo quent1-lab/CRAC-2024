@@ -141,7 +141,44 @@ class IHM_Robot:
         self.play_strategie()
     
     def recalage(self):
-        self.client.send(self.client.create_message(2, "recal", None))
+        recalage_is_playing = False
+        
+        def task_recalage():
+            nonlocal recalage_is_playing
+            
+            with open("data/recalage.json", "r", encoding="utf-8") as f:
+                dict_recalage = json.load(f)
+            
+            for key, action in dict_recalage.items():
+                id = action["id"]
+                akn = action["aknowledge"]
+                
+                if len(action["ordre"]) == 1:
+                    # Ordre de rotation
+                    angle = action["ordre"]["theta"]
+                    self.client.send(self.client.create_message(2, "rotation", {"angle" : angle}))
+                else:
+                    # Ordre de recalage
+                    distance = action["ordre"]["distance"]
+                    mode = action["ordre"]["mode"]
+                    recalage = action["ordre"]["recalage"]
+                    self.client.send(self.client.create_message(2, "recalage", {"distance": distance, "mode": mode, "recalage": recalage}))
+                
+                is_arrived = False
+                
+                while recalage_is_playing and self.is_running and not is_arrived:
+                    time.sleep(0.1)
+                    if akn in self.liste_aknowledge:
+                        self.liste_aknowledge.remove(akn)
+                        is_arrived = True
+                    
+                if self.is_running == False:
+                    break
+            
+            recalage_is_playing = False
+        
+        thread_recalage = threading.Thread(target=task_recalage)
+        thread_recalage.start()
     
     def play_strategie(self):
         # Jouer la stratégie
@@ -214,6 +251,7 @@ class IHM_Robot:
 
         for batterie in self.batteries:
             batterie.draw()
+        self.button_recalage.draw()
     
     def page_strategie(self):
         # Cette page affiche les différentes stratégies possibles

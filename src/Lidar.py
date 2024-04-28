@@ -22,11 +22,6 @@ class LidarScanner:
         # Initialisation du robot virtuel
         self.ROBOT = Objet(0, 1500, 1000, 20)
 
-        if os.name == 'nt':  # Windows
-            self.path_picture = "src/Terrain_Jeu.png"
-        else:  # Linux et autres
-            self.path_picture = "Documents/CRAC-2024/Lidar/Terrain_Jeu.png"
-
         self.objets = []  # Liste pour stocker les objets détectés
 
         self.client_socket = Client('127.0.0.3', 22050, 3)
@@ -302,7 +297,7 @@ class LidarScanner:
 
 if __name__ == '__main__':
     # Initialiser le client
-    scanner = LidarScanner("/dev/ttyUSB1")
+    scanner = LidarScanner()
     try :
         print("LIDAR  : Démarrage du programme")
         logging.info("Starting LiDAR scanner")

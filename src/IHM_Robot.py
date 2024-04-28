@@ -159,7 +159,7 @@ class IHM_Robot:
                     # Ordre de rotation
                     angle = action["ordre"]["theta"]
                     logging.info(f"Rotation de {angle}°")
-                    self.client.send(self.client.create_message(2, "rotation", {"angle" : angle}))
+                    self.client.send(self.client.create_message(2, "rotation", {"angle" : angle*10}))
                 else:
                     # Ordre de recalage
                     distance = action["ordre"]["distance"]
@@ -172,8 +172,6 @@ class IHM_Robot:
                 logging.info(f"Attente de l'aknowledge {akn}")
                 while self.recalage_is_playing and self.is_running and not is_arrived:
                     time.sleep(0.1)
-                    
-                    logging.info("Condition d'arrêt :", akn in self.liste_aknowledge)
                     if akn in self.liste_aknowledge:
                         logging.info(f"Arrivé à la position {id}")
                         self.liste_aknowledge.remove(akn)
@@ -182,7 +180,7 @@ class IHM_Robot:
                 if self.is_running == False:
                     break
             
-            recalage_is_playing = False
+            self.recalage_is_playing = False
         
         thread_recalage = threading.Thread(target=task_recalage)
         thread_recalage.start()

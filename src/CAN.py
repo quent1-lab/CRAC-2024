@@ -162,7 +162,7 @@ class ComCAN:
                 # Format des données : distance (short), mode (char), recalage (short)
                 dataCan = struct.pack('h', data["distance"]) + struct.pack('c', str(data["mode"]).encode()) + struct.pack('h', data["recalage"])
                 
-                messageCan = can.Message(arbitration_id=0x24, data=dataCan, is_extended_id=False)
+                messageCan = can.Message(arbitration_id=0x24,dlc=8, data=dataCan, is_extended_id=False)
                 self.send(messageCan)
             
             elif message["cmd"] == "rotation":

@@ -4,14 +4,14 @@
         "ordre" : {
             "distance" : 150,
             "mode" : 1,
-            "recalage" : 200
+            "recalage" : 150
         },
         "aknowledge" : 273
     },
     "2" : {
         "id": 0,
         "ordre" : {
-            "distance" : -200,
+            "distance" : -150,
             "mode" : 0,
             "recalage" : 0
         },
@@ -29,14 +29,14 @@
         "ordre" : {
             "distance" : 150,
             "mode" : 2,
-            "recalage" : 180
+            "recalage" : 150
         },
         "aknowledge" : 273
     },
     "5" : {
         "id": 0,
         "ordre" : {
-            "distance" : -180,
+            "distance" : -150,
             "mode" : 0,
             "recalage" : 0
         },

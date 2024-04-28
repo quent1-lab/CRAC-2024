@@ -187,7 +187,8 @@ class ComCAN:
                 data = message["data"]
                 commande = data["id"]
                 byte = list(data.items())[1:]  # Convert dictionary items to a list and skip the first item
-                messageCAN = can.Message(arbitration_id=commande, data=byte, is_extended_id=False)
+                byte_values = [b[1] for b in byte]  # Extract the byte values
+                messageCAN = can.Message(arbitration_id=commande, data=byte_values, is_extended_id=False)
                 
                 self.send(messageCAN)
             elif message["cmd"] == "resta":

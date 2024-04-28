@@ -5,6 +5,10 @@ import serial.tools.list_ports
 import os
 from objet import Objet
 from client import *
+import logging
+
+# Configuration du logger
+logging.basicConfig(filename='lidar.log', level=logging.INFO, datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
 
 class LidarScanner:
     def __init__(self, port=None):
@@ -263,10 +267,12 @@ class LidarScanner:
         
         self.connexion_lidar()
         print("LIDAR  : Connecté au LiDAR")
+        logging.info("LiDAR connected")
         self.client_socket.set_callback(self.receive_to_server)
         self.client_socket.set_callback_stop(self.stop)
         self.client_socket.connect()
         print("LIDAR  : Connecté au serveur")
+        logging.info("Connected to the server")
 
         while self.scanning:
             self.objets = []
@@ -299,6 +305,7 @@ if __name__ == '__main__':
     scanner = LidarScanner("/dev/ttyUSB0")
     try :
         print("LIDAR  : Démarrage du programme")
+        logging.info("Starting LiDAR scanner")
         scanner.run()
     except KeyboardInterrupt:
         scanner.stop()

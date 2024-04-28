@@ -681,6 +681,7 @@ class IHM:
             scan = message["data"]
             scan = json.loads(scan)
             self.new_scan = []
+            print("Scan received")
             for point in scan:
                 self.new_scan.append(
                     (point["x"], point["y"], point["dist"], point["angle"]))

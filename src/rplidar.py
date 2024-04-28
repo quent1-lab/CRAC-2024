@@ -92,7 +92,7 @@ class RPLidar(object):
     motor = False  #: Is motor running?
     baudrate = 256000  #: Baudrate for serial port
 
-    def __init__(self, port, baudrate=256000, timeout=1, logger=None):
+    def __init__(self, port, a3 = False,baudrate=256000, timeout=1, logger=None):
         '''Initilize RPLidar object for communicating with the sensor.
 
         Parameters
@@ -115,7 +115,9 @@ class RPLidar(object):
             logger = logging.getLogger('rplidar')
         self.logger = logger
         self.connect()
-
+        if a3:
+            self.start_motor_A3()
+        
     def connect(self):
         '''Connects to the serial port with the name `self.port`. If it was
         connected to another serial port disconnects from it first.'''
@@ -147,6 +149,16 @@ class RPLidar(object):
         cmd = SCAN_BYTE
         self._send_cmd(cmd)
         time.sleep(3)
+    
+    def start_motor_A3(self):
+        '''Starts sensor motor'''
+        self.logger.info('Starting motor')
+        # For A1
+        self._serial_port.dtr = False
+
+        # For A2
+        self.set_pwm(DEFAULT_MOTOR_PWM)
+        self.motor_running = True
 
     def stop_motor(self):
         '''Stops sensor motor'''

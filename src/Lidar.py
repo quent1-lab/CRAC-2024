@@ -297,7 +297,7 @@ class LidarScanner:
 
 if __name__ == '__main__':
     # Initialiser le client
-    scanner = LidarScanner("/dev/ttyUSB1")
+    scanner = LidarScanner("/dev/ttyUSB0")
     try :
         print("LIDAR  : Démarrage du programme")
         logging.info("Starting LiDAR scanner")

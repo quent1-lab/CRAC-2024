@@ -2,7 +2,7 @@ import RPi.GPIO as GPIO
 import time
 
 # Utilisez la numérotation des broches du BCM
-GPIO.setmode(GPIO.BCM)
+GPIO.setmode(GPIO.BOARD)
 
 # Définissez le pin 18 comme une entrée et activez la résistance de pull-up interne
 GPIO.setup(16, GPIO.IN, pull_up_down=GPIO.PUD_UP)

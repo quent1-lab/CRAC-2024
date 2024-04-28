@@ -171,7 +171,7 @@ class ComCAN:
                 data = message["data"]
                 # Format des données : angle (short)
                 dataCan = struct.pack('h', data["angle"])
-                messageCan = can.Message(arbitration_id=0x25, data=dataCan, is_extended_id=False)
+                messageCan = can.Message(arbitration_id=0x23, data=dataCan, is_extended_id=False)
                 self.send(messageCan)
                 
             elif message["cmd"] == "desa":

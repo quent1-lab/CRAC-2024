@@ -93,6 +93,7 @@ class IHM_Robot:
         font = pygame.font.SysFont("Arial", 36)
         self.button_recalage = Button(self.screen, (420, 90, 360, 60), self.theme_path, "Recalage", font, self.recalage)
         
+        self.recalage_is_playing = False
         self.robot_move = False
         self.strategie_is_running = False    
         
@@ -141,10 +142,11 @@ class IHM_Robot:
         self.play_strategie()
     
     def recalage(self):
-        recalage_is_playing = False
+        if self.recalage_is_playing:
+            return
         
         def task_recalage():
-            nonlocal recalage_is_playing
+            self.recalage_is_playing = True
             
             with open("data/recalage.json", "r", encoding="utf-8") as f:
                 dict_recalage = json.load(f)
@@ -152,16 +154,18 @@ class IHM_Robot:
             for key, action in dict_recalage.items():
                 id = action["id"]
                 akn = action["aknowledge"]
-                
+                logging.info(f"Recalage de la position {id}")
                 if len(action["ordre"]) == 1:
                     # Ordre de rotation
                     angle = action["ordre"]["theta"]
+                    logging.info(f"Rotation de {angle}°")
                     self.client.send(self.client.create_message(2, "rotation", {"angle" : angle}))
                 else:
                     # Ordre de recalage
                     distance = action["ordre"]["distance"]
                     mode = action["ordre"]["mode"]
                     recalage = action["ordre"]["recalage"]
+                    logging.info(f"Recalage de {distance}mm en mode {mode} avec recalage {recalage}")
                     self.client.send(self.client.create_message(2, "recalage", {"distance": distance, "mode": mode, "recalage": recalage}))
                 
                 is_arrived = False
@@ -169,6 +173,7 @@ class IHM_Robot:
                 while recalage_is_playing and self.is_running and not is_arrived:
                     time.sleep(0.1)
                     if akn in self.liste_aknowledge:
+                        logging.info(f"Arrivé à la position {id}")
                         self.liste_aknowledge.remove(akn)
                         is_arrived = True
                     

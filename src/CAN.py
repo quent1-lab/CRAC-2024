@@ -135,6 +135,7 @@ class ComCAN:
                 self.client.add_to_send_list(self.client.create_message(0, "akn_m", None))
             elif data[0] in self.liste_ack or data[0] == 0x111:
                 # Message d'acquittement
+                logging.info(f"BusCAN : Message d'acquittement reçu : {data[0]}")
                 self.client.add_to_send_list(self.client.create_message(0, "akn", {"id": data[0]}))
             else:
                 logging.info(f"BusCAN : ID inconnu -> data : {data}")

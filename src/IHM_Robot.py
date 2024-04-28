@@ -172,6 +172,8 @@ class IHM_Robot:
                 logging.info(f"Attente de l'aknowledge {akn}")
                 while recalage_is_playing and self.is_running and not is_arrived:
                     time.sleep(0.1)
+                    
+                    logging.info("Condition d'arrêt :", akn in self.liste_aknowledge)
                     if akn in self.liste_aknowledge:
                         logging.info(f"Arrivé à la position {id}")
                         self.liste_aknowledge.remove(akn)

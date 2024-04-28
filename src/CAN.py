@@ -28,7 +28,6 @@ class ComCAN:
             try:
                 for key, value in d.items():
                     new_path = path + [key]
-                    logging.info(f"BusCAN : new_path : {new_path}")
                     if key == "aknowledge":
                         if isinstance(value, dict):
                             for key, value in value.items():
@@ -52,6 +51,7 @@ class ComCAN:
                 os.system('sudo ip link set can0 type can bitrate 1000000')
                 os.system('sudo ifconfig can0 up')
                 self.can = can.interface.Bus(channel=self.channel, bustype=self.bustype)
+                self.can.state = can.BusState.ACTIVE
                 self.is_connected = True
                 logging.info("BusCAN : Connexion établie")
             else:

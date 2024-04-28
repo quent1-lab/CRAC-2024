@@ -217,7 +217,7 @@ class LidarScanner:
             if self.port == None:
                 self.port = [port.name for port in serial.tools.list_ports.comports() if port.serial_number and "0001" in port.serial_number][0]
 
-            self.lidar = RPLidar(self.port)
+            self.lidar = RPLidar(self.port, logger=logging.getLogger('rplidar'))
             self.lidar.connect()
             logging.info("Lidar connected")
             print("LIDAR  : appareil connecté")

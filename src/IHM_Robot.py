@@ -170,7 +170,7 @@ class IHM_Robot:
                 
                 is_arrived = False
                 logging.info(f"Attente de l'aknowledge {akn}")
-                while recalage_is_playing and self.is_running and not is_arrived:
+                while self.recalage_is_playing and self.is_running and not is_arrived:
                     time.sleep(0.1)
                     
                     logging.info("Condition d'arrêt :", akn in self.liste_aknowledge)

@@ -161,7 +161,7 @@ class ComCAN:
                 data = message["data"]
                 # Format des données : distance (short), mode (entier non signé 1 octet), recalage (short)
                 dataCan = struct.pack('hBhBbb', data["distance"], data["mode"], data["recalage"], 0, 0, 0)
-                
+                logging.info(f"BusCAN : Message de recalage envoyé : {dataCan}")
                 messageCan = can.Message(arbitration_id=0x24,dlc=8, data=dataCan, is_extended_id=False)
                 self.send(messageCan)
             

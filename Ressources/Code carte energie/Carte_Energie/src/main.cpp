@@ -18,6 +18,8 @@ DigitalOut switchControl1(D4); // Interrupteur 1 - D4
 DigitalOut switchControl2(D5); // Interrupteur 2 - D5
 DigitalOut switchControl3(D11); // Interrupteur 3 - D11
 
+DigitalIn ARU(PB_4); // ARU - PB_4
+
 void controlSwitch(DigitalOut &switchControl, bool on)
 {
     switchControl = on;
@@ -56,6 +58,11 @@ bool checkVoltage(float voltage, float max)
     return voltage >= max;
 }
 
+bool checkARU()
+{
+    return ARU.read();
+}
+
 int main()
 {
     printf("CRAC stm32f303k8 démo\n");
@@ -64,6 +71,7 @@ int main()
     CANMessage request;
     CANMessage response_V, response_I, response_S;
     CANMessage order; // Ordre à exécuter
+    CANMessage aruCan; // ARU
     // requetes (tension, courant, switch) / reponse (tension, courant, switch)
 
     // Définition de l'ID du message CAN (11 bits)
@@ -71,15 +79,19 @@ int main()
     response_I.id = 0x204;
     response_S.id = 0x205;
     order.id = 0x206;
+    aruCan.id = 0x207;
 
     // Définition de la longueur des données (8 octets maximum)
     response_V.len = 2;
     response_I.len = 2;
     response_S.len = 2;
     order.len = 2;
+    aruCan.len = 1;
 
     float V_BatMain, V_Bat1, V_Bat2, V_Bat3;
     float TensionMaxBAT = 20.0;
+
+    int compteur_ARU = 0;
 
     while (1)
     {
@@ -106,6 +118,23 @@ int main()
         V_Bat2 = calcul_VBat2(analogValue5 * 3.3); // Supposons que la tension de référence est de 3.3V
 
         V_Bat3 = calcul_VBat3(analogValue6 * 3.3); // Supposons que la tension de référence est de 3.3V
+
+        if (checkARU())
+        {   
+            if (compteur_ARU == 10)
+            {
+                aruCan.data[0] = 0;
+                can1.write(aruCan);
+                compteur_ARU = 0;
+            }else{
+                compteur_ARU++;
+            }
+
+            // Eteindre les interrupteurs
+            controlSwitch(switchControl1, false);
+            controlSwitch(switchControl2, false);
+            controlSwitch(switchControl3, false);
+        }
 
         // Attendre une demande via CAN
         if (can1.read(request))
@@ -214,19 +243,26 @@ int main()
                 {
                     TensionMaxBAT = state;
                 }
+                else if (OrderID == 11)
+                {
+                    // Eteindre les interrupteurs
+                    controlSwitch(switchControl1, false);
+                    controlSwitch(switchControl2, false);
+                    controlSwitch(switchControl3, false);
+                }
             }
         }
 
         if(checkVoltage(V_Bat1, TensionMaxBAT)){
-            controlSwitch(switchControl2, false);
+            controlSwitch(switchControl1, false);
         }
         if(checkVoltage(V_Bat2, TensionMaxBAT)){
-            controlSwitch(switchControl3, false);
+            controlSwitch(switchControl2, false);
         }
         if(checkVoltage(V_Bat3, TensionMaxBAT)){
             controlSwitch(switchControl3, false);
         }
 
-        // ThisThread::sleep_for(100ms);
+        ThisThread::sleep_for(10ms);
     }
 }

@@ -13,17 +13,15 @@ if [ -d "$GIT_DIR" ]; then
     # Se déplacer dans le répertoire git
     cd "$GIT_DIR" || exit
     # Effectuer un git pull
-    echo "Exécution de 'git pull' dans $GIT_DIR..."
+    git reset --hard
     git pull origin main
-    echo "'git pull' terminé."
+
 else
     echo "Le répertoire git n'existe pas : $GIT_DIR"
     exit 1
 fi
 
 # Exécuter une commande spécifique
-echo "Exécution de votre commande spécifique..."
 python3 src/BusCOM.py & python3 src/CAN.py & python3 src/IHM_Robot.py &
-echo "Commande exécutée avec succès."
 
 exit 0

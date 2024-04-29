@@ -159,8 +159,8 @@ class ComCAN:
 
             elif message["cmd"] == "recalage":
                 data = message["data"]
-                # Format des données : distance (short), mode (char), recalage (short)
-                dataCan = struct.pack('h', data["distance"]) + struct.pack('c', str(data["mode"]).encode()) + struct.pack('h', data["recalage"])
+                # Format des données : distance (short), mode (entier non signé 1 octet), recalage (short)
+                dataCan = struct.pack('hBhBbb', data["distance"], data["mode"], data["recalage"], 0, 0, 0)
                 
                 messageCan = can.Message(arbitration_id=0x24,dlc=8, data=dataCan, is_extended_id=False)
                 self.send(messageCan)

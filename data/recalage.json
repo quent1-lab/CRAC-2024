@@ -2,16 +2,16 @@
     "1" : {
         "id" : 0,
         "ordre" : {
-            "distance" : 150,
+            "distance" : 300,
             "mode" : 1,
-            "recalage" : 150
+            "recalage" : 200
         },
         "aknowledge" : 273
     },
     "2" : {
         "id": 0,
         "ordre" : {
-            "distance" : -150,
+            "distance" : -200,
             "mode" : 0,
             "recalage" : 0
         },
@@ -27,16 +27,16 @@
     "4" : {
         "id": 0,
         "ordre" : {
-            "distance" : 150,
+            "distance" : 300,
             "mode" : 2,
-            "recalage" : 150
+            "recalage" : 200
         },
         "aknowledge" : 273
     },
     "5" : {
         "id": 0,
         "ordre" : {
-            "distance" : -150,
+            "distance" : -200,
             "mode" : 0,
             "recalage" : 0
         },

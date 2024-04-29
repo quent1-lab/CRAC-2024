@@ -149,7 +149,7 @@ class IHM_Robot:
         if self.ETAT == 0:
             self.zero_battery()
             self.ETAT = 1
-            self.client.send(self.client.create_message(2, "config", {"etat": 1, "equipe": self.EQUIPE}))
+            self.client.send(self.client.create_message(10, "config", {"etat": 1, "equipe": self.EQUIPE}))
         
         def task_recalage():
             self.recalage_is_playing = True

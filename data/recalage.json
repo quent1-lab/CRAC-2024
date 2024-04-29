@@ -1,52 +1,103 @@
 {
-    "1" : {
-        "id" : 0,
-        "ordre" : {
-            "distance" : 300,
-            "mode" : 1,
-            "recalage" : 0
-        },
-        "aknowledge" : 273
-    },
-    "2" : {
+    "1": {
         "id": 0,
-        "ordre" : {
-            "distance" : -200,
-            "mode" : 0,
-            "recalage" : 0
+        "jaune": {
+            "ordre": {
+                "distance": 300,
+                "mode": 1,
+                "recalage": 0
+            }
         },
-        "aknowledge" : 273
+        "bleu": {
+            "ordre": {
+                "distance": 300,
+                "mode": 1,
+                "recalage": 0
+            }
+        },
+        "aknowledge": 273
     },
-    "3" : {
+    "2": {
         "id": 0,
-        "ordre" : {
-            "theta" : 90
+        "jaune": {
+            "ordre": {
+                "distance": -200,
+                "mode": 0,
+                "recalage": 0
+            }
         },
-        "aknowledge" : 273
+        "bleu": {
+            "ordre": {
+                "distance": -200,
+                "mode": 0,
+                "recalage": 0
+            }
+        },
+        "aknowledge": 273
     },
-    "4" : {
+    "3": {
         "id": 0,
-        "ordre" : {
-            "distance" : 300,
-            "mode" : 2,
-            "recalage" : 0
+        "jaune": {
+            "ordre": {
+                "theta": 90
+            }
         },
-        "aknowledge" : 273
+        "bleu": {
+            "ordre": {
+                "theta": -90
+            }
+        },
+        "aknowledge": 273
     },
-    "5" : {
+    "4": {
         "id": 0,
-        "ordre" : {
-            "distance" : -200,
-            "mode" : 0,
-            "recalage" : 0
+        "jaune": {
+            "ordre": {
+                "distance": 300,
+                "mode": 2,
+                "recalage": 0
+            }
         },
-        "aknowledge" : 273
+        "bleu": {
+            "ordre": {
+                "distance": 300,
+                "mode": 2,
+                "recalage": 0
+            }
+        },
+        "aknowledge": 273
     },
-    "6" : {
+    "5": {
         "id": 0,
-        "ordre" : {
-            "theta" : 90
+        "jaune": {
+            "ordre": {
+                "distance": -200,
+                "mode": 0,
+                "recalage": 0
+            }
         },
-        "aknowledge" : 273
+        "bleu": {
+            "ordre": {
+                "distance": -200,
+                "mode": 0,
+                "recalage": 0
+            }
+        },
+        "aknowledge": 273
+    },
+    "6": {
+        "id": 0,
+        "jaune": {
+            "ordre": {
+                "theta": 90
+            }
+        },
+        "bleu": {
+            "ordre": {
+                "theta": -90
+            }
+        },
+        "aknowledge": 273
     }
 }
+

@@ -49,7 +49,7 @@ class IHM:
         self.new_scan = []
         self.scanning = True
         self.ETAT = 0
-        self.EQUIPE = "Jaune"
+        self.EQUIPE = "jaune"
         self.zone_depart = 1
         self.desactive_m = False
 
@@ -673,10 +673,12 @@ class IHM:
             for obj in json_string:
                 self.objets.append(
                     Objet(obj["id"], obj["x"], obj["y"], obj["taille"]))
+                
         elif message["cmd"] == "coord":
             coord = message["data"]
             self.ROBOT.update_position(coord["x"], coord["y"])
             self.ROBOT_ANGLE = coord["theta"]/10 # Angle en degrés * 10
+            
         elif message["cmd"] == "points":
             scan = message["data"]
             scan = json.loads(scan)
@@ -685,12 +687,19 @@ class IHM:
             for point in scan:
                 self.new_scan.append(
                     (point["x"], point["y"], point["dist"], point["angle"]))
+                
         elif message["cmd"] == "energie":
             energie = message["data"]
             self.update_energie(energie)
+            
         elif message["cmd"] == "akn_m":
             self.robot_move = False
             self.pos_waiting_list.pop(0)
+        
+        elif message["cmd"] == "config":
+            config = message["data"]
+            self.ETAT = config["etat"]
+            self.EQUIPE = config["equipe"]
 
         elif message["cmd"] == "stop":
             self.client_socket.stop()
@@ -900,9 +909,9 @@ class IHM:
                         print(f"Robot commencera à la position de départ {i+1}, x: {pos_r_depart[i][0]}, y: {pos_r_depart[i][1]}, angle: {angle_depart[i]}")
                         self.zone_depart = i
                         if self.zone_depart%2 == 0:
-                            self.EQUIPE = "Bleu"
+                            self.EQUIPE = "bleu"
                         else:
-                            self.EQUIPE = "Jaune"
+                            self.EQUIPE = "jaune"
 
         # Dessiner les rectangles de départ
         for i, rect in enumerate(start_positions):
@@ -911,8 +920,7 @@ class IHM:
 
     def start_match(self):
         self.ETAT = 1
-        self.client_socket.add_to_send_list(self.client_socket.create_message(self.CAN, "recal", {"zone": self.zone_depart}))
-        self.client_socket.add_to_send_list(self.client_socket.create_message(self.IHM_Robot, "etat", {"etat": self.ETAT}))
+        self.client_socket.add_to_send_list(self.client_socket.create_message(self.IHM_Robot, "config", {"equipe": self.EQUIPE, "etat": self.ETAT}))
 
     def run(self):
         #self.programme_simulation()

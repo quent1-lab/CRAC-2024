@@ -25,6 +25,7 @@ class IHM_Robot:
         
         self.PAGE = 0
         self.ETAT = 0
+        self.EQUIPE = "jaune"
         self.energie_recue = False
         self.state_request_energy = False
         self.error = []
@@ -148,6 +149,7 @@ class IHM_Robot:
         if self.ETAT == 0:
             self.zero_battery()
             self.ETAT = 1
+            self.client.send(self.client.create_message(2, "config", {"etat": 1, "equipe": self.EQUIPE}))
         
         def task_recalage():
             self.recalage_is_playing = True
@@ -155,9 +157,10 @@ class IHM_Robot:
             with open("data/recalage.json", "r", encoding="utf-8") as f:
                 dict_recalage = json.load(f)
             
-            for key, action in dict_recalage.items():
-                id = action["id"]
-                akn = action["aknowledge"]
+            for key, value in dict_recalage.items():
+                id = value["id"]
+                akn = value["aknowledge"]
+                action = value[self.EQUIPE]
                 logging.info(f"Recalage de la position {id}")
                 if len(action["ordre"]) == 1:
                     # Ordre de rotation
@@ -380,11 +383,15 @@ class IHM_Robot:
             elif message["cmd"] == "energie":
                 energie = message["data"]
                 self.update_energie(energie)
-            elif message["cmd"] == "etat":
+            elif message["cmd"] == "config":
                 data = message["data"]
                 if data["etat"] == 1 and self.ETAT == 0: 
                     self.zero_battery() # On bannit les batteries à 0V
                 self.ETAT = data["etat"]
+                self.EQUIPE = data["equipe"]
+                
+                self.recalage()
+                
             elif message["cmd"] == "akn_m":
                 self.robot_move = False
             elif message["cmd"] == "akn":

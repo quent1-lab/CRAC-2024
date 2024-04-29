@@ -210,7 +210,7 @@ class LidarScanner:
         # Connexion au lidar
         try:
             if self.port == None:
-                self.port = [port.name for port in serial.tools.list_ports.comports() if port.serial_number and "0001" in port.serial_number][0]
+                self.port = "/dev/" + [port.name for port in serial.tools.list_ports.comports() if port.serial_number and "0001" in port.serial_number][0]
 
             self.lidar = RPLidar(self.port, logger=logging.getLogger('rplidar'))
             self.lidar.connect()

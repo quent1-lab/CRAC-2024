@@ -4,7 +4,7 @@
         "ordre" : {
             "distance" : 300,
             "mode" : 1,
-            "recalage" : 200
+            "recalage" : 0
         },
         "aknowledge" : 273
     },
@@ -29,7 +29,7 @@
         "ordre" : {
             "distance" : 300,
             "mode" : 2,
-            "recalage" : 200
+            "recalage" : 0
         },
         "aknowledge" : 273
     },

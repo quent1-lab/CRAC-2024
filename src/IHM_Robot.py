@@ -387,9 +387,6 @@ class IHM_Robot:
                 data = message["data"]
                 if data["etat"] == 1 and self.ETAT == 0: 
                     self.zero_battery() # On bannit les batteries à 0V
-                
-                if self.ETAT == 0 and data["etat"] == 1:
-                    self.zero_battery()
                 self.ETAT = data["etat"]    
                 self.EQUIPE = data["equipe"]
                 

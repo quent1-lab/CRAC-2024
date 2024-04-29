@@ -160,9 +160,9 @@ class ComCAN:
             elif message["cmd"] == "recalage":
                 data = message["data"]
                 # Format des données : distance (short), mode (entier non signé 1 octet), recalage (short)
-                dataCan = struct.pack('hBhBbb', data["distance"], data["mode"], data["recalage"], 0, 0, 0)
+                dataCan = struct.pack('h', data["distance"]) + struct.pack('B', data["mode"]) + struct.pack('h', data["recalage"]) + struct.pack('Bbb', 0, 0, 0)
                 logging.info(f"BusCAN : Message de recalage envoyé : {dataCan}")
-                messageCan = can.Message(arbitration_id=0x24,dlc=8, data=dataCan, is_extended_id=False)
+                messageCan = can.Message(arbitration_id=0x24, data=dataCan, is_extended_id=False)
                 self.send(messageCan)
             
             elif message["cmd"] == "rotation":

@@ -137,15 +137,15 @@ int main()
             controlSwitch(switchControl2, false);
             controlSwitch(switchControl3, false);
         }
-        else
-        {
-            if (compteur_ARU != 0)
-            {
-                aruCan.data[0] = 0;
-                can1.write(aruCan);
-                compteur_ARU = 0;
-            }
-        }
+        // else
+        // {
+        //     if (compteur_ARU != 0)
+        //     {
+        //         aruCan.data[0] = 0;
+        //         can1.write(aruCan);
+        //         compteur_ARU = 0;
+        //     }
+        // }
 
         // Attendre une demande via CAN
         if (can1.read(request))

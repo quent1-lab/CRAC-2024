@@ -203,21 +203,10 @@ class ComCAN:
             elif message["cmd"] == "CAN":
                 data = message["data"]
                 commande = data["id"]
-                if commande == 508:
-                    # byte correspond à la liste des données à envoyer
-                    byte = list(data.items())[1:]  # Convertir le dictionnaire en liste et supprimer la première valeur
-                    byte_values = [b[1] for b in byte]  # Extraire les valeurs de la liste
-                    # Assurez-vous que les données sont de la bonne longueur
-                    if len(byte_values) != 1:
-                        raise ValueError("Les données doivent être de longueur 1 pour la commande ASSERVISSEMENT_CONFIG_PERIMETRE_ROUE_CODEUSE")
-                    # Convertir les données en un tableau de bytes
-                    byte_values = struct.pack('d', *byte_values)
-                    messageCAN = can.Message(arbitration_id=commande, data=byte_values, is_extended_id=False)
-                else:
-                    # byte correspond à la liste des données à envoyer
-                    byte = list(data.items())[1:]  # Convertir le dictionnaire en liste et supprimer la première valeur
-                    byte_values = [b[1] for b in byte]  # Extraire les valeurs de la liste
-                    messageCAN = can.Message(arbitration_id=commande, data=byte_values, is_extended_id=False)
+                # byte correspond à la liste des données à envoyer
+                byte = list(data.items())[1:]  # Convertir le dictionnaire en liste et supprimer la première valeur
+                byte_values = [b[1] for b in byte]  # Extraire les valeurs de la liste
+                messageCAN = can.Message(arbitration_id=commande, data=byte_values, is_extended_id=False)
                 
                 self.send(messageCAN)
             elif message["cmd"] == "resta":

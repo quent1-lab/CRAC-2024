@@ -14,8 +14,8 @@ AnalogIn analogInPin4(D3); // Utilisez le port analogique (D3) sur la carte F303
 AnalogIn analogInPin5(D6); // Utilisez le port analogique (D6) sur la carte F303K8  - V_Bat2
 AnalogIn analogInPin6(A2); // Utilisez le port analogique (A2) sur la carte F303K8  - V_Bat3
 
-DigitalOut switchControl1(D4); // Interrupteur 1 - D4
-DigitalOut switchControl2(D5); // Interrupteur 2 - D5
+DigitalOut switchControl1(D4);  // Interrupteur 1 - D4
+DigitalOut switchControl2(D5);  // Interrupteur 2 - D5
 DigitalOut switchControl3(D11); // Interrupteur 3 - D11
 
 DigitalIn ARU(PB_4); // ARU - PB_4
@@ -70,7 +70,7 @@ int main()
     // Création d'un message CAN
     CANMessage request;
     CANMessage response_V, response_I, response_S;
-    CANMessage order; // Ordre à exécuter
+    CANMessage order;  // Ordre à exécuter
     CANMessage aruCan; // ARU
     // requetes (tension, courant, switch) / reponse (tension, courant, switch)
 
@@ -120,13 +120,15 @@ int main()
         V_Bat3 = calcul_VBat3(analogValue6 * 3.3); // Supposons que la tension de référence est de 3.3V
 
         if (checkARU())
-        {   
+        {
             if (compteur_ARU == 10)
             {
-                aruCan.data[0] = 0;
+                aruCan.data[0] = 1;
                 can1.write(aruCan);
-                compteur_ARU = 0;
-            }else{
+                compteur_ARU = 1;
+            }
+            else
+            {
                 compteur_ARU++;
             }
 
@@ -134,6 +136,15 @@ int main()
             controlSwitch(switchControl1, false);
             controlSwitch(switchControl2, false);
             controlSwitch(switchControl3, false);
+        }
+        else
+        {
+            if (compteur_ARU != 0)
+            {
+                aruCan.data[0] = 0;
+                can1.write(aruCan);
+                compteur_ARU = 0;
+            }
         }
 
         // Attendre une demande via CAN
@@ -153,19 +164,19 @@ int main()
                 else if (batteryID == 2)
                 {
                     response_V.data[0] = 2;
-                    response_V.data[1] = V_Bat1 *10;
+                    response_V.data[1] = V_Bat1 * 10;
                     can1.write(response_V);
                 }
                 else if (batteryID == 3)
                 {
                     response_V.data[0] = 3;
-                    response_V.data[1] = V_Bat2 *10;
+                    response_V.data[1] = V_Bat2 * 10;
                     can1.write(response_V);
                 }
                 else if (batteryID == 4)
                 {
                     response_V.data[0] = 4;
-                    response_V.data[1] = V_Bat3 *10;
+                    response_V.data[1] = V_Bat3 * 10;
                     can1.write(response_V);
                 }
             }
@@ -182,13 +193,13 @@ int main()
                 else if (batteryID == 2)
                 {
                     response_I.data[0] = 2;
-                    response_I.data[1] = Cap_Courant2 *100;
+                    response_I.data[1] = Cap_Courant2 * 100;
                     can1.write(response_I);
                 }
                 else if (batteryID == 3)
                 {
                     response_I.data[0] = 3;
-                    response_I.data[1] = Cap_Courant3 *100;
+                    response_I.data[1] = Cap_Courant3 * 100;
                     can1.write(response_I);
                 }
             }
@@ -245,9 +256,9 @@ int main()
                 }
                 else if (OrderID == 11)
                 {
-                    
                 }
-            }else if (request.id == 0x001)
+            }
+            else if (request.id == 0x001)
             {
                 // Eteindre les interrupteurs
                 controlSwitch(switchControl1, false);
@@ -256,13 +267,16 @@ int main()
             }
         }
 
-        if(checkVoltage(V_Bat1, TensionMaxBAT)){
+        if (checkVoltage(V_Bat1, TensionMaxBAT))
+        {
             controlSwitch(switchControl1, false);
         }
-        if(checkVoltage(V_Bat2, TensionMaxBAT)){
+        if (checkVoltage(V_Bat2, TensionMaxBAT))
+        {
             controlSwitch(switchControl2, false);
         }
-        if(checkVoltage(V_Bat3, TensionMaxBAT)){
+        if (checkVoltage(V_Bat3, TensionMaxBAT))
+        {
             controlSwitch(switchControl3, false);
         }
 

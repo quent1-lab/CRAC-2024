@@ -293,8 +293,10 @@ class IHM_Robot:
         
         for error in self.error:
             if error == 0x10:
-                draw_text_center(self.screen, "Erreur de réception des données des batteries", x=self.width//2, y=self.height//2 - 15, font=font, color=(255, 255, 255))
-                draw_text_center(self.screen, "La carte énergie est-elle alimenté ?", x=self.width//2, y=self.height//2 + 15, font=font, color=(255, 255, 255))
+                draw_text_center(self.screen, "Erreur de réception des données des batteries", x=self.width//2, y=self.height//2 - 50, font=font, color=(255, 255, 255))
+                draw_text_center(self.screen, "La carte énergie est-elle alimenté ?", x=self.width//2, y=self.height//2 + - 20, font=font, color=(255, 255, 255))
+            elif error == 0x11:
+                draw_text_center(self.screen, "ARU activé", x=self.width//2, y=self.height//2, font=font, color=(255, 255, 255))
     
     def taille_auto_batterie(self):
         nb_batteries_colonne = 0
@@ -394,9 +396,11 @@ class IHM_Robot:
         try:
             if message["cmd"] == "stop":
                 self.client.stop()
+                
             elif message["cmd"] == "energie":
                 energie = message["data"]
                 self.update_energie(energie)
+                
             elif message["cmd"] == "config":
                 data = message["data"]
                 if data["etat"] == 1 and self.ETAT == 0: 
@@ -408,10 +412,21 @@ class IHM_Robot:
                 
             elif message["cmd"] == "akn_m":
                 self.robot_move = False
+                
             elif message["cmd"] == "akn":
                 data = message["data"]
                 self.liste_aknowledge.append(data["id"])
                 logging.info(f"Liste des aknowledge : {self.liste_aknowledge}")
+                
+            elif message["cmd"] == "ARU":
+                data = message["data"]
+                if data["etat"] == 1:
+                    self.strategie_is_running = False
+                    self.robot_move = False
+                    self.error.append(0x11)
+                elif data["etat"] == 0:
+                    if 0x11 in self.error:
+                        self.error.remove(0x11)
         
         except Exception as e:
             print(f"Erreur lors de la réception du message : {str(e)}")

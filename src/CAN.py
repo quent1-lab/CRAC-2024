@@ -130,6 +130,10 @@ class ComCAN:
                 s_bat = dataX[1]
                 self.client.add_to_send_list(self.client.create_message(0, "energie", {f"Batterie {id_bat}": {"Switch" : s_bat}}))
                 print(f"Switch_Batterie_{id_bat} : {s_bat}")
+            elif data[0] == 0x207:
+                # Arret d'urgence
+                etat = dataX[0]
+                self.client.add_to_send_list(self.client.create_message(0, "ARU", {"etat": etat}))
             elif data[0] == 0x114:
                 # Fin d'instruction de positionnement
                 self.client.add_to_send_list(self.client.create_message(0, "akn_m", None))

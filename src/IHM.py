@@ -720,26 +720,36 @@ class IHM:
     def handle_mouse_click(self, event):
         key = pygame.key.get_pressed()
         # Si la touche MAJ gauche est enfoncée et que l'on clique
-        if event.type == MOUSEBUTTONDOWN and key[pygame.K_LSHIFT]:
+        if event.type == MOUSEBUTTONDOWN and event.button == 1 and key[pygame.K_LSHIFT]:
             # Vérifiez si le clic a eu lieu dans la zone de jeu
             if self.is_within_game_area(event.pos):
                 # Convertissez les coordonnées de la souris en coordonnées du terrain de jeu
                 #On recalibre les coordonnées pour que le 0,0 soit en bas à droite
                 x = self.map_value(event.pos[0], self.WINDOW_SIZE[0]-5-self.BORDER_DISTANCE*self.X_RATIO, self.BORDER_DISTANCE*self.X_RATIO+5, 0, self.FIELD_SIZE[0])
                 y = self.map_value(event.pos[1], self.BORDER_DISTANCE*self.Y_RATIO+5 ,self.WINDOW_SIZE[1]-5-self.BORDER_DISTANCE*self.Y_RATIO, 0, self.FIELD_SIZE[1])
-                #x = event.pos[0] / self.X_RATIO
-                #y = event.pos[1] / self.Y_RATIO
                 x = int(x)
                 y = int(y)
+                
                 # Stockez les coordonnées du clic
                 self.clicked_position = (x, y)
-                # Envoie les coordonnées du clic au CAN
-                #self.client_socket.add_to_send_list(self.client_socket.create_message(
-                #    2, "clic", {"x": x, "y": y, "theta": int(self.ROBOT_ANGLE), "sens": "0"}))
+
                 if self.action_window is None:
                     self.action_window = IHM_Action_Aux(self.manager, self.numero_strategie+1, (x, y, self.ROBOT_ANGLE), _callback_save=self.save_action)
-                    
-                #self.pos_waiting_list.append((x,y, int(self.ROBOT_ANGLE), "0"))
+        
+        elif event.type == MOUSEBUTTONDOWN and event.button == 1:
+            # Si le clic droit est dans les alentours d'un point de la liste d'attente, ouvrir le gestionnaire de stratégie
+            for i, pos in enumerate(self.pos_waiting_list):
+                x = self.map_value(pos[0], 0, self.FIELD_SIZE[0], self.WINDOW_SIZE[0]-5-self.BORDER_DISTANCE*self.X_RATIO, self.BORDER_DISTANCE*self.X_RATIO+5)
+                y = self.map_value(pos[1], 0, self.FIELD_SIZE[1], self.BORDER_DISTANCE*self.Y_RATIO+5 ,self.WINDOW_SIZE[1]-5-self.BORDER_DISTANCE*self.Y_RATIO)
+                x = int(x)
+                y = int(y)
+                # Vérifiez si le clic est à proximité d'un point de la liste d'attente à moins de 10 pixels
+                if math.sqrt((event.pos[0] - x)**2 + (event.pos[1] - y)**2) < 10:
+                    if self.action_window is None:
+                        with open("data/strategie.json", "r") as file:
+                            strategie = json.load(file)
+                        self.action_window = IHM_Action_Aux(self.manager, i+1, (pos[0], pos[1], 0), _callback_save=self.save_action, _config = strategie[str(i+1)])
+                    break
 
     def is_within_game_area(self, pos):
         # Vérifie si les coordonnées du clic sont dans la zone de jeu
@@ -923,7 +933,7 @@ class IHM:
         self.client_socket.add_to_send_list(self.client_socket.create_message(self.IHM_Robot, "config", {"equipe": self.EQUIPE, "etat": self.ETAT}))
 
     def run(self):
-        #self.programme_simulation()
+        self.programme_simulation()
         
         self.client_socket.set_callback(self.receive_to_server)
         self.client_socket.set_callback_stop(self.stop)

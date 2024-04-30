@@ -176,7 +176,7 @@ class IHM_Command:
         self.desactive_callback = callback
 
 class IHM_Action_Aux:
-    def __init__(self, manager,_action_numero,_pos_actuelle, _callback_json=None, _callback_save=None, _callback_next=None, _callback_back=None,_id=""):    
+    def __init__(self, manager,_action_numero,_pos_actuelle, _callback_json=None, _callback_save=None, _callback_next=None, _callback_back=None,_id="", _config=None):    
         self.manager = manager
         self.size = (610, 500)
         self.id = _id
@@ -192,6 +192,11 @@ class IHM_Action_Aux:
         self.next_callback = _callback_next
         
         self.cote_actif = ""
+        
+        if _config:
+            # Charger tous les paramètres
+            self.config = _config
+            
 
         self.window = pygame_gui.elements.UIWindow(rect=pygame.Rect((100, 100), self.size),
                                                    manager=self.manager,

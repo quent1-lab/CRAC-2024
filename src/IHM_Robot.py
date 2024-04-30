@@ -421,9 +421,10 @@ class IHM_Robot:
             elif message["cmd"] == "ARU":
                 data = message["data"]
                 if data["etat"] == 1:
-                    self.strategie_is_running = False
-                    self.robot_move = False
-                    self.error.append(0x11)
+                    if 0x11 not in self.error:
+                        self.strategie_is_running = False
+                        self.robot_move = False
+                        self.error.append(0x11)
                 elif data["etat"] == 0:
                     if 0x11 in self.error:
                         self.error.remove(0x11)

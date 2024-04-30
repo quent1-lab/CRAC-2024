@@ -3,16 +3,12 @@
         "id": 0,
         "jaune": {
             "ordre": {
-                "distance": 300,
-                "mode": 1,
-                "recalage": 0
+                "theta": 180
             }
         },
         "bleu": {
             "ordre": {
-                "distance": 300,
-                "mode": 1,
-                "recalage": 0
+                "theta": 180
             }
         },
         "aknowledge": 273
@@ -21,21 +17,39 @@
         "id": 0,
         "jaune": {
             "ordre": {
-                "distance": -200,
-                "mode": 0,
+                "distance": 300,
+                "mode": 1,
                 "recalage": 0
             }
         },
         "bleu": {
             "ordre": {
-                "distance": -200,
-                "mode": 0,
+                "distance": 300,
+                "mode": 1,
                 "recalage": 0
             }
         },
         "aknowledge": 273
     },
     "3": {
+        "id": 0,
+        "jaune": {
+            "ordre": {
+                "distance": -100,
+                "mode": 0,
+                "recalage": 0
+            }
+        },
+        "bleu": {
+            "ordre": {
+                "distance": -100,
+                "mode": 0,
+                "recalage": 0
+            }
+        },
+        "aknowledge": 273
+    },
+    "4": {
         "id": 0,
         "jaune": {
             "ordre": {
@@ -49,43 +63,43 @@
         },
         "aknowledge": 273
     },
-    "4": {
-        "id": 0,
-        "jaune": {
-            "ordre": {
-                "distance": 300,
-                "mode": 2,
-                "recalage": 0
-            }
-        },
-        "bleu": {
-            "ordre": {
-                "distance": 300,
-                "mode": 2,
-                "recalage": 0
-            }
-        },
-        "aknowledge": 273
-    },
     "5": {
         "id": 0,
         "jaune": {
             "ordre": {
-                "distance": -200,
-                "mode": 0,
+                "distance": 300,
+                "mode": 2,
                 "recalage": 0
             }
         },
         "bleu": {
             "ordre": {
-                "distance": -200,
-                "mode": 0,
+                "distance": 300,
+                "mode": 2,
                 "recalage": 0
             }
         },
         "aknowledge": 273
     },
     "6": {
+        "id": 0,
+        "jaune": {
+            "ordre": {
+                "distance": -100,
+                "mode": 0,
+                "recalage": 0
+            }
+        },
+        "bleu": {
+            "ordre": {
+                "distance": -100,
+                "mode": 0,
+                "recalage": 0
+            }
+        },
+        "aknowledge": 273
+    },
+    "7": {
         "id": 0,
         "jaune": {
             "ordre": {

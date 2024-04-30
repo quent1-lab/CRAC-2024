@@ -425,8 +425,10 @@ class IHM_Robot:
                 
             elif message["cmd"] == "akn":
                 data = message["data"]
-                self.liste_aknowledge.append(data["id"])
-                logging.info(f"Liste des aknowledge : {self.liste_aknowledge}")
+                if self.strategie_is_running or self.recalage_is_playing:
+                
+                    self.liste_aknowledge.append(data["id"])
+                    logging.info(f"Liste des aknowledge : {self.liste_aknowledge}")
                 
             elif message["cmd"] == "ARU":
                 data = message["data"]

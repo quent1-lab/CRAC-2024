@@ -304,6 +304,7 @@ class IHM_Robot:
                     self.ARU_compte = 0
                     if 0x11 in self.error:
                         self.error.remove(0x11)
+                        self.PAGE = 0
     
     def taille_auto_batterie(self):
         nb_batteries_colonne = 0

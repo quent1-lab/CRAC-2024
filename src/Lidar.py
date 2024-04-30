@@ -210,7 +210,7 @@ class LidarScanner:
         # Connexion au lidar
         try:
             if self.port == None:
-                self.port = [port.name for port in serial.tools.list_ports.comports() if port.serial_number and "0001" in port.serial_number][0]
+                self.port = "/dev/" + [port.name for port in serial.tools.list_ports.comports() if port.serial_number and "0001" in port.serial_number][0]
 
             self.lidar = RPLidar(self.port, logger=logging.getLogger('rplidar'))
             self.lidar.connect()
@@ -297,7 +297,7 @@ class LidarScanner:
 
 if __name__ == '__main__':
     # Initialiser le client
-    scanner = LidarScanner("/dev/ttyUSB0")
+    scanner = LidarScanner()
     try :
         print("LIDAR  : Démarrage du programme")
         logging.info("Starting LiDAR scanner")

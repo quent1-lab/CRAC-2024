@@ -683,7 +683,6 @@ class IHM:
             scan = message["data"]
             scan = json.loads(scan)
             self.new_scan = []
-            print("Scan received")
             for point in scan:
                 self.new_scan.append(
                     (point["x"], point["y"], point["dist"], point["angle"]))
@@ -887,13 +886,13 @@ class IHM:
         # Définir les rectangles de départ
         shape_x = 400
         shape_y = 350
-        start_positions = [pygame.Rect(self.BORDER_DISTANCE * self.X_RATIO + 5, self.BORDER_DISTANCE * self.Y_RATIO + 5, shape_x * self.X_RATIO, shape_y * self.Y_RATIO),
-                           pygame.Rect((self.FIELD_SIZE[0] - self.BORDER_DISTANCE - shape_x) * self.X_RATIO - 5, self.BORDER_DISTANCE * self.Y_RATIO + 5, shape_x * self.X_RATIO, shape_y * self.Y_RATIO),
+        start_positions = [pygame.Rect((self.FIELD_SIZE[0] - self.BORDER_DISTANCE - shape_x) * self.X_RATIO - 5, self.BORDER_DISTANCE * self.Y_RATIO + 5, shape_x * self.X_RATIO, shape_y * self.Y_RATIO),
+                           pygame.Rect(self.BORDER_DISTANCE * self.X_RATIO + 5, self.BORDER_DISTANCE * self.Y_RATIO + 5, shape_x * self.X_RATIO, shape_y * self.Y_RATIO),
                            pygame.Rect((self.FIELD_SIZE[0] - self.BORDER_DISTANCE - shape_x) * self.X_RATIO - 5, (self.FIELD_SIZE[1] - self.BORDER_DISTANCE - shape_y) * self.Y_RATIO - 5, shape_x * self.X_RATIO, shape_y * self.Y_RATIO),
                            pygame.Rect(self.BORDER_DISTANCE * self.X_RATIO + 5, (self.FIELD_SIZE[1] - self.BORDER_DISTANCE - shape_y) * self.Y_RATIO - 5, shape_x * self.X_RATIO, shape_y * self.Y_RATIO)]
         angle_depart = [180, 0, 0, 180]
-        pos_r_depart = [((self.FIELD_SIZE[0] - self.ROBOT_Dimension[0]/2), (0 + self.ROBOT_Dimension[1]/2)), 
-                        ((0 + self.ROBOT_Dimension[0]/2), (0 + self.ROBOT_Dimension[1]/2)), 
+        pos_r_depart = [((0 + self.ROBOT_Dimension[0]/2), (0 + self.ROBOT_Dimension[1]/2)), 
+                        ((self.FIELD_SIZE[0] - self.ROBOT_Dimension[0]/2), (0 + self.ROBOT_Dimension[1]/2)), 
                         ((0 + self.ROBOT_Dimension[0]/2), (self.FIELD_SIZE[1] - self.ROBOT_Dimension[1]/2)), 
                         ((self.FIELD_SIZE[0] - self.ROBOT_Dimension[0] / 2), (self.FIELD_SIZE[1] - self.ROBOT_Dimension[1]/2))]
         
@@ -909,9 +908,10 @@ class IHM:
                         print(f"Robot commencera à la position de départ {i+1}, x: {pos_r_depart[i][0]}, y: {pos_r_depart[i][1]}, angle: {angle_depart[i]}")
                         self.zone_depart = i
                         if self.zone_depart%2 == 0:
-                            self.EQUIPE = "bleu"
-                        else:
                             self.EQUIPE = "jaune"
+                        else:
+                            self.EQUIPE = "bleu"
+                        print("Equipe:", self.EQUIPE)
 
         # Dessiner les rectangles de départ
         for i, rect in enumerate(start_positions):

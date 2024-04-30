@@ -302,6 +302,8 @@ class IHM_Robot:
                 if self.ARU_compte > 10:
                     self.client.send(self.client.create_message(0, "ARU", {"etat": 0}))
                     self.ARU_compte = 0
+                    if 0x11 in self.error:
+                        self.error.remove(0x11)
     
     def taille_auto_batterie(self):
         nb_batteries_colonne = 0

@@ -107,6 +107,16 @@ class ComCAN:
                 y = struct.unpack('h', dataX[2:4])
                 theta = struct.unpack('h', dataX[4:6])
                 self.client.add_to_send_list(self.client.create_message(0, "coord", {"x": x[0], "y": y[0], "theta": theta[0]}))
+                
+            elif data[0] in self.liste_ack or data[0] == 0x111:
+                # Message d'acquittement
+                logging.info(f"BusCAN : Message d'acquittement reçu : {data[0]}")
+                self.client.add_to_send_list(self.client.create_message(0, "akn", {"id": data[0]}))
+                
+            elif data[0] == 0x114:
+                # Fin d'instruction de positionnement
+                self.client.add_to_send_list(self.client.create_message(0, "akn_m", None))
+                
             elif data[0] == 0x203:
                 # V_Batterie : ID batterie (short), V_Batterie (short)
                 id_bat = dataX[0]
@@ -118,32 +128,30 @@ class ComCAN:
                 else:
                     self.client.add_to_send_list(self.client.create_message(0, "energie", {f"Batterie {id_bat-1}": {"Tension" : v_bat}}))
                     print(f"V_Batterie_{id_bat-1} : {v_bat}")
+                    
             elif data[0] == 0x204:
                 # I_Batterie : ID batterie (short), I_Batterie (short)
                 id_bat = dataX[0]
                 i_bat = dataX[1] /100
                 self.client.add_to_send_list(self.client.create_message(0, "energie", {f"Batterie {id_bat}": {"Courant" : i_bat}}))
                 print(f"I_Batterie_{id_bat} : {i_bat}")
+                
             elif data[0] == 0x205:
                 # Switch_Batterie : ID batterie (short), Switch_Batterie (short)
                 id_bat = dataX[0]
                 s_bat = dataX[1]
                 self.client.add_to_send_list(self.client.create_message(0, "energie", {f"Batterie {id_bat}": {"Switch" : s_bat}}))
                 print(f"Switch_Batterie_{id_bat} : {s_bat}")
+                
             elif data[0] == 0x207:
                 # Arret d'urgence
                 etat = dataX[0]
                 self.client.add_to_send_list(self.client.create_message(0, "ARU", {"etat": etat}))
-            elif data[0] == 0x114:
-                # Fin d'instruction de positionnement
-                self.client.add_to_send_list(self.client.create_message(0, "akn_m", None))
-            elif data[0] in self.liste_ack or data[0] == 0x111:
-                # Message d'acquittement
-                logging.info(f"BusCAN : Message d'acquittement reçu : {data[0]}")
-                self.client.add_to_send_list(self.client.create_message(0, "akn", {"id": data[0]}))
+
             else:
                 logging.info(f"BusCAN : ID inconnu -> data : {data}")
                 #print(f"ID inconnu ; data : {data}")
+                
         except Exception as e:
             logging.info(f"BusCAN : ID inconnu -> data : {data}")
             logging.error(f"BusCAN : Erreur lors de l'analyse du message CAN : {str(e)}")

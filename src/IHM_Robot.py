@@ -113,7 +113,7 @@ class IHM_Robot:
             button = Button(self.screen, (x_depart + 405 * int(nombre_strategies/6), y_depart + i * 70, 385, 60), self.theme_path, texte, font, lambda i=i: self.strategie_action(i))
             self.button_strategie.append(button)
             
-        self.button_ligne_droite = Button(self.screen, (10, 90, 200, 60), self.theme_path, "Ligne droite", font, lambda : self.ligne_droite(1000))
+        self.button_ligne_droite = Button(self.screen, (10, 90, 200, 60), self.theme_path, "Ligne droite", font, lambda : self.ligne_droite(2000))
         self.button_tourner_10 = Button(self.screen, (10, 160, 200, 60), self.theme_path, "Tourner 10", font, lambda : self.tourner(360*8))
         
         self.strategie = None

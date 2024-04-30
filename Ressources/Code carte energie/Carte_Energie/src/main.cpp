@@ -121,16 +121,16 @@ int main()
 
         if (checkARU())
         {
-            if (compteur_ARU == 10)
-            {
-                aruCan.data[0] = 1;
-                can1.write(aruCan);
-                compteur_ARU = 1;
-            }
-            else
-            {
-                compteur_ARU++;
-            }
+            // if (compteur_ARU == 10)
+            // {
+            //     aruCan.data[0] = 1;
+            //     can1.write(aruCan);
+            //     compteur_ARU = 1;
+            // }
+            // else
+            // {
+            //     compteur_ARU++;
+            // }
 
             // Eteindre les interrupteurs
             controlSwitch(switchControl1, false);

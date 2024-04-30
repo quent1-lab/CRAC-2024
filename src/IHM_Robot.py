@@ -114,8 +114,8 @@ class IHM_Robot:
             button = Button(self.screen, (x_depart + 405 * int(nombre_strategies/6), y_depart + i * 70, 385, 60), self.theme_path, texte, font, lambda i=i: self.strategie_action(i))
             self.button_strategie.append(button)
             
-        self.button_ligne_droite = Button(self.screen, (10, 90, 200, 60), self.theme_path, "Ligne droite", font, lambda : self.button_menu_action(10))
-        self.button_tourner_10 = Button(self.screen, (10, 160, 200, 60), self.theme_path, "Tourner 10", font, lambda : self.button_menu_action(11))
+        self.button_ligne_droite = Button(self.screen, (10, 90, 200, 60), self.theme_path, "Ligne droite", font, lambda : self.ligne_droite(2000))
+        self.button_tourner_10 = Button(self.screen, (10, 160, 200, 60), self.theme_path, "Tourner 10", font, lambda : self.tourner(360*10))
         
         self.strategie = None
         self.config_strategie = None
@@ -131,10 +131,6 @@ class IHM_Robot:
             pass            
         elif index == 4:
             self.client.add_to_send_list(self.client.create_message(1, "stop", None))
-        elif index == 10:
-            self.client.send(self.client.create_message(2, "ligne", {"distance" : 2000}))
-        elif index == 11:
-            self.client.send(self.client.create_message(2, "rotation", {"angle" : 360*10*10}))
     
     def strategie_action(self, index):
         self.client.send(self.client.create_message(2, "strategie", {"strategie": index}))
@@ -149,6 +145,12 @@ class IHM_Robot:
             self.ETAT = 1
         
         self.play_strategie()
+    
+    def ligne_droite(self, distance):
+        self.client.send(self.client.create_message(2, "ligne_droite", {"distance": distance}))
+    
+    def tourner(self, angle):
+        self.client.send(self.client.create_message(2, "rotation", {"angle": angle*10}))
     
     def recalage(self):
         if self.recalage_is_playing:

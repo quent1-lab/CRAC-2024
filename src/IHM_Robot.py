@@ -146,9 +146,17 @@ class IHM_Robot:
         self.play_strategie()
     
     def ligne_droite(self, distance):
+        if self.ETAT == 0:
+            self.zero_battery()
+            self.ETAT = 1
+            self.client.send(self.client.create_message(10, "config", {"etat": 1, "equipe": self.EQUIPE}))
         self.client.send(self.client.create_message(2, "deplacement", {"distance": distance}))
     
     def tourner(self, angle):
+        if self.ETAT == 0:
+            self.zero_battery()
+            self.ETAT = 1
+            self.client.send(self.client.create_message(10, "config", {"etat": 1, "equipe": self.EQUIPE}))
         self.client.send(self.client.create_message(2, "rotation", {"angle": angle*10}))
     
     def recalage(self):
@@ -299,6 +307,11 @@ class IHM_Robot:
                 draw_text_center(self.screen, "La carte énergie est-elle alimenté ?", x=self.width//2, y=self.height//2 + - 35, font=font, color=(255, 255, 255))
             if error == 0x11:
                 draw_text_center(self.screen, "ARU activé", x=self.width//2, y=self.height//2+15, font=font, color=(255, 255, 255))
+    
+    def page_play(self):
+        # Cette page affiche la stratégie en cours
+        font = pygame.font.SysFont("Arial", 30)
+        draw_text_center(self.screen, "Stratégie en cours...", x=self.width//2, y=self.height//2 + 15, font=font, color=(255, 255, 255))
     
     def taille_auto_batterie(self):
         nb_batteries_colonne = 0
@@ -531,6 +544,8 @@ class IHM_Robot:
                 self.page_autres()
             elif self.PAGE == 4:
                 self.page_erreur()
+            elif self.PAGE == 5:
+                self.page_play()
 
             pygame.display.flip()
             self.clock.tick(30)

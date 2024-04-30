@@ -3,12 +3,12 @@
         "id": 0,
         "jaune": {
             "ordre": {
-                "theta": -90
+                "theta": 180
             }
         },
         "bleu": {
             "ordre": {
-                "theta": -90
+                "theta": 180
             }
         },
         "aknowledge": 273
@@ -18,14 +18,14 @@
         "jaune": {
             "ordre": {
                 "distance": 300,
-                "mode": 2,
+                "mode": 1,
                 "recalage": 0
             }
         },
         "bleu": {
             "ordre": {
                 "distance": 300,
-                "mode": 2,
+                "mode": 1,
                 "recalage": 0
             }
         },
@@ -53,12 +53,12 @@
         "id": 0,
         "jaune": {
             "ordre": {
-                "theta": -90
+                "theta": 90
             }
         },
         "bleu": {
             "ordre": {
-                "theta": 90
+                "theta": -90
             }
         },
         "aknowledge": 273
@@ -68,14 +68,14 @@
         "jaune": {
             "ordre": {
                 "distance": 300,
-                "mode": 1,
+                "mode": 2,
                 "recalage": 0
             }
         },
         "bleu": {
             "ordre": {
                 "distance": 300,
-                "mode": 1,
+                "mode": 2,
                 "recalage": 0
             }
         },
@@ -103,12 +103,12 @@
         "id": 0,
         "jaune": {
             "ordre": {
-                "theta": 180
+                "theta": 90
             }
         },
         "bleu": {
             "ordre": {
-                "theta": 180
+                "theta": -90
             }
         },
         "aknowledge": 273

@@ -184,6 +184,7 @@ class IHM_Action_Aux:
         self.callback_json = _callback_json
         self.action_numero = _action_numero
         self.pos_actuelle = _pos_actuelle
+        self.angle = 0
         
         self.back_callback = _callback_back
         self.save_callback = _callback_save
@@ -200,6 +201,7 @@ class IHM_Action_Aux:
         self.buttons = []
         self.listes = []
         self.checkboxes = []
+        self.panels = []
         
         # Charger la configuration des actions
         with open("data/config_ordre_to_can.json", "r") as file:
@@ -209,6 +211,7 @@ class IHM_Action_Aux:
         self.name_action_Pince = []
         self.name_action_Peigne = []
         self.name_action_Bras = []
+        self.name_action_Special = []
         
         # Récupérer les ordres des actions pour les listes
         for ordre in self.config["Moteur"]["ordre"]["avant"]:
@@ -219,6 +222,8 @@ class IHM_Action_Aux:
             self.name_action_Peigne.append(ordre)
         for ordre in self.config["HerkuleX"]["Bras"]["ordre"]:
             self.name_action_Bras.append(ordre)
+        for ordre in self.config["Action_special"]:
+            self.name_action_Special.append(ordre)
         
 
         # Ajouter des zones de texte et des labels correspondants
@@ -226,35 +231,47 @@ class IHM_Action_Aux:
             "Numero_action": {"box1": {"type": "label", "position": (20, 5), "size": (150, 30), "text": f"Action numéro : {_action_numero}"}},
             "Cote_Actif": {"box1": {"type": "label", "position": (190, 5), "size": (200, 30), "text": f"Côté actif : Non défini"},},
             "Pos_actuelle":  {"box1": {"type": "label", "position": (370, 5), "size": (240, 30), "text": f"X: {_pos_actuelle[0]}  Y: {_pos_actuelle[1]}"}},
-            "Angle_arrivee": {"box1": {"type": "label", "position": (60, 50), "size": (150, 30), "text": "Angle d'arrivée"},
-                              "box2": {"type": "text", "position": (60, 80), "size": (155, 30), "id":"#t_Angle_arrivee"}},
             
-            "Cote_a_controler": {"box1": {"type": "label", "position": (310, 50), "size": (230, 30), "text": "Côté à contrôler"},
-                                "box2": {"type": "button", "position": (315, 80), "size": (105, 30), "text": "Avant"},
-                                "box3": {"type": "button", "position": (425, 80), "size": (105, 30), "text": "Arrière"}},
+            "Deplacement": {"box1": {"type": "label", "position": (10, 50), "size": (90, 30), "text": "Déplacement"},
+                            "box2": {"type": "checkbox", "position": (40, 80), "size": (35, 35), "text": "Deplac", "id":"#c_Deplac"}},
             
-            "Moteur_pas_a_pas": {"box1": {"type": "label", "position": (0, 210), "size": (120, 30), "text": "Moteur p.à.p"},
-                                "box2": {"type": "list", "position": (10, 240), "size": (100, 30), "text": self.name_action_Moteur, "id":"#l_Moteur"},
-                                "box3": {"type": "label", "position": (10, 270), "size": (70, 35), "text": "Deplac"},
-                                "box4": {"type": "checkbox", "position": (75, 270), "size": (35, 35), "text": "Moteur", "id":"#c_Moteur"}},
+            "Ligne_droite": {"box1": {"type": "label", "position": (120, 50), "size": (150, 30), "text": "Ligne droite"},
+                            "box2": {"type": "checkbox", "position": (120, 80), "size": (35, 35), "text": "Deplac", "id":"#c_Ligne_droite"},
+                            "box3": {"type": "text", "position": (160, 80), "size": (110, 35), "id":"#t_Ligne_droite"}},            
             
-            "Peigne": {"box1": {"type": "label", "position": (110, 210), "size": (120, 30), "text": "Peigne"},
-                    "box2": {"type": "list", "position": (120, 240), "size": (100, 30), "text": self.name_action_Peigne,"id":"#l_Peigne"},
-                    "box3": {"type": "label", "position": (120, 270), "size": (70, 35), "text": "Deplac"},
-                    "box4": {"type": "checkbox", "position": (185, 270), "size": (35, 35), "text": "Peigne", "id":"#c_Peigne"}},
+            "Angle_arrive": {"box1": {"type": "label", "position": (300, 50), "size": (150, 30), "text": "Angle d'arrivé (°)"},
+                              "box2": {"type": "checkbox", "position": (300, 80), "size": (35, 35), "text": "Deplac", "id":"#c_Angle_arrive"},
+                              "box3": {"type": "text", "position": (340, 80), "size": (110, 35), "id":"#t_Angle_arrive"}},
             
-            "Pinces": { "box1": {"type": "label", "position": (220, 210), "size": (220, 30), "text": "Pinces (G/D)"},
-                        "box2": {"type": "list", "position": (230, 240), "size": (100, 30), "text": self.name_action_Pince,"id":"#l_Pince_G"},
-                        "box3": {"type": "list", "position": (340, 240), "size": (100, 30), "text": self.name_action_Pince,"id":"#l_Pince_D"},
-                        "box4": {"type": "label", "position": (270, 270), "size": (70, 35), "text": "Deplac"},
-                        "box5": {"type": "checkbox", "position": (335, 270), "size": (35, 35), "text": "Pince G", "id":"#c_Pinces"}},
+            "Cote_a_controler": {"box1": {"type": "label", "position": (10, 120), "size": (230, 35), "text": "Côté à contrôler"},
+                                "box2": {"type": "button", "position": (15, 150), "size": (105, 35), "text": "Avant"},
+                                "box3": {"type": "button", "position": (125, 150), "size": (105, 35), "text": "Arrière"}},
             
-            "Bras": {"box1": {"type": "label", "position": (450, 210), "size": (100, 30), "text": "Bras"},
-                    "box2": {"type": "list", "position": (450, 240), "size": (100, 30), "text": self.name_action_Bras,"id":"#l_Bras"},
-                    "box3": {"type": "label", "position": (450, 270), "size": (70, 35), "text": "Deplac"},
-                    "box4": {"type": "checkbox", "position": (515, 270), "size": (35, 35), "text": "Bras", "id":"#c_Bras"}},            
+            "Action_special": {"box1": {"type": "label", "position": (340, 120), "size": (120, 30), "text": "Action spéciale"},
+                               "box2": {"type": "list", "position": (320, 150), "size": (155, 35), "text": self.name_action_Special,"id":"#l_Action_special"}},
             
-            "New_coord": {"box1": {"type": "label", "position": (20, 310), "size": (270, 30), "text": "Nouvelle coordonnée (optionnel) :"},
+            "Moteur_pas_a_pas": {"box1": {"type": "label", "position": (0, 200), "size": (120, 30), "text": "Moteur p.à.p"},
+                                "box2": {"type": "list", "position": (10, 230), "size": (100, 30), "text": self.name_action_Moteur, "id":"#l_Moteur"},
+                                "box3": {"type": "label", "position": (10, 260), "size": (70, 35), "text": "Deplac"},
+                                "box4": {"type": "checkbox", "position": (75, 260), "size": (35, 35), "text": "Moteur", "id":"#c_Moteur"}},
+            
+            "Peigne": {"box1": {"type": "label", "position": (110, 200), "size": (120, 30), "text": "Peigne"},
+                    "box2": {"type": "list", "position": (120, 230), "size": (100, 30), "text": self.name_action_Peigne,"id":"#l_Peigne"},
+                    "box3": {"type": "label", "position": (120, 260), "size": (70, 35), "text": "Deplac"},
+                    "box4": {"type": "checkbox", "position": (185, 260), "size": (35, 35), "text": "Peigne", "id":"#c_Peigne"}},
+            
+            "Pinces": { "box1": {"type": "label", "position": (220, 200), "size": (220, 30), "text": "Pinces (G/D)"},
+                        "box2": {"type": "list", "position": (230, 230), "size": (100, 30), "text": self.name_action_Pince,"id":"#l_Pince_G"},
+                        "box3": {"type": "list", "position": (340, 230), "size": (100, 30), "text": self.name_action_Pince,"id":"#l_Pince_D"},
+                        "box4": {"type": "label", "position": (270, 260), "size": (70, 35), "text": "Deplac"},
+                        "box5": {"type": "checkbox", "position": (335, 260), "size": (35, 35), "text": "Pince G", "id":"#c_Pinces"}},
+            
+            "Bras": {"box1": {"type": "label", "position": (450, 200), "size": (100, 30), "text": "Bras"},
+                    "box2": {"type": "list", "position": (450, 230), "size": (100, 30), "text": self.name_action_Bras,"id":"#l_Bras"},
+                    "box3": {"type": "label", "position": (450, 260), "size": (70, 35), "text": "Deplac"},
+                    "box4": {"type": "checkbox", "position": (515, 260), "size": (35, 35), "text": "Bras", "id":"#c_Bras"}},            
+            
+            "New_coord": {"box1": {"type": "label", "position": (60, 310), "size": (270, 30), "text": "Nouvelle coordonnée (optionnel) :"},
                         "box2": {"type": "label", "position": (20, 335), "size": (130, 30), "text": "X"},
                         "box3": {"type": "text", "position": (20, 360), "size": (130, 30), "id":"#t_X"},
                         "box4": {"type": "label", "position": (160, 335), "size": (130, 30), "text": "Y"},
@@ -262,7 +279,8 @@ class IHM_Action_Aux:
                         "box6": {"type": "label", "position": (300, 335), "size": (130, 30), "text": "T"},
                         "box7": {"type": "text", "position": (300, 360), "size": (130, 30), "id":"#t_T"},
                         "box8": {"type": "label", "position": (440, 335), "size": (130, 30), "text": "S"},
-                        "box9": {"type": "text", "position": (440, 360), "size": (130, 30), "id":"#t_S"},},
+                        "box9": {"type": "text", "position": (440, 360), "size": (130, 30), "id":"#t_S"},
+                        "box10": {"type": "checkbox", "position": (20, 310), "size": (35, 35), "id":"#c_New_coord"}},
             
             "Back": {"box1": {"type": "button", "position": (20, 400), "size": (150, 30), "text": "Retour"}},
             "Save": {"box1": {"type": "button", "position": (180, 400), "size": (220, 30), "text": "Enregistrer"}},
@@ -319,6 +337,13 @@ class IHM_Action_Aux:
         
         if self.cote_actif == "":
             self.disable_listes()
+
+        # Activer checkbox deplacement
+        self.checkboxes[0].set_checked(True)
+        
+        # Désactiver les textes de la nouvelle coordonnée
+        for text in self.texts[:1:]:
+            text.disable()
         
     def process_events(self, event):
         if event.type == pygame.USEREVENT:
@@ -364,10 +389,68 @@ class IHM_Action_Aux:
                 elif id == "#b_Suivant":
                     self.next_callback()
                 
+                # Gestion des checkbox
                 elif id.split("_")[0] == "#c":
                     for checkbox in self.checkboxes:
                         if checkbox.get_id() == id:
                             checkbox.toggle()
+                            
+                            if id == "#c_Deplac":
+                                # Activer ou non la checkbox et text ligne droite
+                                if checkbox.get_checked():
+                                    # Ajouter les données de coord
+                                    self.data.setdefault("Coord", {"X": self.pos_actuelle[0], "Y": self.pos_actuelle[1], "T": 0, "S": "0"})
+                                    
+                                    # Activer Ligne droite
+                                    self.checkboxes[1].enable()
+                                    self.texts[0].set_text("")
+                                    
+                                    # Changer le texte de rotation
+                                    self.labels[5].set_text("Angle d'arrivé (°)")
+                                    self.texts[1].set_text("")
+                                    
+                                else:
+                                    # Supprimer les données de coord
+                                    self.data.pop("Coord")
+                                    self.texts[1].set_text("")
+                                    
+                                    # Désactiver Ligne droite
+                                    self.checkboxes[1].set_checked(False)
+                                    self.checkboxes[1].disable()
+                                    self.texts[0].disable()
+                                    self.texts[0].set_text("")
+                                    
+                                    # Active rotation
+                                    self.checkboxes[2].enable()
+                                    self.texts[1].enable()
+                                    self.labels[5].set_text("Rotation (°)")
+                                                               
+                            elif id == "#c_Ligne_droite":
+                                # Activer ou non la checkbox et text ligne droite
+                                if checkbox.get_checked():
+                                    # Désactiver rotation
+                                    self.checkboxes[2].set_checked(False)
+                                    self.checkboxes[2].disable()
+                                    self.texts[1].disable()
+                                    
+                                    # Activer text ligne droite
+                                    self.texts[0].enable()
+                                else:
+                                    # Activer rotation
+                                    self.checkboxes[2].enable()
+                                    self.texts[1].enable()
+                                    
+                                    # Désactiver text ligne droite
+                                    self.texts[0].disable()
+                                    self.texts[0].set_text("")
+                                    
+                            elif id == "#c_New_coord":
+                                if checkbox.get_checked():
+                                    for text in self.texts[2:]:
+                                        text.enable()
+                                else:
+                                    for text in self.texts[2:]:
+                                        text.disable()
 
             elif event.user_type == pygame_gui.UI_DROP_DOWN_MENU_CHANGED: # Si la liste change
                 id = event.ui_element.get_object_ids()[1]
@@ -449,11 +532,27 @@ class IHM_Action_Aux:
                         except KeyError:
                             self.data.setdefault("Action", {}).setdefault("HerkuleX", {}).setdefault("Bras", {}).setdefault("ordre", {})["ordre"] = texte
                             self.data.setdefault("Action", {}).setdefault("HerkuleX", {}).setdefault("Bras", {}).setdefault("deplacement", {})["deplacement"] = self.checkboxes[3].get_checked()
+                            
+                    elif id == "#l_Action_special":
+                        try:
+                            if texte == "-":
+                                self.data["Action"].pop("Action_special")
+                                # Activer les autres listes
+                                for liste in self.listes[1:-1]:
+                                    liste.enable()
+                            else:
+                                self.data["Action"]["Action_special"] = texte
+                                # Désactiver les autres listes
+                                for liste in self.listes[1:-1]:
+                                    liste.disable()
+                        except KeyError:
+                            self.data.setdefault("Action", {}).setdefault("Action_special", {})[self.cote_actif] = texte
                                                         
             elif event.user_type == pygame_gui.UI_TEXT_ENTRY_CHANGED: # Si le texte change
                 id = event.ui_element.get_object_ids()[1]
                 try:
-                    if id == "#t_Angle_arrivee":
+                    if id == "#t_Angle_arrive":
+                        self.angle = int(event.text)
                         self.data["Coord"]["T"] = int(event.text)
                     elif id == "#t_X":
                         self.data["New_coord"]["X"] = int(event.text) 
@@ -483,7 +582,7 @@ class IHM_Action_Aux:
         return self.id
     
     def disable_listes(self):
-        for liste in self.listes[:4]:
+        for liste in self.listes[:-1]:
             liste.disable()
     
     def enable_listes(self):

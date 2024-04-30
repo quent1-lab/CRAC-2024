@@ -368,6 +368,12 @@ class CheckBox:
             if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element == self.button:
                     self.toggle()
+    
+    def disable(self):
+        self.button.disable()
+    
+    def enable(self):
+        self.button.enable()
 
 def draw_text(screen, text, x, y, color=(0, 0, 0), font=None, bg = None):
     """Draws text to the pygame screen, on up left corner"""

@@ -100,6 +100,20 @@
                 "Min": 0
             },
             "aknowledge": 909
+        }        
+    },
+    "Action_special": {
+        "-": 0,
+        "Vibrer" :{
+            "ordre": {
+                "avant": {
+                    "ok": 0
+                },
+                "arriere": {
+                    "ok": 0
+                }
+            },
+            "aknowledge": 910
         }
     }
 }

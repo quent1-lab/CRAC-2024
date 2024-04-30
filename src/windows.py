@@ -185,6 +185,7 @@ class IHM_Action_Aux:
         self.action_numero = _action_numero
         self.pos_actuelle = _pos_actuelle
         self.angle = 0
+        self.distance = 0
         
         self.back_callback = _callback_back
         self.save_callback = _callback_save
@@ -342,8 +343,9 @@ class IHM_Action_Aux:
         self.checkboxes[0].set_checked(True)
         
         # Désactiver les textes de la nouvelle coordonnée
-        for text in self.texts[:1:]:
-            text.disable()
+        for i, text in enumerate(self.texts):
+            if i != 1:
+                text.disable()
         
     def process_events(self, event):
         if event.type == pygame.USEREVENT:
@@ -400,7 +402,9 @@ class IHM_Action_Aux:
                                 if checkbox.get_checked():
                                     # Ajouter les données de coord
                                     self.data.setdefault("Coord", {"X": self.pos_actuelle[0], "Y": self.pos_actuelle[1], "T": 0, "S": "0"})
-                                    
+                                    if "Rotation" in self.data:
+                                        self.data.pop("Rotation")
+                                        
                                     # Activer Ligne droite
                                     self.checkboxes[1].enable()
                                     self.texts[0].set_text("")
@@ -411,7 +415,10 @@ class IHM_Action_Aux:
                                     
                                 else:
                                     # Supprimer les données de coord
-                                    self.data.pop("Coord")
+                                    if "Coord" in self.data:
+                                        self.data.pop("Coord")
+                                    if "Distance" in self.data:
+                                        self.data.pop("Distance")
                                     self.texts[1].set_text("")
                                     
                                     # Désactiver Ligne droite
@@ -432,9 +439,16 @@ class IHM_Action_Aux:
                                     self.checkboxes[2].set_checked(False)
                                     self.checkboxes[2].disable()
                                     self.texts[1].disable()
+                                    self.texts[1].set_text("")
                                     
                                     # Activer text ligne droite
                                     self.texts[0].enable()
+                                    
+                                    # Retirer les données de rotation et coord
+                                    if "Coord" in self.data:
+                                        self.data.pop("Coord")
+                                    if "Rotation" in self.data:
+                                        self.data.pop("Rotation")
                                 else:
                                     # Activer rotation
                                     self.checkboxes[2].enable()
@@ -443,6 +457,11 @@ class IHM_Action_Aux:
                                     # Désactiver text ligne droite
                                     self.texts[0].disable()
                                     self.texts[0].set_text("")
+                                    
+                                    # Ajouter les données de coord et supprimer les données de ligne droite
+                                    self.data.setdefault("Coord", {"X": self.pos_actuelle[0], "Y": self.pos_actuelle[1], "T": 0, "S": "0"})
+                                    if "Distance" in self.data:
+                                        self.data.pop("Distance")
                                     
                             elif id == "#c_New_coord":
                                 if checkbox.get_checked():
@@ -553,7 +572,13 @@ class IHM_Action_Aux:
                 try:
                     if id == "#t_Angle_arrive":
                         self.angle = int(event.text)
-                        self.data["Coord"]["T"] = int(event.text)
+                        if not self.checkboxes[0].get_checked():
+                            self.data["Rotation"] = int(event.text)
+                        else:
+                            self.data["Coord"]["T"] = int(event.text)
+                    elif id == "#t_Ligne_droite":
+                        self.distance = int(event.text)
+                        self.data["Distance"] = int(event.text)
                     elif id == "#t_X":
                         self.data["New_coord"]["X"] = int(event.text) 
                     elif id == "#t_Y":

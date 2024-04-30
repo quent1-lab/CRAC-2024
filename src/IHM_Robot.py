@@ -293,9 +293,9 @@ class IHM_Robot:
         
         for error in self.error:
             if error == 0x10:
-                draw_text_center(self.screen, "Erreur de réception des données des batteries", x=self.width//2, y=self.height//2 - 50, font=font, color=(255, 255, 255))
-                draw_text_center(self.screen, "La carte énergie est-elle alimenté ?", x=self.width//2, y=self.height//2 + - 20, font=font, color=(255, 255, 255))
-            elif error == 0x11:
+                draw_text_center(self.screen, "Erreur de réception des données des batteries", x=self.width//2, y=self.height//2 - 80, font=font, color=(255, 255, 255))
+                draw_text_center(self.screen, "La carte énergie est-elle alimenté ?", x=self.width//2, y=self.height//2 + - 50, font=font, color=(255, 255, 255))
+            if error == 0x11:
                 draw_text_center(self.screen, "ARU activé", x=self.width//2, y=self.height//2, font=font, color=(255, 255, 255))
     
     def taille_auto_batterie(self):

@@ -778,21 +778,27 @@ class IHM:
 
     def save_action(self, action):
         self.numero_strategie += 1
-        
-        coord = action["Coord"]
-        print("Coord:", coord)
-        if coord["T"] == 0:
-            # Si l'angle d'arrivée n'est pas renseigné, on calcule l'angle entre le robot et la position d'arrivée
-            # Récupérer les coordonnées précédentes
-            if len(self.pos_waiting_list) > 0:
-                coord_prec = self.pos_waiting_list[-1]
-            else:
-                coord_prec = (self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE, "0")
-            angle = math.degrees(math.atan2(coord["Y"] - coord_prec[1], coord["X"] - coord_prec[0]))
-            coord["T"] = angle
-            print("Angle:", angle)
-        
-        new_pos = (int(coord["X"]), int(coord["Y"]), int(coord["T"]*10), "0")
+        print("Action:", action)
+        if "Coord" in action:
+            coord = action["Coord"]
+            print("Coord:", coord)
+            
+            if coord["T"] == "":
+                # Si l'angle d'arrivée n'est pas renseigné, on calcule l'angle entre le robot et la position d'arrivée
+                # Récupérer les coordonnées précédentes
+                if len(self.pos_waiting_list) > 0:
+                    coord_prec = self.pos_waiting_list[-1]
+                else:
+                    coord_prec = (self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE, "0")
+                angle = math.degrees(math.atan2(coord["Y"] - coord_prec[1], coord["X"] - coord_prec[0]))
+                coord["T"] = angle
+                print("Angle:", int(angle))
+                
+            new_pos = (int(coord["X"]), int(coord["Y"]), int(coord["T"]*10), "0")
+                
+        else:
+            new_pos = (self.ROBOT.x, self.ROBOT.y, 0, "0")
+                
         self.pos_waiting_list.append(new_pos)
         
         new_window = None

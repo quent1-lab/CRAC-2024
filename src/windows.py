@@ -294,7 +294,7 @@ class IHM_Action_Aux:
         }
         
         self.data = {
-            "Coord": {"X": _pos_actuelle[0], "Y": _pos_actuelle[1], "T": 0, "S": "0"},
+            "Coord": {"X": _pos_actuelle[0], "Y": _pos_actuelle[1], "T": "", "S": "0"},
             "Action" : {
                 
             }
@@ -406,7 +406,7 @@ class IHM_Action_Aux:
                                 # Activer ou non la checkbox et text ligne droite
                                 if checkbox.get_checked():
                                     # Ajouter les données de coord
-                                    self.data.setdefault("Coord", {"X": self.pos_actuelle[0], "Y": self.pos_actuelle[1], "T": 0, "S": "0"})
+                                    self.data.setdefault("Coord", {"X": self.pos_actuelle[0], "Y": self.pos_actuelle[1], "T": "", "S": "0"})
                                     if "Rotation" in self.data:
                                         self.data.pop("Rotation")
                                         
@@ -464,7 +464,7 @@ class IHM_Action_Aux:
                                     self.texts[0].set_text("")
                                     
                                     # Ajouter les données de coord et supprimer les données de ligne droite
-                                    self.data.setdefault("Coord", {"X": self.pos_actuelle[0], "Y": self.pos_actuelle[1], "T": 0, "S": "0"})
+                                    self.data.setdefault("Coord", {"X": self.pos_actuelle[0], "Y": self.pos_actuelle[1], "T": "", "S": "0"})
                                     if "Distance" in self.data:
                                         self.data.pop("Distance")
                                     

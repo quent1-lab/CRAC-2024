@@ -183,6 +183,13 @@ class ComCAN:
                 dataCan = struct.pack('h', data["angle"])
                 messageCan = can.Message(arbitration_id=0x23, data=dataCan, is_extended_id=False)
                 self.send(messageCan)
+            
+            elif message["cmd"] == "deplacement":
+                data = message["data"]
+                # Format des données : distance (short), mode (entier non signé 1 octet)
+                dataCan = struct.pack('h', data["distance"]) + struct.pack('B', 0) + struct.pack('hBbb', 0, 0, 0, 0)
+                messageCan = can.Message(arbitration_id=0x24, data=dataCan, is_extended_id=False)
+                self.send(messageCan)
                 
             elif message["cmd"] == "desa":
                 data = message["data"]

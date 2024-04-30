@@ -147,7 +147,7 @@ class IHM_Robot:
         self.play_strategie()
     
     def ligne_droite(self, distance):
-        self.client.send(self.client.create_message(2, "ligne_droite", {"distance": distance}))
+        self.client.send(self.client.create_message(2, "deplacement", {"distance": distance}))
     
     def tourner(self, angle):
         self.client.send(self.client.create_message(2, "rotation", {"angle": angle*10}))

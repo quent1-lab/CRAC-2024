@@ -112,6 +112,9 @@ class IHM_Robot:
             texte = strategy.split(".")[0]
             button = Button(self.screen, (x_depart + 405 * int(nombre_strategies/6), y_depart + i * 70, 385, 60), self.theme_path, texte, font, lambda i=i: self.strategie_action(i))
             self.button_strategie.append(button)
+            
+        self.button_ligne_droite = Button(self.screen, (10, 90, 200, 60), self.theme_path, "Ligne droite", font, lambda : self.button_menu_action(10))
+        self.button_tourner_10 = Button(self.screen, (10, 160, 200, 60), self.theme_path, "Tourner 10", font, lambda : self.button_menu_action(11))
         
         self.strategie = None
         self.config_strategie = None
@@ -125,8 +128,12 @@ class IHM_Robot:
         self.button_menu[index].update_color((0, 0, 240)) # On met en vert le bouton cliqué
         if index == 0:
             pass            
-        if index == 4:
+        elif index == 4:
             self.client.add_to_send_list(self.client.create_message(1, "stop", None))
+        elif index == 10:
+            self.client.send(self.client.create_message(2, "ligne", {"distance" : 2000}))
+        elif index == 11:
+            self.client.send(self.client.create_message(2, "rotation", {"angle" : 360*10*10}))
     
     def strategie_action(self, index):
         self.client.send(self.client.create_message(2, "strategie", {"strategie": index}))
@@ -269,6 +276,13 @@ class IHM_Robot:
         # Cette page affiche les différentes stratégies possibles
         for button in self.button_strategie:
             button.draw()
+
+    def page_energie(self):
+        pass
+    
+    def page_autres(self):
+        self.button_ligne_droite.draw()
+        self.button_tourner_10.draw()
 
     def page_erreur(self):
         # Cette page affiche un message d'erreur si une erreur est survenue lors de la réception des données des batteries
@@ -468,6 +482,11 @@ class IHM_Robot:
                 elif self.PAGE == 1:
                     for button in self.button_strategie:
                         button.handle_event(event)
+                elif self.PAGE == 2:
+                    pass
+                elif self.PAGE == 3:
+                    self.button_ligne_droite.handle_event(event)
+                    self.button_tourner_10.handle_event(event)
 
             # Affichage
             self.screen.fill(self.BACKGROUND_COLOR)
@@ -488,7 +507,7 @@ class IHM_Robot:
             elif self.PAGE == 2:
                 pass
             elif self.PAGE == 3:
-                pass
+                self.page_autres()
             elif self.PAGE == 4:
                 self.page_erreur()
 

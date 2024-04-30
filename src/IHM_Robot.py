@@ -29,7 +29,6 @@ class IHM_Robot:
         self.energie_recue = False
         self.state_request_energy = False
         self.error = []
-        self.ARU_compte = 0
 
         self.BACKGROUND_COLOR = (100, 100, 100)
         
@@ -300,13 +299,6 @@ class IHM_Robot:
                 draw_text_center(self.screen, "La carte énergie est-elle alimenté ?", x=self.width//2, y=self.height//2 + - 35, font=font, color=(255, 255, 255))
             if error == 0x11:
                 draw_text_center(self.screen, "ARU activé", x=self.width//2, y=self.height//2+15, font=font, color=(255, 255, 255))
-                self.ARU_compte += 1
-                if self.ARU_compte > 10:
-                    self.client.send(self.client.create_message(0, "ARU", {"etat": 0}))
-                    self.ARU_compte = 0
-                    if 0x11 in self.error:
-                        self.error.remove(0x11)
-                        self.PAGE = 0
     
     def taille_auto_batterie(self):
         nb_batteries_colonne = 0

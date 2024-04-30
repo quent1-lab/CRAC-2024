@@ -18,7 +18,7 @@ DigitalOut switchControl1(D4);  // Interrupteur 1 - D4
 DigitalOut switchControl2(D5);  // Interrupteur 2 - D5
 DigitalOut switchControl3(D11); // Interrupteur 3 - D11
 
-DigitalIn ARU(PB_4); // ARU - PB_4
+DigitalIn ARU(PB_4, PullUp); // ARU - PB_4
 
 void controlSwitch(DigitalOut &switchControl, bool on)
 {
@@ -121,31 +121,31 @@ int main()
 
         if (checkARU())
         {
-            // if (compteur_ARU == 10)
-            // {
-            //     aruCan.data[0] = 1;
-            //     can1.write(aruCan);
-            //     compteur_ARU = 1;
-            // }
-            // else
-            // {
-            //     compteur_ARU++;
-            // }
+            if (compteur_ARU == 10)
+            {
+                aruCan.data[0] = 1;
+                can1.write(aruCan);
+                compteur_ARU = 1;
+            }
+            else
+            {
+                compteur_ARU++;
+            }
 
             // Eteindre les interrupteurs
             controlSwitch(switchControl1, false);
             controlSwitch(switchControl2, false);
             controlSwitch(switchControl3, false);
         }
-        // else
-        // {
-        //     if (compteur_ARU != 0)
-        //     {
-        //         aruCan.data[0] = 0;
-        //         can1.write(aruCan);
-        //         compteur_ARU = 0;
-        //     }
-        // }
+        else
+        {
+            if (compteur_ARU != 0)
+            {
+                aruCan.data[0] = 0;
+                can1.write(aruCan);
+                compteur_ARU = 0;
+            }
+        }
 
         // Attendre une demande via CAN
         if (can1.read(request))

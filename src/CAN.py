@@ -215,6 +215,7 @@ class ComCAN:
                     byte = list(data.items())[1:]  # Convertir le dictionnaire en liste et supprimer la première valeur
                     byte_values = [b[1] for b in byte]  # Extraire les valeurs de la liste
                     messageCAN = can.Message(arbitration_id=commande, data=byte_values, is_extended_id=False)
+                    logging.info(f"BusCAN : Message à envoyer : {messageCAN}")
                 
                 self.send(messageCAN)
             elif message["cmd"] == "resta":
@@ -224,6 +225,14 @@ class ComCAN:
                     messageCan = can.Message(arbitration_id=0x34, data=[1], is_extended_id=False)
                 self.send(messageCan)
                 #print("BusCAN : Message de restart envoyé")
+            
+            elif message["cmd"] == "homing":
+                data = message["data"]
+                # Format des données : data_id (short)
+                dataCan = struct.pack('h', 16)
+                messageCan = can.Message(arbitration_id=0xA10, data=dataCan, is_extended_id=False)
+                self.send(messageCan)
+
         except Exception as e:
             logging.error(f"Erreur lors du traitement du message serveur : {str(e)}")
 

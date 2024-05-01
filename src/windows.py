@@ -193,9 +193,10 @@ class IHM_Action_Aux:
         
         self.cote_actif = ""
         
+        self.open_action = None
         if _config:
             # Charger tous les paramètres
-            self.config = _config
+            self.open_action = _config
             
 
         self.window = pygame_gui.elements.UIWindow(rect=pygame.Rect((100, 100), self.size),
@@ -218,6 +219,7 @@ class IHM_Action_Aux:
         self.name_action_Peigne = []
         self.name_action_Bras = []
         self.name_action_Special = []
+        self.name_recalage = []
         
         # Récupérer les ordres des actions pour les listes
         for ordre in self.config["Moteur"]["ordre"]["avant"]:
@@ -230,6 +232,8 @@ class IHM_Action_Aux:
             self.name_action_Bras.append(ordre)
         for ordre in self.config["Action_special"]:
             self.name_action_Special.append(ordre)
+        for ordre in self.config["Recalage"]["ordre"]:
+            self.name_recalage.append(ordre)
         
 
         # Ajouter des zones de texte et des labels correspondants
@@ -253,8 +257,11 @@ class IHM_Action_Aux:
                                 "box2": {"type": "button", "position": (15, 150), "size": (105, 35), "text": "Avant"},
                                 "box3": {"type": "button", "position": (125, 150), "size": (105, 35), "text": "Arrière"}},
             
-            "Action_special": {"box1": {"type": "label", "position": (340, 120), "size": (120, 30), "text": "Action spéciale"},
-                               "box2": {"type": "list", "position": (320, 150), "size": (155, 35), "text": self.name_action_Special,"id":"#l_Action_special"}},
+            "Recalage": {"box1": {"type": "label", "position": (250, 120), "size": (100, 35), "text": "Recalage"},
+                        "box2": {"type": "list", "position": (255, 150), "size": (100, 35), "text": self.name_recalage,"id":"#l_Recalage"}},
+            
+            "Action_special": {"box1": {"type": "label", "position": (400, 120), "size": (120, 30), "text": "Action spéciale"},
+                               "box2": {"type": "list", "position": (380, 150), "size": (155, 35), "text": self.name_action_Special,"id":"#l_Action_special"}},
             
             "Moteur_pas_a_pas": {"box1": {"type": "label", "position": (0, 200), "size": (120, 30), "text": "Moteur p.à.p"},
                                 "box2": {"type": "list", "position": (10, 230), "size": (100, 30), "text": self.name_action_Moteur, "id":"#l_Moteur"},
@@ -351,6 +358,8 @@ class IHM_Action_Aux:
         for i, text in enumerate(self.texts):
             if i != 1:
                 text.disable()
+                
+        
         
     def process_events(self, event):
         if event.type == pygame.USEREVENT:
@@ -567,7 +576,7 @@ class IHM_Action_Aux:
                             else:
                                 self.data["Action"]["Action_special"] = texte
                                 # Désactiver les autres listes
-                                for liste in self.listes[1:-1]:
+                                for liste in self.listes[2:-1]:
                                     liste.disable()
                         except KeyError:
                             self.data.setdefault("Action", {}).setdefault("Action_special", {})[self.cote_actif] = texte
@@ -612,7 +621,7 @@ class IHM_Action_Aux:
         return self.id
     
     def disable_listes(self):
-        for liste in self.listes[:-1]:
+        for liste in self.listes[1:-1]:
             liste.disable()
     
     def enable_listes(self):
@@ -627,24 +636,24 @@ class IHM_Action_Aux:
         herkulex_pince_droite = action.get("HerkuleX", {}).get("Pinces", {}).get("droite", {}).get("ordre", {})
         
         if self.cote_actif in moteur_ordre:
-            self.rebuild_liste(self.listes[0],moteur_ordre[self.cote_actif])
-        else:
-            self.rebuild_liste(self.listes[0],"-")
-        
-        if self.cote_actif in herkulex_peigne_ordre:
-            self.rebuild_liste(self.listes[1],herkulex_peigne_ordre[self.cote_actif])
-        else:
-            self.rebuild_liste(self.listes[1],"-")
-        
-        if self.cote_actif in herkulex_pince_gauche:
-            self.rebuild_liste(self.listes[2],herkulex_pince_gauche[self.cote_actif])
+            self.rebuild_liste(self.listes[2],moteur_ordre[self.cote_actif])
         else:
             self.rebuild_liste(self.listes[2],"-")
-            
-        if self.cote_actif in herkulex_pince_droite:
-            self.rebuild_liste(self.listes[3],herkulex_pince_droite[self.cote_actif])
+        
+        if self.cote_actif in herkulex_peigne_ordre:
+            self.rebuild_liste(self.listes[3],herkulex_peigne_ordre[self.cote_actif])
         else:
             self.rebuild_liste(self.listes[3],"-")
+        
+        if self.cote_actif in herkulex_pince_gauche:
+            self.rebuild_liste(self.listes[4],herkulex_pince_gauche[self.cote_actif])
+        else:
+            self.rebuild_liste(self.listes[4],"-")
+            
+        if self.cote_actif in herkulex_pince_droite:
+            self.rebuild_liste(self.listes[5],herkulex_pince_droite[self.cote_actif])
+        else:
+            self.rebuild_liste(self.listes[5],"-")
             
     def update_checkboxes(self):
         action = self.data.get("Action", {})

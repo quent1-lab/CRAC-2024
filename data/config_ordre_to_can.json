@@ -1,5 +1,9 @@
 {
     "Moteur": {
+        "id" :{
+            "avant": "0x1A0",
+            "arriere": "0x1A1"
+        },
         "ordre": {
             "avant": {
                 "-": 0,
@@ -20,6 +24,10 @@
         }
     },
     "HerkuleX": {
+        "id" :{
+            "avant": "0x1A0",
+            "arriere": "0x1A1"
+        },
         "Peigne": {
             "ordre": {
                 "avant": {
@@ -114,6 +122,15 @@
                 }
             },
             "aknowledge": 910
+        }
+    },
+    "Recalage" :{
+        "id" : "0x24",
+        "ordre": {
+            "-": 0,
+            "X": 0,
+            "Y": 0,
+            "X et Y": 0
         }
     }
 }

@@ -112,13 +112,21 @@ class IHM_Robot:
             texte = strategy.split(".")[0]
             button = Button(self.screen, (x_depart + 405 * int(nombre_strategies/6), y_depart + i * 70, 385, 60), self.theme_path, texte, font, lambda i=i: self.strategie_action(i))
             self.button_strategie.append(button)
+        
+        self.button_autres = [
             
-        self.button_ligne_droite_2 = Button(self.screen, (10, 90, 200, 60), self.theme_path, "Ligne droite 2m", font, lambda : self.ligne_droite(2000))
-        self.button_ligne_droite_1 = Button(self.screen, (10, 160, 200, 60), self.theme_path, "Ligne droite 1m", font, lambda : self.ligne_droite(1000))
-        self.button_tourner_10 = Button(self.screen, (10, 230, 200, 60), self.theme_path, "Tourner 8", font, lambda : self.tourner(360*8))
+        Button(self.screen, (10, 90, 200, 80), self.theme_path, "Ligne droite 2m", font, lambda : self.ligne_droite(2000)),
+        Button(self.screen, (10, 180, 200, 80), self.theme_path, "Ligne droite 1m", font, lambda : self.ligne_droite(1000)),
+        Button(self.screen, (10, 230, 230, 80), self.theme_path, "Tourner 8", font, lambda : self.tourner(360*8)),
         
-        self.button_Homing = Button(self.screen, (220, 90, 200, 60), self.theme_path, "HOMING", font, lambda : self.homing())
+        Button(self.screen, (250, 90, 200, 80), self.theme_path, "HOMING", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 16}))),
+        Button(self.screen, (250, 180, 200, 80), self.theme_path, "UP", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 13}))),
+        Button(self.screen, (250, 270, 200, 80), self.theme_path, "DOWN", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 14}))),
         
+        Button(self.screen, (490, 90, 200, 80), self.theme_path, "CLOSE", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 1}))),
+        Button(self.screen, (490, 180, 200, 80), self.theme_path, "OPEN", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 3}))),
+        Button(self.screen, (490, 270, 200, 80), self.theme_path, "PLANT", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 5})))
+        ]
         self.strategie = None
         self.config_strategie = None
         self.liste_aknowledge = []
@@ -161,10 +169,6 @@ class IHM_Robot:
             self.ETAT = 1
             self.client.send(self.client.create_message(10, "config", {"etat": 1, "equipe": self.EQUIPE}))
         self.client.send(self.client.create_message(2, "rotation", {"angle": angle*10}))
-    
-    def homing(self):
-        self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 16}))
-        #self.client.send(self.client.create_message(2, "homing", {"id": 416, "byte1": 16}))
     
     def recalage(self):
         if self.recalage_is_playing:
@@ -298,10 +302,9 @@ class IHM_Robot:
         pass
     
     def page_autres(self):
-        self.button_ligne_droite_1.draw()
-        self.button_ligne_droite_2.draw()
-        self.button_tourner_10.draw()
-        self.button_Homing.draw()
+        for button in self.button_autres:
+            button.draw()
+        
 
     def page_erreur(self):
         # Cette page affiche un message d'erreur si une erreur est survenue lors de la réception des données des batteries
@@ -528,10 +531,8 @@ class IHM_Robot:
                 elif self.PAGE == 2:
                     pass
                 elif self.PAGE == 3:
-                    self.button_ligne_droite_1.handle_event(event)
-                    self.button_ligne_droite_2.handle_event(event)
-                    self.button_tourner_10.handle_event(event)
-                    self.button_Homing.handle_event(event)
+                    for button in self.button_autres:
+                        button.handle_event(event)
 
             # Affichage
             self.screen.fill(self.BACKGROUND_COLOR)

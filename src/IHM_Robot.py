@@ -6,6 +6,7 @@ import threading
 import time
 from batterie import Batterie
 import logging
+import gpiozero
 
 # Configuration du logger
 logging.basicConfig(filename='ihm_robot.log', level=logging.INFO, datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
@@ -14,6 +15,8 @@ logging.basicConfig(filename='ihm_robot.log', level=logging.INFO, datefmt='%d/%m
 class IHM_Robot:
     def __init__(self):
         self.client = Client("127.0.0.43", 22050, 9, self.receive_to_server)
+        
+        self.JACK = gpiozero.Button(16, pull_up=True)
 
         self.Energie = {
             "Batterie 1": {"Tension": 0, "Courant": 0, "Switch": 0},
@@ -110,26 +113,27 @@ class IHM_Robot:
         
         for i, strategy in enumerate(liste_strategies):
             texte = strategy.split(".")[0]
-            button = Button(self.screen, (x_depart + 405 * int(nombre_strategies/6), y_depart + i * 70, 385, 60), self.theme_path, texte, font, lambda i=i: self.strategie_action(i))
+            button = Button(self.screen, (x_depart + 405 * int(nombre_strategies/6), y_depart + i * 90, 385, 80), self.theme_path, texte, font, lambda i=i: self.strategie_action(i+1))
             self.button_strategie.append(button)
         
         self.button_autres = [
+            Button(self.screen, (10, 90, 200, 80), self.theme_path, "Ligne droite 2m", font, lambda : self.ligne_droite(2000)),
+            Button(self.screen, (10, 180, 200, 80), self.theme_path, "Ligne droite 1m", font, lambda : self.ligne_droite(1000)),
+            Button(self.screen, (10, 270, 200, 80), self.theme_path, "Tourner 8", font, lambda : self.tourner(360*8)),
             
-        Button(self.screen, (10, 90, 200, 80), self.theme_path, "Ligne droite 2m", font, lambda : self.ligne_droite(2000)),
-        Button(self.screen, (10, 180, 200, 80), self.theme_path, "Ligne droite 1m", font, lambda : self.ligne_droite(1000)),
-        Button(self.screen, (10, 270, 200, 80), self.theme_path, "Tourner 8", font, lambda : self.tourner(360*8)),
-        
-        Button(self.screen, (250, 90, 200, 80), self.theme_path, "HOMING", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 16}))),
-        Button(self.screen, (250, 180, 200, 80), self.theme_path, "UP", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 13}))),
-        Button(self.screen, (250, 270, 200, 80), self.theme_path, "DOWN", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 14}))),
-        
-        Button(self.screen, (490, 90, 200, 80), self.theme_path, "CLOSE", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 1}))),
-        Button(self.screen, (490, 180, 200, 80), self.theme_path, "OPEN", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 3}))),
-        Button(self.screen, (490, 270, 200, 80), self.theme_path, "PLANT", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 5})))
+            Button(self.screen, (250, 90, 200, 80), self.theme_path, "HOMING", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 16}))),
+            Button(self.screen, (250, 180, 200, 80), self.theme_path, "UP", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 13}))),
+            Button(self.screen, (250, 270, 200, 80), self.theme_path, "DOWN", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 14}))),
+            
+            Button(self.screen, (490, 90, 200, 80), self.theme_path, "CLOSE", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 1}))),
+            Button(self.screen, (490, 180, 200, 80), self.theme_path, "OPEN", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 3}))),
+            Button(self.screen, (490, 270, 200, 80), self.theme_path, "PLANT", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 5})))
         ]
+        
         self.strategie = None
         self.config_strategie = None
         self.liste_aknowledge = []
+        
         with open("data/config_ordre_to_can.json", "r",encoding="utf-8") as f:
             self.config_strategie = json.load(f)
         
@@ -305,7 +309,6 @@ class IHM_Robot:
         for button in self.button_autres:
             button.draw()
         
-
     def page_erreur(self):
         # Cette page affiche un message d'erreur si une erreur est survenue lors de la réception des données des batteries
         pygame.draw.rect(self.screen, (255, 0, 0), (self.width//2 - 350, 90, 700, 370), 0, 10)

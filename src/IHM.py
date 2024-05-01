@@ -790,10 +790,12 @@ class IHM:
                 else:
                     coord_prec = (self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE, "0")
                 angle = math.degrees(math.atan2(coord["Y"] - coord_prec[1], coord["X"] - coord_prec[0]))
-                coord["T"] = angle
+                coord["T"] = int(angle*10)
                 print("Angle:", int(angle))
+            else:
+                coord["T"] = int(coord["T"]*10)
                 
-            new_pos = (int(coord["X"]), int(coord["Y"]), int(coord["T"]*10), "0")
+            new_pos = (int(coord["X"]), int(coord["Y"]), coord["T"], "0")
                 
         else:
             new_pos = (self.ROBOT.x, self.ROBOT.y, 0, "0")

@@ -149,12 +149,14 @@ class IHM_Command:
         self.command_CAN[3] = self.text_boxes[8].get_text()
 
         # Vérifie la validité des données
-        for i in range(4):
+        for i in range(1,4):
             try:
-                self.command_CAN[i] = int(self.command_CAN[i])
+                if self.command_CAN[i] == "":
+                    self.command_CAN[i] = 0
+                    self.text_boxes[5+i].set_text("0")
             except ValueError:
-                self.command_CAN[i] = 0
-                self.text_boxes[5+i].set_text("0")
+                pass
+                
         print(self.command_CAN)
         self.CAN_callback(self.command_CAN)
 

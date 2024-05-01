@@ -203,10 +203,17 @@ class ComCAN:
             elif message["cmd"] == "CAN":
                 data = message["data"]
                 commande = data["id"]
-                # byte correspond à la liste des données à envoyer
-                byte = list(data.items())[1:]  # Convertir le dictionnaire en liste et supprimer la première valeur
-                byte_values = [b[1] for b in byte]  # Extraire les valeurs de la liste
-                messageCAN = can.Message(arbitration_id=commande, data=byte_values, is_extended_id=False)
+                
+                if commande == 0x1FC or commande == 0x1FD:
+                    # Format des données : data 8 octets
+                    byte = data["byte1"]
+                    dataCan = struct.pack('d', byte)
+                    messageCan = can.Message(arbitration_id=commande, data=dataCan, is_extended_id=False)
+                else:
+                    # byte correspond à la liste des données à envoyer
+                    byte = list(data.items())[1:]  # Convertir le dictionnaire en liste et supprimer la première valeur
+                    byte_values = [b[1] for b in byte]  # Extraire les valeurs de la liste
+                    messageCAN = can.Message(arbitration_id=commande, data=byte_values, is_extended_id=False)
                 
                 self.send(messageCAN)
             elif message["cmd"] == "resta":

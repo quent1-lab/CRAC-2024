@@ -38,11 +38,6 @@ class IHM:
         self.ROBOT = Objet(0, self.ROBOT_Dimension[0], self.ROBOT_Dimension[1], 20)
         self.ROBOT_ANGLE = 0
 
-        if os.name == 'nt':  # Windows
-            self.path_picture = "Lidar/Terrain_Jeu.png"
-        else:  # Linux et autres
-            self.path_picture = "Documents/CRAC-2024/src/Terrain_Jeu.png"
-
         self.path_picture = "data/Terrain_Jeu.png"
         self.id_compteur = 0  # Compteur pour les identifiants d'objet
         self.objets = []  # Liste pour stocker les objets détectés
@@ -63,6 +58,10 @@ class IHM:
         self.pos_waiting_list = [] # Liste pour stocker les futurs positions positions du robot à atteindre 
         self.robot_move = True # Variable pour savoir si le robot est en mouvement
         self.numero_strategie = 0 # Numéro de la stratégie en cours
+        
+        # Vider le fichier de sauvegarde des stratégies
+        with open("data/strategie.json", "w") as f:
+            f.write("{}")
 
         # Initialisation de Pygame et ajustement de la taille de la fenêtre
         pygame.init()

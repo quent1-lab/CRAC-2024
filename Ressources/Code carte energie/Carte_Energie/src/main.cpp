@@ -256,9 +256,12 @@ int main()
                 }
                 else if (OrderID == 11)
                 {
+                    controlSwitch(switchControl1, false);
+                    controlSwitch(switchControl2, false);
+                    controlSwitch(switchControl3, false);
                 }
             }
-            else if (request.id == 0x001)
+            else if (request.id == 0x001 || request.id == 0x002)
             {
                 // Eteindre les interrupteurs
                 controlSwitch(switchControl1, false);

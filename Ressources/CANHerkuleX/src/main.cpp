@@ -4,7 +4,7 @@
 
 #define SEC 1000
 #define PAUSE 100
-#define IDCARD 3
+#define IDCARD 0x1A0
 
 // ! Constantes pour les servos des pinces droites avant & arrière
 #define RGRABBERMAX 0x03AD    // 941
@@ -285,6 +285,11 @@ void elevatorDown(void)
 void elevatorUp(void)
 {
   stepper(660, 0, 0, 0, 1, 1);
+}
+
+void elevatorHoming(void)
+{
+  stepper(660, 0, 0, 0, 0, 1);
 }
 
 void blockStepper(void)

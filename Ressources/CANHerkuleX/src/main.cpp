@@ -32,6 +32,8 @@
 #define SHAKING 0x0B
 #define ELEVATORUP 0x0D
 #define ELEVATORDOWN 0x0E
+#define ELEVATORMID 0x0F
+#define ELEVATORHOMING 0x10
 
 // ! Constantes pour le moteur pas-à-pas
 #define CLOCKWISE 1
@@ -63,6 +65,9 @@ DigitalOut M1(D9);
 DigitalOut M2(D8);
 DigitalOut led(LED1);
 #endif
+
+// Fin de course
+DigitalIn endstop(PA_1);
 
 Herkulex servo(PB_6, PB_7, 115200);
 
@@ -108,6 +113,9 @@ void elevatorDown();
 //* Fonction pour descendre l'ascenseur à mi-hauteur
 void elevatorMid();
 
+//* Fonction pour homing l'ascenseur
+void elevatorHoming();
+
 //* Fonction pour activer le couple du moteur pas-à-pas de l'ascenseur
 void blockStepper();
 
@@ -124,10 +132,12 @@ int main()
 {
   initServo();
   initStepper();
+
   while (1)
   {
     if (can.read(RXMsg) && (RXMsg.id == IDCARD))
     {
+      elevatorHoming();
       switch (RXMsg.data[0])
       {
       case CLOSE:
@@ -160,6 +170,10 @@ int main()
 
       case ELEVATORDOWN:
         elevatorDown();
+        break;
+
+      case ELEVATORHOMING:
+        elevatorHoming();
         break;
 
       default:
@@ -289,7 +303,11 @@ void elevatorUp(void)
 
 void elevatorHoming(void)
 {
-  stepper(660, 0, 0, 0, 0, 1);
+  // Monte l'ascenseur jusqu'à ce qu'il atteigne le fin de course
+  while (endstop.read() == 1)
+  {
+    stepper(20, 0, 0, 0, 1, 1);
+  }
 }
 
 void blockStepper(void)

@@ -113,8 +113,11 @@ class IHM_Robot:
             button = Button(self.screen, (x_depart + 405 * int(nombre_strategies/6), y_depart + i * 70, 385, 60), self.theme_path, texte, font, lambda i=i: self.strategie_action(i))
             self.button_strategie.append(button)
             
-        self.button_ligne_droite = Button(self.screen, (10, 90, 200, 60), self.theme_path, "Ligne droite", font, lambda : self.ligne_droite(2000))
-        self.button_tourner_10 = Button(self.screen, (10, 160, 200, 60), self.theme_path, "Tourner 10", font, lambda : self.tourner(360*8))
+        self.button_ligne_droite_2 = Button(self.screen, (10, 90, 200, 60), self.theme_path, "Ligne droite 2m", font, lambda : self.ligne_droite(2000))
+        self.button_ligne_droite_1 = Button(self.screen, (10, 160, 200, 60), self.theme_path, "Ligne droite 1m", font, lambda : self.ligne_droite(1000))
+        self.button_tourner_10 = Button(self.screen, (10, 230, 200, 60), self.theme_path, "Tourner 8", font, lambda : self.tourner(360*8))
+        
+        self.button_Homing = Button(self.screen, (220, 90, 200, 60), self.theme_path, "Ligne droite 1m", font, lambda : self.homing())
         
         self.strategie = None
         self.config_strategie = None
@@ -158,6 +161,9 @@ class IHM_Robot:
             self.ETAT = 1
             self.client.send(self.client.create_message(10, "config", {"etat": 1, "equipe": self.EQUIPE}))
         self.client.send(self.client.create_message(2, "rotation", {"angle": angle*10}))
+    
+    def homing(self):
+        self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 0}))
     
     def recalage(self):
         if self.recalage_is_playing:
@@ -291,8 +297,10 @@ class IHM_Robot:
         pass
     
     def page_autres(self):
-        self.button_ligne_droite.draw()
+        self.button_ligne_droite_1.draw()
+        self.button_ligne_droite_2.draw()
         self.button_tourner_10.draw()
+        self.button_Homing.draw()
 
     def page_erreur(self):
         # Cette page affiche un message d'erreur si une erreur est survenue lors de la réception des données des batteries
@@ -519,8 +527,10 @@ class IHM_Robot:
                 elif self.PAGE == 2:
                     pass
                 elif self.PAGE == 3:
-                    self.button_ligne_droite.handle_event(event)
+                    self.button_ligne_droite_1.handle_event(event)
+                    self.button_ligne_droite_2.handle_event(event)
                     self.button_tourner_10.handle_event(event)
+                    self.button_Homing.handle_event(event)
 
             # Affichage
             self.screen.fill(self.BACKGROUND_COLOR)

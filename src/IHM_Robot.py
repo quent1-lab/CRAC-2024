@@ -133,6 +133,7 @@ class IHM_Robot:
         self.strategie = None
         self.config_strategie = None
         self.liste_aknowledge = []
+        self.text_page_play = ""
         
         with open("data/config_ordre_to_can.json", "r",encoding="utf-8") as f:
             self.config_strategie = json.load(f)
@@ -230,6 +231,15 @@ class IHM_Robot:
         self.PAGE = 5
         
         def task_play(): # Fonction pour jouer la stratégie dans un thread
+            # Démarage au Jack
+            while not self.JACK.is_pressed:
+                self.text_page_play = "Veillez insérer le Jack"
+                time.sleep(0.1)
+            time.sleep(0.2)
+            while self.JACK.is_pressed:
+                self.text_page_play = "Robot prêt à démarer le match"
+                time.sleep(0.05)
+            
             for key, action in self.strategie.items():
 
                 if not self.robot_move:

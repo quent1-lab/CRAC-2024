@@ -201,6 +201,7 @@ class ComCAN:
                 self.send(messageCan)
 
             elif message["cmd"] == "CAN":
+                logging.info(f"BusCAN : Message à envoyer : {message}")
                 data = message["data"]
                 commande = data["id"]
                 

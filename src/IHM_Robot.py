@@ -148,7 +148,7 @@ class IHM_Robot:
             self.client.add_to_send_list(self.client.create_message(1, "stop", None))
     
     def strategie_action(self, index):
-        self.client.send(self.client.create_message(2, "strategie", {"strategie": index}))
+        self.client.send(self.client.create_message(0, "strategie", {"strategie": index}))
         
         # Charger la stratégie
         with open(f"data/strategies/strategie_{index}.json", "r") as f:
@@ -158,6 +158,7 @@ class IHM_Robot:
         if self.ETAT == 0:
             self.zero_battery() # On bannit les batteries à 0V
             self.ETAT = 1
+            self.client.send(self.client.create_message(10, "config", {"etat": 1, "equipe": self.EQUIPE}))
         
         self.play_strategie()
     
@@ -239,6 +240,8 @@ class IHM_Robot:
             while self.JACK.is_pressed:
                 self.text_page_play = "Robot prêt à démarer le match"
                 time.sleep(0.05)
+            
+            self.text_page_play = "Stratégie en cours..."
             
             for key, action in self.strategie.items():
 
@@ -336,7 +339,7 @@ class IHM_Robot:
     def page_play(self):
         # Cette page affiche la stratégie en cours
         font = pygame.font.SysFont("Arial", 30)
-        draw_text_center(self.screen, "Stratégie en cours...", x=self.width//2, y=self.height//2 + 15, font=font, color=(255, 255, 255))
+        draw_text_center(self.screen, self.text_page_play, x=self.width//2, y=self.height//2 + 15, font=font, color=(255, 255, 255))
     
     def taille_auto_batterie(self):
         nb_batteries_colonne = 0

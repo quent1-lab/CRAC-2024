@@ -773,6 +773,8 @@ class IHM:
                 print("Going to position:", pos)
         elif len(self.pos_waiting_list) == 0 and not self.robot_move:
             self.robot_move = True
+            self.numero_strategie = 0
+            
             print("Fin du trajet")
 
     def save_action(self, action):
@@ -858,6 +860,11 @@ class IHM:
             # Sauvegarde de la stratégie
             with open(f"data/strategies/strategie_{numero}.json", "w") as file:
                 json.dump(strategie, file, indent=4)
+                
+            self.client_socket.add_to_send_list(self.client_socket.create_message(self.IHM_Robot, 
+                                                                                  "strategie", {"id": numero,
+                                                                                                "strategie": strategie}))              
+                
         else:
             print("Aucune stratégie à sauvegarder")
     

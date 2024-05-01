@@ -243,12 +243,12 @@ class IHM_Robot:
             
             self.text_page_play = "Stratégie en cours..."
             
-            for key, action in self.strategie.items():
-
+            for key, item in self.strategie.items():
+                
                 if not self.robot_move:
                     self.robot_move = True
 
-                    pos = (action["Coord"]["X"], action["Coord"]["Y"], int(action["Coord"]["T"]), "0")
+                    pos = (item["Coord"]["X"], item["Coord"]["Y"], int(item["Coord"]["T"]), "0")
 
                     # Envoyez la position au CAN
                     self.client.add_to_send_list(self.client.create_message(
@@ -259,7 +259,8 @@ class IHM_Robot:
                     
                     if self.strategie_is_running == False:
                         break                  
-                    logging.info("Fin de l'instruction de positionnement")
+                    
+                    action = item["Action"]
                     # Gérer les actions à effectuer
                     for key, value in action.items():
                         commande = []
@@ -287,7 +288,7 @@ class IHM_Robot:
                         logging.info(f"Commande : {commande}")
                         # Envoyer les commandes au CAN
                         for i, cmd in enumerate(commande):
-                            self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": cmd, "byte1": 0, "byte2": 0, "byte3": 0}))
+                            self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 0x1A0, "byte1": cmd, "byte2": 0, "byte3": 0}))
                             
                             while not self.robot_move and self.strategie_is_running and self.is_running:
                                 time.sleep(0.1)
@@ -474,6 +475,18 @@ class IHM_Robot:
                     if 0x11 in self.error:
                         self.error.remove(0x11)
                         self.PAGE = 0
+            
+            elif message["cmd"] == "strategie":
+                data = message["data"]
+                id = data["id"]
+                strategie = data["strategie"]
+                
+                # Vérifie si le fichier de la stratégie existe
+                path = f"data/strategies/strategie_{id}.json"
+                if not os.path.exists(path):
+                    # Enregistre la stratégie dans un fichier
+                    with open(path, "w") as f:
+                        f.write(json.dumps(strategie))
         
         except Exception as e:
             print(f"Erreur lors de la réception du message : {str(e)}")

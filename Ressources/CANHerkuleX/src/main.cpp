@@ -137,7 +137,6 @@ int main()
   {
     if (can.read(RXMsg) && (RXMsg.id == IDCARD))
     {
-      elevatorHoming();
       switch (RXMsg.data[0])
       {
       case CLOSE:
@@ -304,7 +303,7 @@ void elevatorUp(void)
 void elevatorHoming(void)
 {
   // Monte l'ascenseur jusqu'à ce qu'il atteigne le fin de course
-  while (endstop.read() == 1)
+  while (endstop.read() == 0)
   {
     stepper(20, 0, 0, 0, 1, 1);
   }

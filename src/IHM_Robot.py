@@ -163,8 +163,8 @@ class IHM_Robot:
         self.client.send(self.client.create_message(2, "rotation", {"angle": angle*10}))
     
     def homing(self):
-        #self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 0}))
-        self.client.send(self.client.create_message(2, "homing", {"id": 416, "byte1": 16}))
+        self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 16}))
+        #self.client.send(self.client.create_message(2, "homing", {"id": 416, "byte1": 16}))
     
     def recalage(self):
         if self.recalage_is_playing:

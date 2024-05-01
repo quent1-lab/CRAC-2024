@@ -117,7 +117,7 @@ class IHM_Robot:
             
         Button(self.screen, (10, 90, 200, 80), self.theme_path, "Ligne droite 2m", font, lambda : self.ligne_droite(2000)),
         Button(self.screen, (10, 180, 200, 80), self.theme_path, "Ligne droite 1m", font, lambda : self.ligne_droite(1000)),
-        Button(self.screen, (10, 230, 230, 80), self.theme_path, "Tourner 8", font, lambda : self.tourner(360*8)),
+        Button(self.screen, (10, 240, 200, 80), self.theme_path, "Tourner 8", font, lambda : self.tourner(360*8)),
         
         Button(self.screen, (250, 90, 200, 80), self.theme_path, "HOMING", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 16}))),
         Button(self.screen, (250, 180, 200, 80), self.theme_path, "UP", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 13}))),

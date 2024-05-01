@@ -117,7 +117,7 @@ class IHM_Robot:
         self.button_ligne_droite_1 = Button(self.screen, (10, 160, 200, 60), self.theme_path, "Ligne droite 1m", font, lambda : self.ligne_droite(1000))
         self.button_tourner_10 = Button(self.screen, (10, 230, 200, 60), self.theme_path, "Tourner 8", font, lambda : self.tourner(360*8))
         
-        self.button_Homing = Button(self.screen, (220, 90, 200, 60), self.theme_path, "Ligne droite 1m", font, lambda : self.homing())
+        self.button_Homing = Button(self.screen, (220, 90, 200, 60), self.theme_path, "HOMING", font, lambda : self.homing())
         
         self.strategie = None
         self.config_strategie = None

@@ -267,7 +267,6 @@ class LidarScanner:
         self.client_socket.set_callback_stop(self.stop)
         self.client_socket.connect()
         print("LIDAR  : Connecté au serveur")
-        logging.info("Connected to the server")
 
         while self.scanning:
             self.objets = []
@@ -287,6 +286,7 @@ class LidarScanner:
                 #self.lidar.disconnect()
                 #self.connexion_lidar()
                 time.sleep(2)
+                self.connexion_lidar()
                 
             except KeyboardInterrupt:
                 self.stop()

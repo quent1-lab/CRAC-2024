@@ -679,12 +679,15 @@ class IHM:
             self.ROBOT_ANGLE = coord["theta"]/10 # Angle en degrés * 10
             
         elif message["cmd"] == "points":
-            scan = message["data"]
-            scan = json.loads(scan)
-            self.new_scan = []
-            for point in scan:
-                self.new_scan.append(
-                    (point["x"], point["y"], point["dist"], point["angle"]))
+            try:
+                scan = message["data"]
+                scan = json.loads(scan)
+                self.new_scan = []
+                for point in scan:
+                    self.new_scan.append(
+                        (point["x"], point["y"], point["dist"], point["angle"]))
+            except Exception as e:
+                print("Erreur dans la réception des points", e)
                 
         elif message["cmd"] == "energie":
             energie = message["data"]
@@ -1008,15 +1011,18 @@ class IHM:
                     self.draw_point(point[0], point[1])
                     
                 self.draw_mouse_coordinates()
-
+                
                 if len(self.new_scan) > 0:
-                    new_objets = self.detect_object(self.new_scan)
+                    new_objets = self.detect_objects(self.new_scan)
+                    self.suivre_objet(new_objets, 100)
                      #self.suivre_objet(new_objets, 100)
-
+                    
                 for objet in self.objets:
-                    if objet.is_not_moving():
-                        self.objets.remove(objet)
                     self.draw_object(objet)
+                    trajectoire_actuel, trajectoire_adverse, trajectoire_evitement = self.trajectoires_anticipation(
+                        self.ROBOT, objet, 1.5, 0.1, 50)
+                    self.draw_all_trajectoires(
+                        trajectoire_actuel, trajectoire_adverse, trajectoire_evitement)
 
                 self.manager.update(1/60.0)
                 self.manager.draw_ui(self.lcd)

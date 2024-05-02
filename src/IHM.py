@@ -569,8 +569,8 @@ class IHM:
         print("Programme de simulation")
         logging.info("Starting simulation program")
         last_time = time.time()
-        self.ROBOT.x = 1500
-        self.ROBOT.y = 1000
+        self.ROBOT.x = 100
+        self.ROBOT.y = 100
 
         while True:
             keys = pygame.key.get_pressed()
@@ -647,7 +647,7 @@ class IHM:
             self.manager.draw_ui(self.lcd)
             pygame.display.update()
             self.lcd.fill(self.WHITE)
-            self.ROBOT_ANGLE += 1
+            #self.ROBOT_ANGLE += 1
 
             # Déplacement du robot virtuel avec des touches du clavier
             x = self.ROBOT.x
@@ -950,7 +950,7 @@ class IHM:
         self.client_socket.add_to_send_list(self.client_socket.create_message(self.IHM_Robot, "config", {"equipe": self.EQUIPE, "etat": self.ETAT}))
 
     def run(self):
-        #self.programme_simulation()
+        self.programme_simulation()
         
         self.client_socket.set_callback(self.receive_to_server)
         self.client_socket.set_callback_stop(self.stop)

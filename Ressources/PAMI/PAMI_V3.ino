@@ -10,7 +10,7 @@ Vl53l0x capteur2;
 
 rgb_lcd lcd;
 
-Encodeur encodeur();
+Encodeur encodeur;
 
 bool detectionCapteur1 = false;
 bool detectionCapteur2 = false;
@@ -41,8 +41,8 @@ float y = 1000;
 float theta = 0;
 int resolution = 2000;
 int reduction = 1;
-int countD = 0;
-int countG = 0;
+int32_t countD = 0;
+int32_t countG = 0;
 
 /*--------------------------- Prototype fonction -------------------------------------*/
 void avancer(float distance);
@@ -133,116 +133,21 @@ void controleMoteurGauche(int PWM)
   analogWrite(pinPWMGauche, PWM);
 }
 
-void X_Y_Theta(float x, float y, float theta)
+void odo(void *parameters)
 {
-  m_newX = x;
-  m_newY = y;
-  angle_arrive = theta;
-  m_distance = sqrt(pow(m_newX - distance_prec_X, 2) + pow(m_newY - distance_prec_Y, 2));
+  TickType_t xLastWakeTime;
+  xLastWakeTime = xTaskGetTickCount();
 
-  angle = atan2(m_newY - distance_prec_Y, m_newX - distance_prec_X);
-
-  cons_rotation = degrees(angle);
-  cons_asserv = m_distance;
-  // etat = 2;
-}
-
-void rotation()
-{
-
-  // Asservissement en rotation
-  switch (etat_Rotation)
+  while (1)
   {
-  case -1:
-    // Serial.print("etat_Rotation ");
-    // Serial.println(etat_Rotation);
-    break;
-  case 0:
-    // if (r == 0) {
-    etat_Rotation = 1;
-    delay(50);
-    codeurs.reset();
-    delay(1000);
-    Serial.println("Reset codeur effecuter");
-    delay(1000);
-    erreur_moyenne;
-    if (cons_rotation > 0)
-    {
-      cons_rotation = cons_rotation + 20.0;
-      angle_cons_droit = cons_rotation / 2.0;
-      angle_cons_gauche = -1 * angle_cons_droit;
-    }
-    if (cons_rotation < 0)
-    {
-      cons_rotation = cons_rotation - 20.0;
-      angle_cons_droit = cons_rotation / 2.0;
-      angle_cons_gauche = -1 * angle_cons_droit;
-    }
+    xSemaphoreTake(xMutex, portMAX_DELAY);
 
-    //   r = 1;
-    // }
+    encodeur.odometrie();
+    countD = encodeur.get_countD();
+    countG = encodeur.get_countG();
 
-    break;
-  case 1:
-    // Serial.println("action rot");
-    // /*
-    codeurs.read(codeurGauche, codeurDroit);
-    erreur_anglegauche = (codeurGauche * rayonRoue * 2.0 / 2048.0) - (2.0 * 3.1415 * 52.0 * angle_cons_droit / 360.0);
-    erreur_angleDroit = (codeurDroit * rayonRoue * 2.0 / 2048.0) - (2.0 * 3.1415 * 52.0 * angle_cons_gauche / 360.0);
-    erreur_moyenne = (erreur_anglegauche - erreur_angleDroit) / 2.0;
-
-    // Serial.print(" erreur_moyenne ::: ");
-    // Serial.print(erreur_moyenne);
-    // Serial.print(" Errer dRoit ::: ");
-    // Serial.print(erreur_angleDroit);
-    // Serial.print("  gauche");
-    // Serial.println(erreur_anglegauche);
-    if (cons_rotation >= 0)
-    {
-      if (erreur_moyenne < 0)
-      {
-        controleMoteurDroit(-vit_ang - (commandeComp * 255.0));
-        controleMoteurGauche(vit_ang + (commandeComp * 255.0));
-      }
-      if (erreur_moyenne > 0)
-      {
-        controleMoteurDroit(0);
-        controleMoteurGauche(0);
-        etat_Rotation = 2;
-      }
-    }
-    else
-    {
-      if (erreur_moyenne > 0)
-      {
-        controleMoteurDroit(20 + (commandeComp * 255.0));
-        controleMoteurGauche(-20 - (commandeComp * 255.0));
-      }
-      if (erreur_moyenne < 0)
-      {
-        controleMoteurDroit(0);
-        controleMoteurGauche(0);
-        etat_Rotation = 2;
-      }
-    }
-    // if ((erreur_moyenne < -2) && (erreur_moyenne > 1.5)) {
-    // }
-    // Serial.print("etat rotation ");
-    // Serial.println(etat_Rotation);
-    // Serial.print("erreur ");
-    // Serial.println(erreur_moyenne);
-    // */
-    break;
-
-  case 2:
-    controleMoteurDroit(0);
-    controleMoteurGauche(0);
-    etat_Rotation = -1;
-    etat = 3;
-    break;
-  default:
-    Serial.println("probleme");
-    break;
+    xSemaphoreGive(xMutex);
+    vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(Te));
   }
 }
 
@@ -261,8 +166,6 @@ void controle(void *parameters)
     float vbat = analogRead(mesureVbat);
     float tensionBat = (vbat / 895) * 3.3;
     tensionBat = tensionBat * (7.2 / 3.3);
-
-    encodeur.odometrie();
 
     switch (etat)
     {
@@ -322,7 +225,8 @@ void setup()
   encodeur.init(x, y, theta, rayon, entraxe, reduction, resolution);
 
   xMutex = xSemaphoreCreateMutex();                        // Create a mutex
-  xTaskCreate(controle, "Controle", 1000, NULL, 20, NULL); // Create a task
+  xTaskCreate(controle, "Controle", 4960, NULL, 20, NULL); // Create a task
+  xTaskCreate(odo, "Odo", 4960, NULL, 22, NULL); // Create a task
   delay(500);
   Serial.println("tache controle ok");
 }
@@ -349,6 +253,10 @@ void avancer(float distance)
     // Adapter la vitesse des moteurs en fonction de l'erreur
     float erreurG = pas_gauche - countG;
     float erreurD = pas_droit - countD;
+    Serial.print("D :");
+    Serial.print(erreurD);
+    Serial.print("| G :");
+    Serial.println(erreurG);
 
     // Vitesse des moteurs (Démarrage rapide et freinage adaptatif)
     float vitesseG = 60;
@@ -463,144 +371,49 @@ void aller_a(float X, float Y)
   }*/
 }
 
+// void readSensors(void *pvParameters)
+// {
+//   while (1)
+//   {
+//     xSemaphoreTake(xMutex, portMAX_DELAY); // Take the mutex before accessing I2C
 
-void deplacement(void *pvParameters)
-{
-  TickType_t xLastWakeTime;
-  xLastWakeTime = xTaskGetTickCount();
-  int i = 0;
+//     VL53L0X_RangingMeasurementData_t rangingMeasurementData1;
+//     VL53L0X_RangingMeasurementData_t rangingMeasurementData2;
+//     capteur1.performContinuousRangingMeasurement(&rangingMeasurementData1);
+//     capteur2.performContinuousRangingMeasurement(&rangingMeasurementData2);
+//     // codeurs.read(codeurGauche, codeurDroit);
+//     mesure_capteur1 = rangingMeasurementData1.RangeMilliMeter;
+//     mesure_capteur2 = rangingMeasurementData2.RangeMilliMeter;
+//     xSemaphoreGive(xMutex); // Give the mutex back after accessing I2C
 
-  while (1)
-  {
-    // xSemaphoreTake(xMutex, portMAX_DELAY);
+//     // X_Y_Theta(2000,1200,0);
 
-    // FAIS PLANTER LA TACHE
-    // int etat_TOR1 = digitalRead(TOR1);
-    // int etat_TOR2 = digitalRead(TOR2);
+//     // lcd.clear();
+//     // lcd.setCursor(0,0);
+//     // lcd.print("dist capt1: ");
+//     // lcd.print(rangingMeasurementData1.RangeMilliMeter);
+//     // lcd.setCursor(0, 1);
+//     // lcd.print("dist capt 2: ");
+//     // lcd.print(rangingMeasurementData2.RangeMilliMeter);
 
-    // float vbat = analogRead(mesureVbat);
-    // float tensionBat = (vbat / 895) * 3.3;
-    // tensionBat = tensionBat * (7.2 / 3.3);
+//     // if (rangingMeasurementData1.RangeMilliMeter >= 2000) {
+//     //   Serial.println("capteur1 out of range");
+//     // } else if (rangingMeasurementData2.RangeMilliMeter >= 2000) {
+//     //   Serial.println("capteur 2 out of range");
+//     // } else {
+//     //   Serial.print("distance capteur 1: ");
+//     //   Serial.print(rangingMeasurementData1.RangeMilliMeter);
+//     //   Serial.print(" distance capteur 2: ");
+//     //   Serial.print(rangingMeasurementData2.RangeMilliMeter);
+//     //   Serial.print(" Encodeurs: ");
+//     //   Serial.print(codeurGauche);
+//     //   Serial.print(" ");
+//     //   Serial.println(codeurDroit);
+//     // }
 
-    // lcd.clear();
-    // lcd.setRGB(255,0,0);
-    // lcd.setCursor(7, 0);
-    // lcd.print("v: ");
-    // lcd.setCursor(12, 0);
-    // lcd.print(tensionBat);
-    // //xSemaphoreGive(xMutex);
-    // lcd.setCursor(0,0);
-    // lcd.print("cpt1: ");
-    // lcd.setCursor(5,0);
-    // lcd.print(mesure_capteur1);
-    // lcd.setCursor(0,1);
-    // lcd.print("cpt2: ");
-    // lcd.setCursor(8,1);
-    // lcd.print(mesure_capteur2);
-
-    // lcd.setRGB(255,0,255);
-    // lcd.clear();
-    // lcd.print("tache 1");
-    // lcd.setCursor(0,1);
-    // lcd.print(i);
-    // lcd.setCursor(5,1);
-    // lcd.print(etat_TOR1);
-    // i++;
-    // if (i >= 100){
-    //   i=0;
-    // }
-
-    // FONCTIONNEL
-
-    // switch(dplt){
-    //   case 0:
-    //   //lcd.setRGB(255,0,0);
-    //   controleMoteurDroit(0);
-    //   controleMoteurGauche(0);
-    //   // lcd.clear();
-    //   // lcd.print("dplt 0");
-    //   // if (etat_TOR1 != TOR1_precedent) {
-    //       if (etat_TOR1 == HIGH) { //ETAT_TOR1
-    //         dplt = 1;
-    //       }
-    //     // }
-    //   break;
-    //   case 1:
-    //   controleMoteurDroit(75);
-    //   controleMoteurGauche(75);
-    //   if(mesure_capteur1 >= 2000 && mesure_capteur2 >= 2000){
-    //     dplt = 0;
-    //   }
-    //   break;
-    //  }
-
-    if (mesure_capteur1 >= 2000)
-    {
-      Serial.println("capteur1 out of range");
-    }
-    else if (mesure_capteur2 >= 2000)
-    {
-      Serial.println("capteur 2 out of range");
-    }
-    else
-    {
-      Serial.print("distance capteur 1: ");
-      Serial.print(mesure_capteur1);
-      Serial.print(" distance capteur 2: ");
-      Serial.print(mesure_capteur2);
-      Serial.print(" Encodeurs: ");
-      Serial.print(codeurGauche);
-      Serial.print(" ");
-      Serial.println(codeurDroit);
-    }
-
-    vTaskDelay(pdMS_TO_TICKS(100));
-  }
-}
-
-void readSensors(void *pvParameters)
-{
-  while (1)
-  {
-    xSemaphoreTake(xMutex, portMAX_DELAY); // Take the mutex before accessing I2C
-
-    VL53L0X_RangingMeasurementData_t rangingMeasurementData1;
-    VL53L0X_RangingMeasurementData_t rangingMeasurementData2;
-    capteur1.performContinuousRangingMeasurement(&rangingMeasurementData1);
-    capteur2.performContinuousRangingMeasurement(&rangingMeasurementData2);
-    // codeurs.read(codeurGauche, codeurDroit);
-    mesure_capteur1 = rangingMeasurementData1.RangeMilliMeter;
-    mesure_capteur2 = rangingMeasurementData2.RangeMilliMeter;
-    xSemaphoreGive(xMutex); // Give the mutex back after accessing I2C
-
-    // X_Y_Theta(2000,1200,0);
-
-    // lcd.clear();
-    // lcd.setCursor(0,0);
-    // lcd.print("dist capt1: ");
-    // lcd.print(rangingMeasurementData1.RangeMilliMeter);
-    // lcd.setCursor(0, 1);
-    // lcd.print("dist capt 2: ");
-    // lcd.print(rangingMeasurementData2.RangeMilliMeter);
-
-    // if (rangingMeasurementData1.RangeMilliMeter >= 2000) {
-    //   Serial.println("capteur1 out of range");
-    // } else if (rangingMeasurementData2.RangeMilliMeter >= 2000) {
-    //   Serial.println("capteur 2 out of range");
-    // } else {
-    //   Serial.print("distance capteur 1: ");
-    //   Serial.print(rangingMeasurementData1.RangeMilliMeter);
-    //   Serial.print(" distance capteur 2: ");
-    //   Serial.print(rangingMeasurementData2.RangeMilliMeter);
-    //   Serial.print(" Encodeurs: ");
-    //   Serial.print(codeurGauche);
-    //   Serial.print(" ");
-    //   Serial.println(codeurDroit);
-    // }
-
-    vTaskDelay(pdMS_TO_TICKS(10)); // Delay for 100ms
-  }
-}
+//     vTaskDelay(pdMS_TO_TICKS(10)); // Delay for 100ms
+//   }
+// }
 
 void loop()
 {

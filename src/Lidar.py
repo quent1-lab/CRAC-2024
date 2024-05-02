@@ -286,7 +286,6 @@ class LidarScanner:
                 #self.lidar.disconnect()
                 #self.connexion_lidar()
                 time.sleep(2)
-                self.connexion_lidar()
                 
             except KeyboardInterrupt:
                 self.stop()
@@ -307,4 +306,7 @@ if __name__ == '__main__':
     except Exception as e:
             print(f"LIDAR  : Une erreur s'est produite : {e}")
             scanner.stop()
+            time.sleep(2)
+            print("LIDAR  : Redémarrage du programme")
+            scanner.run()
     print("LIDAR  : Fin du programme")

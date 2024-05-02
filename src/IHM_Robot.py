@@ -459,7 +459,7 @@ class IHM_Robot:
                 self.ETAT = data["etat"]    
                 self.EQUIPE = data["equipe"]
                 
-                self.recalage()
+                #self.recalage()
                 
             elif message["cmd"] == "akn_m":
                 self.robot_move = False

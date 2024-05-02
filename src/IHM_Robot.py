@@ -131,7 +131,9 @@ class IHM_Robot:
             Button(self.screen, (390, 270, 150, 80), self.theme_path, "PLANT", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 3}))),
             
             Button(self.screen, (580, 90, 150, 80), self.theme_path, "COMB UP", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 4}))),
-            Button(self.screen, (580, 180, 150, 80), self.theme_path, "COMB DOWN", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 5}))),
+            Button(self.screen, (580, 180, 150, 80), self.theme_path, "COMB SHACKING", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 10}))),
+            Button(self.screen, (580, 270, 150, 80), self.theme_path, "COMB DOWN", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 5})))
+            
         ]
         
         self.strategie = None

@@ -6,6 +6,7 @@ import threading
 import time
 from batterie import Batterie
 import logging
+import gpiozero
 
 # Configuration du logger
 logging.basicConfig(filename='ihm_robot.log', level=logging.INFO, datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
@@ -13,7 +14,9 @@ logging.basicConfig(filename='ihm_robot.log', level=logging.INFO, datefmt='%d/%m
 
 class IHM_Robot:
     def __init__(self):
-        self.client = Client("127.0.0.43", 22050, 9, self.receive_to_server)
+        self.client = Client("127.0.0.9", 22050, 9, self.receive_to_server)
+        
+        self.JACK = gpiozero.Button(16, pull_up=True)
 
         self.Energie = {
             "Batterie 1": {"Tension": 0, "Courant": 0, "Switch": 0},
@@ -110,15 +113,35 @@ class IHM_Robot:
         
         for i, strategy in enumerate(liste_strategies):
             texte = strategy.split(".")[0]
-            button = Button(self.screen, (x_depart + 405 * int(nombre_strategies/6), y_depart + i * 70, 385, 60), self.theme_path, texte, font, lambda i=i: self.strategie_action(i))
+            button = Button(self.screen, (x_depart + 405 * int(nombre_strategies/6), y_depart + i * 90, 385, 80), self.theme_path, texte, font, lambda i=i: self.strategie_action(i+1))
             self.button_strategie.append(button)
+        
+        self.button_autres = [
+            Button(self.screen, (10, 90, 150, 80), self.theme_path, "Ligne droite 2m", font, lambda : self.ligne_droite(2000)),
+            Button(self.screen, (10, 180, 150, 80), self.theme_path, "Ligne droite 1m", font, lambda : self.ligne_droite(1000)),
+            Button(self.screen, (10, 270, 150, 80), self.theme_path, "Tourner 8", font, lambda : self.tourner(360*8)),
             
-        self.button_ligne_droite = Button(self.screen, (10, 90, 200, 60), self.theme_path, "Ligne droite", font, lambda : self.ligne_droite(2000))
-        self.button_tourner_10 = Button(self.screen, (10, 160, 200, 60), self.theme_path, "Tourner 10", font, lambda : self.tourner(360*8))
+            Button(self.screen, (200, 90, 150, 80), self.theme_path, "HOMING", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 6}))),
+            Button(self.screen, (200, 180, 150, 80), self.theme_path, "UP", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 7}))),
+            Button(self.screen, (200, 270, 150, 80), self.theme_path, "MID", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 8}))),
+            Button(self.screen, (200, 360, 150, 80), self.theme_path, "DOWN", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 9}))),
+            
+            Button(self.screen, (390, 90, 150, 80), self.theme_path, "CLOSE", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 1}))),
+            Button(self.screen, (390, 180, 150, 80), self.theme_path, "OPEN", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 2}))),
+            Button(self.screen, (390, 270, 150, 80), self.theme_path, "PLANT", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 3}))),
+            Button(self.screen, (390, 360, 150, 80), self.theme_path, "RESET", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 11}))),
+            
+            Button(self.screen, (580, 90, 150, 80), self.theme_path, "COMB UP", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 4}))),
+            Button(self.screen, (580, 180, 150, 80), self.theme_path, "COMB SHAKE", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 10}))),
+            Button(self.screen, (580, 270, 150, 80), self.theme_path, "COMB DOWN", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 5})))
+            
+        ]
         
         self.strategie = None
         self.config_strategie = None
         self.liste_aknowledge = []
+        self.text_page_play = ""
+        
         with open("data/config_ordre_to_can.json", "r",encoding="utf-8") as f:
             self.config_strategie = json.load(f)
         
@@ -132,7 +155,7 @@ class IHM_Robot:
             self.client.add_to_send_list(self.client.create_message(1, "stop", None))
     
     def strategie_action(self, index):
-        self.client.send(self.client.create_message(2, "strategie", {"strategie": index}))
+        self.client.send(self.client.create_message(0, "strategie", {"strategie": index}))
         
         # Charger la stratégie
         with open(f"data/strategies/strategie_{index}.json", "r") as f:
@@ -142,6 +165,7 @@ class IHM_Robot:
         if self.ETAT == 0:
             self.zero_battery() # On bannit les batteries à 0V
             self.ETAT = 1
+            self.client.send(self.client.create_message(10, "config", {"etat": 1, "equipe": self.EQUIPE}))
         
         self.play_strategie()
     
@@ -215,12 +239,23 @@ class IHM_Robot:
         self.PAGE = 5
         
         def task_play(): # Fonction pour jouer la stratégie dans un thread
-            for key, action in self.strategie.items():
-
+            # Démarage au Jack
+            while not self.JACK.is_pressed:
+                self.text_page_play = "Veillez insérer le Jack"
+                time.sleep(0.1)
+            time.sleep(0.2)
+            while self.JACK.is_pressed:
+                self.text_page_play = "Robot prêt à démarer le match"
+                time.sleep(0.05)
+            
+            self.text_page_play = "Stratégie en cours..."
+            
+            for key, item in self.strategie.items():
+                
                 if not self.robot_move:
                     self.robot_move = True
 
-                    pos = (action["Coord"]["X"], action["Coord"]["Y"], int(action["Coord"]["T"]), "0")
+                    pos = (item["Coord"]["X"], item["Coord"]["Y"], int(item["Coord"]["T"]), "0")
 
                     # Envoyez la position au CAN
                     self.client.add_to_send_list(self.client.create_message(
@@ -231,7 +266,8 @@ class IHM_Robot:
                     
                     if self.strategie_is_running == False:
                         break                  
-                    logging.info("Fin de l'instruction de positionnement")
+                    
+                    action = item["Action"]
                     # Gérer les actions à effectuer
                     for key, value in action.items():
                         commande = []
@@ -259,13 +295,13 @@ class IHM_Robot:
                         logging.info(f"Commande : {commande}")
                         # Envoyer les commandes au CAN
                         for i, cmd in enumerate(commande):
-                            self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": cmd, "byte1": 0, "byte2": 0, "byte3": 0}))
-                            
-                            while not self.robot_move and self.strategie_is_running and self.is_running:
+                            self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 0x1A0, "byte1": cmd, "byte2": 0, "byte3": 0}))
+                            time.sleep(5)
+                            """while not self.robot_move and self.strategie_is_running and self.is_running:
                                 time.sleep(0.1)
                                 if aknowledge[i] in self.liste_aknowledge:
                                     self.liste_aknowledge.remove(aknowledge[i])
-                                    break
+                                    break"""
 
             logging.info("Fin de la stratégie")
             self.strategie_is_running = False
@@ -291,9 +327,9 @@ class IHM_Robot:
         pass
     
     def page_autres(self):
-        self.button_ligne_droite.draw()
-        self.button_tourner_10.draw()
-
+        for button in self.button_autres:
+            button.draw()
+        
     def page_erreur(self):
         # Cette page affiche un message d'erreur si une erreur est survenue lors de la réception des données des batteries
         pygame.draw.rect(self.screen, (255, 0, 0), (self.width//2 - 350, 90, 700, 370), 0, 10)
@@ -311,7 +347,7 @@ class IHM_Robot:
     def page_play(self):
         # Cette page affiche la stratégie en cours
         font = pygame.font.SysFont("Arial", 30)
-        draw_text_center(self.screen, "Stratégie en cours...", x=self.width//2, y=self.height//2 + 15, font=font, color=(255, 255, 255))
+        draw_text_center(self.screen, self.text_page_play, x=self.width//2, y=self.height//2 + 15, font=font, color=(255, 255, 255))
     
     def taille_auto_batterie(self):
         nb_batteries_colonne = 0
@@ -446,6 +482,18 @@ class IHM_Robot:
                     if 0x11 in self.error:
                         self.error.remove(0x11)
                         self.PAGE = 0
+            
+            elif message["cmd"] == "strategie":
+                data = message["data"]
+                id = data["id"]
+                strategie = data["strategie"]
+                
+                # Vérifie si le fichier de la stratégie existe
+                path = f"data/strategies/strategie_{id}.json"
+                if not os.path.exists(path):
+                    # Enregistre la stratégie dans un fichier
+                    with open(path, "w") as f:
+                        f.write(json.dumps(strategie))
         
         except Exception as e:
             print(f"Erreur lors de la réception du message : {str(e)}")
@@ -519,8 +567,8 @@ class IHM_Robot:
                 elif self.PAGE == 2:
                     pass
                 elif self.PAGE == 3:
-                    self.button_ligne_droite.handle_event(event)
-                    self.button_tourner_10.handle_event(event)
+                    for button in self.button_autres:
+                        button.handle_event(event)
 
             # Affichage
             self.screen.fill(self.BACKGROUND_COLOR)

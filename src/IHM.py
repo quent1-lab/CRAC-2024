@@ -133,7 +133,7 @@ class IHM:
         x_r = self.map_value(x, 0, self.FIELD_SIZE[0], self.WINDOW_SIZE[0]-5-self.BORDER_DISTANCE*self.X_RATIO, self.BORDER_DISTANCE*self.X_RATIO+5)
         y_r = self.map_value(y, 0, self.FIELD_SIZE[1], self.BORDER_DISTANCE*self.Y_RATIO+5 ,self.WINDOW_SIZE[1]-5-self.BORDER_DISTANCE*self.Y_RATIO)
         x_r = int(x_r)
-        y_r = int(y_r)      
+        y_r = int(y_r)
         # Dessiner le robot en fonction de ses coordonnées et de son angle et de ses dimensions en rectangle
         # Créer une nouvelle surface pour le robot
         robot_surface = pygame.Surface((self.ROBOT_Dimension[0] * self.X_RATIO, self.ROBOT_Dimension[1]* self.Y_RATIO), pygame.SRCALPHA)
@@ -679,12 +679,15 @@ class IHM:
             self.ROBOT_ANGLE = coord["theta"]/10 # Angle en degrés * 10
             
         elif message["cmd"] == "points":
-            scan = message["data"]
-            scan = json.loads(scan)
-            self.new_scan = []
-            for point in scan:
-                self.new_scan.append(
-                    (point["x"], point["y"], point["dist"], point["angle"]))
+            try:
+                scan = message["data"]
+                scan = json.loads(scan)
+                self.new_scan = []
+                for point in scan:
+                    self.new_scan.append(
+                        (point["x"], point["y"], point["dist"], point["angle"]))
+            except Exception as e:
+                print("Erreur dans la réception des points", e)
                 
         elif message["cmd"] == "energie":
             energie = message["data"]
@@ -773,6 +776,8 @@ class IHM:
                 print("Going to position:", pos)
         elif len(self.pos_waiting_list) == 0 and not self.robot_move:
             self.robot_move = True
+            self.numero_strategie = 0
+            
             print("Fin du trajet")
 
     def save_action(self, action):
@@ -858,6 +863,11 @@ class IHM:
             # Sauvegarde de la stratégie
             with open(f"data/strategies/strategie_{numero}.json", "w") as file:
                 json.dump(strategie, file, indent=4)
+                
+            self.client_socket.add_to_send_list(self.client_socket.create_message(self.IHM_Robot, 
+                                                                                  "strategie", {"id": numero,
+                                                                                                "strategie": strategie}))              
+                
         else:
             print("Aucune stratégie à sauvegarder")
     
@@ -1001,15 +1011,18 @@ class IHM:
                     self.draw_point(point[0], point[1])
                     
                 self.draw_mouse_coordinates()
-
+                
                 if len(self.new_scan) > 0:
-                    new_objets = self.detect_object(self.new_scan)
+                    new_objets = self.detect_objects(self.new_scan)
+                    self.suivre_objet(new_objets, 100)
                      #self.suivre_objet(new_objets, 100)
-
+                    
                 for objet in self.objets:
-                    if objet.is_not_moving():
-                        self.objets.remove(objet)
                     self.draw_object(objet)
+                    trajectoire_actuel, trajectoire_adverse, trajectoire_evitement = self.trajectoires_anticipation(
+                        self.ROBOT, objet, 1.5, 0.1, 50)
+                    self.draw_all_trajectoires(
+                        trajectoire_actuel, trajectoire_adverse, trajectoire_evitement)
 
                 self.manager.update(1/60.0)
                 self.manager.draw_ui(self.lcd)

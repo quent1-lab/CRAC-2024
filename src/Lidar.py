@@ -39,7 +39,7 @@ class LidarScanner:
         points = []
         for point in scan:
             distance = point[2]
-            new_angle = point[1] - self.ROBOT_ANGLE
+            new_angle = point[1] - self.ROBOT_ANGLE + 180
 
             new_angle %= 360
             if new_angle < 0:
@@ -51,7 +51,7 @@ class LidarScanner:
 
                 # Vérifier si le point est en dehors du terrain de jeu
                 if self.BORDER_DISTANCE < x < self.FIELD_SIZE[0] - self.BORDER_DISTANCE and self.BORDER_DISTANCE < y < self.FIELD_SIZE[1] - self.BORDER_DISTANCE:
-                    points.append((x, y, distance, new_angle))
+                    points.append((int(x), int(y), int(distance), int(new_angle)))
         return points
 
     def get_points_in_zone(self, points, origin_distance, origin_angle):
@@ -214,16 +214,13 @@ class LidarScanner:
 
             self.lidar = RPLidar(self.port, logger=logging.getLogger('rplidar'))
             self.lidar.connect()
-            logging.info("Lidar connected")
-            print("LIDAR  : appareil connecté")
         except RPLidarException as e:
             # Code pour gérer RPLidarException
-            print(f"LIDAR  : Une erreur RPLidarException s'est produite dans le connexion : {e}")
+            logging.error(f"Failed to connect to RPLidar, retrying: {e}")
             self.lidar.stop()
             self.connexion_lidar()
         except Exception as e:
             logging.error(f"Failed to create an instance of RPLidar: {e}")
-            print("LIDAR  : Erreur lors de la création de l'instance du LiDAR")
 
             time.sleep(1)
             exit(0)
@@ -249,6 +246,9 @@ class LidarScanner:
         json = json[:-1] + "]"
         return json
 
+    def map_value(self,x, in_min, in_max, out_min, out_max):
+        return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
+
     def receive_to_server(self, message):
         if message["cmd"] == "stop":
             self.client_socket.stop()
@@ -256,7 +256,7 @@ class LidarScanner:
             if message["cmd"] == "coord":
                 coord = message["data"]
                 self.ROBOT.update_position(coord["x"], coord["y"])
-                self.ROBOT_ANGLE = coord["theta"]
+                self.ROBOT_ANGLE = coord["theta"]/10 # Angle en degrés * 10
 
     def run(self):
         
@@ -266,13 +266,11 @@ class LidarScanner:
         self.client_socket.set_callback(self.receive_to_server)
         self.client_socket.set_callback_stop(self.stop)
         self.client_socket.connect()
-        print("LIDAR  : Connecté au serveur")
-        logging.info("Connected to the server")
 
         while self.scanning:
             self.objets = []
             try:
-                
+                logging.info("Starting LiDAR scan")
                 for scan in self.lidar.iter_scans():
                     if not self.scanning:
                         break
@@ -307,4 +305,6 @@ if __name__ == '__main__':
     except Exception as e:
             print(f"LIDAR  : Une erreur s'est produite : {e}")
             scanner.stop()
+            time.sleep(2)
+            #scanner.run()
     print("LIDAR  : Fin du programme")

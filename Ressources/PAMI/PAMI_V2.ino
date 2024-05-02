@@ -2,15 +2,15 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "semphr.h"
-#include "Codeurs.h"
 #include "rgb_lcd.h"
+#include <Encodeur.h>
 
 Vl53l0x capteur1;
 Vl53l0x capteur2;
 
-Codeurs codeurs;
 rgb_lcd lcd;
 
+Encodeur encodeur();
 
 bool detectionCapteur1 = false;
 bool detectionCapteur2 = false;
@@ -22,11 +22,7 @@ SemaphoreHandle_t xMutex;
 #define BACKWARD 0x1
 #define FORWARD 0x0
 
-int _address = 0x10;
-int32_t _gauche, _droit;
-int16_t _g16, _d16;
-static const int16_t MAX = 16384;
-int32_t codeurGauche, codeurDroit;
+//static const int16_t MAX = 16384;
 int pinDirectionDroit = PA15;
 int pinPWMDroit = PA13;
 int pinDirectionGauche = PA14;
@@ -34,6 +30,22 @@ int pinPWMGauche = PA12;
 const int mesureVbat = PB3;
 const int TOR1 = 2;
 const int TOR2 = 3;
+
+
+
+/*----------------------------- Variables pour l'odométrie ------------------------------*/
+// Variables pour les compteurs des encodeurs
+float rayon = 22;
+float entraxe = 88;
+
+float x = 1500;
+float y = 1000;
+float theta = 0;
+int resolution = 298;
+int reduction = 6;
+int countD = 0;
+int countG = 0;
+
 
 int etat = 0;
 int dplt = 0;
@@ -124,8 +136,6 @@ void X_Y_Theta(float x, float y, float theta) {
   cons_asserv = m_distance;
   // etat = 2;
 }
-
-
 
 void asservissement() {
 
@@ -395,7 +405,7 @@ void setup() {
 
   lcd.begin(16, 2);
   lcd.setRGB(0, 0, 255);
-  codeurs.reset();
+
   //NE PAS OUBLIER DE METTRE INPUT_PULLUP
   pinMode(TOR1, INPUT_PULLUP);
   pinMode(TOR2, INPUT_PULLUP);
@@ -403,6 +413,8 @@ void setup() {
 
   initMoteurDroit();
   initMoteurGauche();
+
+
 
   // capteur1.begin(I2C_DEFAULT_ADDR, false);
   // delay(500);

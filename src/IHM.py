@@ -133,7 +133,7 @@ class IHM:
         x_r = self.map_value(x, 0, self.FIELD_SIZE[0], self.WINDOW_SIZE[0]-5-self.BORDER_DISTANCE*self.X_RATIO, self.BORDER_DISTANCE*self.X_RATIO+5)
         y_r = self.map_value(y, 0, self.FIELD_SIZE[1], self.BORDER_DISTANCE*self.Y_RATIO+5 ,self.WINDOW_SIZE[1]-5-self.BORDER_DISTANCE*self.Y_RATIO)
         x_r = int(x_r)
-        y_r = int(y_r)      
+        y_r = int(y_r)
         # Dessiner le robot en fonction de ses coordonnées et de son angle et de ses dimensions en rectangle
         # Créer une nouvelle surface pour le robot
         robot_surface = pygame.Surface((self.ROBOT_Dimension[0] * self.X_RATIO, self.ROBOT_Dimension[1]* self.Y_RATIO), pygame.SRCALPHA)

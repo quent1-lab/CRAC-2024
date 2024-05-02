@@ -48,6 +48,9 @@ class LidarScanner:
             if distance != 0:
                 x = distance * math.cos(math.radians(new_angle)) + self.ROBOT.x
                 y = distance * math.sin(math.radians(new_angle)) + self.ROBOT.y
+                
+                x = int(self.map_value(x, 0, 3000,0))
+                y = int(self.map_value(y, 0, 2000,0))
 
                 # Vérifier si le point est en dehors du terrain de jeu
                 if self.BORDER_DISTANCE < x < self.FIELD_SIZE[0] - self.BORDER_DISTANCE and self.BORDER_DISTANCE < y < self.FIELD_SIZE[1] - self.BORDER_DISTANCE:
@@ -248,6 +251,9 @@ class LidarScanner:
             json += f"{{\"x\": {point[0]}, \"y\": {point[1]}, \"dist\": {point[2]}, \"angle\": {point[3]}}},"
         json = json[:-1] + "]"
         return json
+
+    def map_value(self,x, in_min, in_max, out_min, out_max):
+        return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
 
     def receive_to_server(self, message):
         if message["cmd"] == "stop":

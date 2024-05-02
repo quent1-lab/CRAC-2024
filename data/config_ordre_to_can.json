@@ -1,22 +1,14 @@
 {
+    "ID": {
+        "avant": "0x1A0",
+        "arriere": "0x1A1"
+    },
     "Moteur": {
-        "id" :{
-            "avant": "0x1A0",
-            "arriere": "0x1A1"
-        },
         "ordre": {
-            "avant": {
-                "-": 0,
-                "Haut": 13,
-                "Milieu": 15,
-                "Bas": 14
-            },
-            "arriere": {
-                "-": 0,
-                "Haut": 13,
-                "Milieu": 15,
-                "Bas": 14
-            }
+            "-": 0,
+            "Haut": 13,
+            "Milieu": 15,
+            "Bas": 14
         },
         "aknowledge": {
             "avant": 901,
@@ -24,24 +16,12 @@
         }
     },
     "HerkuleX": {
-        "id" :{
-            "avant": "0x1A0",
-            "arriere": "0x1A1"
-        },
         "Peigne": {
             "ordre": {
-                "avant": {
-                    "-": 0,
-                    "Lever": 7,
-                    "Milieu": 0,
-                    "Baisser": 8
-                },
-                "arriere": {
-                    "-": 0,
-                    "Lever": 7,
-                    "Milieu": 0,
-                    "Baisser": 8
-                }
+                "-": 0,
+                "Lever": 7,
+                "Milieu": 0,
+                "Baisser": 8
             },
             "aknowledge": {
                 "avant": 903,
@@ -51,22 +31,12 @@
         "Pinces": {
             "droite": {
                 "ordre": {
-                    "avant": {
-                        "-": 0,
-                        "Max": 0,
-                        "Ouvert": 3,
-                        "Milieu": 5,
-                        "Ferme": 1,
-                        "Min": 0
-                    },
-                    "arriere": {
-                        "-": 0,
-                        "Max": 0,
-                        "Ouvert": 3,
-                        "Milieu": 5,
-                        "Ferme": 1,
-                        "Min": 0
-                    }
+                    "-": 0,
+                    "Max": 0,
+                    "Ouvert": 3,
+                    "Milieu": 5,
+                    "Ferme": 1,
+                    "Min": 0
                 },
                 "aknowledge": {
                     "avant": 905,
@@ -75,22 +45,12 @@
             },
             "gauche": {
                 "ordre": {
-                    "avant": {
-                        "-": 0,
-                        "Max": 0,
-                        "Ouvert": 0,
-                        "Milieu": 0,
-                        "Ferme": 0,
-                        "Min": 0
-                    },
-                    "arriere": {
-                        "-": 0,
-                        "Max": 0,
-                        "Ouvert": 0,
-                        "Milieu": 0,
-                        "Ferme": 0,
-                        "Min": 0
-                    }
+                    "-": 0,
+                    "Max": 0,
+                    "Ouvert": 0,
+                    "Milieu": 0,
+                    "Ferme": 0,
+                    "Min": 0
                 },
                 "aknowledge": {
                     "avant": 907,
@@ -108,24 +68,20 @@
                 "Min": 0
             },
             "aknowledge": 909
-        }        
+        }
     },
     "Action_special": {
         "-": 0,
-        "Vibrer" :{
-            "ordre": {
-                "avant": {
-                    "ok": 0
-                },
-                "arriere": {
-                    "ok": 0
-                }
-            },
-            "aknowledge": 910
+        "Vibrer": {
+            "ordre": 0,
+            "aknowledge": {
+                "avant": 910,
+                "arriere": 911
+            }
         }
     },
-    "Recalage" :{
-        "id" : "0x24",
+    "Recalage": {
+        "id": "0x24",
         "ordre": {
             "-": 0,
             "X": 0,

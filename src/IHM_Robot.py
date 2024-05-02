@@ -428,7 +428,7 @@ class IHM_Robot:
                         nb_tentatives += 1
                         temps = 0
                     
-                    if nb_tentatives > 1: # On a essayé 1 fois de recevoir les données, on affiche un message d'erreur
+                    if nb_tentatives >= 1: # On a essayé 1 fois de recevoir les données, on affiche un message d'erreur
                         if 0x10 not in self.error:
                             self.error.append(0x10)
                             for batterie in self.batteries:

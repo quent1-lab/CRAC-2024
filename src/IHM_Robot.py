@@ -121,13 +121,14 @@ class IHM_Robot:
             Button(self.screen, (10, 180, 200, 80), self.theme_path, "Ligne droite 1m", font, lambda : self.ligne_droite(1000)),
             Button(self.screen, (10, 270, 200, 80), self.theme_path, "Tourner 8", font, lambda : self.tourner(360*8)),
             
-            Button(self.screen, (250, 90, 200, 80), self.theme_path, "HOMING", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 16}))),
-            Button(self.screen, (250, 180, 200, 80), self.theme_path, "UP", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 13}))),
-            Button(self.screen, (250, 270, 200, 80), self.theme_path, "DOWN", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 14}))),
+            Button(self.screen, (250, 90, 200, 80), self.theme_path, "HOMING", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 6}))),
+            Button(self.screen, (250, 180, 200, 80), self.theme_path, "UP", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 7}))),
+            Button(self.screen, (250, 270, 200, 80), self.theme_path, "MID", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 8}))),
+            Button(self.screen, (250, 360, 200, 80), self.theme_path, "DOWN", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 9}))),
             
             Button(self.screen, (490, 90, 200, 80), self.theme_path, "CLOSE", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 1}))),
-            Button(self.screen, (490, 180, 200, 80), self.theme_path, "OPEN", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 3}))),
-            Button(self.screen, (490, 270, 200, 80), self.theme_path, "PLANT", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 5})))
+            Button(self.screen, (490, 180, 200, 80), self.theme_path, "OPEN", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 2}))),
+            Button(self.screen, (490, 270, 200, 80), self.theme_path, "PLANT", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 3})))
         ]
         
         self.strategie = None

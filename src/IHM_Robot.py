@@ -240,11 +240,11 @@ class IHM_Robot:
         
         def task_play(): # Fonction pour jouer la stratégie dans un thread
             # Démarage au Jack
-            while self.JACK.is_pressed:
+            while self.JACK.is_not_pressed:
                 self.text_page_play = "Veillez insérer le Jack"
                 time.sleep(0.1)
             time.sleep(0.2)
-            while not self.JACK.is_pressed:
+            while self.JACK.is_pressed:
                 self.text_page_play = "Robot prêt à démarer le match"
                 time.sleep(0.05)
             
@@ -256,7 +256,7 @@ class IHM_Robot:
                     self.robot_move = True
 
                     pos = (item["Coord"]["X"], item["Coord"]["Y"], int(item["Coord"]["T"]), "0")
-
+                    logging.info(f"Position : {pos}")
                     # Envoyez la position au CAN
                     self.client.add_to_send_list(self.client.create_message(
                         2, "clic", {"x": pos[0], "y": pos[1], "theta": pos[2], "sens": pos[3]}))
@@ -267,7 +267,7 @@ class IHM_Robot:
                     if self.strategie_is_running == False:
                         logging.info("Arrêt de la stratégie")
                         break                  
-                    logging.info(f"Position : {pos}")
+                    logging.info(f"Position {pos} atteinte")
                     action = item["Action"]
                     logging.info(f"Action : {action}")
                     # Gérer les actions à effectuer
@@ -423,12 +423,12 @@ class IHM_Robot:
                         break
                     time.sleep(0.05)
                     temps += 0.05
-                    if temps > 2:
+                    if temps > 1:
                         self.client.send(self.client.create_message(2, "CAN", {"id": commande_energie[index][0], "byte1": commande_energie[index][1], "byte2": commande_energie[index][2], "byte3": commande_energie[index][3]}))
                         nb_tentatives += 1
                         temps = 0
                     
-                    if nb_tentatives >= 1: # On a essayé 1 fois de recevoir les données, on affiche un message d'erreur
+                    if nb_tentatives > 1: # On a essayé 1 fois de recevoir les données, on affiche un message d'erreur
                         if 0x10 not in self.error:
                             self.error.append(0x10)
                             for batterie in self.batteries:

@@ -44,6 +44,10 @@ int reduction = 1;
 int countD = 0;
 int countG = 0;
 
+/*--------------------------- Prototype fonction -------------------------------------*/
+void avancer(float distance);
+void rotation(float angle);
+
 int etat = 0;
 int dplt = 0;
 
@@ -342,6 +346,8 @@ void controle(void *parameters)
     float tensionBat = (vbat / 895) * 3.3;
     tensionBat = tensionBat * (7.2 / 3.3);
 
+    encodeur.odometrie();
+
     switch (etat)
     {
     case 0:
@@ -416,6 +422,48 @@ void setup()
   xTaskCreate(controle, "Controle", 1000, NULL, 20, NULL); // Create a task
   delay(500);
   Serial.println("tache controle ok");
+}
+
+void avancer(float distance)
+{
+  /*
+    Input : distance : distance à parcourir en cm (float)
+    Output : none
+    Description:  Cette fonction permet de faire avancer le robot d'une certaine distance
+                  Un asservissement en pas est utilisé pour avancer droit
+  */
+
+  // Calcul de la distance totale à parcourir par chaque roue
+  float nbr_pas_a_parcourir = distance / (2 * PI * rayon) * encodeur.get_resolution() * encodeur.get_reduction();
+
+  // Asservissement en pas pour chaque roue
+  int pas_gauche = countG + nbr_pas_a_parcourir;
+  int pas_droit = countD + nbr_pas_a_parcourir;
+
+  // Asservissement en pas pour chaque roue
+  while (countG < pas_gauche && countD < pas_droit)
+  {
+    // Adapter la vitesse des moteurs en fonction de l'erreur
+    float erreurG = pas_gauche - countG;
+    float erreurD = pas_droit - countD;
+
+    // Vitesse des moteurs (Démarrage rapide et freinage adaptatif)
+    float vitesseG = 60;
+    float vitesseD = 60;
+    if (erreurG <= 0)
+    {
+      vitesseG = 2; // Valeur non nulle pour bloquer le moteur
+    }
+    if (erreurD <= 0)
+    {
+      vitesseD = 2;
+    }
+
+    controleMoteurGauche(PWM);
+    controleMoteurDroit(PWM);
+  }
+  moteurGauche.setVitesse(2);
+  moteurDroit.setVitesse(2);
 }
 
 void deplacement(void *pvParameters)

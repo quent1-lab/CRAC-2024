@@ -129,6 +129,7 @@ class IHM_Robot:
             Button(self.screen, (390, 90, 150, 80), self.theme_path, "CLOSE", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 1}))),
             Button(self.screen, (390, 180, 150, 80), self.theme_path, "OPEN", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 2}))),
             Button(self.screen, (390, 270, 150, 80), self.theme_path, "PLANT", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 3}))),
+            Button(self.screen, (390, 360, 150, 80), self.theme_path, "CLEAR", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 11}))),
             
             Button(self.screen, (580, 90, 150, 80), self.theme_path, "COMB UP", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 4}))),
             Button(self.screen, (580, 180, 150, 80), self.theme_path, "COMB SHAKE", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 10}))),

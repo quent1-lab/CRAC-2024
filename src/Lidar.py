@@ -51,7 +51,7 @@ class LidarScanner:
 
                 # Vérifier si le point est en dehors du terrain de jeu
                 if self.BORDER_DISTANCE < x < self.FIELD_SIZE[0] - self.BORDER_DISTANCE and self.BORDER_DISTANCE < y < self.FIELD_SIZE[1] - self.BORDER_DISTANCE:
-                    points.append((x, y, distance, new_angle))
+                    points.append((int(x), int(y), int(distance), int(new_angle)))
         return points
 
     def get_points_in_zone(self, points, origin_distance, origin_angle):
@@ -276,11 +276,8 @@ class LidarScanner:
                 for scan in self.lidar.iter_scans():
                     if not self.scanning:
                         break
-                    print("LIDAR  : Scan en cours")
                     new_scan = self.transform_scan(scan)
-                    print("LIDAR  : Scan terminé", new_scan[0])
                     self.client_socket.add_to_send_list(self.client_socket.create_message(10, "points", self.generate_JSON_Points(new_scan)))
-                    print("LIDAR  : Envoi des points au serveur", new_scan[0])
                     #self.detect_object(new_scan)
                     #self.client_socket.add_to_send_list(self.client_socket.create_message(10, "objects", self.generate_JSON_Objets()))
             except RPLidarException as e:

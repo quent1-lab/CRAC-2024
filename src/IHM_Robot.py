@@ -14,7 +14,7 @@ logging.basicConfig(filename='ihm_robot.log', level=logging.INFO, datefmt='%d/%m
 
 class IHM_Robot:
     def __init__(self):
-        self.client = Client("127.0.0.43", 22050, 9, self.receive_to_server)
+        self.client = Client("127.0.0.9", 22050, 9, self.receive_to_server)
         
         self.JACK = gpiozero.Button(16, pull_up=True)
 
@@ -290,11 +290,11 @@ class IHM_Robot:
                         for i, cmd in enumerate(commande):
                             self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 0x1A0, "byte1": cmd, "byte2": 0, "byte3": 0}))
                             
-                            while not self.robot_move and self.strategie_is_running and self.is_running:
+                            """while not self.robot_move and self.strategie_is_running and self.is_running:
                                 time.sleep(0.1)
                                 if aknowledge[i] in self.liste_aknowledge:
                                     self.liste_aknowledge.remove(aknowledge[i])
-                                    break
+                                    break"""
 
             logging.info("Fin de la stratégie")
             self.strategie_is_running = False

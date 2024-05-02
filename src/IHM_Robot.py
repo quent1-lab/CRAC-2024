@@ -289,7 +289,7 @@ class IHM_Robot:
                         # Envoyer les commandes au CAN
                         for i, cmd in enumerate(commande):
                             self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 0x1A0, "byte1": cmd, "byte2": 0, "byte3": 0}))
-                            
+                            time.sleep(5)
                             """while not self.robot_move and self.strategie_is_running and self.is_running:
                                 time.sleep(0.1)
                                 if aknowledge[i] in self.liste_aknowledge:

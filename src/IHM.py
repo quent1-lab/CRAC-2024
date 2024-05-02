@@ -944,8 +944,8 @@ class IHM:
         for i, rect in enumerate(start_positions):
             color = (0, 255, 0) if i == self.zone_depart else (255, 255, 255)
             pygame.draw.rect(self.lcd, color, rect, 10)
-
-    def start_match(self):
+ 
+    def start_match(self):# Démarre le match
         self.ETAT = 1
         self.client_socket.add_to_send_list(self.client_socket.create_message(self.IHM_Robot, "config", {"equipe": self.EQUIPE, "etat": self.ETAT}))
 

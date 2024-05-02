@@ -247,6 +247,8 @@ class IHM_Robot:
             while self.JACK.is_pressed:
                 self.text_page_play = "Robot prêt à démarer le match"
                 time.sleep(0.05)
+                
+            self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 11}))
             
             self.text_page_play = "Stratégie en cours..."
             

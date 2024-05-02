@@ -240,11 +240,11 @@ class IHM_Robot:
         
         def task_play(): # Fonction pour jouer la stratégie dans un thread
             # Démarage au Jack
-            while not self.JACK.is_pressed:
+            while self.JACK.is_pressed:
                 self.text_page_play = "Veillez insérer le Jack"
                 time.sleep(0.1)
             time.sleep(0.2)
-            while self.JACK.is_pressed:
+            while not self.JACK.is_pressed:
                 self.text_page_play = "Robot prêt à démarer le match"
                 time.sleep(0.05)
             
@@ -265,9 +265,11 @@ class IHM_Robot:
                         time.sleep(0.1)
                     
                     if self.strategie_is_running == False:
+                        logging.info("Arrêt de la stratégie")
                         break                  
-                    
+                    logging.info(f"Position : {pos}")
                     action = item["Action"]
+                    logging.info(f"Action : {action}")
                     # Gérer les actions à effectuer
                     for key, value in action.items():
                         commande = []
@@ -281,12 +283,12 @@ class IHM_Robot:
                                 if key2 == "Peigne":
                                     for ordre, cmd in action["HerkuleX"]["Peigne"]["ordre"].items():
                                         commande.append(self.config_strategie["HerkuleX"]["Peigne"]["ordre"][ordre][cmd])
-                                        aknowledge.append(self.config_strategie["HerkuleX"]["Peigne"]["aknowledge"][ordre])
+                                    #aknowledge.append(self.config_strategie["HerkuleX"]["Peigne"]["aknowledge"][ordre])
                                 elif key2 == "Pinces":
                                     for cote, value3 in action["HerkuleX"]["Pinces"].items():
-                                        for ordre, cmd in action["HerkuleX"]["Pinces"][cote]["ordre"].items():
-                                            commande.append(self.config_strategie["HerkuleX"]["Pinces"][cote]["ordre"][cmd])
-                                            aknowledge.append(self.config_strategie["HerkuleX"]["Pinces"][cote]["aknowledge"])
+                                        for ordre, cmd in value3["ordre"].items():
+                                            commande.append(self.config_strategie["HerkuleX"]["Pinces"]["Gauche"]["ordre"][ordre][cmd])
+                                            #aknowledge.append(self.config_strategie["HerkuleX"]["Pinces"]["Gauche"]["aknowledge"][ordre])
                                 elif key2 == "Bras":
                                     for ordre, cmd in action["HerkuleX"]["Bras"]["ordre"].items():
                                         commande.append(self.config_strategie["HerkuleX"]["Bras"]["ordre"][ordre][cmd])

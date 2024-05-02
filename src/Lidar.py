@@ -272,11 +272,13 @@ class LidarScanner:
         while self.scanning:
             self.objets = []
             try:
-                
+                print("LIDAR  : Début du scan")
                 for scan in self.lidar.iter_scans():
                     if not self.scanning:
                         break
+                    print("LIDAR  : Scan en cours")
                     new_scan = self.transform_scan(scan)
+                    print("LIDAR  : Scan terminé", new_scan[0])
                     self.client_socket.add_to_send_list(self.client_socket.create_message(10, "points", self.generate_JSON_Points(new_scan)))
                     print("LIDAR  : Envoi des points au serveur", new_scan[0])
                     #self.detect_object(new_scan)

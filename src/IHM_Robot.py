@@ -268,6 +268,7 @@ class IHM_Robot:
                         break                  
                     
                     action = item["Action"]
+                    logging.info(f"Action : {action}")
                     # Gérer les actions à effectuer
                     for key, value in action.items():
                         commande = []
@@ -281,12 +282,12 @@ class IHM_Robot:
                                 if key2 == "Peigne":
                                     for ordre, cmd in action["HerkuleX"]["Peigne"]["ordre"].items():
                                         commande.append(self.config_strategie["HerkuleX"]["Peigne"]["ordre"][ordre][cmd])
-                                        aknowledge.append(self.config_strategie["HerkuleX"]["Peigne"]["aknowledge"][ordre])
+                                    #aknowledge.append(self.config_strategie["HerkuleX"]["Peigne"]["aknowledge"][ordre])
                                 elif key2 == "Pinces":
                                     for cote, value3 in action["HerkuleX"]["Pinces"].items():
-                                        for ordre, cmd in action["HerkuleX"]["Pinces"][cote]["ordre"].items():
-                                            commande.append(self.config_strategie["HerkuleX"]["Pinces"][cote]["ordre"][cmd])
-                                            aknowledge.append(self.config_strategie["HerkuleX"]["Pinces"][cote]["aknowledge"])
+                                        for ordre, cmd in value3["ordre"].items():
+                                            commande.append(self.config_strategie["HerkuleX"]["Pinces"]["Gauche"]["ordre"][ordre][cmd])
+                                            #aknowledge.append(self.config_strategie["HerkuleX"]["Pinces"]["Gauche"]["aknowledge"][ordre])
                                 elif key2 == "Bras":
                                     for ordre, cmd in action["HerkuleX"]["Bras"]["ordre"].items():
                                         commande.append(self.config_strategie["HerkuleX"]["Bras"]["ordre"][ordre][cmd])

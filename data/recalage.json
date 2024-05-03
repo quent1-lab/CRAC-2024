@@ -5,14 +5,14 @@
             "ordre": {
                 "distance": -300,
                 "mode": 1,
-                "recalage": 132
+                "recalage": 134.5
             }
         },
         "bleu": {
             "ordre": {
                 "distance": -300,
                 "mode": 1,
-                "recalage": 132
+                "recalage": 134.5
             }
         },
         "aknowledge": 273
@@ -21,14 +21,14 @@
         "id": 0,
         "jaune": {
             "ordre": {
-                "distance": -93,
+                "distance": 90.5,
                 "mode": 0,
                 "recalage": 0
             }
         },
         "bleu": {
             "ordre": {
-                "distance": -93,
+                "distance": 90.5,
                 "mode": 0,
                 "recalage": 0
             }
@@ -39,12 +39,12 @@
         "id": 0,
         "jaune": {
             "ordre": {
-                "theta": 90
+                "theta": -90
             }
         },
         "bleu": {
             "ordre": {
-                "theta": -90
+                "theta": 90
             }
         },
         "aknowledge": 278
@@ -53,16 +53,16 @@
         "id": 0,
         "jaune": {
             "ordre": {
-                "distance": 300,
+                "distance": -300,
                 "mode": 2,
-                "recalage": 234.5
+                "recalage": 134.5
             }
         },
         "bleu": {
             "ordre": {
-                "distance": 300,
+                "distance": -300,
                 "mode": 2,
-                "recalage": 234.5
+                "recalage": 134.5
             }
         },
         "aknowledge": 273
@@ -71,14 +71,14 @@
         "id": 0,
         "jaune": {
             "ordre": {
-                "distance": -90.5,
+                "distance": 90.5,
                 "mode": 0,
                 "recalage": 0
             }
         },
         "bleu": {
             "ordre": {
-                "distance": -90.5,
+                "distance": 90.5,
                 "mode": 0,
                 "recalage": 0
             }

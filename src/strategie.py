@@ -98,8 +98,10 @@ class Strategie:
             for key, act in action.items():
                 self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": act["id"], "byte1": act["ordre"]}))
                 
-                while act["akn"] not in self.liste_aknowledge and self.strategie_is_running:
-                    time.sleep(0.1)
+                """while act["akn"] not in self.liste_aknowledge and self.strategie_is_running:
+                    time.sleep(0.1)"""
+                
+                time.sleep(3)
             
             if self.strategie_is_running == False:
                 logging.info("Arrêt de la stratégie")

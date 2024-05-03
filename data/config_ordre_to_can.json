@@ -15,9 +15,9 @@
     "Moteur": {
         "ordre": {
             "-": 0,
-            "Haut": 13,
-            "Milieu": 15,
-            "Bas": 14
+            "Haut": 7,
+            "Milieu": 8,
+            "Bas": 9
         },
         "aknowledge": {
             "avant": 901,
@@ -28,9 +28,9 @@
         "Peigne": {
             "ordre": {
                 "-": 0,
-                "Lever": 7,
-                "Milieu": 0,
-                "Baisser": 8
+                "Lever": 4,
+                "Prendre": 12,
+                "Déposer": 13
             },
             "aknowledge": {
                 "avant": 903,
@@ -42,8 +42,8 @@
                 "ordre": {
                     "-": 0,
                     "Max": 0,
-                    "Ouvert": 3,
-                    "Milieu": 5,
+                    "Ouvert": 2,
+                    "Plante": 3,
                     "Ferme": 1,
                     "Min": 0
                 },
@@ -56,9 +56,9 @@
                 "ordre": {
                     "-": 0,
                     "Max": 0,
-                    "Ouvert": 0,
-                    "Milieu": 0,
-                    "Ferme": 0,
+                    "Ouvert": 2,
+                    "Plante": 3,
+                    "Ferme": 4,
                     "Min": 0
                 },
                 "aknowledge": {
@@ -71,9 +71,9 @@
             "ordre": {
                 "-": 0,
                 "Max": 0,
-                "Haut": 0,
-                "Milieu": 0,
-                "Bas": 0,
+                "Ouvert": 2,
+                "Plante": 3,
+                "Ferme": 4,
                 "Min": 0
             },
             "aknowledge": 909

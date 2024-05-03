@@ -54,7 +54,7 @@ class Strategie:
                     logging.info(f"STRAT : Acquittement reçu : {data['id']}")
                 
             elif message["cmd"] == "ARU":
-                pass
+                self.strategie_is_running = False
         
         except Exception as e:
             print(f"Erreur lors de la réception du message : {str(e)}")

@@ -673,7 +673,7 @@ class IHM_Robot:
                 pygame.display.flip()
                 self.clock.tick(30)
             except Exception as e:
-                print(f"Erreur : {str(e)}")
+                logging.error(f"Erreur : {str(e)}")
         pygame.quit()
 
 if __name__ == "__main__":

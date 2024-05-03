@@ -1,80 +1,134 @@
 {
     "1": {
-        "Coord": {
-            "X": 766,
-            "Y": 485,
-            "T": 308,
-            "S": "0"
-        },
-        "Action": {
-            "HerkuleX": {
-                "Pinces": {
-                    "droite": {
-                        "ordre": {
-                            "avant": "Ouvert"
-                        },
-                        "deplacement": {
-                            "avant": false
-                        }
-                    },
-                    "gauche": {
-                        "ordre": {
-                            "avant": "Ouvert"
-                        },
-                        "deplacement": {
-                            "avant": false
-                        }
-                    }
-                }
+        "D\u00e9placement": {
+            "Coord": {
+                "X": 809,
+                "Y": 523,
+                "T": 270,
+                "S": "0"
             }
-        }
+        },
+        "Action": {},
+        "Sp\u00e9cial": {}
     },
     "2": {
-        "Coord": {
-            "X": 1066,
-            "Y": 778,
-            "T": 443,
-            "S": "0"
-        },
-        "Action": {}
-    },
-    "3": {
-        "Coord": {
-            "X": 1066,
-            "Y": 942,
-            "T": 900,
-            "S": "0"
+        "D\u00e9placement": {
+            "Coord": {
+                "X": 856,
+                "Y": 561,
+                "T": 389,
+                "S": "0"
+            }
         },
         "Action": {
-            "HerkuleX": {
-                "Pinces": {
-                    "gauche": {
-                        "ordre": {
-                            "avant": "Ferme"
-                        },
-                        "deplacement": {
-                            "avant": false
-                        }
-                    },
-                    "droite": {
-                        "ordre": {
-                            "avant": "Ferme"
-                        },
-                        "deplacement": {
-                            "avant": false
-                        }
-                    }
-                }
+            "_PG_av": {
+                "id": "0x1A0",
+                "en_mvt": false,
+                "ordre": 0,
+                "akn": 907,
+                "str": "Ouvert"
+            },
+            "_PD_av": {
+                "id": "0x1A0",
+                "en_mvt": false,
+                "ordre": 3,
+                "akn": 905,
+                "str": "Ouvert"
             }
-        }
+        },
+        "Sp\u00e9cial": {}
+    },
+    "3": {
+        "D\u00e9placement": {
+            "Coord": {
+                "X": 1103,
+                "Y": 825,
+                "T": 469,
+                "S": "0"
+            }
+        },
+        "Action": {
+            "_PG_av": {
+                "id": "0x1A0",
+                "en_mvt": false,
+                "ordre": 0,
+                "akn": 907,
+                "str": "Milieu"
+            },
+            "_PD_av": {
+                "id": "0x1A0",
+                "en_mvt": false,
+                "ordre": 5,
+                "akn": 905,
+                "str": "Milieu"
+            }
+        },
+        "Sp\u00e9cial": {}
     },
     "4": {
-        "Coord": {
-            "X": 325,
-            "Y": 1671,
-            "T": 1800,
-            "S": "0"
+        "D\u00e9placement": {
+            "Coord": {
+                "X": 1100,
+                "Y": 1000,
+                "T": 2700,
+                "S": "0"
+            }
         },
-        "Action": {}
+        "Action": {
+            "_PG_ar": {
+                "id": "0x1A1",
+                "en_mvt": false,
+                "ordre": 0,
+                "akn": 908,
+                "str": "Ouvert"
+            },
+            "_PD_ar": {
+                "id": "0x1A1",
+                "en_mvt": false,
+                "ordre": 3,
+                "akn": 906,
+                "str": "Ouvert"
+            }
+        },
+        "Sp\u00e9cial": {}
+    },
+    "5": {
+        "D\u00e9placement": {
+            "Coord": {
+                "X": 952,
+                "Y": 1450,
+                "T": 1082,
+                "S": "0"
+            }
+        },
+        "Action": {
+            "_PG_ar": {
+                "id": "0x1A1",
+                "en_mvt": false,
+                "ordre": 0,
+                "akn": 908,
+                "str": "Milieu"
+            },
+            "_PD_ar": {
+                "id": "0x1A1",
+                "en_mvt": false,
+                "ordre": 5,
+                "akn": 906,
+                "str": "Milieu"
+            }
+        },
+        "Sp\u00e9cial": {}
+    },
+    "6": {
+        "D\u00e9placement": {
+            "Coord": {
+                "X": 233,
+                "Y": 1774,
+                "T": 1800,
+                "S": "0"
+            }
+        },
+        "Action": {},
+        "Sp\u00e9cial": {}
     }
 }

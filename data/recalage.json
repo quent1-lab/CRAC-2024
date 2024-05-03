@@ -1,32 +1,18 @@
 {
-    "1": {
-        "id": 0,
-        "jaune": {
-            "ordre": {
-                "theta": 180
-            }
-        },
-        "bleu": {
-            "ordre": {
-                "theta": 180
-            }
-        },
-        "aknowledge": 278
-    },
     "2": {
         "id": 0,
         "jaune": {
             "ordre": {
-                "distance": 300,
+                "distance": -300,
                 "mode": 1,
-                "recalage": 0
+                "recalage": 134
             }
         },
         "bleu": {
             "ordre": {
-                "distance": 300,
+                "distance": -300,
                 "mode": 1,
-                "recalage": 0
+                "recalage": 134
             }
         },
         "aknowledge": 273
@@ -35,14 +21,14 @@
         "id": 0,
         "jaune": {
             "ordre": {
-                "distance": -100,
+                "distance": 90,
                 "mode": 0,
                 "recalage": 0
             }
         },
         "bleu": {
             "ordre": {
-                "distance": -100,
+                "distance": 90,
                 "mode": 0,
                 "recalage": 0
             }
@@ -58,7 +44,7 @@
         },
         "bleu": {
             "ordre": {
-                "theta": -90
+                "theta": 90
             }
         },
         "aknowledge": 278
@@ -67,16 +53,16 @@
         "id": 0,
         "jaune": {
             "ordre": {
-                "distance": 300,
+                "distance": -300,
                 "mode": 2,
-                "recalage": 0
+                "recalage": 134
             }
         },
         "bleu": {
             "ordre": {
-                "distance": 300,
+                "distance": -300,
                 "mode": 2,
-                "recalage": 0
+                "recalage": 134
             }
         },
         "aknowledge": 273
@@ -85,14 +71,14 @@
         "id": 0,
         "jaune": {
             "ordre": {
-                "distance": -100,
+                "distance": 90,
                 "mode": 0,
                 "recalage": 0
             }
         },
         "bleu": {
             "ordre": {
-                "distance": -100,
+                "distance": 90,
                 "mode": 0,
                 "recalage": 0
             }
@@ -103,7 +89,7 @@
         "id": 0,
         "jaune": {
             "ordre": {
-                "theta": 90
+                "theta": -90
             }
         },
         "bleu": {

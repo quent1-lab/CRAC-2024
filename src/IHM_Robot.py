@@ -7,6 +7,7 @@ import time
 from batterie import Batterie
 import logging
 import gpiozero
+from strategie import Strategie
 
 # Configuration du logger
 logging.basicConfig(filename='ihm_robot.log', level=logging.INFO, datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
@@ -113,7 +114,7 @@ class IHM_Robot:
         
         for i, strategy in enumerate(liste_strategies):
             texte = strategy.split(".")[0]
-            button = Button(self.screen, (x_depart + 405 * int(nombre_strategies/6), y_depart + i * 90, 385, 80), self.theme_path, texte, font, lambda i=i: self.strategie_action(i+1))
+            button = Button(self.screen, (x_depart + 405 * int(nombre_strategies/4), y_depart + i * 90, 385, 80), self.theme_path, texte, font, lambda i=i: self.strategie_action(i+1))
             self.button_strategie.append(button)
         
         self.button_autres = [
@@ -127,19 +128,19 @@ class IHM_Robot:
             Button(self.screen, (10, 180, 150, 80), self.theme_path, "Ligne droite 1m", font, lambda : self.ligne_droite(1000)),
             Button(self.screen, (10, 270, 150, 80), self.theme_path, "Tourner 8", font, lambda : self.tourner(360*8)),
             
-            Button(self.screen, (200, 90, 150, 80), self.theme_path, "HOMING", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 6}))),
-            Button(self.screen, (200, 180, 150, 80), self.theme_path, "UP", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 7}))),
-            Button(self.screen, (200, 270, 150, 80), self.theme_path, "MID", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 8}))),
-            Button(self.screen, (200, 360, 150, 80), self.theme_path, "DOWN", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 9}))),
+            Button(self.screen, (200, 90, 150, 80), self.theme_path, "HOMING", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 416, "byte1": 6}))),
+            Button(self.screen, (200, 180, 150, 80), self.theme_path, "UP", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 416, "byte1": 7}))),
+            Button(self.screen, (200, 270, 150, 80), self.theme_path, "MID", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 416, "byte1": 8}))),
+            Button(self.screen, (200, 360, 150, 80), self.theme_path, "DOWN", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 416, "byte1": 9}))),
             
-            Button(self.screen, (390, 90, 150, 80), self.theme_path, "CLOSE", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 1}))),
-            Button(self.screen, (390, 180, 150, 80), self.theme_path, "OPEN", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 2}))),
-            Button(self.screen, (390, 270, 150, 80), self.theme_path, "PLANT", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 3}))),
-            Button(self.screen, (390, 360, 150, 80), self.theme_path, "RESET", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 11}))),
+            Button(self.screen, (390, 90, 150, 80), self.theme_path, "CLOSE", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 416, "byte1": 1}))),
+            Button(self.screen, (390, 180, 150, 80), self.theme_path, "OPEN", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 416, "byte1": 2}))),
+            Button(self.screen, (390, 270, 150, 80), self.theme_path, "PLANT", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 416, "byte1": 3}))),
+            Button(self.screen, (390, 360, 150, 80), self.theme_path, "RESET", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 416, "byte1": 11}))),
             
-            Button(self.screen, (580, 90, 150, 80), self.theme_path, "COMB UP", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 4}))),
-            Button(self.screen, (580, 180, 150, 80), self.theme_path, "COMB SHAKE", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 10}))),
-            Button(self.screen, (580, 270, 150, 80), self.theme_path, "COMB DOWN", font, lambda : self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 5})))
+            Button(self.screen, (580, 90, 150, 80), self.theme_path, "COMB UP", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 416, "byte1": 4}))),
+            Button(self.screen, (580, 180, 150, 80), self.theme_path, "COMB SHAKE", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 416, "byte1": 10}))),
+            Button(self.screen, (580, 270, 150, 80), self.theme_path, "COMB DOWN", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 416, "byte1": 5})))
             
         ]
         
@@ -165,7 +166,7 @@ class IHM_Robot:
             self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 11}))
     
     def strategie_action(self, index):
-        self.client.send(self.client.create_message(0, "strategie", {"strategie": index}))
+        self.client.add_to_send_list(self.client.create_message(0, "strategie", {"strategie": index}))
         
         # Charger la stratégie
         with open(f"data/strategies/strategie_{index}.json", "r") as f:
@@ -175,32 +176,19 @@ class IHM_Robot:
         if self.ETAT == 0:
             self.zero_battery() # On bannit les batteries à 0V
             self.ETAT = 1
-            self.client.send(self.client.create_message(10, "config", {"etat": 1, "equipe": self.EQUIPE}))
+            self.client.add_to_send_list(self.client.create_message(10, "config", {"etat": 1, "equipe": self.EQUIPE}))
         
-        self.play_strategie()
+        self.play_strategie(index)
     
     def ligne_droite(self, distance):
-        if self.ETAT == 0:
-            self.zero_battery()
-            self.ETAT = 1
-            self.client.send(self.client.create_message(10, "config", {"etat": 1, "equipe": self.EQUIPE}))
-        self.client.send(self.client.create_message(2, "deplacement", {"distance": distance}))
+        self.client.add_to_send_list(self.client.create_message(2, "deplacement", {"distance": distance}))
     
     def tourner(self, angle):
-        if self.ETAT == 0:
-            self.zero_battery()
-            self.ETAT = 1
-            self.client.send(self.client.create_message(10, "config", {"etat": 1, "equipe": self.EQUIPE}))
-        self.client.send(self.client.create_message(2, "rotation", {"angle": angle*10}))
+        self.client.add_to_send_list(self.client.create_message(2, "rotation", {"angle": angle*10}))
     
     def recalage(self):
         if self.recalage_is_playing:
             return
-        
-        if self.ETAT == 0:
-            self.zero_battery()
-            self.ETAT = 1
-            self.client.send(self.client.create_message(10, "config", {"etat": 1, "equipe": self.EQUIPE}))
         
         def task_recalage():
             self.recalage_is_playing = True
@@ -217,14 +205,14 @@ class IHM_Robot:
                     # Ordre de rotation
                     angle = action["ordre"]["theta"]
                     logging.info(f"Rotation de {angle}°")
-                    self.client.send(self.client.create_message(2, "rotation", {"angle" : angle*10}))
+                    self.client.add_to_send_list(self.client.create_message(2, "rotation", {"angle" : angle*10}))
                 else:
                     # Ordre de recalage
                     distance = action["ordre"]["distance"]
                     mode = action["ordre"]["mode"]
                     recalage = action["ordre"]["recalage"]
                     logging.info(f"Recalage de {distance}mm en mode {mode} avec recalage {recalage}")
-                    self.client.send(self.client.create_message(2, "recalage", {"distance": distance, "mode": mode, "recalage": recalage}))
+                    self.client.add_to_send_list(self.client.create_message(2, "recalage", {"distance": distance, "mode": mode, "recalage": recalage}))
                 
                 is_arrived = False
                 logging.info(f"Attente de l'aknowledge {akn}")
@@ -243,7 +231,7 @@ class IHM_Robot:
         thread_recalage = threading.Thread(target=task_recalage)
         thread_recalage.start()
     
-    def play_strategie(self):
+    def play_strategie(self,index):
         # Jouer la stratégie
         self.strategie_is_running = True
         self.PAGE = 5
@@ -258,7 +246,7 @@ class IHM_Robot:
                 self.text_page_play = "Robot prêt à démarer le match"
                 time.sleep(0.05)
                 
-            self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 11}))
+            self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 416, "byte1": 11}))
             
             self.text_page_play = "Stratégie en cours..."
             
@@ -320,8 +308,10 @@ class IHM_Robot:
             logging.info("Fin de la stratégie")
             self.strategie_is_running = False
             self.PAGE = 1
-            
-        thread_play = threading.Thread(target=task_play)
+        
+        strat = Strategie(f"strategie_{index}.json")
+        
+        thread_play = threading.Thread(target=strat.play)
         thread_play.start()
     
     def page_favori(self):
@@ -391,10 +381,10 @@ class IHM_Robot:
                 self.ban_battery.append(i+6)
 
     def switch_on(self, num_switch):
-        self.client.send(self.client.create_message(2, "CAN", {"id": 518, "byte1": num_switch, "byte2": 1, "byte3": 0}))
+        self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 518, "byte1": num_switch, "byte2": 1, "byte3": 0}))
 
     def switch_off(self, num_switch):
-        self.client.send(self.client.create_message(2, "CAN", {"id": 518, "byte1": num_switch, "byte2": 0, "byte3": 0}))
+        self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 518, "byte1": num_switch, "byte2": 0, "byte3": 0}))
     
     def set_switch(self, num_switch, etat):
         if etat == 1:
@@ -427,7 +417,7 @@ class IHM_Robot:
                     index += 1
                     continue
                 
-                self.client.send(self.client.create_message(2, "CAN", {"id": commande_energie[index][0], "byte1": commande_energie[index][1], "byte2": commande_energie[index][2], "byte3": commande_energie[index][3]}))
+                self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": commande_energie[index][0], "byte1": commande_energie[index][1], "byte2": commande_energie[index][2], "byte3": commande_energie[index][3]}))
 
                 temps = 0
                 while not self.energie_recue: # On attend de recevoir les données
@@ -436,7 +426,7 @@ class IHM_Robot:
                     time.sleep(0.05)
                     temps += 0.05
                     if temps > 1:
-                        self.client.send(self.client.create_message(2, "CAN", {"id": commande_energie[index][0], "byte1": commande_energie[index][1], "byte2": commande_energie[index][2], "byte3": commande_energie[index][3]}))
+                        self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": commande_energie[index][0], "byte1": commande_energie[index][1], "byte2": commande_energie[index][2], "byte3": commande_energie[index][3]}))
                         nb_tentatives += 1
                         temps = 0
                     
@@ -481,9 +471,11 @@ class IHM_Robot:
             elif message["cmd"] == "akn":
                 data = message["data"]
                 if self.strategie_is_running or self.recalage_is_playing:
-                
-                    self.liste_aknowledge.append(data["id"])
-                    logging.info(f"Liste des aknowledge : {self.liste_aknowledge}")
+                    if data["id"] != 0x114:
+                        self.liste_aknowledge.append(data["id"])
+                        logging.info(f"Liste des aknowledge : {self.liste_aknowledge}")
+                    else:
+                        self.robot_move = False
                 
             elif message["cmd"] == "ARU":
                 data = message["data"]
@@ -496,6 +488,16 @@ class IHM_Robot:
                     if 0x11 in self.error:
                         self.error.remove(0x11)
                         self.PAGE = 0
+            
+            elif message["cmd"] == "jack":
+                data = message["data"]
+                if data["data"] == "wait_for_press":
+                    self.text_page_play = "Veillez insérer le Jack"
+                elif data["data"] == "wait_for_release":
+                    self.text_page_play = "Prêt à démarrer le match"
+                elif data["data"] == "start":
+                    self.text_page_play = "Straégie en cours..."
+            
             
             elif message["cmd"] == "strategie":
                 data = message["data"]

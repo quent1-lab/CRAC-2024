@@ -530,11 +530,11 @@ class IHM:
 
     def desactive_motor(self):
         self.desactive_m = not self.desactive_m
-        self.client_socket.send(self.client_socket.create_message(2, "desa", self.desactive_m))
+        self.client_socket.add_to_send_list(self.client_socket.create_message(2, "desa", self.desactive_m))
         print("Moteur est", "désactivé" if self.desactive_m else "activé")
 
     def restart_motor(self):
-        self.client_socket.send(self.client_socket.create_message(2, "resta", True))
+        self.client_socket.add_to_send_list(self.client_socket.create_message(2, "resta", True))
         print("Moteur est activé")
 
     def command_CAN(self, message):
@@ -546,7 +546,7 @@ class IHM:
         byte1 = message[1]
         byte2 = message[2]
         byte3 = message[3]
-        self.client_socket.send(self.client_socket.create_message(2, "CAN", {"id": commande, "byte1": byte1, "byte2": byte2, "byte3": byte3}))
+        self.client_socket.add_to_send_list(self.client_socket.create_message(2, "CAN", {"id": commande, "byte1": byte1, "byte2": byte2, "byte3": byte3}))
 
     def valeur_de_test(self):
         scan = []
@@ -569,8 +569,8 @@ class IHM:
         print("Programme de simulation")
         logging.info("Starting simulation program")
         last_time = time.time()
-        self.ROBOT.x = 1500
-        self.ROBOT.y = 1000
+        self.ROBOT.x = 225
+        self.ROBOT.y = 225
 
         while True:
             keys = pygame.key.get_pressed()
@@ -647,7 +647,7 @@ class IHM:
             self.manager.draw_ui(self.lcd)
             pygame.display.update()
             self.lcd.fill(self.WHITE)
-            self.ROBOT_ANGLE += 1
+            #self.ROBOT_ANGLE += 1
 
             # Déplacement du robot virtuel avec des touches du clavier
             x = self.ROBOT.x
@@ -780,12 +780,13 @@ class IHM:
             
             print("Fin du trajet")
 
-    def save_action(self, action):
+    def save_action(self, strat):
         self.numero_strategie += 1
-        print("Action:", action)
-        if "Coord" in action:
-            coord = action["Coord"]
-            print("Coord:", coord)
+        action = strat["Action"]
+        
+        print("| Déplacement", strat["Déplacement"], "\n| Action", action)
+        if "Coord" in strat["Déplacement"]:
+            coord = strat["Déplacement"]["Coord"]
             
             if coord["T"] == "":
                 # Si l'angle d'arrivée n'est pas renseigné, on calcule l'angle entre le robot et la position d'arrivée
@@ -811,19 +812,19 @@ class IHM:
         
         # Gérer la commandes de nouvelles coordonnées
         try:
-            if action["New_coord"]["X"] !=  "" and action["New_coord"]["Y"] != "" and action["New_coord"]["T"] != "": 
-                if action["New_coord"]["S"] != "":
-                    new_pos = (int(action["New_coord"]["X"]), int(action["New_coord"]["Y"]), int(action["New_coord"]["T"]), action["New_coord"]["S"])
+            if strat["New_coord"]["X"] !=  "" and strat["New_coord"]["Y"] != "" and strat["New_coord"]["T"] != "": 
+                if strat["New_coord"]["S"] != "":
+                    new_pos = (int(strat["New_coord"]["X"]), int(strat["New_coord"]["Y"]), int(strat["New_coord"]["T"]), strat["New_coord"]["S"])
                 else:
-                    new_pos = (int(action["New_coord"]["X"]), int(action["New_coord"]["Y"]), int(action["New_coord"]["T"]), "0")
-                new_window = IHM_Action_Aux(self.manager, self.numero_strategie+1, (int(action["New_coord"]["X"]), int(action["New_coord"]["Y"]), int(action["New_coord"]["T"])), _callback_save=self.save_action,_id="New_coord")
+                    new_pos = (int(strat["New_coord"]["X"]), int(strat["New_coord"]["Y"]), int(strat["New_coord"]["T"]), "0")
+                new_window = IHM_Action_Aux(self.manager, self.numero_strategie+1, (int(strat["New_coord"]["X"]), int(strat["New_coord"]["Y"]), int(strat["New_coord"]["T"])), _callback_save=self.save_action,_id="New_coord")
             
            # Retirer New_coord et New_angle de l'action
-            action.pop("New_coord") 
+            strat.pop("New_coord") 
         except KeyError:
             pass
         
-        strategie = {self.numero_strategie: action}
+        strategie = {self.numero_strategie: strat}
         
         with open("data/strategie.json", "r") as file:
             try:
@@ -833,7 +834,7 @@ class IHM:
             try :
                 #if data[str(self.numero_strategie)]:
                     # Si la stratégie existe déjà, on l'écrase
-                data[self.numero_strategie] = action   
+                data[self.numero_strategie] = strat   
             except KeyError:
                 data.update(strategie)
                 

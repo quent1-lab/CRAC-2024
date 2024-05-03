@@ -108,14 +108,14 @@ class ComCAN:
                 theta = struct.unpack('h', dataX[4:6])
                 self.client.add_to_send_list(self.client.create_message(0, "coord", {"x": x[0], "y": y[0], "theta": theta[0]}))
                 
-            elif data[0] in self.liste_ack or data[0] == 0x111 or data[0] == 0x115 or data[0] == 0x116:
+            elif data[0] in self.liste_ack or data[0] == 0x111 or data[0] == 0x114 or data[0] == 0x115 or data[0] == 0x116:
                 # Message d'acquittement
                 logging.info(f"BusCAN : Message d'acquittement reçu : {data[0]}")
                 self.client.add_to_send_list(self.client.create_message(0, "akn", {"id": data[0]}))
                 
-            elif data[0] == 0x114:
+                """elif data[0] == 0x114:
                 # Fin d'instruction de positionnement
-                self.client.add_to_send_list(self.client.create_message(0, "akn_m", None))
+                self.client.add_to_send_list(self.client.create_message(0, "akn_m", None))"""
                 
             elif data[0] == 0x203:
                 # V_Batterie : ID batterie (short), V_Batterie (short)

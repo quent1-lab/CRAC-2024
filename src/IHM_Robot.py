@@ -118,9 +118,9 @@ class IHM_Robot:
             self.button_strategie.append(button)
         
         self.button_autres = [
-            Button(self.screen, (40, 290, 200, 80), self.theme_path, "TEST Mouvement", font, lambda : self.button_autres_action(0)),
-            Button(self.screen, (280, 290, 200, 80), self.theme_path, "TEST Action", font, lambda : self.button_autres_action(1)),
-            Button(self.screen, (520, 290, 240, 80), self.theme_path, "TEST Spécial", font, lambda : self.button_autres_action(2))
+            Button(self.screen, (40, 200, 200, 80), self.theme_path, "TEST Mouvement", font, lambda : self.button_autres_action(0)),
+            Button(self.screen, (280, 200, 200, 80), self.theme_path, "TEST Action", font, lambda : self.button_autres_action(1)),
+            Button(self.screen, (520, 200, 240, 80), self.theme_path, "TEST Spécial", font, lambda : self.button_autres_action(2))
         ]
         
         self.button_tests = [

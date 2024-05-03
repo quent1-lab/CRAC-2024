@@ -60,6 +60,7 @@ class Strategie:
             
     def play(self):
         self.is_running = True
+        self.strategie_is_running = True
         self.client.set_callback(self.receive_to_server)
         self.client.set_callback_stop(self.stop)
         self.client.connect()

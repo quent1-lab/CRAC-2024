@@ -527,6 +527,7 @@ class IHM_Robot:
             
             elif message["cmd"] == "jack":
                 data = message["data"]
+                logging.info(f"Jack : {data}")
                 if data["data"] == "wait_for_press":
                     self.text_page_play = "Veillez insérer le Jack"
                 elif data["data"] == "wait_for_release":

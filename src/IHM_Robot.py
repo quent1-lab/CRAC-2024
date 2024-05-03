@@ -17,7 +17,7 @@ class IHM_Robot:
     def __init__(self):
         self.client = Client("127.0.0.9", 22050, 9, self.receive_to_server)
         
-        self.JACK = gpiozero.Button(16, pull_up=True)
+        #self.JACK = gpiozero.Button(16, pull_up=True)
 
         self.Energie = {
             "Batterie 1": {"Tension": 0, "Courant": 0, "Switch": 0},
@@ -262,13 +262,13 @@ class IHM_Robot:
         
         def task_play(): # Fonction pour jouer la stratégie dans un thread
             # Démarage au Jack
-            while self.JACK.is_not_pressed:
+            """while self.JACK.is_not_pressed:
                 self.text_page_play = "Veillez insérer le Jack"
                 time.sleep(0.1)
             time.sleep(0.2)
             while self.JACK.is_pressed:
                 self.text_page_play = "Robot prêt à démarer le match"
-                time.sleep(0.05)
+                time.sleep(0.05)"""
                 
             self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 416, "byte1": 11}))
             

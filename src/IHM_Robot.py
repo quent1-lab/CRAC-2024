@@ -132,17 +132,17 @@ class IHM_Robot:
         
         self.button_tests_action = [
             Button(self.screen, (100, 90, 200, 60), self.theme_path, "Carte Avant", font, lambda : self.set_id_card_action(416)),
-            Button(self.screen, (500, 160, 200, 60), self.theme_path, "Carte Arrière", font, lambda : self.set_id_card_action(417)),
+            Button(self.screen, (500, 90, 200, 60), self.theme_path, "Carte Arrière", font, lambda : self.set_id_card_action(417)),
             
-            Button(self.screen, (10, 160, 150, 60), self.theme_path, "HOMING", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 6}))),
-            Button(self.screen, (10, 230, 150, 60), self.theme_path, "UP", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 7}))),
-            Button(self.screen, (10, 300, 150, 60), self.theme_path, "MID", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 8}))),
-            Button(self.screen, (10, 370, 150, 60), self.theme_path, "DOWN", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 9}))),
+            Button(self.screen, (20, 160, 150, 60), self.theme_path, "HOMING", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 6}))),
+            Button(self.screen, (20, 230, 150, 60), self.theme_path, "UP", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 7}))),
+            Button(self.screen, (20, 300, 150, 60), self.theme_path, "MID", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 8}))),
+            Button(self.screen, (20, 370, 150, 60), self.theme_path, "DOWN", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 9}))),
             
-            Button(self.screen, (190, 160, 150, 60), self.theme_path, "CLOSE", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 1}))),
-            Button(self.screen, (190, 230, 150, 60), self.theme_path, "OPEN", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 2}))),
-            Button(self.screen, (190, 300, 150, 60), self.theme_path, "PLANT", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 3}))),
-            Button(self.screen, (390, 370, 150, 60), self.theme_path, "RESET", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 11}))),
+            Button(self.screen, (200, 160, 150, 60), self.theme_path, "CLOSE", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 1}))),
+            Button(self.screen, (200, 230, 150, 60), self.theme_path, "OPEN", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 2}))),
+            Button(self.screen, (200, 300, 150, 60), self.theme_path, "PLANT", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 3}))),
+            Button(self.screen, (200, 370, 150, 60), self.theme_path, "RESET", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 11}))),
             
             Button(self.screen, (380, 160, 150, 60), self.theme_path, "COMB UP", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 4}))),
             Button(self.screen, (380, 230, 150, 60), self.theme_path, "COMB SHAKE", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 10}))),
@@ -180,6 +180,7 @@ class IHM_Robot:
             self.PAGE = 11
         elif index == 2:
             self.PAGE = 12
+        time.sleep(1)
     
     def strategie_action(self, index):
         self.client.add_to_send_list(self.client.create_message(0, "strategie", {"strategie": index}))
@@ -597,81 +598,82 @@ class IHM_Robot:
         handle_temp_raspberry.start()
         
         while self.is_running:
-            
-            # Si une erreur est survenue lors de la réception des données des batteries
-            if len(self.error) > 0:
-                self.PAGE = 4
-            else:
-                self.PAGE = self.PAGE
-            
-            # Gestion des événements
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    self.client.add_to_send_list(self.client.create_message(1, "stop", None))
-                    self.is_running = False
-                    self.strategie_is_running = False
-                    
-                for button in self.button_menu:
-                    button.handle_event(event)
+            try:
+                # Si une erreur est survenue lors de la réception des données des batteries
+                if len(self.error) > 0:
+                    self.PAGE = 4
+                else:
+                    self.PAGE = self.PAGE
                 
-                if self.PAGE == 0:
-                    for batterie in self.batteries:
-                        batterie.handle_event(event)
-                    self.button_recalage.handle_event(event)
-                elif self.PAGE == 1:
-                    for button in self.button_strategie:
+                # Gestion des événements
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        self.client.add_to_send_list(self.client.create_message(1, "stop", None))
+                        self.is_running = False
+                        self.strategie_is_running = False
+                    
+                    if self.PAGE == 0:
+                        for batterie in self.batteries:
+                            batterie.handle_event(event)
+                        self.button_recalage.handle_event(event)
+                    elif self.PAGE == 1:
+                        for button in self.button_strategie:
+                            button.handle_event(event)
+                    elif self.PAGE == 2:
+                        pass
+                    elif self.PAGE == 3:
+                        for button in self.button_autres:
+                            button.handle_event(event)
+                    elif self.PAGE == 5:
+                        pass
+                    elif self.PAGE == 10:
+                        for button in self.button_tests_mouvement:
+                            button.handle_event(event)
+                    elif self.PAGE == 11:
+                        for button in self.button_tests_action:
+                            button.handle_event(event)
+                    elif self.PAGE == 12:
+                        for button in self.button_tests_special:
+                            button.handle_event(event)
+
+                    for button in self.button_menu:
                         button.handle_event(event)
+
+                # Affichage
+                self.screen.fill(self.BACKGROUND_COLOR)
+
+                # ------------------- Affichage des éléments graphiques du menu -------------------
+                for button in self.button_menu:
+                    button.draw()
+
+                self.draw_temp_raspberry()
+                    
+                pygame.draw.line(self.screen, (50, 50, 50), (0, 70), (self.width, 70), 2)
+                # --------------------------------------------------------------------------------
+
+                if self.PAGE == 0:
+                    self.page_favori()
+                elif self.PAGE == 1:
+                    self.page_strategie()
                 elif self.PAGE == 2:
                     pass
                 elif self.PAGE == 3:
-                    for button in self.button_autres:
-                        button.handle_event(event)
+                    self.page_autres()
+                elif self.PAGE == 4:
+                    self.page_erreur()
                 elif self.PAGE == 5:
-                    pass
+                    self.page_play()
                 elif self.PAGE == 10:
-                    for button in self.button_tests_mouvement:
-                        button.handle_event(event)
+                    self.page_mouvement()
                 elif self.PAGE == 11:
-                    for button in self.button_tests_action:
-                        button.handle_event(event)
+                    self.page_action()
                 elif self.PAGE == 12:
-                    for button in self.button_tests_special:
-                        button.handle_event(event)
+                    self.page_special()
 
-            # Affichage
-            self.screen.fill(self.BACKGROUND_COLOR)
-
-            # ------------------- Affichage des éléments graphiques du menu -------------------
-            for button in self.button_menu:
-                button.draw()
-
-            self.draw_temp_raspberry()
-                
-            pygame.draw.line(self.screen, (50, 50, 50), (0, 70), (self.width, 70), 2)
-            # --------------------------------------------------------------------------------
-
-            if self.PAGE == 0:
-                self.page_favori()
-            elif self.PAGE == 1:
-                self.page_strategie()
-            elif self.PAGE == 2:
-                pass
-            elif self.PAGE == 3:
-                self.page_autres()
-            elif self.PAGE == 4:
-                self.page_erreur()
-            elif self.PAGE == 5:
-                self.page_play()
-            elif self.PAGE == 10:
-                self.page_mouvement()
-            elif self.PAGE == 11:
-                self.page_action()
-            elif self.PAGE == 12:
-                self.page_special()
-
-            pygame.display.flip()
-            self.clock.tick(30)
-        
+                pygame.display.flip()
+                self.clock.tick(30)
+            except Exception as e:
+                print(f"Erreur : {str(e)}")
         pygame.quit()
 
 if __name__ == "__main__":

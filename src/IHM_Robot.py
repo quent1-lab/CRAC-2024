@@ -461,7 +461,7 @@ class IHM_Robot:
             elif message["cmd"] == "akn":
                 data = message["data"]
                 if self.strategie_is_running or self.recalage_is_playing:
-                    if data["id"] != 0x111:
+                    if data["id"] != 0x114:
                         self.liste_aknowledge.append(data["id"])
                         logging.info(f"Liste des aknowledge : {self.liste_aknowledge}")
                     else:

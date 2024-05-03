@@ -33,6 +33,7 @@ class IHM_Robot:
         self.energie_recue = False
         self.state_request_energy = False
         self.error = []
+        self.id_card_action = 416
 
         self.BACKGROUND_COLOR = (100, 100, 100)
         
@@ -118,30 +119,38 @@ class IHM_Robot:
             self.button_strategie.append(button)
         
         self.button_autres = [
-            Button(self.screen, (40, 200, 200, 80), self.theme_path, "TEST Mouvement", font, lambda : self.button_autres_action(0)),
-            Button(self.screen, (280, 200, 200, 80), self.theme_path, "TEST Action", font, lambda : self.button_autres_action(1)),
-            Button(self.screen, (520, 200, 240, 80), self.theme_path, "TEST Spécial", font, lambda : self.button_autres_action(2))
+            Button(self.screen, (40, 220, 200, 80), self.theme_path, "TEST Mouvement", font, lambda : self.button_autres_action(0)),
+            Button(self.screen, (280, 220, 200, 80), self.theme_path, "TEST Action", font, lambda : self.button_autres_action(1)),
+            Button(self.screen, (520, 220, 240, 80), self.theme_path, "TEST Spécial", font, lambda : self.button_autres_action(2))
         ]
         
-        self.button_tests = [
+        self.button_tests_mouvement = [
             Button(self.screen, (10, 90, 150, 80), self.theme_path, "Ligne droite 2m", font, lambda : self.ligne_droite(2000)),
             Button(self.screen, (10, 180, 150, 80), self.theme_path, "Ligne droite 1m", font, lambda : self.ligne_droite(1000)),
             Button(self.screen, (10, 270, 150, 80), self.theme_path, "Tourner 8", font, lambda : self.tourner(360*8)),
+        ]
+        
+        self.button_tests_action = [
+            Button(self.screen, (100, 90, 200, 60), self.theme_path, "Carte Avant", font, lambda : self.set_id_card_action(416)),
+            Button(self.screen, (500, 160, 200, 60), self.theme_path, "Carte Arrière", font, lambda : self.set_id_card_action(417)),
             
-            Button(self.screen, (200, 90, 150, 80), self.theme_path, "HOMING", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 416, "byte1": 6}))),
-            Button(self.screen, (200, 180, 150, 80), self.theme_path, "UP", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 416, "byte1": 7}))),
-            Button(self.screen, (200, 270, 150, 80), self.theme_path, "MID", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 416, "byte1": 8}))),
-            Button(self.screen, (200, 360, 150, 80), self.theme_path, "DOWN", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 416, "byte1": 9}))),
+            Button(self.screen, (10, 160, 150, 60), self.theme_path, "HOMING", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 6}))),
+            Button(self.screen, (10, 230, 150, 60), self.theme_path, "UP", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 7}))),
+            Button(self.screen, (10, 300, 150, 60), self.theme_path, "MID", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 8}))),
+            Button(self.screen, (10, 370, 150, 60), self.theme_path, "DOWN", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 9}))),
             
-            Button(self.screen, (390, 90, 150, 80), self.theme_path, "CLOSE", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 416, "byte1": 1}))),
-            Button(self.screen, (390, 180, 150, 80), self.theme_path, "OPEN", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 416, "byte1": 2}))),
-            Button(self.screen, (390, 270, 150, 80), self.theme_path, "PLANT", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 416, "byte1": 3}))),
-            Button(self.screen, (390, 360, 150, 80), self.theme_path, "RESET", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 416, "byte1": 11}))),
+            Button(self.screen, (190, 160, 150, 60), self.theme_path, "CLOSE", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 1}))),
+            Button(self.screen, (190, 230, 150, 60), self.theme_path, "OPEN", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 2}))),
+            Button(self.screen, (190, 300, 150, 60), self.theme_path, "PLANT", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 3}))),
+            Button(self.screen, (390, 370, 150, 60), self.theme_path, "RESET", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 11}))),
             
-            Button(self.screen, (580, 90, 150, 80), self.theme_path, "COMB UP", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 416, "byte1": 4}))),
-            Button(self.screen, (580, 180, 150, 80), self.theme_path, "COMB SHAKE", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 416, "byte1": 10}))),
-            Button(self.screen, (580, 270, 150, 80), self.theme_path, "COMB DOWN", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 416, "byte1": 5})))
-            
+            Button(self.screen, (380, 160, 150, 60), self.theme_path, "COMB UP", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 4}))),
+            Button(self.screen, (380, 230, 150, 60), self.theme_path, "COMB SHAKE", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 10}))),
+            Button(self.screen, (380, 300, 150, 60), self.theme_path, "COMB DOWN", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 5})))
+        ]
+        
+        self.button_tests_special = [
+            Button(self.screen, (10, 90, 150, 80), self.theme_path, "Recalage", font, self.recalage),
         ]
         
         self.strategie = None
@@ -160,10 +169,17 @@ class IHM_Robot:
             pass            
         elif index == 4:
             self.client.add_to_send_list(self.client.create_message(1, "stop", None))
+
+    def set_id_card_action(self, id):
+        self.id_card_action = id
     
     def button_autres_action(self, index):
         if index == 0:
-            self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 11}))
+            self.PAGE = 10
+        elif index == 1:
+            self.PAGE = 11
+        elif index == 2:
+            self.PAGE = 12
     
     def strategie_action(self, index):
         self.client.add_to_send_list(self.client.create_message(0, "strategie", {"strategie": index}))
@@ -352,6 +368,18 @@ class IHM_Robot:
         # Cette page affiche la stratégie en cours
         font = pygame.font.SysFont("Arial", 30)
         draw_text_center(self.screen, self.text_page_play, x=self.width//2, y=self.height//2 + 15, font=font, color=(255, 255, 255))
+    
+    def page_mouvement(self):
+        for button in self.button_tests_mouvement:
+            button.draw()
+    
+    def page_action(self):
+        for button in self.button_tests_action:
+            button.draw()
+            
+    def page_special(self):
+        for button in self.button_tests_special:
+            button.draw()
     
     def taille_auto_batterie(self):
         nb_batteries_colonne = 0
@@ -598,6 +626,17 @@ class IHM_Robot:
                 elif self.PAGE == 3:
                     for button in self.button_autres:
                         button.handle_event(event)
+                elif self.PAGE == 5:
+                    pass
+                elif self.PAGE == 10:
+                    for button in self.button_tests_mouvement:
+                        button.handle_event(event)
+                elif self.PAGE == 11:
+                    for button in self.button_tests_action:
+                        button.handle_event(event)
+                elif self.PAGE == 12:
+                    for button in self.button_tests_special:
+                        button.handle_event(event)
 
             # Affichage
             self.screen.fill(self.BACKGROUND_COLOR)
@@ -623,6 +662,12 @@ class IHM_Robot:
                 self.page_erreur()
             elif self.PAGE == 5:
                 self.page_play()
+            elif self.PAGE == 10:
+                self.page_mouvement()
+            elif self.PAGE == 11:
+                self.page_action()
+            elif self.PAGE == 12:
+                self.page_special()
 
             pygame.display.flip()
             self.clock.tick(30)

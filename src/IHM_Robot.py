@@ -90,19 +90,19 @@ class IHM_Robot:
         self.button_menu_names = ["Favori", "Stratégie", "Energie", "Autres", "Quitter"]
         self.button_menu_colors = [(0,0,200), None, None, None,(200, 0, 0)] # None = Couleur par défaut
 
-        for i, name in enumerate(self.button_menu_names):
+        """for i, name in enumerate(self.button_menu_names):
             x = 0
             if i == 4:
                 x = 190 # Permet de décaler le bouton "Quitter" vers la droite
-            self.button_menu.append(Button(self.screen, (10 + 120 * i + x, 10, 100, 50), self.theme_path, name, self.font, lambda i=i: self.button_menu_action(i), color=self.button_menu_colors[i]))
+            self.button_menu.append(Button(self.screen, (10 + 120 * i + x, 10, 100, 50), self.theme_path, name, self.font, lambda i=i: self.button_menu_action(i), color=self.button_menu_colors[i]))"""
         
-        """self.button_menu = [
+        self.button_menu = [
             Button(self.screen, (10, 10, 100, 50), self.theme_path, "Favori", self.font, lambda : self.button_menu_action(0), color=(0,0,200)),
             Button(self.screen, (130, 10, 100, 50), self.theme_path, "Stratégie", self.font, lambda : self.button_menu_action(1)),
             Button(self.screen, (250, 10, 100, 50), self.theme_path, "Energie", self.font, lambda : self.button_menu_action(2)),
             Button(self.screen, (370, 10, 100, 50), self.theme_path, "Autres", self.font, lambda : self.button_menu_action(3)),
             Button(self.screen, (680, 10, 100, 50), self.theme_path, "Quitter", self.font, lambda : self.button_menu_action(4), color=(200, 0, 0))
-        ]"""
+        ]
         
         font = pygame.font.SysFont("Arial", 36)
         self.button_recalage = Button(self.screen, (420, 90, 360, 60), self.theme_path, "Recalage", font, self.recalage, color=(100, 0, 200))

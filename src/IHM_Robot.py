@@ -10,7 +10,7 @@ import gpiozero
 from strategie import Strategie
 
 # Configuration du logger
-logging.basicConfig(filename='ihm_robot.log', level=logging.INFO, datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s', filemode='w')
+logging.basicConfig(filename='ihm_robot.log', level=logging.INFO, datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
 
 
 class IHM_Robot:

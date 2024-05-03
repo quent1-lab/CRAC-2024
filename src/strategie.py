@@ -7,15 +7,15 @@ import  os
 
 class Strategie:
     def __init__(self, _nom_strat):
-        self.nom_start = _nom_strat
+        self.nom_strat = _nom_strat
         self.strategie = None
         
         # Vérification de l'existence du fichier
-        if os.path.exists(f"data/strategies/{self.nom_start}.json"):
-            with open(f"data/strategies/{self.nom_start}.json", "r") as file:
+        if os.path.exists(f"data/strategies/{self.nom_strat}"):
+            with open(f"data/strategies/{self.nom_strat}", "r") as file:
                 self.strategie = json.load(file)
         else:
-            logging.error(f"La stratégie {self.nom_start} n'existe pas")
+            logging.error(f"La stratégie {self.nom_strat} n'existe pas")
             return
         
         self.client = Client("127.0.0.4", 22050, 4, self.receive_to_server)

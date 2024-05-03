@@ -6,7 +6,7 @@ import threading
 import time
 from batterie import Batterie
 import logging
-import gpiozero
+#import gpiozero
 from strategie import Strategie
 
 # Configuration du logger

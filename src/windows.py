@@ -416,7 +416,8 @@ class IHM_Action_Aux:
                                 # Activer ou non la checkbox et text ligne droite
                                 if checkbox.get_checked():
                                     # Ajouter les données de coord
-                                    self.data["Déplacement"] = {"Coord": {"X": self.pos_actuelle[0], "Y": self.pos_actuelle[1], "T": "", "S": "0"}}
+                                    self.data["Déplacement"] = {"Coord": {"X": self.pos_actuelle[0], "Y": self.pos_actuelle[1], "T": "", "S": "0"},
+                                                                "aknowledge": self.config["Coord"]["aknowledge"]}
                                         
                                     # Activer Ligne droite
                                     self.checkboxes[1].enable()
@@ -466,7 +467,8 @@ class IHM_Action_Aux:
                                     self.texts[0].set_text("")
                                     
                                     # Ajouter les données de coord et supprimer les données de ligne droite
-                                    self.data["Déplacement"] = {"Coord": {"X": self.pos_actuelle[0], "Y": self.pos_actuelle[1], "T": "", "S": "0"}}
+                                    self.data["Déplacement"] = {"Coord": {"X": self.pos_actuelle[0], "Y": self.pos_actuelle[1], "T": "", "S": "0"},
+                                                                "aknowledge": self.config["Coord"]["aknowledge"]}
                                     
                             elif id == "#c_New_coord":
                                 if checkbox.get_checked():
@@ -590,7 +592,7 @@ class IHM_Action_Aux:
                         self.data["Action"]["_R_"] = {
                             "id": self.config["Recalage"]["id"],
                             "ordre": self.config["Recalage"]["ordre"][texte],
-                            "akn" : 0,
+                            "akn" : self.config["Recalage"]["aknowledge"],
                             "str" : texte
                         }
                                                         
@@ -600,12 +602,14 @@ class IHM_Action_Aux:
                     if id == "#t_Angle_arrive":
                         self.angle = int(event.text)
                         if not self.checkboxes[0].get_checked():
-                            self.data["Déplacement"]["Rotation"] = int(event.text)
+                            self.data["Déplacement"] = {"Rotation": self.angle,
+                                                        "aknowledge": self.config["Rotation"]["aknowledge"]}
                         else:
                             self.data["Déplacement"]["Coord"]["T"] = int(event.text)
                     elif id == "#t_Ligne_droite":
                         self.distance = int(event.text)
-                        self.data["Déplacement"]["Ligne_Droite"] = int(event.text)
+                        self.data["Déplacement"] = {"Ligne_Droite": self.distance,
+                                                    "aknowledge": self.config["Ligne_Droite"]["aknowledge"]}
                     elif id == "#t_X":
                         self.data["New_coord"]["X"] = int(event.text) 
                     elif id == "#t_Y":

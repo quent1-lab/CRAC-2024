@@ -6,8 +6,8 @@ import  json
 import  os
 
 class Strategie:
-    def __init__(self, _nom_start):
-        self.nom_start = _nom_start
+    def __init__(self, _nom_strat):
+        self.nom_start = _nom_strat
         self.strategie = None
         
         # Vérification de l'existence du fichier
@@ -20,9 +20,10 @@ class Strategie:
         
         self.client = Client("127.0.0.4", 22050, 4, self.receive_to_server)
         
+        self.JACK = gpiozero.Button(16, pull_up=True)
+        
         self.is_running = False
         self.strategie_is_running = False
-        self.robot_move = False
         
         self.ETAT = 0
         self.EQUIPE = "jaune"
@@ -59,40 +60,61 @@ class Strategie:
             
     def play(self):
         self.is_running = True
-        self.client.start()
+        self.client.set_callback(self.receive_to_server)
+        self.client.set_callback_stop(self.stop)
+        self.client.connect()
         
         while self.is_running:
             if self.strategie_is_running:
+                self.start_jack()
+                
                 self.run_strategie()
-            else:
-                self.run_start()
-                
-    def run_start(self):
-        for action in self.strategie["start"]:
-            if action["type"] == "attente":
-                time.sleep(action["duree"])
-                
-            elif action["type"] == "envoi":
-                self.client.send(action["message"])
-                
-            elif action["type"] == "strategie":
-                self.strategie_is_running = True
-                break
+    
+    def start_jack(self):
+        # Attend que le jack soit enclechée
+        self.client.send({"cmd": "jack", "data": "wait_for_press"})
+        self.JACK.wait_for_press()
+        
+        self.client.send({"cmd": "jack", "data": "wait_for_release"})
+        self.JACK.wait_for_release()
+        
+        self.client.send({"cmd": "jack", "data": "start"})
     
     def run_strategie(self):
-        for action in self.strategie["strategie"]:
-            if action["type"] == "attente":
-                time.sleep(action["duree"])
+        # Reset la carte actionneur
+        self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 416, "byte1": 11}))
+        
+        for key, item in self.strategie.items():
+            deplacement = item["Déplacement"]
+            action = item["Action"]
+            special = item["Spécial"]
+            
+            if "Coord" in deplacement:
+                self.move(deplacement)
                 
-            elif action["type"] == "envoi":
-                self.client.send(action["message"])
+            for key, act in action.items():
+                self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": act["id"], "byte1": act["ordre"]}))
                 
-            elif action["type"] == "strategie":
-                self.strategie_is_running = False
-                break
+                while act["akn"] not in self.liste_aknowledge and self.strategie_is_running:
+                    time.sleep(0.1)
+            
+            if self.strategie_is_running == False:
+                logging.info("Arrêt de la stratégie")
+                break                  
+    
+    def move(self, deplacement):
+        # Envoi de la commande de déplacement
+        pos = (deplacement["Coord"]["X"], deplacement["Coord"]["Y"], int(deplacement["Coord"]["T"]), "0")
+        logging.info(f"STRAT : Déplacement en {pos}")
+        
+        # Envoyez la position au CAN
+        self.client.add_to_send_list(self.client.create_message(
+            2, "clic", {"x": pos[0], "y": pos[1], "theta": pos[2], "sens": pos[3]}))
+        
+        # Attendre l'acquittement
+        while deplacement["aknowledge"] not in self.liste_aknowledge and self.strategie_is_running:
+            time.sleep(0.1)
                 
-            elif action["type"] == "fonction":
-                self.jouer(action["fonction"])
-
-    def jouer(self, jeu):
-        return self.fonction(jeu)
+    def stop(self):
+        self.is_running = False
+        self.strategie_is_running = False

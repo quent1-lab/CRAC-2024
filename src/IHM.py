@@ -530,11 +530,11 @@ class IHM:
 
     def desactive_motor(self):
         self.desactive_m = not self.desactive_m
-        self.client_socket.send(self.client_socket.create_message(2, "desa", self.desactive_m))
+        self.client_socket.add_to_send_list(self.client_socket.create_message(2, "desa", self.desactive_m))
         print("Moteur est", "désactivé" if self.desactive_m else "activé")
 
     def restart_motor(self):
-        self.client_socket.send(self.client_socket.create_message(2, "resta", True))
+        self.client_socket.add_to_send_list(self.client_socket.create_message(2, "resta", True))
         print("Moteur est activé")
 
     def command_CAN(self, message):
@@ -546,7 +546,7 @@ class IHM:
         byte1 = message[1]
         byte2 = message[2]
         byte3 = message[3]
-        self.client_socket.send(self.client_socket.create_message(2, "CAN", {"id": commande, "byte1": byte1, "byte2": byte2, "byte3": byte3}))
+        self.client_socket.add_to_send_list(self.client_socket.create_message(2, "CAN", {"id": commande, "byte1": byte1, "byte2": byte2, "byte3": byte3}))
 
     def valeur_de_test(self):
         scan = []

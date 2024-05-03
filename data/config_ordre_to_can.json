@@ -3,6 +3,15 @@
         "avant": "0x1A0",
         "arriere": "0x1A1"
     },
+    "Coord": {
+        "aknowledge": 276
+    },
+    "Ligne_Droite": {
+        "aknowledge": 277
+    },
+    "Rotation": {
+        "aknowledge": 278
+    },
     "Moteur": {
         "ordre": {
             "-": 0,
@@ -87,6 +96,7 @@
             "X": 0,
             "Y": 0,
             "X et Y": 0
-        }
+        },
+        "aknowledge": 279
     }
 }

@@ -201,9 +201,13 @@ class ComCAN:
                 self.send(messageCan)
 
             elif message["cmd"] == "CAN":
-                logging.info(f"BusCAN : Message à envoyer : {message}")
                 data = message["data"]
                 commande = data["id"]
+                
+                if type(commande) == str:
+                    if commande[:2] != "0x":
+                        commande = "0x" + commande
+                    commande = int(commande, 16)
                 
                 if commande == 0x1FC or commande == 0x1FD:
                     # Format des données : data 8 octets
@@ -225,13 +229,6 @@ class ComCAN:
                     messageCan = can.Message(arbitration_id=0x34, data=[1], is_extended_id=False)
                 self.send(messageCan)
                 #print("BusCAN : Message de restart envoyé")
-            
-            elif message["cmd"] == "homing":
-                data = message["data"]
-                # Format des données : data_id (short)
-                dataCan = struct.pack('h', 16)
-                messageCan = can.Message(arbitration_id=0xA10, data=dataCan, is_extended_id=False)
-                self.send(messageCan)
 
         except Exception as e:
             logging.error(f"Erreur lors du traitement du message serveur : {str(e)}")

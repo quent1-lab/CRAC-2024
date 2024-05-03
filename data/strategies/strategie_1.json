@@ -13,14 +13,14 @@
             "_PG_av": {
                 "id": "0x1A0",
                 "en_mvt": false,
-                "ordre": 0,
+                "ordre": 2,
                 "akn": 907,
                 "str": "Ouvert"
             },
             "_PD_av": {
                 "id": "0x1A0",
                 "en_mvt": false,
-                "ordre": 3,
+                "ordre": 2,
                 "akn": 905,
                 "str": "Ouvert"
             }
@@ -41,14 +41,14 @@
             "_PG_av": {
                 "id": "0x1A0",
                 "en_mvt": false,
-                "ordre": 0,
+                "ordre": 3,
                 "akn": 907,
                 "str": "Milieu"
             },
             "_PD_av": {
                 "id": "0x1A0",
                 "en_mvt": false,
-                "ordre": 5,
+                "ordre": 3,
                 "akn": 905,
                 "str": "Milieu"
             }

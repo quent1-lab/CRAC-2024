@@ -39,7 +39,7 @@
         "id": 0,
         "jaune": {
             "ordre": {
-                "theta": -90
+                "theta": 90
             }
         },
         "bleu": {

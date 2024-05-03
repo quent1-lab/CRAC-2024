@@ -84,11 +84,12 @@ class Strategie:
         
         logging.info("STRAT : Jack relaché")
         self.client.add_to_send_list(self.client.create_message(9, "jack", {"data": "start"}))
-    
-    def run_strategie(self):
+        
         # Reset la carte actionneur
         self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 416, "byte1": 11}))
-        
+    
+    def run_strategie(self):
+                
         for key, item in self.strategie.items():
             deplacement = item["Déplacement"]
             action = item["Action"]
@@ -120,7 +121,11 @@ class Strategie:
         
         # Attendre l'acquittement
         while deplacement["aknowledge"] not in self.liste_aknowledge and self.strategie_is_running:
+            if self.strategie_is_running == False:
+                break
             time.sleep(0.1)
+        if deplacement["aknowledge"] in self.liste_aknowledge:
+            self.liste_aknowledge.remove(deplacement["aknowledge"])
                 
     def stop(self):
         self.is_running = False

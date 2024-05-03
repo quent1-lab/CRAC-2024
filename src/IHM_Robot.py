@@ -117,6 +117,12 @@ class IHM_Robot:
             self.button_strategie.append(button)
         
         self.button_autres = [
+            Button(self.screen, (20, 90, 240, 80), self.theme_path, "TEST Mouvement", font, lambda : self.button_autres_action(0)),
+            Button(self.screen, (20, 280, 240, 80), self.theme_path, "TEST Action", font, lambda : self.button_autres_action(1)),
+            Button(self.screen, (20, 540, 240, 80), self.theme_path, "TEST Spécial", font, lambda : self.button_autres_action(2))
+        ]
+        
+        self.button_tests = [
             Button(self.screen, (10, 90, 150, 80), self.theme_path, "Ligne droite 2m", font, lambda : self.ligne_droite(2000)),
             Button(self.screen, (10, 180, 150, 80), self.theme_path, "Ligne droite 1m", font, lambda : self.ligne_droite(1000)),
             Button(self.screen, (10, 270, 150, 80), self.theme_path, "Tourner 8", font, lambda : self.tourner(360*8)),
@@ -153,6 +159,10 @@ class IHM_Robot:
             pass            
         elif index == 4:
             self.client.add_to_send_list(self.client.create_message(1, "stop", None))
+    
+    def button_autres_action(self, index):
+        if index == 0:
+            self.client.send(self.client.create_message(2, "CAN", {"id": 416, "byte1": 11}))
     
     def strategie_action(self, index):
         self.client.send(self.client.create_message(0, "strategie", {"strategie": index}))

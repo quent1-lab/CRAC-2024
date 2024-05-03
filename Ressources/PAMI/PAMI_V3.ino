@@ -61,8 +61,6 @@ int TOR1_precedent = LOW; // laisser en LOW
 float distance = 0, erreur, commande, commandeTraiter, commandeComp = 0.1, vitesse, Kalpha = 50, PWM, PWMD = 0, PWMG = 0, consDistance = 0;
 float m_distance;
 float angle_cons_droit, angle_cons_gauche;
-float rayonRoue = 60.0;
-float vit_ang = 75.0;
 
 float distance_prec_Y = 0;
 float distance_prec_X = 1500;
@@ -71,8 +69,8 @@ float Te = 10;
 float Tc = 50;
 
 int etat_Asserv = 0;
-int etat_Ligne_Droite = -1;
-int etat_Rotation = -1;
+int etat_Ligne_Droite = 0;
+int etat_Rotation = 0;
 
 float cons_asserv = 0;
 float cons_rotation = 0;
@@ -88,7 +86,6 @@ float angle;
 
 bool is_asserv_X_Y_Theta = false; // Variable permettant de savoir si on est en mode asservissement XYT ou non
 
-bool rotActiver = false;
 ////////////////////////////////////// Moteur Droit/////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////// Initialisation du moteur Droit/////////////////////////////////////////////////////////////////////////////////////////////////////
 void initMoteurDroit()

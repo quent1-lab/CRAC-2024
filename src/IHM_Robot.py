@@ -479,6 +479,16 @@ class IHM_Robot:
                         self.error.remove(0x11)
                         self.PAGE = 0
             
+            elif message["cmd"] == "jack":
+                data = message["data"]
+                if data["data"] == "wait_for_press":
+                    self.text_page_play = "Veillez insérer le Jack"
+                elif data["data"] == "wait_for_release":
+                    self.text_page_play = "Prêt à démarrer le match"
+                elif data["data"] == "start":
+                    self.text_page_play = "Straégie en cours..."
+            
+            
             elif message["cmd"] == "strategie":
                 data = message["data"]
                 id = data["id"]

@@ -72,13 +72,16 @@ class Strategie:
     
     def start_jack(self):
         # Attend que le jack soit enclechée
-        self.client.send({"cmd": "jack", "data": "wait_for_press"})
+        self.client.add_to_send_list(self.client.create_message(9, "jack", {"data": "wait_for_press"}))
+        logging.info("STRAT : Attente du jack")
         self.JACK.wait_for_press()
         
-        self.client.send({"cmd": "jack", "data": "wait_for_release"})
+        logging.info("STRAT : Jack enclenché")
+        self.client.add_to_send_list(self.client.create_message(9, "jack", {"data": "wait_for_release"}))
         self.JACK.wait_for_release()
         
-        self.client.send({"cmd": "jack", "data": "start"})
+        logging.info("STRAT : Jack relaché")
+        self.client.add_to_send_list(self.client.create_message(9, "jack", {"data": "start"}))
     
     def run_strategie(self):
         # Reset la carte actionneur

@@ -91,20 +91,28 @@ class Strategie:
     def run_strategie(self):
                 
         for key, item in self.strategie.items():
+            if self.strategie_is_running == False:
+                break
+            
             deplacement = item["Déplacement"]
             action = item["Action"]
             special = item["Spécial"]
             
             if "Coord" in deplacement:
                 self.move(deplacement)
+            elif "Rotation" in deplacement:
+                self.rotate(deplacement)
+            elif "Ligne_Droite" in deplacement:
+                self.ligne_droite(deplacement)
+            
                 
             for key, act in action.items():
                 self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": act["id"], "byte1": act["ordre"]}))
                 
-                """while act["akn"] not in self.liste_aknowledge and self.strategie_is_running:
-                    time.sleep(0.1)"""
+                #self.wait_for_aknowledge(act["aknowledge"])
                 
                 time.sleep(3)
+            
             
             if self.strategie_is_running == False:
                 logging.info("Arrêt de la stratégie")
@@ -120,13 +128,34 @@ class Strategie:
             2, "clic", {"x": pos[0], "y": pos[1], "theta": pos[2], "sens": pos[3]}))
         
         # Attendre l'acquittement
-        while deplacement["aknowledge"] not in self.liste_aknowledge and self.strategie_is_running:
-            if self.strategie_is_running == False:
-                break
+        self.wait_for_aknowledge(deplacement["aknowledge"])
+    
+    def rotate(self, deplacement):
+        # Envoi de la commande de rotation
+        angle = deplacement["Rotation"]
+        
+        # Envoyez la position au CAN
+        self.client.add_to_send_list(self.client.create_message(2, "rotation", {"angle": angle*10}))
+
+        # Attendre l'acquittement
+        self.wait_for_aknowledge(deplacement["aknowledge"])
+    
+    def ligne_droite(self, deplacement):
+        # Envoi de la commande de rotation
+        distance = deplacement["Ligne_Droite"]
+        
+        # Envoyez la position au CAN
+        self.client.add_to_send_list(self.client.create_message(2, "deplacement", {"distance": distance}))
+
+        # Attendre l'acquittement
+        self.wait_for_aknowledge(deplacement["aknowledge"])
+    
+    def wait_for_aknowledge(self, id):
+        while id not in self.liste_aknowledge and self.strategie_is_running:
             time.sleep(0.1)
-        if deplacement["aknowledge"] in self.liste_aknowledge:
-            self.liste_aknowledge.remove(deplacement["aknowledge"])
-                
+        if id in self.liste_aknowledge:
+            self.liste_aknowledge.remove(id)
+    
     def stop(self):
         self.is_running = False
         self.strategie_is_running = False

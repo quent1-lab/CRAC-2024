@@ -172,6 +172,12 @@ class IHM_Robot:
 
     def set_id_card_action(self, id):
         self.id_card_action = id
+        if id == 416:
+            self.button_tests_action[0].update_color((10, 200, 10))
+            self.button_tests_action[1].update_color(None)
+        elif id == 417:
+            self.button_tests_action[0].update_color(None)
+            self.button_tests_action[1].update_color((10, 200, 10))
     
     def button_autres_action(self, index):
         if index == 0:

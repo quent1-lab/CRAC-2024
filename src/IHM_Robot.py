@@ -162,7 +162,7 @@ class IHM_Robot:
             self.config_strategie = json.load(f)
         
     def button_menu_action(self, index):
-        if self.PAGE > 4:
+        if self.PAGE < 4:
             self.button_menu[self.PAGE].update_color(None) # On remet la couleur par défaut du bouton actuel
         self.PAGE = index
         self.button_menu[index].update_color((0, 0, 240)) # On met en vert le bouton cliqué

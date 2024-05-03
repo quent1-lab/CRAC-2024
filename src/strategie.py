@@ -51,6 +51,7 @@ class Strategie:
                 data = message["data"]
                 if self.strategie_is_running:
                     self.liste_aknowledge.append(data["id"])
+                    logging.info(f"STRAT : Acquittement reçu : {data['id']}")
                 
             elif message["cmd"] == "ARU":
                 pass

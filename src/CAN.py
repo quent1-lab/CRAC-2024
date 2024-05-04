@@ -118,6 +118,7 @@ class ComCAN:
             
             elif data[0] == 0x1A0 or data[0] == 0x1A1:
                 id_action = dataX[0]
+                logging.info(f"BusCAN : ID action : {id_action}")
                 if id_action == 5:
                     self.client.add_to_send_list(self.client.create_message(9, "get_pos", {"id_herk": dataX[1], "pos": struct.unpack('h', dataX[1:3])}))
         

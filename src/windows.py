@@ -37,7 +37,7 @@ class IHM_Command:
             ("Y", (110, 100), (80, 30)),
             ("T", (210, 100), (80, 30)),
             ("S", (310, 100), (80, 30)),
-            ("CMD base10", (10, 180), (80, 30)),
+            ("CMD hexa", (10, 180), (80, 30)),
             ("Byte1", (110, 180), (80, 30)),
             ("Byte2", (210, 180), (80, 30)),
             ("Byte3", (310, 180), (80, 30)),
@@ -178,7 +178,7 @@ class IHM_Command:
         self.desactive_callback = callback
 
 class IHM_Action_Aux:
-    def __init__(self, manager,_action_numero,_pos_actuelle, _callback_json=None, _callback_save=None, _callback_next=None, _callback_back=None,_id="", _config=None):    
+    def __init__(self, manager,_action_numero,_pos_actuelle, _callback_json=None, _callback_save=None, _callback_next=None, _callback_back=None,_id="", _config=None, _callback_delete=None, _angle = None):    
         self.manager = manager
         self.size = (610, 500)
         self.id = _id
@@ -192,6 +192,7 @@ class IHM_Action_Aux:
         self.back_callback = _callback_back
         self.save_callback = _callback_save
         self.next_callback = _callback_next
+        self.delete_callback = _callback_delete
         
         self.cote_actif = ""
 
@@ -205,6 +206,7 @@ class IHM_Action_Aux:
         self.listes = []
         self.checkboxes = []
         self.panels = []
+        self.button_delete = None
         
         # Charger la configuration des actions
         with open("data/config_ordre_to_can.json", "r") as file:
@@ -269,9 +271,9 @@ class IHM_Action_Aux:
                     "box3": {"type": "label", "position": (120, 260), "size": (70, 35), "text": "Deplac"},
                     "box4": {"type": "checkbox", "position": (185, 260), "size": (35, 35), "text": "Peigne", "id":"#c_Peigne"}},
             
-            "Pinces": { "box1": {"type": "label", "position": (220, 200), "size": (220, 30), "text": "Pinces (G/D)"},
-                        "box2": {"type": "list", "position": (230, 230), "size": (100, 30), "text": self.name_action_Pince,"id":"#l_Pince_G"},
-                        "box3": {"type": "list", "position": (340, 230), "size": (100, 30), "text": self.name_action_Pince,"id":"#l_Pince_D"},
+            "Pinces": { "box1": {"type": "label", "position": (220, 200), "size": (220, 30), "text": "Pinces"},
+                        "box2": {"type": "list", "position": (240, 230), "size": (190, 30), "text": self.name_action_Pince,"id":"#l_Pince_G"},
+                        "box3": {"type": "list", "position": (1, 1), "size": (1, 1), "text": self.name_action_Pince,"id":"#l_Pince_D"},
                         "box4": {"type": "label", "position": (270, 260), "size": (70, 35), "text": "Deplac"},
                         "box5": {"type": "checkbox", "position": (335, 260), "size": (35, 35), "text": "Pince G", "id":"#c_Pinces"}},
             
@@ -297,12 +299,13 @@ class IHM_Action_Aux:
         }
         
         self.data = {
+            "id_action": _action_numero,
             "Déplacement":{
                 "Coord": {"X": _pos_actuelle[0], "Y": _pos_actuelle[1], "T": "", "S": "0"},
                 "aknowledge": self.config["Coord"]["aknowledge"]
             },
             "Action" : {},
-            "Spécial" :{}
+            "Special" :{}
         }
 
         for label_text, box_info in box_infos.items():
@@ -357,12 +360,23 @@ class IHM_Action_Aux:
             if i != 1:
                 text.disable()
         
+        # Désactiver les boutons back et next
+        self.buttons[-1].disable()
+        self.buttons[-3].disable()
+        
+        # Mise a jour de l'angle
+        if _angle:
+            self.texts[1].set_text(str(_angle))
+            self.data["Déplacement"]["Coord"]["T"] = _angle
+            
+        
         if _config:
             # Charger tous les paramètres
             self.load_data(_config)
-                
         
-        
+        # Cacher la liste pince gauche
+        self.listes[5].hide()
+
     def process_events(self, event):
         if event.type == pygame.USEREVENT:
             if event.user_type == pygame_gui.UI_BUTTON_PRESSED: # Si un bouton est pressé
@@ -401,11 +415,17 @@ class IHM_Action_Aux:
                         self.update_checkboxes()
                         
                 elif id == "#b_Retour":
-                    self.back_callback()
+                    if self.back_callback:
+                        self.back_callback()
                 elif id == "#b_Enregistrer":
                     self.save_data(self.data)
                 elif id == "#b_Suivant":
-                    self.next_callback()
+                    if self.next_callback:
+                        self.next_callback()
+                
+                elif id == "#b_Delete":
+                    if self.delete_callback:
+                        self.delete_callback(self.action_numero)
                 
                 # Gestion des checkbox
                 elif id.split("_")[0] == "#c":
@@ -563,9 +583,9 @@ class IHM_Action_Aux:
                     
                     elif id == "#l_Action_special":
                         if texte == "-":
-                            self.data["Spécial"] = {}
+                            self.data["Special"] = {}
                         else:
-                            self.data["Spécial"] = {
+                            self.data["Special"] = {
                                 "id": self.config["ID"][self.cote_actif],
                                 "ordre": texte,
                                 "akn" : self.config["Action_special"][texte]["aknowledge"][self.cote_actif],
@@ -603,7 +623,7 @@ class IHM_Action_Aux:
                     if id == "#t_Angle_arrive":
                         self.angle = int(event.text)
                         if not self.checkboxes[0].get_checked():
-                            self.data["Déplacement"] = {"Rotation": self.angle,
+                            self.data["Déplacement"] = {"Rotation": self.angle * 10,
                                                         "aknowledge": self.config["Rotation"]["aknowledge"]}
                         else:
                             self.data["Déplacement"]["Coord"]["T"] = int(event.text)
@@ -653,7 +673,7 @@ class IHM_Action_Aux:
         herkulex_pince_gauche = action.get("_PG_"+self.cote_actif[:2], {"str": "-"})
         herkulex_pince_droite = action.get("_PD_"+self.cote_actif[:2], {"str": "-"})
         herkulex_bras = action.get("_B_", {"str": "-"})
-        action_special = self.data.get("Spécial", {"str": "-"})
+        action_special = self.data.get("Special", {"str": "-"})
         
         if "str" in action_special:        
             self.rebuild_liste(self.listes[1],action_special["str"])
@@ -694,6 +714,7 @@ class IHM_Action_Aux:
     
     def load_data(self,data):
         self.data = data
+        self.data["id_action"] = self.action_numero
         for key in data["Action"]:
             if key[-2:] == "av":
                 self.cote_actif = "avant"
@@ -701,6 +722,8 @@ class IHM_Action_Aux:
             elif key[-2:] == "ar":
                 self.cote_actif = "arriere"
                 break
+            else:
+                self.cote_actif = ""
         if "Coord" in data["Déplacement"]:
             self.pos_actuelle = [data["Déplacement"]["Coord"]["X"], data["Déplacement"]["Coord"]["Y"]]
             self.labels[2].set_text(f"X: {self.pos_actuelle[0]}  Y: {self.pos_actuelle[1]}")
@@ -725,7 +748,17 @@ class IHM_Action_Aux:
         self.update_listes()
         self.enable_listes()
         self.update_checkboxes()
-    
+        
+        if self.cote_actif == "":
+            if self.cote_actif == "":
+                self.disable_listes()
+
+        self.button_delete = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((400, 5), (170, 30)),
+                                                        text='Supprimer',
+                                                        manager=self.manager,
+                                                        container=self.window,
+                                                        object_id=ObjectID(object_id="#b_Delete"))
+        
     def close(self):
         self.window.kill()
 

@@ -126,24 +126,24 @@ class IHM_Robot:
         ]
         
         self.button_tests_mouvement = [
-            Button(self.screen, (10, 90, 150, 80), self.theme_path, "Ligne droite 2m", font, lambda : self.ligne_droite(2000)),
+            Button(self.screen, (10, 90, 150, 80), self.theme_path, "Ligne droite 2m",  font, lambda : self.ligne_droite(2000)),
             Button(self.screen, (10, 180, 150, 80), self.theme_path, "Ligne droite 1m", font, lambda : self.ligne_droite(1000)),
-            Button(self.screen, (10, 270, 150, 80), self.theme_path, "Tourner 8", font, lambda : self.tourner(360*8)),
+            Button(self.screen, (10, 270, 150, 80), self.theme_path, "Tourner 8",       font, lambda : self.tourner(360*8)),
         ]
         
         self.button_tests_action = [
-            Button(self.screen, (100, 90, 200, 60), self.theme_path, "Carte Avant", font, lambda : self.set_id_card_action(416)),
-            Button(self.screen, (500, 90, 200, 60), self.theme_path, "Carte Arrière", font, lambda : self.set_id_card_action(417)),
+            Button(self.screen, (100, 90, 200, 60), self.theme_path, "Carte Avant",     font, lambda : self.set_id_card_action(416)),
+            Button(self.screen, (500, 90, 200, 60), self.theme_path, "Carte Arrière",   font, lambda : self.set_id_card_action(417)),
             
-            Button(self.screen, (20, 160, 150, 60), self.theme_path, "HOMING", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 6}))),
-            Button(self.screen, (20, 230, 150, 60), self.theme_path, "UP", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 7}))),
-            Button(self.screen, (20, 300, 150, 60), self.theme_path, "MID", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 8}))),
-            Button(self.screen, (20, 370, 150, 60), self.theme_path, "DOWN", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 9}))),
+            Button(self.screen, (20, 160, 150, 60), self.theme_path, "HOMING",          font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 6}))),
+            Button(self.screen, (20, 230, 150, 60), self.theme_path, "UP",              font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 7}))),
+            Button(self.screen, (20, 300, 150, 60), self.theme_path, "MID",             font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 8}))),
+            Button(self.screen, (20, 370, 150, 60), self.theme_path, "DOWN",            font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 9}))),
             
-            Button(self.screen, (200, 160, 150, 60), self.theme_path, "CLOSE", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 1}))),
-            Button(self.screen, (200, 230, 150, 60), self.theme_path, "OPEN", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 2}))),
-            Button(self.screen, (200, 300, 150, 60), self.theme_path, "PLANT", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 3}))),
-            Button(self.screen, (200, 370, 150, 60), self.theme_path, "RESET", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 11}))),
+            Button(self.screen, (200, 160, 150, 60), self.theme_path, "CLOSE",          font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 1}))),
+            Button(self.screen, (200, 230, 150, 60), self.theme_path, "OPEN",           font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 2}))),
+            Button(self.screen, (200, 300, 150, 60), self.theme_path, "PLANT",          font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 3}))),
+            Button(self.screen, (200, 370, 150, 60), self.theme_path, "RESET",          font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 11}))),
             
             Button(self.screen, (380, 160, 150, 60), self.theme_path, "COMB UP", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 4}))),
             Button(self.screen, (380, 230, 150, 60), self.theme_path, "COMB SHAKE", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 10}))),

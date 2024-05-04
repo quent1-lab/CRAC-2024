@@ -98,6 +98,15 @@ class Strategie:
             action = item["Action"]
             special = item["Spécial"]
             
+            action_en_mvt = []
+            action_apres_mvt = []
+            
+            for key, act in action.items():
+                if act["en_mvt"] == True:
+                    action_en_mvt.append(action[key])
+                else:
+                    action_apres_mvt.append(action[key])
+            
             if "Coord" in deplacement:
                 self.move(deplacement)
             elif "Rotation" in deplacement:
@@ -105,14 +114,7 @@ class Strategie:
             elif "Ligne_Droite" in deplacement:
                 self.ligne_droite(deplacement)
             
-                
-            for key, act in action.items():
-                self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": act["id"], "byte1": act["ordre"]}))
-                
-                #self.wait_for_aknowledge(act["aknowledge"])
-                
-                time.sleep(3)
-            
+            self.send_actions(action_apres_mvt)
             
             if self.strategie_is_running == False:
                 logging.info("Arrêt de la stratégie")
@@ -135,7 +137,7 @@ class Strategie:
         angle = deplacement["Rotation"]
         
         # Envoyez la position au CAN
-        self.client.add_to_send_list(self.client.create_message(2, "rotation", {"angle": angle*10}))
+        self.client.add_to_send_list(self.client.create_message(2, "rotation", {"angle": angle}))
 
         # Attendre l'acquittement
         self.wait_for_aknowledge(deplacement["aknowledge"])
@@ -155,6 +157,12 @@ class Strategie:
             time.sleep(0.1)
         if id in self.liste_aknowledge:
             self.liste_aknowledge.remove(id)
+    
+    def send_actions(self, actions):
+        for action in actions:
+            self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": action["id"], "byte1": action["ordre"]}))
+            #self.wait_for_aknowledge(action["aknowledge"])
+            time.sleep(2)
     
     def stop(self):
         self.is_running = False

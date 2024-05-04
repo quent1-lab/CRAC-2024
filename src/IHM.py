@@ -58,6 +58,7 @@ class IHM:
         self.pos_waiting_list = [] # Liste pour stocker les futurs positions positions du robot à atteindre 
         self.robot_move = True # Variable pour savoir si le robot est en mouvement
         self.numero_strategie = 0 # Numéro de la stratégie en cours
+        self.angle_mouse = 0 # Angle de la souris
         
         # Vider le fichier de sauvegarde des stratégies
         with open("data/strategie.json", "w") as f:
@@ -185,10 +186,11 @@ class IHM:
 
         # Obtenir les coordonnées de la souris
         pos = pygame.mouse.get_pos()
+        key = pygame.key.get_pressed()
 
         if self.is_within_game_area(pos):
             # Convertissez les coordonnées de la souris en coordonnées du terrain de jeu
-            #On recalibre les coordonnées pour que le 0,0 soit en bas à droite
+            # On recalibre les coordonnées pour que le 0,0 soit en bas à droite
             x = self.map_value(pos[0], self.WINDOW_SIZE[0]-5-self.BORDER_DISTANCE*self.X_RATIO, self.BORDER_DISTANCE*self.X_RATIO+5, 0, self.FIELD_SIZE[0])
             y = self.map_value(pos[1], self.BORDER_DISTANCE*self.Y_RATIO+5 ,self.WINDOW_SIZE[1]-5-self.BORDER_DISTANCE*self.Y_RATIO, 0, self.FIELD_SIZE[1])
 
@@ -197,6 +199,51 @@ class IHM:
             
             # Dessiner un petit cercle rouge sur la pointe de la souris
             pygame.draw.circle(self.lcd, pygame.Color(255, 0, 0), pos, 5)
+            
+            # Dessine le robot si la touche shift est enfoncée
+            if key[pygame.K_LSHIFT]:
+                robot_image = pygame.image.load('data/robot.png').convert_alpha()
+                
+                # Ajuster la taille de l'image du robot à la taille du terrain de jeu
+                robot_image = pygame.transform.scale(robot_image, (int(self.ROBOT_Dimension[0] * self.X_RATIO), int(self.ROBOT_Dimension[1] * self.Y_RATIO)))
+                
+                # Rendre l'image du robot transparente pour que le fond soit visible
+                robot_image.set_alpha(128)
+                
+                if key[pygame.K_LEFT]:
+                    self.angle_mouse += 2
+                elif key[pygame.K_RIGHT]:
+                    self.angle_mouse -= 2
+                
+                # Tourner l'image du robot en fonction de l'angle de la souris
+                robot_image = pygame.transform.rotate(robot_image, self.angle_mouse)
+                
+                # Ajuster la position pour que le robot soit centré sur la souris
+                robot_pos = (pos[0] - robot_image.get_width() // 2, pos[1] - robot_image.get_height() // 2)
+                self.lcd.blit(robot_image, robot_pos)
+            else:
+                self.angle_mouse = 0
+                # Dessine le robot si la souris est a proximité d'un point de la liste d'attente
+                for pos_r in self.pos_waiting_list:
+                    if math.sqrt((pos_r[0] - x)**2 + (pos_r[1] - y)**2) < 25:
+                        robot_image = pygame.image.load('data/robot.png').convert_alpha()
+                        
+                        # Ajuster la taille de l'image du robot à la taille du terrain de jeu
+                        robot_image = pygame.transform.scale(robot_image, (int(self.ROBOT_Dimension[0] * self.X_RATIO), int(self.ROBOT_Dimension[1] * self.Y_RATIO)))
+                        
+                        # Rendre l'image du robot transparente pour que le fond soit visible
+                        robot_image.set_alpha(128)
+
+                        # Tourner l'image du robot en fonction de l'angle du robot
+                        robot_image = pygame.transform.rotate(robot_image, pos_r[2]/10)
+                        
+                        # Ajuster la position pour que le robot soit centré le point de la liste d'attente
+                        x_r = self.map_value(pos_r[0], 0, self.FIELD_SIZE[0], self.WINDOW_SIZE[0]-5-self.BORDER_DISTANCE*self.X_RATIO, self.BORDER_DISTANCE*self.X_RATIO+5)
+                        y_r = self.map_value(pos_r[1], 0, self.FIELD_SIZE[1], self.BORDER_DISTANCE*self.Y_RATIO+5 ,self.WINDOW_SIZE[1]-5-self.BORDER_DISTANCE*self.Y_RATIO)
+                        x_r = int(x_r)
+                        y_r = int(y_r)
+                        robot_pos = (x_r - robot_image.get_width() // 2, y_r - robot_image.get_height() // 2)
+                        self.lcd.blit(robot_image, robot_pos)
 
     def draw_text(self, text, x, y, color=(0, 0, 0)):
         """Draws text to the pygame screen, on up left corner"""
@@ -705,7 +752,7 @@ class IHM:
 
         elif message["cmd"] == "stop":
             self.client_socket.stop()
-        
+
     def update_energie(self, _json):
         if _json is None:
             return
@@ -723,7 +770,7 @@ class IHM:
     def handle_mouse_click(self, event):
         key = pygame.key.get_pressed()
         # Si la touche MAJ gauche est enfoncée et que l'on clique
-        if event.type == MOUSEBUTTONDOWN and event.button == 1 and key[pygame.K_LSHIFT]:
+        if (event.type == MOUSEBUTTONDOWN and event.button == 1) and key[pygame.K_LSHIFT]:
             # Vérifiez si le clic a eu lieu dans la zone de jeu
             if self.is_within_game_area(event.pos):
                 # Convertissez les coordonnées de la souris en coordonnées du terrain de jeu
@@ -737,7 +784,7 @@ class IHM:
                 self.clicked_position = (x, y)
 
                 if self.action_window is None:
-                    self.action_window = IHM_Action_Aux(self.manager, self.numero_strategie+1, (x, y, self.ROBOT_ANGLE), _callback_save=self.save_action)
+                    self.action_window = IHM_Action_Aux(self.manager, self.numero_strategie+1, (x, y, self.ROBOT_ANGLE), _callback_save=self.save_action, _angle = self.angle_mouse)
         
         elif event.type == MOUSEBUTTONDOWN and event.button == 1:
             # Si le clic droit est dans les alentours d'un point de la liste d'attente, ouvrir le gestionnaire de stratégie
@@ -751,7 +798,7 @@ class IHM:
                     if self.action_window is None:
                         with open("data/strategie.json", "r") as file:
                             strategie = json.load(file)
-                        self.action_window = IHM_Action_Aux(self.manager, i+1, (pos[0], pos[1], 0), _callback_save=self.save_action, _config = strategie[str(i+1)])
+                        self.action_window = IHM_Action_Aux(self.manager, i+1, (pos[0], pos[1], 0), _callback_save=self.save_action, _config = strategie[str(i+1)], _callback_delete=self.delete_action)
                     break
 
     def is_within_game_area(self, pos):
@@ -781,33 +828,82 @@ class IHM:
             
             print("Fin du trajet")
 
-    def save_action(self, strat):
-        self.numero_strategie += 1
-        action = strat["Action"]
+    def delete_action(self, numero):
+        # Permet de supprimer une action de la stratégie
+        with open("data/strategie.json", "r") as file:
+            strategie = json.load(file)
+        try:
+            strategie.pop(str(numero))
+        except KeyError:
+            pass
         
-        print("| Déplacement", strat["Déplacement"], "\n| Action", action)
+        # Supprimer les coordonnées de la liste d'attente
+        self.pos_waiting_list.pop(numero-1)
+        self.numero_strategie -= 1
+        
+        # Modifier les numéros des actions suivantes
+        for i in range(numero+1, len(strategie)+2):
+            strat = strategie.pop(str(i))
+            strategie[str(i-1)] = strat
+            strat["id_action"] = i-1
+        
+        print("Stratégie modifiée", strategie)
+        
+        with open("data/strategie.json", "w") as file:
+            json.dump(strategie, file, indent=4)
+            
+        self.action_window.close()
+        self.action_window = None
+        
+        print("Action supprimée")
+    
+    def save_action(self, strat):
+        action = strat["Action"]
+        numero = strat["id_action"]
+        strat.pop("id_action")
+        
+        print("| Déplacement", strat["Déplacement"], "\n| Action", action, "| Special", strat["Special"])
+        
         if "Coord" in strat["Déplacement"]:
             coord = strat["Déplacement"]["Coord"]
             
             if coord["T"] == "":
                 # Si l'angle d'arrivée n'est pas renseigné, on calcule l'angle entre le robot et la position d'arrivée
-                # Récupérer les coordonnées précédentes
-                if len(self.pos_waiting_list) > 0:
+                if len(self.pos_waiting_list) > 0: # Récupérer les coordonnées précédentes
                     coord_prec = self.pos_waiting_list[-1]
                 else:
                     coord_prec = (self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE, "0")
+                    
                 angle = math.degrees(math.atan2(coord["Y"] - coord_prec[1], coord["X"] - coord_prec[0]))
                 coord["T"] = int(angle*10)
-                print("Angle:", int(angle))
             else:
                 coord["T"] = int(coord["T"]*10)
                 
             new_pos = (int(coord["X"]), int(coord["Y"]), coord["T"], "0")
                 
-        else:
-            new_pos = (self.ROBOT.x, self.ROBOT.y, 0, "0")
+        elif "Ligne_Droite" in strat["Déplacement"]:
+            distance = strat["Déplacement"]["Ligne_Droite"]
+            
+            # Calcul de la position d'arrivée en fonction de la coordonnée précédente
+            if len(self.pos_waiting_list) > 0: # Récupérer les coordonnées précédentes
+                coord_prec = self.pos_waiting_list[-1]
+            else:
+                coord_prec = (self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE, "0")
                 
-        self.pos_waiting_list.append(new_pos)
+            x = coord_prec[0] + distance * math.cos(math.radians(coord_prec[2]/10))
+            y = coord_prec[1] + distance * math.sin(math.radians(coord_prec[2]/10))
+            new_pos = (int(x), int(y), coord_prec[2], "0")
+        elif "Rotation" in strat["Déplacement"]:
+            angle = strat["Déplacement"]["Rotation"]
+            
+            # Calcul de l'angle d'arrivée en fonction de l'angle précédent
+            if len(self.pos_waiting_list) > 0: # Récupérer les coordonnées précédentes
+                coord_prec = self.pos_waiting_list[-1]
+            else:
+                coord_prec = (self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE, "0")
+            
+            new_angle = angle
+            new_pos = (coord_prec[0], coord_prec[1], new_angle, "0")
         
         new_window = None
         
@@ -818,32 +914,37 @@ class IHM:
                     new_pos = (int(strat["New_coord"]["X"]), int(strat["New_coord"]["Y"]), int(strat["New_coord"]["T"]), strat["New_coord"]["S"])
                 else:
                     new_pos = (int(strat["New_coord"]["X"]), int(strat["New_coord"]["Y"]), int(strat["New_coord"]["T"]), "0")
-                new_window = IHM_Action_Aux(self.manager, self.numero_strategie+1, (int(strat["New_coord"]["X"]), int(strat["New_coord"]["Y"]), int(strat["New_coord"]["T"])), _callback_save=self.save_action,_id="New_coord")
+                new_window = IHM_Action_Aux(self.manager, self.numero_strategie+2, (int(strat["New_coord"]["X"]), int(strat["New_coord"]["Y"]), int(strat["New_coord"]["T"])), _callback_save=self.save_action,_id="New_coord")
             
            # Retirer New_coord et New_angle de l'action
-            strat.pop("New_coord") 
+            strat.pop("New_coord")
         except KeyError:
             pass
         
-        strategie = {self.numero_strategie: strat}
+        strategie = {str(numero): strat}
         
         with open("data/strategie.json", "r") as file:
             try:
                 data = json.load(file)
+                print("Stratégie chargée", data)
             except:
                 data = {}
             try :
-                #if data[str(self.numero_strategie)]:
-                    # Si la stratégie existe déjà, on l'écrase
-                data[self.numero_strategie] = strat   
-            except KeyError:
+                #data[numero] = strat
                 data.update(strategie)
+            except KeyError:
+                pass
+                #data.update(strategie)
                 
         with open("data/strategie.json", "w") as file:
             json.dump(data, file, indent=4)
         
         self.action_window.close()
         self.action_window = new_window
+        
+        if numero > self.numero_strategie :
+            self.numero_strategie += 1
+            self.pos_waiting_list.append(new_pos)
     
     def save_action_live(self):
         # Permet de sauvegarder la position actuelle du robot
@@ -952,7 +1053,7 @@ class IHM:
         self.client_socket.add_to_send_list(self.client_socket.create_message(self.IHM_Robot, "config", {"equipe": self.EQUIPE, "etat": self.ETAT}))
 
     def run(self):
-        #self.programme_simulation()
+        self.programme_simulation()
         
         self.client_socket.set_callback(self.receive_to_server)
         self.client_socket.set_callback_stop(self.stop)

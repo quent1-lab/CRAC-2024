@@ -707,6 +707,8 @@ class IHM_Robot:
                     self.page_action()
                 elif self.PAGE == 12:
                     self.page_special()
+                elif self.PAGE == 13:
+                    self.page_get_pos()
 
                 pygame.display.flip()
                 self.clock.tick(30)

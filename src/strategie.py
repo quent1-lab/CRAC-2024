@@ -73,24 +73,13 @@ class Strategie:
                 self.run_strategie()
     
     def start_jack(self):
+
+        self.client_strat.add_to_send_list(self.client_strat.create_message(9, "jack", {"data": "input_jack"}))
+        self.JACK.wait_for_release() # Attend que le jack soit enclenché
         
-        while 1:
-            try:
-                self.client_strat.add_to_send_list(self.client_strat.create_message(10, "jack", {"value": self.JACK.value}))
-            except Exception as e:
-                logging.error(f"Erreur lors de la lecture du jack : {str(e)}")
-                break
-            time.sleep(0.2)
-        # Attend que le jack soit enclechée
-        self.client_strat.add_to_send_list(self.client_strat.create_message(9, "jack", {"data": "wait_for_press"}))
-        logging.info("STRAT : Attente du jack")
-        self.JACK.wait_for_press()
+        self.client_strat.add_to_send_list(self.client_strat.create_message(9, "jack", {"data": "wait_start"}))
+        self.JACK.wait_for_press() # Attend que le jack soit relaché
         
-        logging.info("STRAT : Jack enclenché")
-        self.client_strat.add_to_send_list(self.client_strat.create_message(9, "jack", {"data": "wait_for_release"}))
-        self.JACK.wait_for_release()
-        
-        logging.info("STRAT : Jack relaché")
         self.client_strat.add_to_send_list(self.client_strat.create_message(9, "jack", {"data": "start"}))
         
         # Reset la carte actionneur

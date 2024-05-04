@@ -84,7 +84,8 @@ class Strategie:
         
         # Reset la carte actionneur
         self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 416, "byte1": 11}))
-    
+        self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 417, "byte1": 11}))
+        
     def run_strategie(self):
                 
         for key, item in self.strategie.items():

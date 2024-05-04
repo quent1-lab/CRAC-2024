@@ -586,6 +586,10 @@ class IHM_Robot:
                     texte = strategy.split(".")[0]
                     button = Button(self.screen, (x_depart + 405 * int(nombre_strategies/6), y_depart + i * 90, 385, 80), self.theme_path, texte, font, lambda i=i: self.strategie_action(i+1))
                     self.button_strategie.append(button)
+            
+            elif message["cmd"] == "get_pos":
+                data = message["data"]
+                self.value_get_pos["id_herk"] = data["pos"]
         
         except Exception as e:
             print(f"Erreur lors de la réception du message : {str(e)}")

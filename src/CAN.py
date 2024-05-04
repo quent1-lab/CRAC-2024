@@ -172,13 +172,11 @@ class ComCAN:
                 dataCan = struct.pack('h', data["x"]) + struct.pack('h', data["y"]) + struct.pack('h', data["theta"]) + struct.pack('c', data["sens"].encode())
                 messageCan = can.Message(arbitration_id=0x20, data=dataCan, is_extended_id=False)
                 self.send(messageCan)
-                logging.info(f"BusCAN : Message de clic envoyé : {messageCan}")
 
             elif message["cmd"] == "recalage":
                 data = message["data"]
                 # Format des données : distance (short), mode (entier non signé 1 octet), recalage (short)
                 dataCan = struct.pack('h', data["distance"]) + struct.pack('B', data["mode"]) + struct.pack('h', data["recalage"]) + struct.pack('Bbb', 0, 0, 0)
-                logging.info(f"BusCAN : Message de recalage envoyé : {dataCan}")
                 messageCan = can.Message(arbitration_id=0x24, data=dataCan, is_extended_id=False)
                 self.send(messageCan)
             
@@ -224,7 +222,6 @@ class ComCAN:
                     byte = list(data.items())[1:]  # Convertir le dictionnaire en liste et supprimer la première valeur
                     byte_values = [b[1] for b in byte]  # Extraire les valeurs de la liste
                     messageCAN = can.Message(arbitration_id=commande, data=byte_values, is_extended_id=False)
-                    logging.info(f"BusCAN : Message à envoyer : {messageCAN}")
                 
                 self.send(messageCAN)
             elif message["cmd"] == "resta":

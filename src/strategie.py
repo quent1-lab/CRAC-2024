@@ -18,7 +18,7 @@ class Strategie:
             logging.error(f"La stratégie {self.nom_strat} n'existe pas")
             return
         
-        self.client = Client("127.0.0.4", 22050, 4, self.receive_to_server)
+        self.client_strat = Client("127.0.0.4", 22050, 4, self.receive_to_server)
         
         self.JACK = gpiozero.Button(16, pull_up=True)
         
@@ -37,7 +37,7 @@ class Strategie:
     def receive_to_server(self, message):
         try:
             if message["cmd"] == "stop":
-                self.client.stop()
+                self.client_strat.stop()
                 
             elif message["cmd"] == "config":
                 data = message["data"]
@@ -62,9 +62,9 @@ class Strategie:
     def play(self):
         self.is_running = True
         self.strategie_is_running = True
-        self.client.set_callback(self.receive_to_server)
-        self.client.set_callback_stop(self.stop)
-        self.client.connect()
+        self.client_strat.set_callback(self.receive_to_server)
+        self.client_strat.set_callback_stop(self.stop)
+        self.client_strat.connect()
         
         while self.is_running:
             if self.strategie_is_running:
@@ -75,22 +75,26 @@ class Strategie:
     def start_jack(self):
         
         while 1:
-            self.client.add_to_send_list(self.client.create_message(10, "jack", {"value": self.JACK.value}))
+            try:
+                self.client_strat.add_to_send_list(self.client_strat.create_message(10, "jack", {"value": self.JACK.value}))
+            except Exception as e:
+                logging.error(f"Erreur lors de la lecture du jack : {str(e)}")
+                break
             time.sleep(0.2)
         # Attend que le jack soit enclechée
-        self.client.add_to_send_list(self.client.create_message(9, "jack", {"data": "wait_for_press"}))
+        self.client_strat.add_to_send_list(self.client_strat.create_message(9, "jack", {"data": "wait_for_press"}))
         logging.info("STRAT : Attente du jack")
         self.JACK.wait_for_press()
         
         logging.info("STRAT : Jack enclenché")
-        self.client.add_to_send_list(self.client.create_message(9, "jack", {"data": "wait_for_release"}))
+        self.client_strat.add_to_send_list(self.client_strat.create_message(9, "jack", {"data": "wait_for_release"}))
         self.JACK.wait_for_release()
         
         logging.info("STRAT : Jack relaché")
-        self.client.add_to_send_list(self.client.create_message(9, "jack", {"data": "start"}))
+        self.client_strat.add_to_send_list(self.client_strat.create_message(9, "jack", {"data": "start"}))
         
         # Reset la carte actionneur
-        self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 416, "byte1": 11}))
+        self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 416, "byte1": 11}))
     
     def run_strategie(self):
                 
@@ -130,7 +134,7 @@ class Strategie:
         logging.info(f"STRAT : Déplacement en {pos}")
         
         # Envoyez la position au CAN
-        self.client.add_to_send_list(self.client.create_message(
+        self.client_strat.add_to_send_list(self.client_strat.create_message(
             2, "clic", {"x": pos[0], "y": pos[1], "theta": pos[2], "sens": pos[3]}))
         
         # Attendre l'acquittement
@@ -141,7 +145,7 @@ class Strategie:
         angle = deplacement["Rotation"]
         
         # Envoyez la position au CAN
-        self.client.add_to_send_list(self.client.create_message(2, "rotation", {"angle": angle}))
+        self.client_strat.add_to_send_list(self.client_strat.create_message(2, "rotation", {"angle": angle}))
 
         # Attendre l'acquittement
         self.wait_for_aknowledge(deplacement["aknowledge"])
@@ -151,7 +155,7 @@ class Strategie:
         distance = deplacement["Ligne_Droite"]
         
         # Envoyez la position au CAN
-        self.client.add_to_send_list(self.client.create_message(2, "deplacement", {"distance": distance}))
+        self.client_strat.add_to_send_list(self.client_strat.create_message(2, "deplacement", {"distance": distance}))
 
         # Attendre l'acquittement
         self.wait_for_aknowledge(deplacement["aknowledge"])
@@ -164,7 +168,7 @@ class Strategie:
     
     def send_actions(self, actions):
         for action in actions:
-            self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": action["id"], "byte1": action["ordre"]}))
+            self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": action["id"], "byte1": action["ordre"]}))
             #self.wait_for_aknowledge(action["aknowledge"])
             time.sleep(2)
     

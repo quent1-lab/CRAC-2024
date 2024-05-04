@@ -185,10 +185,11 @@ class IHM:
 
         # Obtenir les coordonnées de la souris
         pos = pygame.mouse.get_pos()
+        key = pygame.key.get_pressed()
 
         if self.is_within_game_area(pos):
             # Convertissez les coordonnées de la souris en coordonnées du terrain de jeu
-            #On recalibre les coordonnées pour que le 0,0 soit en bas à droite
+            # On recalibre les coordonnées pour que le 0,0 soit en bas à droite
             x = self.map_value(pos[0], self.WINDOW_SIZE[0]-5-self.BORDER_DISTANCE*self.X_RATIO, self.BORDER_DISTANCE*self.X_RATIO+5, 0, self.FIELD_SIZE[0])
             y = self.map_value(pos[1], self.BORDER_DISTANCE*self.Y_RATIO+5 ,self.WINDOW_SIZE[1]-5-self.BORDER_DISTANCE*self.Y_RATIO, 0, self.FIELD_SIZE[1])
 
@@ -197,6 +198,19 @@ class IHM:
             
             # Dessiner un petit cercle rouge sur la pointe de la souris
             pygame.draw.circle(self.lcd, pygame.Color(255, 0, 0), pos, 5)
+            
+            if key[pygame.K_LSHIFT]:
+                robot_image = pygame.image.load('data/robot.png').convert_alpha()
+                
+                # Ajuster la taille de l'image du robot à la taille du terrain de jeu
+                robot_image = pygame.transform.scale(robot_image, (int(self.ROBOT_Dimension[0] * self.X_RATIO), int(self.ROBOT_Dimension[1] * self.Y_RATIO)))
+                
+                # Rendre l'image du robot transparente pour que le fond soit visible
+                robot_image.set_alpha(128)
+                
+                # Ajuster la position pour que le robot soit centré sur la souris
+                robot_pos = (pos[0] - robot_image.get_width() // 2, pos[1] - robot_image.get_height() // 2)
+                self.lcd.blit(robot_image, robot_pos)
 
     def draw_text(self, text, x, y, color=(0, 0, 0)):
         """Draws text to the pygame screen, on up left corner"""

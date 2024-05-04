@@ -91,6 +91,8 @@ class Strategie:
             if self.strategie_is_running == False:
                 break
             
+            logging.info(f"STRAT : {key} , {item}")
+            
             deplacement = item["Déplacement"]
             action = item["Action"]
             special = item["Spécial"]

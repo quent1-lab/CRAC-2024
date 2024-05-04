@@ -205,6 +205,7 @@ class IHM_Action_Aux:
         self.listes = []
         self.checkboxes = []
         self.panels = []
+        self.button_delete = None
         
         # Charger la configuration des actions
         with open("data/config_ordre_to_can.json", "r") as file:
@@ -364,9 +365,7 @@ class IHM_Action_Aux:
         
         # Cacher la liste pince gauche
         self.listes[5].hide()
-                
-        
-        
+
     def process_events(self, event):
         if event.type == pygame.USEREVENT:
             if event.user_type == pygame_gui.UI_BUTTON_PRESSED: # Si un bouton est pressé
@@ -736,6 +735,12 @@ class IHM_Action_Aux:
         if self.cote_actif == "":
             if self.cote_actif == "":
                 self.disable_listes()
+
+        self.button_delete = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((370, 5), (240, 30)),
+                                                        text='Delete',
+                                                        manager=self.manager,
+                                                        container=self.window,
+                                                        object_id=ObjectID(object_id="#b_Delete"))
         
     def close(self):
         self.window.kill()

@@ -178,7 +178,7 @@ class IHM_Command:
         self.desactive_callback = callback
 
 class IHM_Action_Aux:
-    def __init__(self, manager,_action_numero,_pos_actuelle, _callback_json=None, _callback_save=None, _callback_next=None, _callback_back=None,_id="", _config=None, _callback_delete=None):    
+    def __init__(self, manager,_action_numero,_pos_actuelle, _callback_json=None, _callback_save=None, _callback_next=None, _callback_back=None,_id="", _config=None, _callback_delete=None, _angle = None):    
         self.manager = manager
         self.size = (610, 500)
         self.id = _id
@@ -363,6 +363,12 @@ class IHM_Action_Aux:
         # Désactiver les boutons back et next
         self.buttons[-1].disable()
         self.buttons[-3].disable()
+        
+        # Mise a jour de l'angle
+        if _angle:
+            self.texts[1].set_text(str(_angle))
+            self.data["Déplacement"]["Coord"]["T"] = _angle
+            
         
         if _config:
             # Charger tous les paramètres
@@ -617,7 +623,7 @@ class IHM_Action_Aux:
                     if id == "#t_Angle_arrive":
                         self.angle = int(event.text)
                         if not self.checkboxes[0].get_checked():
-                            self.data["Déplacement"] = {"Rotation": self.angle,
+                            self.data["Déplacement"] = {"Rotation": self.angle * 10,
                                                         "aknowledge": self.config["Rotation"]["aknowledge"]}
                         else:
                             self.data["Déplacement"]["Coord"]["T"] = int(event.text)

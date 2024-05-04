@@ -135,7 +135,7 @@ class Strategie:
         angle = deplacement["Rotation"]
         
         # Envoyez la position au CAN
-        self.client.add_to_send_list(self.client.create_message(2, "rotation", {"angle": angle*10}))
+        self.client.add_to_send_list(self.client.create_message(2, "rotation", {"angle": angle}))
 
         # Attendre l'acquittement
         self.wait_for_aknowledge(deplacement["aknowledge"])

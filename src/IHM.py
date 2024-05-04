@@ -58,6 +58,7 @@ class IHM:
         self.pos_waiting_list = [] # Liste pour stocker les futurs positions positions du robot à atteindre 
         self.robot_move = True # Variable pour savoir si le robot est en mouvement
         self.numero_strategie = 0 # Numéro de la stratégie en cours
+        self.angle_mouse = 0 # Angle de la souris
         
         # Vider le fichier de sauvegarde des stratégies
         with open("data/strategie.json", "w") as f:
@@ -209,10 +210,19 @@ class IHM:
                 # Rendre l'image du robot transparente pour que le fond soit visible
                 robot_image.set_alpha(128)
                 
+                if key[pygame.K_LEFT]:
+                    self.angle_mouse += 2
+                elif key[pygame.K_RIGHT]:
+                    self.angle_mouse -= 2
+                
+                # Tourner l'image du robot en fonction de l'angle de la souris
+                robot_image = pygame.transform.rotate(robot_image, self.angle_mouse)
+                
                 # Ajuster la position pour que le robot soit centré sur la souris
                 robot_pos = (pos[0] - robot_image.get_width() // 2, pos[1] - robot_image.get_height() // 2)
                 self.lcd.blit(robot_image, robot_pos)
             else:
+                self.angle_mouse = 0
                 # Dessine le robot si la souris est a proximité d'un point de la liste d'attente
                 for pos_r in self.pos_waiting_list:
                     if math.sqrt((pos_r[0] - x)**2 + (pos_r[1] - y)**2) < 25:
@@ -742,7 +752,7 @@ class IHM:
 
         elif message["cmd"] == "stop":
             self.client_socket.stop()
-        
+
     def update_energie(self, _json):
         if _json is None:
             return
@@ -760,7 +770,7 @@ class IHM:
     def handle_mouse_click(self, event):
         key = pygame.key.get_pressed()
         # Si la touche MAJ gauche est enfoncée et que l'on clique
-        if event.type == MOUSEBUTTONDOWN and event.button == 1 and key[pygame.K_LSHIFT]:
+        if (event.type == MOUSEBUTTONDOWN and event.button == 1) and key[pygame.K_LSHIFT]:
             # Vérifiez si le clic a eu lieu dans la zone de jeu
             if self.is_within_game_area(event.pos):
                 # Convertissez les coordonnées de la souris en coordonnées du terrain de jeu
@@ -774,7 +784,7 @@ class IHM:
                 self.clicked_position = (x, y)
 
                 if self.action_window is None:
-                    self.action_window = IHM_Action_Aux(self.manager, self.numero_strategie+1, (x, y, self.ROBOT_ANGLE), _callback_save=self.save_action)
+                    self.action_window = IHM_Action_Aux(self.manager, self.numero_strategie+1, (x, y, self.ROBOT_ANGLE), _callback_save=self.save_action, _angle = self.angle_mouse)
         
         elif event.type == MOUSEBUTTONDOWN and event.button == 1:
             # Si le clic droit est dans les alentours d'un point de la liste d'attente, ouvrir le gestionnaire de stratégie
@@ -892,11 +902,7 @@ class IHM:
             else:
                 coord_prec = (self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE, "0")
             
-            new_angle = coord_prec[2] + angle
-            
-            # Si l'angle est supérieur à 360°, on le ramène entre 0 et 360°
-            new_angle %= 360
-            
+            new_angle = angle
             new_pos = (coord_prec[0], coord_prec[1], new_angle, "0")
         
         new_window = None

@@ -223,7 +223,7 @@ class IHM:
                         
                         # Rendre l'image du robot transparente pour que le fond soit visible
                         robot_image.set_alpha(128)
-                        print(pos_r[2])
+
                         # Tourner l'image du robot en fonction de l'angle du robot
                         robot_image = pygame.transform.rotate(robot_image, pos_r[2]/10)
                         
@@ -853,6 +853,7 @@ class IHM:
         strat.pop("id_action")
         
         print("| Déplacement", strat["Déplacement"], "\n| Action", action, "| Special", strat["Special"])
+        
         if "Coord" in strat["Déplacement"]:
             coord = strat["Déplacement"]["Coord"]
             
@@ -870,8 +871,33 @@ class IHM:
                 
             new_pos = (int(coord["X"]), int(coord["Y"]), coord["T"], "0")
                 
-        else:
-            new_pos = (self.ROBOT.x, self.ROBOT.y, 0, "0")
+        elif "Ligne_Droite" in strat["Déplacement"]:
+            distance = strat["Déplacement"]["Ligne_Droite"]
+            
+            # Calcul de la position d'arrivée en fonction de la coordonnée précédente
+            if len(self.pos_waiting_list) > 0: # Récupérer les coordonnées précédentes
+                coord_prec = self.pos_waiting_list[-1]
+            else:
+                coord_prec = (self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE, "0")
+                
+            x = coord_prec[0] + distance * math.cos(math.radians(coord_prec[2]/10))
+            y = coord_prec[1] + distance * math.sin(math.radians(coord_prec[2]/10))
+            new_pos = (int(x), int(y), coord_prec[2], "0")
+        elif "Rotation" in strat["Déplacement"]:
+            angle = strat["Déplacement"]["Rotation"]
+            
+            # Calcul de l'angle d'arrivée en fonction de l'angle précédent
+            if len(self.pos_waiting_list) > 0: # Récupérer les coordonnées précédentes
+                coord_prec = self.pos_waiting_list[-1]
+            else:
+                coord_prec = (self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE, "0")
+            
+            new_angle = coord_prec[2] + angle
+            
+            # Si l'angle est supérieur à 360°, on le ramène entre 0 et 360°
+            new_angle %= 360
+            
+            new_pos = (coord_prec[0], coord_prec[1], new_angle, "0")
         
         new_window = None
         
@@ -885,7 +911,7 @@ class IHM:
                 new_window = IHM_Action_Aux(self.manager, self.numero_strategie+2, (int(strat["New_coord"]["X"]), int(strat["New_coord"]["Y"]), int(strat["New_coord"]["T"])), _callback_save=self.save_action,_id="New_coord")
             
            # Retirer New_coord et New_angle de l'action
-            strat.pop("New_coord") 
+            strat.pop("New_coord")
         except KeyError:
             pass
         

@@ -199,6 +199,7 @@ class IHM:
             # Dessiner un petit cercle rouge sur la pointe de la souris
             pygame.draw.circle(self.lcd, pygame.Color(255, 0, 0), pos, 5)
             
+            # Dessine le robot si la touche shift est enfoncée
             if key[pygame.K_LSHIFT]:
                 robot_image = pygame.image.load('data/robot.png').convert_alpha()
                 
@@ -211,6 +212,28 @@ class IHM:
                 # Ajuster la position pour que le robot soit centré sur la souris
                 robot_pos = (pos[0] - robot_image.get_width() // 2, pos[1] - robot_image.get_height() // 2)
                 self.lcd.blit(robot_image, robot_pos)
+            else:
+                # Dessine le robot si la souris est a proximité d'un point de la liste d'attente
+                for pos_r in self.pos_waiting_list:
+                    if math.sqrt((pos_r[0] - x)**2 + (pos_r[1] - y)**2) < 25:
+                        robot_image = pygame.image.load('data/robot.png').convert_alpha()
+                        
+                        # Ajuster la taille de l'image du robot à la taille du terrain de jeu
+                        robot_image = pygame.transform.scale(robot_image, (int(self.ROBOT_Dimension[0] * self.X_RATIO), int(self.ROBOT_Dimension[1] * self.Y_RATIO)))
+                        
+                        # Rendre l'image du robot transparente pour que le fond soit visible
+                        robot_image.set_alpha(128)
+                        print(pos_r[2])
+                        # Tourner l'image du robot en fonction de l'angle du robot
+                        robot_image = pygame.transform.rotate(robot_image, pos_r[2]/10)
+                        
+                        # Ajuster la position pour que le robot soit centré le point de la liste d'attente
+                        x_r = self.map_value(pos_r[0], 0, self.FIELD_SIZE[0], self.WINDOW_SIZE[0]-5-self.BORDER_DISTANCE*self.X_RATIO, self.BORDER_DISTANCE*self.X_RATIO+5)
+                        y_r = self.map_value(pos_r[1], 0, self.FIELD_SIZE[1], self.BORDER_DISTANCE*self.Y_RATIO+5 ,self.WINDOW_SIZE[1]-5-self.BORDER_DISTANCE*self.Y_RATIO)
+                        x_r = int(x_r)
+                        y_r = int(y_r)
+                        robot_pos = (x_r - robot_image.get_width() // 2, y_r - robot_image.get_height() // 2)
+                        self.lcd.blit(robot_image, robot_pos)
 
     def draw_text(self, text, x, y, color=(0, 0, 0)):
         """Draws text to the pygame screen, on up left corner"""

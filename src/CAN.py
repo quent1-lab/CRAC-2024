@@ -115,7 +115,12 @@ class ComCAN:
                 """elif data[0] == 0x114:
                 # Fin d'instruction de positionnement
                 self.client.add_to_send_list(self.client.create_message(0, "akn_m", None))"""
-                
+            
+            elif data[0] == 0x1A0 or data[0] == 0x1A1:
+                id_action = dataX[0]
+                if id_action == 5:
+                    self.client.add_to_send_list(self.client.create_message(9, "get_pos", {"id_herk": dataX[1], "pos": struct.unpack('h', dataX[1:3])}))
+        
             elif data[0] == 0x203:
                 # V_Batterie : ID batterie (short), V_Batterie (short)
                 id_bat = dataX[0]

@@ -121,7 +121,8 @@ class IHM_Robot:
         self.button_autres = [
             Button(self.screen, (40, 220, 200, 80), self.theme_path, "TEST Mouvement", font, lambda : self.button_autres_action(0)),
             Button(self.screen, (280, 220, 200, 80), self.theme_path, "TEST Action", font, lambda : self.button_autres_action(1)),
-            Button(self.screen, (520, 220, 240, 80), self.theme_path, "TEST Spécial", font, lambda : self.button_autres_action(2))
+            Button(self.screen, (520, 220, 240, 80), self.theme_path, "TEST Spécial", font, lambda : self.button_autres_action(2)),
+            Button(self.screen, (280, 320, 200, 80), self.theme_path, "GET pos", font, lambda : self.button_autres_action(3)),
         ]
         
         self.button_tests_mouvement = [
@@ -146,8 +147,7 @@ class IHM_Robot:
             
             Button(self.screen, (380, 160, 150, 60), self.theme_path, "COMB UP", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 4}))),
             Button(self.screen, (380, 230, 150, 60), self.theme_path, "COMB SHAKE", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 10}))),
-            Button(self.screen, (380, 300, 150, 60), self.theme_path, "COMB DOWN", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 5}))),
-            Button(self.screen, (380, 370, 150, 60), self.theme_path, "COMB TAKE", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 12}))),
+            Button(self.screen, (380, 300, 150, 60), self.theme_path, "COMB TAKE", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 12}))),
             
             Button(self.screen, (560, 160, 150, 60), self.theme_path, "COMB DROPOFF", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 13}))),
         ]
@@ -155,6 +155,14 @@ class IHM_Robot:
         self.button_tests_special = [
             Button(self.screen, (10, 90, 150, 80), self.theme_path, "Recalage", font, self.recalage),
         ]
+        
+        self.button_get_pos = [
+            Button(self.screen, (100, 90, 200, 60), self.theme_path, "Carte Avant", font, lambda : self.set_id_card_action(416)),
+            Button(self.screen, (500, 90, 200, 60), self.theme_path, "Carte Arrière", font, lambda : self.set_id_card_action(417))
+        ]
+        self.value_get_pos = [0, 0, 0]
+        
+        self.set_id_card_action(416)
         
         self.strategie = None
         self.config_strategie = None
@@ -179,18 +187,17 @@ class IHM_Robot:
         if id == 416:
             self.button_tests_action[0].update_color((10, 200, 10))
             self.button_tests_action[1].update_color(None)
+            self.button_get_pos[0].update_color((10, 200, 10))
+            self.button_get_pos[1].update_color(None)
         elif id == 417:
             self.button_tests_action[0].update_color(None)
             self.button_tests_action[1].update_color((10, 200, 10))
+            self.button_get_pos[0].update_color(None)
+            self.button_get_pos[1].update_color((10, 200, 10))
     
     def button_autres_action(self, index):
-        if index == 0:
-            self.PAGE = 10
-        elif index == 1:
-            self.PAGE = 11
-        elif index == 2:
-            self.PAGE = 12
-        time.sleep(0.5)
+        self.PAGE = 10 + index
+        time.sleep(0.2)
     
     def strategie_action(self, index):
         self.client.add_to_send_list(self.client.create_message(0, "strategie", {"strategie": index}))
@@ -386,6 +393,27 @@ class IHM_Robot:
     def page_special(self):
         for button in self.button_tests_special:
             button.draw()
+    
+    def page_get_pos(self):
+        
+        def get_pos():
+            i = 0
+            while self.PAGE == 13:
+                # Faire une demande de position HerkulEX par HerkulEX
+                self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 5, "byte2": i}))
+                time.sleep(0.1)
+                
+                # Dessiner les valeurs
+                font = pygame.font.SysFont("Arial", 30)
+                for i, value in enumerate(self.value_get_pos):
+                    draw_text_center(self.screen, f"Position {i} : {value}", x=self.width//2, y=90 + i * 50, font=font, color=(255, 255, 255))
+                
+                i += 1
+                if i > 3:
+                    i = 0
+                
+        get_pos_thread = threading.Thread(target=get_pos)
+        get_pos_thread.start()
     
     def taille_auto_batterie(self):
         nb_batteries_colonne = 0

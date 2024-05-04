@@ -400,7 +400,7 @@ class IHM_Robot:
         font = pygame.font.SysFont("Arial", 30)
         for i, value in enumerate(self.value_get_pos):
             # Faire une demande de position HerkulEX par HerkulEX
-            self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 5, "byte2": i}))
+            #self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 5, "byte2": i}))
             time.sleep(0.1)
             draw_text_center(self.screen, f"Position {i} : {value}", x=self.width//2, y=90 + i * 50, font=font, color=(255, 255, 255))
     

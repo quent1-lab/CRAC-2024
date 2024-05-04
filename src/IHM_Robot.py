@@ -396,24 +396,13 @@ class IHM_Robot:
     
     def page_get_pos(self):
         
-        def get_pos():
-            i = 0
-            while self.PAGE == 13:
-                # Faire une demande de position HerkulEX par HerkulEX
-                self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 5, "byte2": i}))
-                time.sleep(0.1)
-                
-                # Dessiner les valeurs
-                font = pygame.font.SysFont("Arial", 30)
-                for i, value in enumerate(self.value_get_pos):
-                    draw_text_center(self.screen, f"Position {i} : {value}", x=self.width//2, y=90 + i * 50, font=font, color=(255, 255, 255))
-                
-                i += 1
-                if i > 3:
-                    i = 0
-                
-        get_pos_thread = threading.Thread(target=get_pos)
-        get_pos_thread.start()
+        # Dessiner les valeurs
+        font = pygame.font.SysFont("Arial", 30)
+        for i, value in enumerate(self.value_get_pos):
+            # Faire une demande de position HerkulEX par HerkulEX
+            self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 5, "byte2": i}))
+            time.sleep(0.1)
+            draw_text_center(self.screen, f"Position {i} : {value}", x=self.width//2, y=90 + i * 50, font=font, color=(255, 255, 255))
     
     def taille_auto_batterie(self):
         nb_batteries_colonne = 0

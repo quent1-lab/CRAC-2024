@@ -95,7 +95,7 @@ class Strategie:
             
             deplacement = item["Déplacement"]
             action = item["Action"]
-            special = item["Spécial"]
+            special = item["Special"]
             
             action_en_mvt = []
             action_apres_mvt = []

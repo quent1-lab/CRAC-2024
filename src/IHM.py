@@ -721,9 +721,6 @@ class IHM:
                 self.objets.append(
                     Objet(obj["id"], obj["x"], obj["y"], obj["taille"]))
                 
-        elif message["cmd"] == "jack":
-            print(message["data"]["value"])
-                
         elif message["cmd"] == "coord":
             coord = message["data"]
             self.ROBOT.update_position(coord["x"], coord["y"])

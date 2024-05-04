@@ -79,7 +79,7 @@ class Strategie:
         
         self.client_strat.add_to_send_list(self.client_strat.create_message(9, "jack", {"data": "wait_start"}))
         self.JACK.wait_for_press() # Attend que le jack soit relaché
-        
+
         self.client_strat.add_to_send_list(self.client_strat.create_message(9, "jack", {"data": "start"}))
         
         # Reset la carte actionneur

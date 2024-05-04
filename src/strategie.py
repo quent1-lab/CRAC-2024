@@ -110,6 +110,7 @@ class Strategie:
                 logging.error(f"Erreur lors de la lecture des actions : {str(e)}")
             
             if "Coord" in deplacement:
+                logging.info(f"STRAT : Déplacement en {deplacement['Coord']}")
                 self.move(deplacement)
             elif "Rotation" in deplacement:
                 self.rotate(deplacement)
@@ -123,16 +124,20 @@ class Strategie:
                 break                  
     
     def move(self, deplacement):
-        # Envoi de la commande de déplacement
-        pos = (deplacement["Coord"]["X"], deplacement["Coord"]["Y"], int(deplacement["Coord"]["T"]), "0")
-        logging.info(f"STRAT : Déplacement en {pos}")
-        
-        # Envoyez la position au CAN
-        self.client_strat.add_to_send_list(self.client_strat.create_message(
-            2, "clic", {"x": pos[0], "y": pos[1], "theta": pos[2], "sens": pos[3]}))
-        
-        # Attendre l'acquittement
-        self.wait_for_aknowledge(deplacement["aknowledge"])
+        try:
+            # Envoi de la commande de déplacement
+            pos = (deplacement["Coord"]["X"], deplacement["Coord"]["Y"], int(deplacement["Coord"]["T"]), "0")
+            logging.info(f"STRAT : Déplacement en {pos}")
+            
+            # Envoyez la position au CAN
+            self.client_strat.add_to_send_list(self.client_strat.create_message(
+                2, "clic", {"x": pos[0], "y": pos[1], "theta": pos[2], "sens": pos[3]}))
+            
+            logging.info(f"STRAT : Envoi de la position")
+            # Attendre l'acquittement
+            self.wait_for_aknowledge(deplacement["aknowledge"])
+        except Exception as e:
+            logging.error(f"Erreur lors de l'envoi de la position move : {str(e)}")
     
     def rotate(self, deplacement):
         # Envoi de la commande de rotation

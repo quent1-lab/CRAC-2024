@@ -544,9 +544,9 @@ class IHM_Robot:
             elif message["cmd"] == "jack":
                 data = message["data"]
                 logging.info(f"Jack : {data}")
-                if data["data"] == "wait_for_press":
+                if data["data"] == "input_jack":
                     self.text_page_play = "Veillez insérer le Jack"
-                elif data["data"] == "wait_for_release":
+                elif data["data"] == "wait_start":
                     self.text_page_play = "Prêt à démarrer le match"
                 elif data["data"] == "start":
                     self.text_page_play = "Straégie en cours..."

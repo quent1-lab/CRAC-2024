@@ -967,9 +967,7 @@ class IHM:
             with open(f"data/strategies/strategie_{numero}.json", "w") as file:
                 json.dump(strategie, file, indent=4)
                 
-            self.client_socket.add_to_send_list(self.client_socket.create_message(self.IHM_Robot, 
-                                                                                  "strategie", {"id": numero,
-                                                                                                "strategie": strategie}))              
+            #self.client_socket.add_to_send_list(self.client_socket.create_message(self.IHM_Robot,strategie", {"id": numero,"strategie": strategie}))           
                 
         else:
             print("Aucune stratégie à sauvegarder")

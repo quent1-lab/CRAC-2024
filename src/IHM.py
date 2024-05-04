@@ -543,9 +543,10 @@ class IHM:
             if commande[:2] != "0x":
                 commande = "0x" + commande
             commande = int(commande, 16)
-        byte1 = message[1]
-        byte2 = message[2]
-        byte3 = message[3]
+        byte1 = int(message[1])
+        byte2 = int(message[2])
+        byte3 = int(message[3])
+        print(f"Commande CAN: {commande}, {byte1}, {byte2}, {byte3}")
         self.client_socket.add_to_send_list(self.client_socket.create_message(2, "CAN", {"id": commande, "byte1": byte1, "byte2": byte2, "byte3": byte3}))
 
     def valeur_de_test(self):

@@ -7,15 +7,15 @@ import  os
 
 class Strategie:
     def __init__(self, _nom_strat):
-        self.nom_start = _nom_strat
+        self.nom_strat = _nom_strat
         self.strategie = None
         
         # Vérification de l'existence du fichier
-        if os.path.exists(f"data/strategies/{self.nom_start}.json"):
-            with open(f"data/strategies/{self.nom_start}.json", "r") as file:
+        if os.path.exists(f"data/strategies/{self.nom_strat}"):
+            with open(f"data/strategies/{self.nom_strat}", "r") as file:
                 self.strategie = json.load(file)
         else:
-            logging.error(f"La stratégie {self.nom_start} n'existe pas")
+            logging.error(f"La stratégie {self.nom_strat} n'existe pas")
             return
         
         self.client = Client("127.0.0.4", 22050, 4, self.receive_to_server)
@@ -51,15 +51,17 @@ class Strategie:
                 data = message["data"]
                 if self.strategie_is_running:
                     self.liste_aknowledge.append(data["id"])
+                    logging.info(f"STRAT : Acquittement reçu : {data['id']}")
                 
             elif message["cmd"] == "ARU":
-                pass
+                self.strategie_is_running = False
         
         except Exception as e:
             print(f"Erreur lors de la réception du message : {str(e)}")
             
     def play(self):
         self.is_running = True
+        self.strategie_is_running = True
         self.client.set_callback(self.receive_to_server)
         self.client.set_callback_stop(self.stop)
         self.client.connect()
@@ -82,26 +84,35 @@ class Strategie:
         
         logging.info("STRAT : Jack relaché")
         self.client.add_to_send_list(self.client.create_message(9, "jack", {"data": "start"}))
-    
-    def run_strategie(self):
+        
         # Reset la carte actionneur
         self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 416, "byte1": 11}))
-        
+    
+    def run_strategie(self):
+                
         for key, item in self.strategie.items():
+            if self.strategie_is_running == False:
+                break
+            
             deplacement = item["Déplacement"]
             action = item["Action"]
             special = item["Spécial"]
             
             if "Coord" in deplacement:
                 self.move(deplacement)
+            elif "Rotation" in deplacement:
+                self.rotate(deplacement)
+            elif "Ligne_Droite" in deplacement:
+                self.ligne_droite(deplacement)
+            
                 
             for key, act in action.items():
                 self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": act["id"], "byte1": act["ordre"]}))
                 
-                """while act["akn"] not in self.liste_aknowledge and self.strategie_is_running:
-                    time.sleep(0.1)"""
+                #self.wait_for_aknowledge(act["aknowledge"])
                 
                 time.sleep(3)
+            
             
             if self.strategie_is_running == False:
                 logging.info("Arrêt de la stratégie")
@@ -117,9 +128,34 @@ class Strategie:
             2, "clic", {"x": pos[0], "y": pos[1], "theta": pos[2], "sens": pos[3]}))
         
         # Attendre l'acquittement
-        while deplacement["aknowledge"] not in self.liste_aknowledge and self.strategie_is_running:
+        self.wait_for_aknowledge(deplacement["aknowledge"])
+    
+    def rotate(self, deplacement):
+        # Envoi de la commande de rotation
+        angle = deplacement["Rotation"]
+        
+        # Envoyez la position au CAN
+        self.client.add_to_send_list(self.client.create_message(2, "rotation", {"angle": angle*10}))
+
+        # Attendre l'acquittement
+        self.wait_for_aknowledge(deplacement["aknowledge"])
+    
+    def ligne_droite(self, deplacement):
+        # Envoi de la commande de rotation
+        distance = deplacement["Ligne_Droite"]
+        
+        # Envoyez la position au CAN
+        self.client.add_to_send_list(self.client.create_message(2, "deplacement", {"distance": distance}))
+
+        # Attendre l'acquittement
+        self.wait_for_aknowledge(deplacement["aknowledge"])
+    
+    def wait_for_aknowledge(self, id):
+        while id not in self.liste_aknowledge and self.strategie_is_running:
             time.sleep(0.1)
-                
+        if id in self.liste_aknowledge:
+            self.liste_aknowledge.remove(id)
+    
     def stop(self):
         self.is_running = False
         self.strategie_is_running = False

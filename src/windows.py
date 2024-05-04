@@ -299,6 +299,7 @@ class IHM_Action_Aux:
         self.data = {
             "Déplacement":{
                 "Coord": {"X": _pos_actuelle[0], "Y": _pos_actuelle[1], "T": "", "S": "0"},
+                "aknowledge": self.config["Coord"]["aknowledge"]
             },
             "Action" : {},
             "Spécial" :{}

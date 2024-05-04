@@ -6,7 +6,7 @@ import threading
 import time
 from batterie import Batterie
 import logging
-import gpiozero
+#import gpiozero
 from strategie import Strategie
 
 # Configuration du logger
@@ -17,7 +17,7 @@ class IHM_Robot:
     def __init__(self):
         self.client = Client("127.0.0.9", 22050, 9, self.receive_to_server)
         
-        self.JACK = gpiozero.Button(16, pull_up=True)
+        #self.JACK = gpiozero.Button(16, pull_up=True)
 
         self.Energie = {
             "Batterie 1": {"Tension": 0, "Courant": 0, "Switch": 0},
@@ -147,7 +147,10 @@ class IHM_Robot:
             
             Button(self.screen, (380, 160, 150, 60), self.theme_path, "COMB UP", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 4}))),
             Button(self.screen, (380, 230, 150, 60), self.theme_path, "COMB SHAKE", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 10}))),
-            Button(self.screen, (380, 300, 150, 60), self.theme_path, "COMB DOWN", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 5})))
+            Button(self.screen, (380, 300, 150, 60), self.theme_path, "COMB DOWN", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 5}))),
+            Button(self.screen, (380, 370, 150, 60), self.theme_path, "COMB TAKE", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 12}))),
+            
+            Button(self.screen, (560, 160, 150, 60), self.theme_path, "COMB DROPOFF", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 13}))),
         ]
         
         self.button_tests_special = [
@@ -225,26 +228,21 @@ class IHM_Robot:
                 id = value["id"]
                 akn = value["aknowledge"]
                 action = value[self.EQUIPE]
-                logging.info(f"Recalage de la position {id}")
                 if len(action["ordre"]) == 1:
                     # Ordre de rotation
                     angle = action["ordre"]["theta"]
-                    logging.info(f"Rotation de {angle}°")
                     self.client.add_to_send_list(self.client.create_message(2, "rotation", {"angle" : angle*10}))
                 else:
                     # Ordre de recalage
                     distance = action["ordre"]["distance"]
                     mode = action["ordre"]["mode"]
                     recalage = action["ordre"]["recalage"]
-                    logging.info(f"Recalage de {distance}mm en mode {mode} avec recalage {recalage}")
                     self.client.add_to_send_list(self.client.create_message(2, "recalage", {"distance": distance, "mode": mode, "recalage": recalage}))
                 
                 is_arrived = False
-                logging.info(f"Attente de l'aknowledge {akn}")
                 while self.recalage_is_playing and self.is_running and not is_arrived:
                     time.sleep(0.1)
                     if akn in self.liste_aknowledge:
-                        logging.info(f"Arrivé à la position {id}")
                         self.liste_aknowledge.remove(akn)
                         is_arrived = True
                     
@@ -263,13 +261,13 @@ class IHM_Robot:
         
         def task_play(): # Fonction pour jouer la stratégie dans un thread
             # Démarage au Jack
-            while self.JACK.is_not_pressed:
+            """while self.JACK.is_not_pressed:
                 self.text_page_play = "Veillez insérer le Jack"
                 time.sleep(0.1)
             time.sleep(0.2)
             while self.JACK.is_pressed:
                 self.text_page_play = "Robot prêt à démarer le match"
-                time.sleep(0.05)
+                time.sleep(0.05)"""
                 
             self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 416, "byte1": 11}))
             
@@ -528,6 +526,7 @@ class IHM_Robot:
             
             elif message["cmd"] == "jack":
                 data = message["data"]
+                logging.info(f"Jack : {data}")
                 if data["data"] == "wait_for_press":
                     self.text_page_play = "Veillez insérer le Jack"
                 elif data["data"] == "wait_for_release":

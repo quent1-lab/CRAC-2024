@@ -751,7 +751,7 @@ class IHM:
                     if self.action_window is None:
                         with open("data/strategie.json", "r") as file:
                             strategie = json.load(file)
-                        self.action_window = IHM_Action_Aux(self.manager, i+1, (pos[0], pos[1], 0), _callback_save=self.save_action, _config = strategie[str(i+1)])
+                        self.action_window = IHM_Action_Aux(self.manager, i+1, (pos[0], pos[1], 0), _callback_save=self.save_action, _config = strategie[str(i+1)], _callback_delete=self.delete_action)
                     break
 
     def is_within_game_area(self, pos):
@@ -781,6 +781,35 @@ class IHM:
             
             print("Fin du trajet")
 
+    def delete_action(self, numero):
+        # Permet de supprimer une action de la stratégie
+        with open("data/strategie.json", "r") as file:
+            strategie = json.load(file)
+        try:
+            strategie.pop(str(numero))
+        except KeyError:
+            pass
+        
+        # Supprimer les coordonnées de la liste d'attente
+        self.pos_waiting_list.pop(numero-1)
+        self.numero_strategie -= 1
+        
+        # Modifier les numéros des actions suivantes
+        for i in range(numero+1, len(strategie)+2):
+            strat = strategie.pop(str(i))
+            strategie[str(i-1)] = strat
+            strat["id_action"] = i-1
+        
+        print("Stratégie modifiée", strategie)
+        
+        with open("data/strategie.json", "w") as file:
+            json.dump(strategie, file, indent=4)
+            
+        self.action_window.close()
+        self.action_window = None
+        
+        print("Action supprimée")
+    
     def save_action(self, strat):
         action = strat["Action"]
         numero = strat["id_action"]
@@ -823,7 +852,7 @@ class IHM:
         except KeyError:
             pass
         
-        strategie = {numero: strat}
+        strategie = {str(numero): strat}
         
         with open("data/strategie.json", "r") as file:
             try:

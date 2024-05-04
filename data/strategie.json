@@ -2,27 +2,15 @@
     "1": {
         "D\u00e9placement": {
             "Coord": {
-                "X": 898,
-                "Y": 530,
-                "T": 243,
+                "X": 942,
+                "Y": 898,
+                "T": 1110,
                 "S": "0"
             },
             "aknowledge": 276
         },
         "Action": {},
-        "Special": {}
-    },
-    "2": {
-        "D\u00e9placement": {
-            "Coord": {
-                "X": 1217,
-                "Y": 840,
-                "T": 441,
-                "S": "0"
-            },
-            "aknowledge": 276
-        },
-        "Action": {},
-        "Special": {}
+        "Special": {},
+        "id_action": 1
     }
 }

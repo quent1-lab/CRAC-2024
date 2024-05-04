@@ -178,7 +178,7 @@ class IHM_Command:
         self.desactive_callback = callback
 
 class IHM_Action_Aux:
-    def __init__(self, manager,_action_numero,_pos_actuelle, _callback_json=None, _callback_save=None, _callback_next=None, _callback_back=None,_id="", _config=None):    
+    def __init__(self, manager,_action_numero,_pos_actuelle, _callback_json=None, _callback_save=None, _callback_next=None, _callback_back=None,_id="", _config=None, _callback_delete=None):    
         self.manager = manager
         self.size = (610, 500)
         self.id = _id
@@ -192,6 +192,7 @@ class IHM_Action_Aux:
         self.back_callback = _callback_back
         self.save_callback = _callback_save
         self.next_callback = _callback_next
+        self.delete_callback = _callback_delete
         
         self.cote_actif = ""
 
@@ -359,6 +360,10 @@ class IHM_Action_Aux:
             if i != 1:
                 text.disable()
         
+        # Désactiver les boutons back et next
+        self.buttons[-1].disable()
+        self.buttons[-3].disable()
+        
         if _config:
             # Charger tous les paramètres
             self.load_data(_config)
@@ -404,11 +409,17 @@ class IHM_Action_Aux:
                         self.update_checkboxes()
                         
                 elif id == "#b_Retour":
-                    self.back_callback()
+                    if self.back_callback:
+                        self.back_callback()
                 elif id == "#b_Enregistrer":
                     self.save_data(self.data)
                 elif id == "#b_Suivant":
-                    self.next_callback()
+                    if self.next_callback:
+                        self.next_callback()
+                
+                elif id == "#b_Delete":
+                    if self.delete_callback:
+                        self.delete_callback(self.action_numero)
                 
                 # Gestion des checkbox
                 elif id.split("_")[0] == "#c":
@@ -736,7 +747,7 @@ class IHM_Action_Aux:
             if self.cote_actif == "":
                 self.disable_listes()
 
-        self.button_delete = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((400, 5), (150, 30)),
+        self.button_delete = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((400, 5), (170, 30)),
                                                         text='Supprimer',
                                                         manager=self.manager,
                                                         container=self.window,

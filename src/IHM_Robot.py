@@ -160,6 +160,7 @@ class IHM_Robot:
             Button(self.screen, (100, 90, 200, 60), self.theme_path, "Carte Avant", font, lambda : self.set_id_card_action(416)),
             Button(self.screen, (500, 90, 200, 60), self.theme_path, "Carte Arrière", font, lambda : self.set_id_card_action(417))
         ]
+        
         self.value_get_pos = [0, 0, 0]
         
         self.set_id_card_action(416)

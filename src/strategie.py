@@ -98,11 +98,14 @@ class Strategie:
             action_en_mvt = []
             action_apres_mvt = []
             
-            for key, act in action.items():
-                if act["en_mvt"] == True:
-                    action_en_mvt.append(action[key])
-                else:
-                    action_apres_mvt.append(action[key])
+            try:
+                for key, act in action.items():
+                    if act["en_mvt"] == True:
+                        action_en_mvt.append(action[key])
+                    else:
+                        action_apres_mvt.append(action[key])
+            except Exception as e:
+                logging.error(f"Erreur lors de la lecture des actions : {str(e)}")
             
             if "Coord" in deplacement:
                 self.move(deplacement)

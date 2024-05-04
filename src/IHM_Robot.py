@@ -134,7 +134,8 @@ class IHM_Robot:
             Button(self.screen, (100, 90, 200, 60), self.theme_path, "Carte Avant", font, lambda : self.set_id_card_action(416)),
             Button(self.screen, (500, 90, 200, 60), self.theme_path, "Carte Arrière", font, lambda : self.set_id_card_action(417)),
             
-            Button(self.screen, (20, 160, 150, 60), self.theme_path, "HOMING", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 6}))),
+            Button(self.screen, (20, 160, 150, 60), self.theme_path, "HOMING", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.
+                                                                                                                                                                 , "byte1": 6}))),
             Button(self.screen, (20, 230, 150, 60), self.theme_path, "UP", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 7}))),
             Button(self.screen, (20, 300, 150, 60), self.theme_path, "MID", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 8}))),
             Button(self.screen, (20, 370, 150, 60), self.theme_path, "DOWN", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 9}))),

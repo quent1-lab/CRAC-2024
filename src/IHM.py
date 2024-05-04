@@ -782,23 +782,23 @@ class IHM:
             print("Fin du trajet")
 
     def save_action(self, strat):
-        self.numero_strategie += 1
         action = strat["Action"]
+        numero = strat["id_action"]
+        strat.pop("id_action")
         
-        print("| Déplacement", strat["Déplacement"], "\n| Action", action)
+        print("| Déplacement", strat["Déplacement"], "\n| Action", action, "| Special", strat["Special"])
         if "Coord" in strat["Déplacement"]:
             coord = strat["Déplacement"]["Coord"]
             
             if coord["T"] == "":
                 # Si l'angle d'arrivée n'est pas renseigné, on calcule l'angle entre le robot et la position d'arrivée
-                # Récupérer les coordonnées précédentes
-                if len(self.pos_waiting_list) > 0:
+                if len(self.pos_waiting_list) > 0: # Récupérer les coordonnées précédentes
                     coord_prec = self.pos_waiting_list[-1]
                 else:
                     coord_prec = (self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE, "0")
+                    
                 angle = math.degrees(math.atan2(coord["Y"] - coord_prec[1], coord["X"] - coord_prec[0]))
                 coord["T"] = int(angle*10)
-                print("Angle:", int(angle))
             else:
                 coord["T"] = int(coord["T"]*10)
                 
@@ -806,8 +806,6 @@ class IHM:
                 
         else:
             new_pos = (self.ROBOT.x, self.ROBOT.y, 0, "0")
-                
-        self.pos_waiting_list.append(new_pos)
         
         new_window = None
         
@@ -818,32 +816,37 @@ class IHM:
                     new_pos = (int(strat["New_coord"]["X"]), int(strat["New_coord"]["Y"]), int(strat["New_coord"]["T"]), strat["New_coord"]["S"])
                 else:
                     new_pos = (int(strat["New_coord"]["X"]), int(strat["New_coord"]["Y"]), int(strat["New_coord"]["T"]), "0")
-                new_window = IHM_Action_Aux(self.manager, self.numero_strategie+1, (int(strat["New_coord"]["X"]), int(strat["New_coord"]["Y"]), int(strat["New_coord"]["T"])), _callback_save=self.save_action,_id="New_coord")
+                new_window = IHM_Action_Aux(self.manager, self.numero_strategie+2, (int(strat["New_coord"]["X"]), int(strat["New_coord"]["Y"]), int(strat["New_coord"]["T"])), _callback_save=self.save_action,_id="New_coord")
             
            # Retirer New_coord et New_angle de l'action
             strat.pop("New_coord") 
         except KeyError:
             pass
         
-        strategie = {self.numero_strategie: strat}
+        strategie = {numero: strat}
         
         with open("data/strategie.json", "r") as file:
             try:
                 data = json.load(file)
+                print("Stratégie chargée", data)
             except:
                 data = {}
             try :
-                #if data[str(self.numero_strategie)]:
-                    # Si la stratégie existe déjà, on l'écrase
-                data[self.numero_strategie] = strat   
-            except KeyError:
+                #data[numero] = strat
                 data.update(strategie)
+            except KeyError:
+                pass
+                #data.update(strategie)
                 
         with open("data/strategie.json", "w") as file:
             json.dump(data, file, indent=4)
         
         self.action_window.close()
         self.action_window = new_window
+        
+        if numero > self.numero_strategie :
+            self.numero_strategie += 1
+            self.pos_waiting_list.append(new_pos)
     
     def save_action_live(self):
         # Permet de sauvegarder la position actuelle du robot
@@ -952,7 +955,7 @@ class IHM:
         self.client_socket.add_to_send_list(self.client_socket.create_message(self.IHM_Robot, "config", {"equipe": self.EQUIPE, "etat": self.ETAT}))
 
     def run(self):
-        #self.programme_simulation()
+        self.programme_simulation()
         
         self.client_socket.set_callback(self.receive_to_server)
         self.client_socket.set_callback_stop(self.stop)

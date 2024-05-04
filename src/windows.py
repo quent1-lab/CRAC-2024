@@ -37,7 +37,7 @@ class IHM_Command:
             ("Y", (110, 100), (80, 30)),
             ("T", (210, 100), (80, 30)),
             ("S", (310, 100), (80, 30)),
-            ("CMD base10", (10, 180), (80, 30)),
+            ("CMD hexa", (10, 180), (80, 30)),
             ("Byte1", (110, 180), (80, 30)),
             ("Byte2", (210, 180), (80, 30)),
             ("Byte3", (310, 180), (80, 30)),
@@ -269,9 +269,9 @@ class IHM_Action_Aux:
                     "box3": {"type": "label", "position": (120, 260), "size": (70, 35), "text": "Deplac"},
                     "box4": {"type": "checkbox", "position": (185, 260), "size": (35, 35), "text": "Peigne", "id":"#c_Peigne"}},
             
-            "Pinces": { "box1": {"type": "label", "position": (220, 200), "size": (220, 30), "text": "Pinces (G/D)"},
-                        "box2": {"type": "list", "position": (230, 230), "size": (100, 30), "text": self.name_action_Pince,"id":"#l_Pince_G"},
-                        "box3": {"type": "list", "position": (340, 230), "size": (100, 30), "text": self.name_action_Pince,"id":"#l_Pince_D"},
+            "Pinces": { "box1": {"type": "label", "position": (220, 200), "size": (220, 30), "text": "Pinces"},
+                        "box2": {"type": "list", "position": (240, 230), "size": (190, 30), "text": self.name_action_Pince,"id":"#l_Pince_G"},
+                        "box3": {"type": "list", "position": (1, 1), "size": (1, 1), "text": self.name_action_Pince,"id":"#l_Pince_D"},
                         "box4": {"type": "label", "position": (270, 260), "size": (70, 35), "text": "Deplac"},
                         "box5": {"type": "checkbox", "position": (335, 260), "size": (35, 35), "text": "Pince G", "id":"#c_Pinces"}},
             
@@ -297,12 +297,13 @@ class IHM_Action_Aux:
         }
         
         self.data = {
+            "id_action": _action_numero,
             "Déplacement":{
                 "Coord": {"X": _pos_actuelle[0], "Y": _pos_actuelle[1], "T": "", "S": "0"},
                 "aknowledge": self.config["Coord"]["aknowledge"]
             },
             "Action" : {},
-            "Spécial" :{}
+            "Special" :{}
         }
 
         for label_text, box_info in box_infos.items():
@@ -360,6 +361,9 @@ class IHM_Action_Aux:
         if _config:
             # Charger tous les paramètres
             self.load_data(_config)
+        
+        # Cacher la liste pince gauche
+        self.listes[5].hide()
                 
         
         
@@ -563,9 +567,9 @@ class IHM_Action_Aux:
                     
                     elif id == "#l_Action_special":
                         if texte == "-":
-                            self.data["Spécial"] = {}
+                            self.data["Special"] = {}
                         else:
-                            self.data["Spécial"] = {
+                            self.data["Special"] = {
                                 "id": self.config["ID"][self.cote_actif],
                                 "ordre": texte,
                                 "akn" : self.config["Action_special"][texte]["aknowledge"][self.cote_actif],
@@ -653,7 +657,7 @@ class IHM_Action_Aux:
         herkulex_pince_gauche = action.get("_PG_"+self.cote_actif[:2], {"str": "-"})
         herkulex_pince_droite = action.get("_PD_"+self.cote_actif[:2], {"str": "-"})
         herkulex_bras = action.get("_B_", {"str": "-"})
-        action_special = self.data.get("Spécial", {"str": "-"})
+        action_special = self.data.get("Special", {"str": "-"})
         
         if "str" in action_special:        
             self.rebuild_liste(self.listes[1],action_special["str"])
@@ -694,6 +698,7 @@ class IHM_Action_Aux:
     
     def load_data(self,data):
         self.data = data
+        self.data["id_action"] = self.action_numero
         for key in data["Action"]:
             if key[-2:] == "av":
                 self.cote_actif = "avant"
@@ -701,6 +706,8 @@ class IHM_Action_Aux:
             elif key[-2:] == "ar":
                 self.cote_actif = "arriere"
                 break
+            else:
+                self.cote_actif = ""
         if "Coord" in data["Déplacement"]:
             self.pos_actuelle = [data["Déplacement"]["Coord"]["X"], data["Déplacement"]["Coord"]["Y"]]
             self.labels[2].set_text(f"X: {self.pos_actuelle[0]}  Y: {self.pos_actuelle[1]}")
@@ -725,7 +732,11 @@ class IHM_Action_Aux:
         self.update_listes()
         self.enable_listes()
         self.update_checkboxes()
-    
+        
+        if self.cote_actif == "":
+            if self.cote_actif == "":
+                self.disable_listes()
+        
     def close(self):
         self.window.kill()
 

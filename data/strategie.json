@@ -2,42 +2,9 @@
     "1": {
         "D\u00e9placement": {
             "Coord": {
-                "X": 864,
-                "Y": 557,
-                "T": 27400,
-                "S": "0"
-            },
-            "aknowledge": 276
-        },
-        "Action": {
-            "_M_av": {
-                "id": "0x1A0",
-                "en_mvt": false,
-                "ordre": 7,
-                "akn": 901,
-                "str": "Haut"
-            },
-            "_PG_av": {
-                "id": "0x1A0",
-                "en_mvt": false,
-                "ordre": 2,
-                "akn": 907,
-                "str": "Ouvert"
-            }
-        },
-        "Special": {
-            "id": "0x1A0",
-            "ordre": "Vibrer",
-            "akn": 910,
-            "str": "Vibrer"
-        }
-    },
-    "2": {
-        "D\u00e9placement": {
-            "Coord": {
-                "X": 1148,
-                "Y": 1026,
-                "T": 588,
+                "X": 898,
+                "Y": 530,
+                "T": 243,
                 "S": "0"
             },
             "aknowledge": 276
@@ -45,12 +12,12 @@
         "Action": {},
         "Special": {}
     },
-    "3": {
+    "2": {
         "D\u00e9placement": {
             "Coord": {
-                "X": 879,
-                "Y": 1429,
-                "T": 1237,
+                "X": 1217,
+                "Y": 840,
+                "T": 441,
                 "S": "0"
             },
             "aknowledge": 276

@@ -736,8 +736,8 @@ class IHM_Action_Aux:
             if self.cote_actif == "":
                 self.disable_listes()
 
-        self.button_delete = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((370, 5), (240, 30)),
-                                                        text='Delete',
+        self.button_delete = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((400, 5), (150, 30)),
+                                                        text='Supprimer',
                                                         manager=self.manager,
                                                         container=self.window,
                                                         object_id=ObjectID(object_id="#b_Delete"))

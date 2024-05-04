@@ -75,7 +75,7 @@ class Strategie:
     def start_jack(self):
         
         while 1:
-            self.client.add_to_send_list(self.client.create_message(10, "jack", {"data": self.JACK.value}))
+            self.client.add_to_send_list(self.client.create_message(10, "jack", {"value": self.JACK.value}))
             time.sleep(0.2)
         # Attend que le jack soit enclechée
         self.client.add_to_send_list(self.client.create_message(9, "jack", {"data": "wait_for_press"}))

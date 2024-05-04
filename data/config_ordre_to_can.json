@@ -58,7 +58,7 @@
                     "Max": 0,
                     "Ouvert": 2,
                     "Plante": 3,
-                    "Ferme": 4,
+                    "Ferme": 1,
                     "Min": 0
                 },
                 "aknowledge": {

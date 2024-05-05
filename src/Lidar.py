@@ -20,6 +20,7 @@ class LidarScanner:
         self.BORDER_DISTANCE = 200
         self.FIELD_SIZE = (3000, 2000)
         self.scanning = True
+        self.perimetre_securite = 400 # rayon de sécurité en mm
 
         # Initialisation du robot virtuel
         self.ROBOT = Objet(0, 1500, 1000, 20)
@@ -290,10 +291,10 @@ class LidarScanner:
         logging.info("Stopping LiDAR motor")
         print("LIDAR  : Arrêt du moteur")
 
-    def generate_JSON_Objets(self):
+    def generate_JSON_Objets(self, objets):
         # Générer une chaîne de caractères au format JSON des objets détectés en fonction des id
         json = "["
-        for objet in self.objets:
+        for objet in objets:
             json += str(objet) + ","
         json = json[:-1] + "]"
         return json
@@ -335,13 +336,26 @@ class LidarScanner:
                     if not self.scanning:
                         break
                     new_scan = self.transform_scan(scan)
-                    self.client_socket.add_to_send_list(self.client_socket.create_message(10, "points", self.generate_JSON_Points(new_scan)))
+                    #self.client_socket.add_to_send_list(self.client_socket.create_message(10, "points", self.generate_JSON_Points(new_scan)))
                     
-                    """if len(new_scan) > 0:
+                    if len(new_scan) > 0:
                         new_objets = self.detect_objects(new_scan)
-                        self.suivre_objet(new_objets, 100)"""
+                        #self.suivre_objet(new_objets, 100)
                         
-                    #self.client_socket.add_to_send_list(self.client_socket.create_message(10, "objects", self.generate_JSON_Objets()))
+                        # Vérifier si l'objet rentre dans le périmètre de sécurité
+                        for objet in new_objets:
+                            distance_objet = math.sqrt((objet.x - self.ROBOT.x)**2 + (objet.y - self.ROBOT.y)**2)
+                            if distance_objet < self.perimetre_securite:
+                                # Envoyer un message d'alerte
+                                self.client_socket.add_to_send_list(self.client_socket.create_message(0, "lidar", {"etat": "stop", "distance": distance_objet}))
+                                
+                                # Arrêter le robot
+                                self.client_socket.add_to_send_list(self.client_socket.create_message(2, "CAN", {"id": 0x1F7, "byte1": 0}))
+                                time.sleep(0.05)
+                                self.client_socket.add_to_send_list(self.client_socket.create_message(2, "CAN", {"id": 0x1F7, "byte1": 0}))
+                                break
+                        
+                        self.client_socket.add_to_send_list(self.client_socket.create_message(10, "objects", self.generate_JSON_Objets(new_objets)))
             except RPLidarException as e:
                 # Code pour gérer RPLidarException
                 print(f"LIDAR  : Une erreur RPLidarException s'est produite dans le run : {e}")

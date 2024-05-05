@@ -27,6 +27,8 @@ class Strategie:
         
         self.ETAT = 0
         self.EQUIPE = "jaune"
+        self.state_lidar = ""
+        self.state_strat = 0
         
         self.liste_aknowledge = []
         
@@ -55,6 +57,12 @@ class Strategie:
                 
             elif message["cmd"] == "ARU":
                 self.strategie_is_running = False
+
+            elif message["cmd"] == "lidar":
+                self.state_lidar = message["etat"]
+                if self.state_strat == "stop":
+                    self.strategie_is_running = False
+                
         
         except Exception as e:
             print(f"Erreur lors de la réception du message : {str(e)}")
@@ -70,7 +78,7 @@ class Strategie:
             if self.strategie_is_running:
                 self.start_jack()
                 
-                self.run_strategie()
+                self.run_strategie_2()
     
     def start_jack(self):
 
@@ -124,19 +132,65 @@ class Strategie:
                 logging.info("Arrêt de la stratégie")
                 break                  
     
+    def run_strategie_2(self):
+        # Excecute la stratégie de façon non bloquante
+        for key, item in self.strategie.items():
+            if self.strategie_is_running == False:
+                break
+            
+            logging.info(f"STRAT : {key} , {item}")
+            
+            deplacement = item["Déplacement"]
+            action = item["Action"]
+            special = item["Special"]
+            
+            action_en_mvt = []
+            action_apres_mvt = []
+            
+            try:
+                for key, act in action.items():
+                    if act["en_mvt"] == True:
+                        action_en_mvt.append(action[key])
+                    else:
+                        action_apres_mvt.append(action[key])
+            except Exception as e:
+                logging.error(f"Erreur lors de la lecture des actions : {str(e)}")
+            
+            if "Coord" in deplacement:
+                self.move(deplacement)
+            elif "Rotation" in deplacement:
+                self.rotate(deplacement)
+            elif "Ligne_Droite" in deplacement:
+                self.ligne_droite(deplacement)
+            
+            # Envoi des actions en mouvement
+            self.send_actions(action_en_mvt)
+            
+            if self.strategie_is_running == False:
+                break
+            
+            # Attend l'acquittement du mouvement
+            self.wait_for_aknowledge(deplacement["aknowledge"])
+            
+            if self.strategie_is_running == False:
+                break
+            
+            # Envoi des actions après le mouvement
+            self.send_actions(action_apres_mvt)
+            
+            if self.strategie_is_running == False:
+                logging.info("Arrêt de la stratégie")
+                break
+    
     def move(self, deplacement):
         try:
             # Envoi de la commande de déplacement
-            pos = (deplacement["Coord"]["X"], deplacement["Coord"]["Y"], int(deplacement["Coord"]["T"]), "0")
-            logging.info(f"STRAT : Déplacement en {pos}")
+            pos = (deplacement["Coord"]["X"], deplacement["Coord"]["Y"], int(deplacement["Coord"]["T"]), deplacement["Coord"]["S"])
             
             # Envoyez la position au CAN
             self.client_strat.add_to_send_list(self.client_strat.create_message(
                 2, "clic", {"x": pos[0], "y": pos[1], "theta": pos[2], "sens": pos[3]}))
             
-            logging.info(f"STRAT : Envoi de la position")
-            # Attendre l'acquittement
-            self.wait_for_aknowledge(deplacement["aknowledge"])
         except Exception as e:
             logging.error(f"Erreur lors de l'envoi de la position move : {str(e)}")
     
@@ -146,9 +200,6 @@ class Strategie:
         
         # Envoyez la position au CAN
         self.client_strat.add_to_send_list(self.client_strat.create_message(2, "rotation", {"angle": angle}))
-
-        # Attendre l'acquittement
-        self.wait_for_aknowledge(deplacement["aknowledge"])
     
     def ligne_droite(self, deplacement):
         # Envoi de la commande de rotation
@@ -156,21 +207,25 @@ class Strategie:
         
         # Envoyez la position au CAN
         self.client_strat.add_to_send_list(self.client_strat.create_message(2, "deplacement", {"distance": distance}))
-
-        # Attendre l'acquittement
-        self.wait_for_aknowledge(deplacement["aknowledge"])
     
     def wait_for_aknowledge(self, id):
         while id not in self.liste_aknowledge and self.strategie_is_running:
             time.sleep(0.1)
         if id in self.liste_aknowledge:
             self.liste_aknowledge.remove(id)
+            
+    def wait_for_list_aknowledge(self, ids):
+        # Attend que tous les acquittements soient reçus
+        while len(ids) > 0 and self.strategie_is_running:
+            for id in ids:
+                if id in self.liste_aknowledge:
+                    self.liste_aknowledge.remove(id)
     
     def send_actions(self, actions):
         for action in actions:
             self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": action["id"], "byte1": action["ordre"]}))
+            time.sleep(1.2)
             #self.wait_for_aknowledge(action["aknowledge"])
-            time.sleep(2)
     
     def stop(self):
         self.is_running = False

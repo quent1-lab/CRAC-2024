@@ -344,7 +344,8 @@ class LidarScanner:
                         
                         # Vérifier si l'objet rentre dans le périmètre de sécurité
                         for objet in new_objets:
-                            distance_objet = math.sqrt((objet.x - self.ROBOT.x)**2 + (objet.y - self.ROBOT.y)**2)
+                            x_r = self.map_value(self.ROBOT.x, 0, 3000, 3000, 0)
+                            distance_objet = math.sqrt((objet.x - x_r)**2 + (objet.y - self.ROBOT.y)**2)
                             if distance_objet < self.perimetre_securite:
                                 # Envoyer un message d'alerte
                                 logging.info("Object detected in security perimeter")

@@ -39,7 +39,7 @@ class LidarScanner:
         points = []
         for point in scan:
             distance = point[2]
-            new_angle = point[1] - self.ROBOT_ANGLE + 180
+            new_angle = point[1] - self.ROBOT_ANGLE
 
             new_angle %= 360
             if new_angle < 0:

@@ -445,7 +445,7 @@ class IHM_Robot:
             if num_switch == 3:
                 # Activer l'asservissement
                 logging.info("IHM : Asservissement activé")
-                self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 0x1F7, "byte1": 0}))
+                self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 503, "byte1": 0}))
         elif etat == 0:
             self.switch_off(num_switch)
         
@@ -495,7 +495,7 @@ class IHM_Robot:
                 
                 if not self.can_connect:
                     self.can_connect = True
-                    self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 0x1F7, "byte1": 0}))
+                    self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 503, "byte1": 0}))
                 
                 if 0x10 in self.error:
                     self.error.remove(0x10)
@@ -545,12 +545,12 @@ class IHM_Robot:
                         self.strategie_is_running = False
                         self.robot_move = False
                         self.error.append(0x11)
-                        self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 0x1F7, "byte1": 0}))
+                        self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 503, "byte1": 0}))
                 elif data["etat"] == 0:
                     if 0x11 in self.error:
                         self.error.remove(0x11)
                         self.PAGE = 0
-                        self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 0x1F7, "byte1": 0}))
+                        self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 503, "byte1": 0}))
             
             elif message["cmd"] == "jack":
                 data = message["data"]

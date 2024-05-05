@@ -2,114 +2,61 @@
     "1": {
         "D\u00e9placement": {
             "Coord": {
-                "X": 699,
-                "Y": 443,
-                "T": 380,
+                "X": 934,
+                "Y": 231,
+                "T": 138,
                 "S": "0"
             },
             "aknowledge": 276
         },
-        "Action": {
-            "_PG_av": {
-                "id": "0x1A0",
-                "en_mvt": false,
-                "ordre": 2,
-                "akn": 907,
-                "str": "Ouvert"
-            }
-        },
+        "Action": {},
         "Special": {}
     },
     "2": {
         "D\u00e9placement": {
             "Coord": {
-                "X": 1094,
-                "Y": 813,
-                "T": 900,
+                "X": 1170,
+                "Y": 1079,
+                "T": 744,
                 "S": "0"
             },
             "aknowledge": 276
         },
-        "Action": {
-            "_PG_av": {
-                "id": "0x1A0",
-                "en_mvt": false,
-                "ordre": 3,
-                "akn": 907,
-                "str": "Plante"
-            }
-        },
+        "Action": {},
         "Special": {}
     },
     "3": {
         "D\u00e9placement": {
             "Coord": {
-                "X": 276,
-                "Y": 1774,
-                "T": -1800,
+                "X": 760,
+                "Y": 1523,
+                "T": 1327,
                 "S": "0"
             },
             "aknowledge": 276
         },
-        "Action": {
-            "_PG_av": {
-                "id": "0x1A0",
-                "en_mvt": false,
-                "ordre": 2,
-                "akn": 907,
-                "str": "Ouvert"
-            }
-        },
+        "Action": {},
         "Special": {}
     },
     "4": {
         "D\u00e9placement": {
-            "Ligne_Droite": -300,
-            "aknowledge": 277
+            "Coord": {
+                "X": 291,
+                "Y": 1752,
+                "T": 1539,
+                "S": "0"
+            },
+            "aknowledge": 276
         },
-        "Action": {
-            "_PG_av": {
-                "id": "0x1A0",
-                "en_mvt": false,
-                "ordre": 1,
-                "akn": 907,
-                "str": "Ferme"
-            }
-        },
+        "Action": {},
         "Special": {}
     },
     "5": {
         "D\u00e9placement": {
             "Coord": {
-                "X": 1244,
-                "Y": 1476,
-                "T": -240,
-                "S": "0"
-            },
-            "aknowledge": 276
-        },
-        "Action": {},
-        "Special": {}
-    },
-    "6": {
-        "D\u00e9placement": {
-            "Coord": {
-                "X": 1513,
-                "Y": 1003,
-                "T": -603,
-                "S": "0"
-            },
-            "aknowledge": 276
-        },
-        "Action": {},
-        "Special": {}
-    },
-    "7": {
-        "D\u00e9placement": {
-            "Coord": {
-                "X": 2751,
-                "Y": 992,
-                "T": -5,
+                "X": 649,
+                "Y": 1101,
+                "T": -611,
                 "S": "0"
             },
             "aknowledge": 276

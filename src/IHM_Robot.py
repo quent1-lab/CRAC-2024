@@ -568,13 +568,21 @@ class IHM_Robot:
                 id = data["id"]
                 strategie = data["strategie"]
                 
-                # Vérifie si le fichier de la stratégie existe
-                path = self.path_strat + f"/strategie_{id}.json"
-
-                if not os.path.exists(path):
-                    # Enregistre la stratégie dans un fichier
-                    with open(path, "w") as f:
-                        f.write(json.dumps(strategie))
+                # Récupère la liste des fichiers de stratégies
+                liste_strategies = os.listdir(self.path_strat)
+                
+                # Récupère le dernier numéro de stratégie pour enregistrer la nouvelle stratégie
+                num_strategie = 0
+                for strategy in liste_strategies:
+                    num = int(strategy.split("_")[1].split(".")[0])
+                    if num > num_strategie:
+                        num_strategie = num
+                
+                num_strategie += 1
+                path = self.path_strat + f"/strategie_{num_strategie}.json"
+                
+                with open(path, "w") as f:
+                    f.write(json.dumps(strategie))
                 
                 liste_strategies = os.listdir(self.path_strat)
                 x_depart = 10

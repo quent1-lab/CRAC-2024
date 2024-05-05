@@ -42,16 +42,14 @@ class LidarScanner:
         points = []
         for point in scan:
             distance = point[2]
-            new_angle = point[1] - self.ROBOT_ANGLE + 180
-            
-            x_robot = self.map_value(self.ROBOT.x, 0, self.FIELD_SIZE[0], self.FIELD_SIZE[0], 0)
+            new_angle = point[1] - self.ROBOT_ANGLE
             
             new_angle %= 360
             if new_angle < 0:
                 new_angle += 360
 
             if distance != 0:
-                x = distance * math.cos(math.radians(new_angle)) + x_robot
+                x = distance * math.cos(math.radians(new_angle)) + self.ROBOT.x
                 y = distance * math.sin(math.radians(new_angle)) + self.ROBOT.y
 
                 # Vérifier si le point est en dehors du terrain de jeu
@@ -316,9 +314,14 @@ class LidarScanner:
         else:
             if message["cmd"] == "coord":
                 coord = message["data"]
-                logging.info(f"Received new position: {coord}")
+                x_robot = self.map_value(self.ROBOT.x, 0, self.FIELD_SIZE[0], self.FIELD_SIZE[0], 0)
+                angle = (coord["theta"]/10) + 180
+                angle %= 360
+                if angle < 0:
+                    angle += 360
+                    
                 self.ROBOT.update_position(coord["x"], coord["y"])
-                self.ROBOT_ANGLE = coord["theta"]/10 # Angle en degrés * 10
+                self.ROBOT_ANGLE = angle # Angle en degrés * 10
 
     def run(self):
         

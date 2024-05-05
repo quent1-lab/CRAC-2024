@@ -350,9 +350,9 @@ class LidarScanner:
                                 self.client_socket.add_to_send_list(self.client_socket.create_message(0, "lidar", {"etat": "stop", "distance": distance_objet}))
                                 
                                 # Arrêter le robot
-                                self.client_socket.add_to_send_list(self.client_socket.create_message(2, "CAN", {"id": 0x1F7, "byte1": 0}))
+                                self.client_socket.add_to_send_list(self.client_socket.create_message(2, "CAN", {"id": 503, "byte1": 0}))
                                 time.sleep(0.05)
-                                self.client_socket.add_to_send_list(self.client_socket.create_message(2, "CAN", {"id": 0x1F7, "byte1": 0}))
+                                self.client_socket.add_to_send_list(self.client_socket.create_message(2, "CAN", {"id": 503, "byte1": 1}))
                                 break
                         
                         self.client_socket.add_to_send_list(self.client_socket.create_message(10, "objects", self.generate_JSON_Objets(new_objets)))

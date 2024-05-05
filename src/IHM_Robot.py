@@ -445,7 +445,7 @@ class IHM_Robot:
             if num_switch == 3:
                 # Activer l'asservissement
                 logging.info("IHM : Asservissement activé")
-                self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 503, "byte1": 0}))
+                self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 503, "byte1": 1}))
         elif etat == 0:
             self.switch_off(num_switch)
         
@@ -550,7 +550,7 @@ class IHM_Robot:
                     if 0x11 in self.error:
                         self.error.remove(0x11)
                         self.PAGE = 0
-                        self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 503, "byte1": 0}))
+                        self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 503, "byte1": 1}))
             
             elif message["cmd"] == "jack":
                 data = message["data"]

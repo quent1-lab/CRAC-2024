@@ -60,6 +60,8 @@ class Strategie:
 
             elif message["cmd"] == "lidar":
                 self.state_lidar = message["etat"]
+                if self.state_strat == "stop":
+                    self.strategie_is_running = False
                 
         
         except Exception as e:
@@ -76,7 +78,7 @@ class Strategie:
             if self.strategie_is_running:
                 self.start_jack()
                 
-                self.run_strategie()
+                self.run_strategie_2()
     
     def start_jack(self):
 
@@ -164,8 +166,14 @@ class Strategie:
             # Envoi des actions en mouvement
             self.send_actions(action_en_mvt)
             
+            if self.strategie_is_running == False:
+                break
+            
             # Attend l'acquittement du mouvement
             self.wait_for_aknowledge(deplacement["aknowledge"])
+            
+            if self.strategie_is_running == False:
+                break
             
             # Envoi des actions après le mouvement
             self.send_actions(action_apres_mvt)

@@ -173,6 +173,28 @@ class LidarScanner:
             objets.append(nouvel_objet)
 
         return objets
+
+    def suivre_objet(self, objets, rayon_cercle=100):
+
+        if len(self.objets) != len(objets):
+            # Ajoute les objets manquants
+            for objet in objets[len(self.objets):]:
+                self.objets.append(objet)
+
+        # Pré-calculer le carré du rayon du cercle
+        rayon_cercle_carre = rayon_cercle ** 2
+        # Vérifier si l'objet est déjà suivi
+        objets_copy = objets.copy()
+        for objet in self.objets:
+            objets_dans_cercle = [objet_param for objet_param in objets_copy if (objet_param.x - objet.x)**2 + (objet_param.y - objet.y)**2 < rayon_cercle_carre]
+            
+            if objets_dans_cercle:
+                # Trouver l'objet le plus proche
+                objet_le_plus_proche = min(objets_dans_cercle, key=lambda objet_param: (objet_param.x - objet.x)**2 + (objet_param.y - objet.y)**2)
+                self.objets[objet_le_plus_proche.id - 1].update_position(objet_le_plus_proche.x, objet_le_plus_proche.y)
+                objets_copy.remove(objet_le_plus_proche)  # Retirer l'objet de la liste
+
+        return None
     
     def trouver_id_objet_existants(self, x, y, seuil_distance=100):
         # Vérifier si l'objet est déjà suivi
@@ -314,7 +336,11 @@ class LidarScanner:
                         break
                     new_scan = self.transform_scan(scan)
                     #self.client_socket.add_to_send_list(self.client_socket.create_message(10, "points", self.generate_JSON_Points(new_scan)))
-                    self.detect_objects(new_scan)
+                    
+                    if len(new_scan) > 0:
+                        new_objets = self.detect_objects(new_scan)
+                        self.suivre_objet(new_objets, 100)
+                        
                     self.client_socket.add_to_send_list(self.client_socket.create_message(10, "objects", self.generate_JSON_Objets()))
             except RPLidarException as e:
                 # Code pour gérer RPLidarException

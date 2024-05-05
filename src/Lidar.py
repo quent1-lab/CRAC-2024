@@ -45,7 +45,7 @@ class LidarScanner:
             new_angle = point[1] - self.ROBOT_ANGLE + 180
             
             x_robot = self.map_value(self.ROBOT.x, 0, self.FIELD_SIZE[0], self.FIELD_SIZE[0], 0)
-            logging.info(f"x_robot: {x_robot}")
+            
             new_angle %= 360
             if new_angle < 0:
                 new_angle += 360
@@ -338,7 +338,7 @@ class LidarScanner:
                     new_scan = self.transform_scan(scan)
                     self.client_socket.add_to_send_list(self.client_socket.create_message(10, "points", self.generate_JSON_Points(new_scan)))
                     
-                    if len(new_scan) > 0 and False:
+                    if len(new_scan) > 0:
                         new_objets = self.detect_objects(new_scan)
                         #self.suivre_objet(new_objets, 100)
                         

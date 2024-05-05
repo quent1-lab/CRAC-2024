@@ -53,7 +53,7 @@ class LidarScanner:
 
             if distance != 0:
                 x = distance * math.cos(math.radians(new_angle)) + x_r
-                y = distance * math.sin(math.radians(new_angle)) + self.ROBOT.y
+                y = distance * math.sin(math.radians(-new_angle)) + self.ROBOT.y
 
                 # Vérifier si le point est en dehors du terrain de jeu
                 if self.BORDER_DISTANCE < x < self.FIELD_SIZE[0] - self.BORDER_DISTANCE and self.BORDER_DISTANCE < y < self.FIELD_SIZE[1] - self.BORDER_DISTANCE:
@@ -337,9 +337,9 @@ class LidarScanner:
                     if not self.scanning:
                         break
                     new_scan = self.transform_scan(scan)
-                    #self.client_socket.add_to_send_list(self.client_socket.create_message(10, "points", self.generate_JSON_Points(new_scan)))
+                    self.client_socket.add_to_send_list(self.client_socket.create_message(10, "points", self.generate_JSON_Points(new_scan)))
                     
-                    if len(new_scan) > 0:
+                    if len(new_scan) > 0 and False:
                         new_objets = self.detect_objects(new_scan)
                         #self.suivre_objet(new_objets, 100)
                         

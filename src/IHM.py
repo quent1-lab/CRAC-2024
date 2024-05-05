@@ -740,8 +740,9 @@ class IHM:
                 scan = json.loads(scan)
                 self.new_scan = []
                 for point in scan:
+                    x_r = self.map_value(point["x"], 0, self.FIELD_SIZE[0], self.FIELD_SIZE[0], 0)
                     self.new_scan.append(
-                        (point["x"], point["y"], point["dist"], point["angle"]))
+                        (x_r, point["y"], point["dist"], point["angle"]))
             except Exception as e:
                 print("Erreur dans la réception des points", e)
                 

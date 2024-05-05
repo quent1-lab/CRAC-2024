@@ -444,6 +444,7 @@ class IHM_Robot:
             self.switch_on(num_switch)
             if num_switch == 3:
                 # Activer l'asservissement
+                logging.info("IHM : Asservissement activé")
                 self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 0x1F7, "byte1": 0}))
         elif etat == 0:
             self.switch_off(num_switch)

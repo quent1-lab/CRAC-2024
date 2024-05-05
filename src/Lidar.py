@@ -317,7 +317,7 @@ class LidarScanner:
             if message["cmd"] == "coord":
                 coord = message["data"]
                 x_r = self.map_value(coord["x"], 0, 3000, 3000, 0)
-                self.ROBOT.update_position(coord["x"], coord["y"])
+                self.ROBOT.update_position(x_r, coord["y"])
                 self.ROBOT_ANGLE = coord["theta"]/10 # Angle en degrés * 10
 
     def run(self):

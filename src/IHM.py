@@ -1115,15 +1115,27 @@ class IHM:
                 
                 if len(self.new_scan) > 0:
                     new_objets = self.detect_objects(self.new_scan)
-                    self.suivre_objet(new_objets, 100)
+                    #self.suivre_objet(new_objets, 100)
                      #self.suivre_objet(new_objets, 100)
+                
+                # Dessine un périmètre de sécurité autour du robot
+                pygame.draw.circle(self.lcd, self.RED, (int(self.ROBOT.x), int(self.ROBOT.y)), 50, 1)
                     
-                for objet in self.objets:
+                for objet in new_objets:
                     self.draw_object(objet)
-                    trajectoire_actuel, trajectoire_adverse, trajectoire_evitement = self.trajectoires_anticipation(
+                    
+                    # Dessine un périmètre de sécurité autour de l'objet
+                    pygame.draw.circle(self.lcd, self.RED, (int(objet.x), int(objet.y)), 50, 1)
+                    
+                    # Vérifie si l'objet est dans le périmètre de sécurité
+                    if math.sqrt((self.ROBOT.x - objet.x)**2 + (self.ROBOT.y - objet.y)**2) < 50:
+                        self.client_socket.add_to_send_list(self.client_socket.create_message(4, "lidar", {"etat": "stop"}))
+                        print("Arrêt du lidar")
+                    
+                    """trajectoire_actuel, trajectoire_adverse, trajectoire_evitement = self.trajectoires_anticipation(
                         self.ROBOT, objet, 1.5, 0.1, 50)
                     self.draw_all_trajectoires(
-                        trajectoire_actuel, trajectoire_adverse, trajectoire_evitement)
+                        trajectoire_actuel, trajectoire_adverse, trajectoire_evitement)"""
 
                 self.manager.update(1/60.0)
                 self.manager.draw_ui(self.lcd)

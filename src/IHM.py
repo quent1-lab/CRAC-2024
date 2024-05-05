@@ -974,7 +974,7 @@ class IHM:
             with open(f"data/strategies/strategie_{numero}.json", "w") as file:
                 json.dump(strategie, file, indent=4)
                 
-            #self.client_socket.add_to_send_list(self.client_socket.create_message(self.IHM_Robot,strategie", {"id": numero,"strategie": strategie}))           
+            self.client_socket.add_to_send_list(self.client_socket.create_message(self.IHM_Robot,strategie, {"id": numero,"strategie": strategie}))           
                 
         else:
             print("Aucune stratégie à sauvegarder")
@@ -1129,9 +1129,9 @@ class IHM:
                     self.draw_object(objet)
                     
                     # Vérifie si l'objet est dans le périmètre de sécurité
-                    if math.sqrt((self.ROBOT.x - objet.x)**2 + (self.ROBOT.y - objet.y)**2) < self.perimetre_securite:
+                    """if math.sqrt((self.ROBOT.x - objet.x)**2 + (self.ROBOT.y - objet.y)**2) < self.perimetre_securite:
                         self.client_socket.add_to_send_list(self.client_socket.create_message(4, "lidar", {"etat": "stop"}))
-                        print("Arrêt du lidar")
+                        print("Arrêt du lidar")"""
                     
                     """trajectoire_actuel, trajectoire_adverse, trajectoire_evitement = self.trajectoires_anticipation(
                         self.ROBOT, objet, 1.5, 0.1, 50)

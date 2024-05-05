@@ -101,11 +101,12 @@ class IHM_Robot:
         
         self.recalage_is_playing = False
         self.robot_move = False
-        self.strategie_is_running = False    
+        self.strategie_is_running = False
+        self.can_connect = False
         
         self.button_strategie = []
         
-        path = "data/strategies"
+        path = "data/strategies_cache"
         liste_strategies = os.listdir(path)
         nombre_strategies = len(liste_strategies)
         x_depart = 10
@@ -115,7 +116,7 @@ class IHM_Robot:
         
         for i, strategy in enumerate(liste_strategies):
             texte = strategy.split(".")[0]
-            button = Button(self.screen, (x_depart + 405 * int(nombre_strategies/4), y_depart + i * 90, 385, 80), self.theme_path, texte, font, lambda i=i: self.strategie_action(i+1))
+            button = Button(self.screen, (x_depart + 405 * int(i/4), y_depart + i * 90, 385, 80), self.theme_path, texte, font, lambda i=i: self.strategie_action(i+1))
             self.button_strategie.append(button)
         
         self.button_autres = [
@@ -204,7 +205,7 @@ class IHM_Robot:
         self.client.add_to_send_list(self.client.create_message(0, "strategie", {"strategie": index}))
         
         # Charger la stratégie
-        with open(f"data/strategies/strategie_{index}.json", "r") as f:
+        with open(f"data/strategies_cache/strategie_{index}.json", "r") as f:
             self.strategie = json.load(f)
             logging.info(f"Stratégie chargée : {self.strategie}")
         
@@ -488,6 +489,10 @@ class IHM_Robot:
                             for batterie in self.batteries:
                                 batterie.mode_error()
                 
+                if not self.can_connect:
+                    self.can_connect = True
+                    self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 0x1F7, "byte1": 0}))
+                
                 if 0x10 in self.error:
                     self.error.remove(0x10)
                     self.PAGE = 0
@@ -536,10 +541,12 @@ class IHM_Robot:
                         self.strategie_is_running = False
                         self.robot_move = False
                         self.error.append(0x11)
+                        self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 0x1F7, "byte1": 0}))
                 elif data["etat"] == 0:
                     if 0x11 in self.error:
                         self.error.remove(0x11)
                         self.PAGE = 0
+                        self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 0x1F7, "byte1": 0}))
             
             elif message["cmd"] == "jack":
                 data = message["data"]
@@ -558,13 +565,13 @@ class IHM_Robot:
                 strategie = data["strategie"]
                 
                 # Vérifie si le fichier de la stratégie existe
-                path = f"data/strategies/strategie_{id}.json"
+                path = f"data/strategies_cache/strategie_{id}.json"
                 if not os.path.exists(path):
                     # Enregistre la stratégie dans un fichier
                     with open(path, "w") as f:
                         f.write(json.dumps(strategie))
                 
-                path = "data/strategies"
+                path = "data/strategies_cache"
                 liste_strategies = os.listdir(path)
                 nombre_strategies = len(liste_strategies)
                 x_depart = 10
@@ -574,7 +581,7 @@ class IHM_Robot:
                 self.button_strategie = []
                 for i, strategy in enumerate(liste_strategies):
                     texte = strategy.split(".")[0]
-                    button = Button(self.screen, (x_depart + 405 * int(nombre_strategies/6), y_depart + i * 90, 385, 80), self.theme_path, texte, font, lambda i=i: self.strategie_action(i+1))
+                    button = Button(self.screen, (x_depart + 405 * int(i/4), y_depart + i * 90, 385, 80), self.theme_path, texte, font, lambda i=i: self.strategie_action(i+1))
                     self.button_strategie.append(button)
             
             elif message["cmd"] == "get_pos":

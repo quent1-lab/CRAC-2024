@@ -20,6 +20,7 @@ class LidarScanner:
         self.BORDER_DISTANCE = 200
         self.FIELD_SIZE = (3000, 2000)
         self.scanning = True
+        self.perimetre_securite = 400 # rayon de sécurité en mm
 
         # Initialisation du robot virtuel
         self.ROBOT = Objet(0, 1500, 1000, 20)
@@ -340,6 +341,19 @@ class LidarScanner:
                     if len(new_scan) > 0:
                         new_objets = self.detect_objects(new_scan)
                         #self.suivre_objet(new_objets, 100)
+                        
+                        # Vérifier si l'objet rentre dans le périmètre de sécurité
+                        for objet in new_objets:
+                            distance_objet = math.sqrt((objet.x - self.ROBOT.x)**2 + (objet.y - self.ROBOT.y)**2)
+                            if distance_objet < self.perimetre_securite:
+                                # Envoyer un message d'alerte
+                                self.client_socket.add_to_send_list(self.client_socket.create_message(0, "lidar", {"etat": "stop", "distance": distance_objet}))
+                                
+                                # Arrêter le robot
+                                self.client_socket.add_to_send_list(self.client_socket.create_message(2, "CAN", {"id": 0x1F7, "byte1": 0}))
+                                time.sleep(0.05)
+                                self.client_socket.add_to_send_list(self.client_socket.create_message(2, "CAN", {"id": 0x1F7, "byte1": 0}))
+                                break
                         
                         self.client_socket.add_to_send_list(self.client_socket.create_message(10, "objects", self.generate_JSON_Objets(new_objets)))
             except RPLidarException as e:

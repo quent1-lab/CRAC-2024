@@ -315,7 +315,7 @@ class LidarScanner:
             if message["cmd"] == "coord":
                 coord = message["data"]
                 x_robot = self.map_value(self.ROBOT.x, 0, self.FIELD_SIZE[0], self.FIELD_SIZE[0], 0)
-                angle = (coord["theta"]/10) + 180
+                angle = (coord["theta"]/10)
                 angle %= 360
                 if angle < 0:
                     angle += 360

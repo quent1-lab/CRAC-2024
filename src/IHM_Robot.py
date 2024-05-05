@@ -201,11 +201,11 @@ class IHM_Robot:
         self.PAGE = 10 + index
         time.sleep(0.2)
     
-    def strategie_action(self, index):
-        self.client.add_to_send_list(self.client.create_message(0, "strategie", {"strategie": index}))
+    def strategie_action(self, name):
+        self.client.add_to_send_list(self.client.create_message(0, "strategie", {"strategie": name}))
         
         # Charger la stratégie
-        with open(f"data/strategies/strategie_{index}.json", "r") as f:
+        with open(f"data/strategies/strategie_cache{name}.json", "r") as f:
             self.strategie = json.load(f)
             logging.info(f"Stratégie chargée : {self.strategie}")
         
@@ -214,7 +214,7 @@ class IHM_Robot:
             self.ETAT = 1
             self.client.add_to_send_list(self.client.create_message(10, "config", {"etat": 1, "equipe": self.EQUIPE}))
         
-        self.play_strategie(index)
+        self.play_strategie(name)
     
     def ligne_droite(self, distance):
         self.client.add_to_send_list(self.client.create_message(2, "deplacement", {"distance": distance}))
@@ -262,7 +262,7 @@ class IHM_Robot:
         thread_recalage = threading.Thread(target=task_recalage)
         thread_recalage.start()
     
-    def play_strategie(self,index):
+    def play_strategie(self,name):
         # Jouer la stratégie
         self.strategie_is_running = True
         self.PAGE = 5
@@ -340,7 +340,7 @@ class IHM_Robot:
             self.strategie_is_running = False
             self.PAGE = 1
         
-        strat = Strategie(f"strategie_{index}.json")
+        strat = Strategie(f"strategie_{name}.json")
         
         thread_play = threading.Thread(target=strat.play)
         thread_play.start()
@@ -570,7 +570,7 @@ class IHM_Robot:
                 
                 # Vérifie si le fichier de la stratégie existe
                 path = f"data/strategies/strategie_{id}.json"
-                logging.info(f"Chargement de la stratégie {path}")
+
                 if not os.path.exists(path):
                     # Enregistre la stratégie dans un fichier
                     with open(path, "w") as f:
@@ -578,7 +578,6 @@ class IHM_Robot:
                 
                 path = "data/strategies_cache"
                 liste_strategies = os.listdir(path)
-                nombre_strategies = len(liste_strategies)
                 x_depart = 10
                 y_depart = 90
                 
@@ -586,7 +585,8 @@ class IHM_Robot:
                 self.button_strategie = []
                 for i, strategy in enumerate(liste_strategies):
                     texte = strategy.split(".")[0]
-                    button = Button(self.screen, (x_depart + 405 * int(i/4), y_depart + i * 90, 385, 80), self.theme_path, texte, font, lambda i=i: self.strategie_action(i+1))
+                    name = texte.split("_")[1]
+                    button = Button(self.screen, (x_depart + 405 * int(i/4), y_depart + i * 90, 385, 80), self.theme_path, texte, font, lambda i=i: self.strategie_action(name))
                     self.button_strategie.append(button)
             
             elif message["cmd"] == "get_pos":

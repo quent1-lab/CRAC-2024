@@ -12,6 +12,7 @@ import numpy as np
 from sklearn.cluster import DBSCAN
 from client import *
 import json
+import re
 
 from windows import IHM_Command, IHM_Action_Aux
 
@@ -968,10 +969,18 @@ class IHM:
             with open("data/strategie.json", "r") as file:
                 strategie = json.load(file)
             
-            # Lire tous les fichier du dosser strategies
+            # Récupérer la liste des fichiers dans le dossier
             files = os.listdir("data/strategies")
-            
-            numero = len(files) + 1
+
+            # Extraire les numéros des fichiers existants
+            numbers = [int(re.search(r'\d+', file).group()) for file in files if re.search(r'\d+', file)]
+
+            # Trouver le numéro le plus élevé et l'incrémenter pour le nouveau fichier
+            if numbers:
+                numero = max(numbers) + 1
+            else:
+                numero = 1
+
             # Sauvegarde de la stratégie
             with open(f"data/strategies/strategie_{numero}.json", "w") as file:
                 json.dump(strategie, file, indent=4)
@@ -1004,9 +1013,36 @@ class IHM:
         
             for key in strategie:
                 action = strategie[key]
-                coord = action["Coord"]
-
-                new_pos = (int(coord["X"]), int(coord["Y"]), int(coord["T"]), "0")
+                
+                if "Coord" in action["Déplacement"]:
+                    coord = action["Déplacement"]["Coord"]
+                        
+                    new_pos = (int(coord["X"]), int(coord["Y"]), coord["T"]/10, "0")
+                        
+                elif "Ligne_Droite" in action["Déplacement"]:
+                    distance = action["Déplacement"]["Ligne_Droite"]
+                    
+                    # Calcul de la position d'arrivée en fonction de la coordonnée précédente
+                    if len(self.pos_waiting_list) > 0: # Récupérer les coordonnées précédentes
+                        coord_prec = self.pos_waiting_list[-1]
+                    else:
+                        coord_prec = (self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE, "0")
+                        
+                    x = coord_prec[0] + distance * math.cos(math.radians(coord_prec[2]/10))
+                    y = coord_prec[1] + distance * math.sin(math.radians(coord_prec[2]/10))
+                    new_pos = (int(x), int(y), coord_prec[2], "0")
+                    
+                elif "Rotation" in action["Déplacement"]:
+                    angle = action["Déplacement"]["Rotation"]
+                    
+                    # Calcul de l'angle d'arrivée en fonction de l'angle précédent
+                    if len(self.pos_waiting_list) > 0: # Récupérer les coordonnées précédentes
+                        coord_prec = self.pos_waiting_list[-1]
+                    else:
+                        coord_prec = (self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE, "0")
+                    
+                    new_angle = angle
+                    new_pos = (coord_prec[0], coord_prec[1], new_angle, "0")
             
                 self.pos_waiting_list.append(new_pos)
                 self.numero_strategie += 1
@@ -1060,7 +1096,7 @@ class IHM:
         self.client_socket.add_to_send_list(self.client_socket.create_message(self.IHM_Robot, "config", {"equipe": self.EQUIPE, "etat": self.ETAT}))
 
     def run(self):
-        #self.programme_simulation()
+        self.programme_simulation()
         
         self.client_socket.set_callback(self.receive_to_server)
         self.client_socket.set_callback_stop(self.stop)

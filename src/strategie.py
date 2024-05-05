@@ -1,9 +1,11 @@
 from    client  import  Client
-import  logging
+import  threading
 import  gpiozero
+import  logging
 import  time
 import  json
 import  os
+
 
 class Strategie:
     def __init__(self, _nom_strat):
@@ -29,6 +31,8 @@ class Strategie:
         self.EQUIPE = "jaune"
         self.state_lidar = ""
         self.state_strat = 0
+        self.TIMER = 0
+        self.temps_de_jeu = 100
         
         self.liste_aknowledge = []
         
@@ -87,12 +91,23 @@ class Strategie:
         
         self.client_strat.add_to_send_list(self.client_strat.create_message(9, "jack", {"data": "wait_start"}))
         self.JACK.wait_for_press() # Attend que le jack soit relaché
+        self.TIMER = time.time()
 
         self.client_strat.add_to_send_list(self.client_strat.create_message(0, "jack", {"data": "start"}))
         
         # Reset la carte actionneur
         self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 416, "byte1": 11}))
         self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 417, "byte1": 11}))
+    
+    def stop_with_timer(self):
+        
+        def timer():
+            while time.time() - self.TIMER < self.temps_de_jeu and self.strategie_is_running:
+                time.sleep(1)
+            self.strategie_is_running = False
+        
+        t = threading.Thread(target=timer)
+        t.start()
         
     def run_strategie(self):
                 
@@ -230,3 +245,7 @@ class Strategie:
     def stop(self):
         self.is_running = False
         self.strategie_is_running = False
+        
+if __name__ == "__main__":
+    strat = Strategie("strat_1")
+    strat.play()

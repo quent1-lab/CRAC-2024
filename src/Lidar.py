@@ -1,11 +1,13 @@
-import logging
-from rplidar import RPLidar, RPLidarException
-import math
-import serial.tools.list_ports
-import os
-from objet import Objet
-from client import *
-import logging
+import  logging
+from    rplidar import RPLidar, RPLidarException
+import  math
+import  serial.tools.list_ports
+import  os
+from    objet import Objet
+from    client import *
+import  logging
+import  numpy as np
+from    sklearn.cluster import DBSCAN
 
 # Configuration du logger
 logging.basicConfig(filename='lidar.log', level=logging.INFO, datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
@@ -138,6 +140,40 @@ class LidarScanner:
                     # Si le nombre d'objets max est atteint, retourner None
                     return None           
 
+    def detect_objects(self, scan, eps=300, min_samples=3):
+
+        # Regroupement des points avec DBSCAN
+        X = np.array([(point[0], point[1]) for point in scan])
+
+        #eps = 200  # À ajuster en fonction de la densité des points
+        #min_samples = 20  # À ajuster en fonction de la densité des points
+        dbscan = DBSCAN(eps=eps, min_samples=min_samples)
+        labels = dbscan.fit_predict(X)
+
+        # Création des objets à partir des clusters
+        objets = []
+        for label in set(labels):
+            if label == -1:
+                # Ignore les points considérés comme du bruit (pas de cluster)
+                continue
+
+            cluster_points = X[labels == label]
+            x_moyen = np.mean(cluster_points[:, 0])
+            y_moyen = np.mean(cluster_points[:, 1])
+
+            # Calcul de la taille de l'objet (peut être ajusté en fonction de votre application)
+            x_min = np.min(cluster_points[:, 0])
+            x_max = np.max(cluster_points[:, 0])
+            y_min = np.min(cluster_points[:, 1])
+            y_max = np.max(cluster_points[:, 1])
+            taille = math.sqrt((x_max - x_min)**2 + (y_max - y_min)**2)
+
+            nouvel_objet = Objet(id=len(objets) + 1,
+                                 x=x_moyen, y=y_moyen, taille=taille)
+            objets.append(nouvel_objet)
+
+        return objets
+    
     def trouver_id_objet_existants(self, x, y, seuil_distance=100):
         # Vérifier si l'objet est déjà suivi
         for objet in self.objets:
@@ -277,9 +313,9 @@ class LidarScanner:
                     if not self.scanning:
                         break
                     new_scan = self.transform_scan(scan)
-                    self.client_socket.add_to_send_list(self.client_socket.create_message(10, "points", self.generate_JSON_Points(new_scan)))
-                    #self.detect_object(new_scan)
-                    #self.client_socket.add_to_send_list(self.client_socket.create_message(10, "objects", self.generate_JSON_Objets()))
+                    #self.client_socket.add_to_send_list(self.client_socket.create_message(10, "points", self.generate_JSON_Points(new_scan)))
+                    self.detect_objects(new_scan)
+                    self.client_socket.add_to_send_list(self.client_socket.create_message(10, "objects", self.generate_JSON_Objets()))
             except RPLidarException as e:
                 # Code pour gérer RPLidarException
                 print(f"LIDAR  : Une erreur RPLidarException s'est produite dans le run : {e}")

@@ -429,7 +429,7 @@ class IHM:
                     points.append((x, y, distance, new_angle))
         return points
 
-    def detect_objects(self, scan, eps=150, min_samples=6):
+    def detect_objects(self, scan, eps=300, min_samples=3):
 
         # Regroupement des points avec DBSCAN
         X = np.array([(point[0], point[1]) for point in scan])

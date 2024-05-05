@@ -59,6 +59,7 @@ class IHM:
         self.robot_move = True # Variable pour savoir si le robot est en mouvement
         self.numero_strategie = 0 # Numéro de la stratégie en cours
         self.angle_mouse = 0 # Angle de la souris
+        self.perimetre_securite = 400 # Périmètre de sécurité autour des objets
         
         # Vider le fichier de sauvegarde des stratégies
         with open("data/strategie.json", "w") as f:
@@ -148,6 +149,9 @@ class IHM:
         # Dessiner la flèche sur la nouvelle surface
         pygame.draw.polygon(robot_surface, pygame.Color(255, 0, 0), [(dim_x - 5, dim_y / 2), (dim_x /2, 10), (dim_x / 2, dim_y / 2 - 10),(10,dim_y / 2 - 10), (10,dim_y / 2 + 10), (dim_x / 2, dim_y / 2 + 10), (dim_x / 2, dim_y - 10), (dim_x-5, dim_y / 2)], 0)
 
+        # Dessine un périmètre de sécurité autour du robot
+        pygame.draw.circle(self.lcd, pygame.Color(255, 0, 0), (x_r, y_r), self.perimetre_securite * self.X_RATIO, 2)
+        
         # Faire pivoter la surface du robot par rapport au centre
         # Obtenir la position actuelle du centre de la surface
         old_center = robot_surface.get_rect().center
@@ -331,6 +335,9 @@ class IHM:
             255, 255, 0), (objet.x * self.X_RATIO, objet.y * self.Y_RATIO), 10)
         pygame.draw.circle(self.lcd, pygame.Color(50, 50, 200), (objet.x * self.X_RATIO,
                            objet.y * self.Y_RATIO), int(objet.taille / 2 * self.X_RATIO), 3)
+        
+        # Dessine le périmètre de sécurité autour de l'objet
+        pygame.draw.circle(self.lcd, pygame.Color(255, 0, 0), (objet.x * self.X_RATIO, objet.y * self.Y_RATIO), self.perimetre_securite * self.X_RATIO, 2)
 
         # Affichage des coordonnées de l'objet et de son ID
         self.draw_text("ID: " + str(objet.id), objet.x *
@@ -1112,20 +1119,14 @@ class IHM:
                     self.draw_point(point[0], point[1])
                     
                 self.draw_mouse_coordinates()
-                
-                if len(self.new_scan) > 0:
+                new_objets = []
+                """if len(self.new_scan) > 0:
                     new_objets = self.detect_objects(self.new_scan)
                     #self.suivre_objet(new_objets, 100)
-                     #self.suivre_objet(new_objets, 100)
-                
-                # Dessine un périmètre de sécurité autour du robot
-                pygame.draw.circle(self.lcd, self.RED, (int(self.ROBOT.x), int(self.ROBOT.y)), 50, 1)
+                     #self.suivre_objet(new_objets, 100)"""
                     
-                for objet in new_objets:
+                for objet in self.objets:
                     self.draw_object(objet)
-                    
-                    # Dessine un périmètre de sécurité autour de l'objet
-                    pygame.draw.circle(self.lcd, self.RED, (int(objet.x), int(objet.y)), 50, 1)
                     
                     # Vérifie si l'objet est dans le périmètre de sécurité
                     if math.sqrt((self.ROBOT.x - objet.x)**2 + (self.ROBOT.y - objet.y)**2) < 50:

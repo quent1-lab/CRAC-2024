@@ -106,7 +106,7 @@ class IHM_Robot:
         
         self.button_strategie = []
         
-        path = "data/strategies_cache"
+        path = "data/strategies"
         liste_strategies = os.listdir(path)
         nombre_strategies = len(liste_strategies)
         x_depart = 10
@@ -205,7 +205,7 @@ class IHM_Robot:
         self.client.add_to_send_list(self.client.create_message(0, "strategie", {"strategie": index}))
         
         # Charger la stratégie
-        with open(f"data/strategies_cache/strategie_{index}.json", "r") as f:
+        with open(f"data/strategies/strategie_{index}.json", "r") as f:
             self.strategie = json.load(f)
             logging.info(f"Stratégie chargée : {self.strategie}")
         
@@ -444,7 +444,8 @@ class IHM_Robot:
             self.switch_on(num_switch)
             if num_switch == 3:
                 # Activer l'asservissement
-                self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 0x1F7, "byte1": 0}))
+                logging.info("IHM : Asservissement activé")
+                self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 503, "byte1": 1}))
         elif etat == 0:
             self.switch_off(num_switch)
         
@@ -494,7 +495,7 @@ class IHM_Robot:
                 
                 if not self.can_connect:
                     self.can_connect = True
-                    self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 0x1F7, "byte1": 0}))
+                    self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 503, "byte1": 0}))
                 
                 if 0x10 in self.error:
                     self.error.remove(0x10)
@@ -544,12 +545,12 @@ class IHM_Robot:
                         self.strategie_is_running = False
                         self.robot_move = False
                         self.error.append(0x11)
-                        self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 0x1F7, "byte1": 0}))
+                        self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 503, "byte1": 0}))
                 elif data["etat"] == 0:
                     if 0x11 in self.error:
                         self.error.remove(0x11)
                         self.PAGE = 0
-                        self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 0x1F7, "byte1": 0}))
+                        self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 503, "byte1": 1}))
             
             elif message["cmd"] == "jack":
                 data = message["data"]
@@ -568,7 +569,8 @@ class IHM_Robot:
                 strategie = data["strategie"]
                 
                 # Vérifie si le fichier de la stratégie existe
-                path = f"data/strategies_cache/strategie_{id}.json"
+                path = f"data/strategies/strategie_{id}.json"
+                logging.info(f"Chargement de la stratégie {path}")
                 if not os.path.exists(path):
                     # Enregistre la stratégie dans un fichier
                     with open(path, "w") as f:
@@ -590,6 +592,10 @@ class IHM_Robot:
             elif message["cmd"] == "get_pos":
                 data = message["data"]
                 self.value_get_pos["id_herk"] = data["pos"]
+            
+            elif message["cmd"] == "lidar":
+                data = message["data"]
+                logging.info(f"Lidar : {data}")
         
         except Exception as e:
             print(f"Erreur lors de la réception du message : {str(e)}")
@@ -718,4 +724,7 @@ class IHM_Robot:
 
 if __name__ == "__main__":
     ihm = IHM_Robot()
-    ihm.run()
+    try:
+        ihm.run()
+    except Exception as e:
+        print(f"Erreur dans le run : {str(e)}")

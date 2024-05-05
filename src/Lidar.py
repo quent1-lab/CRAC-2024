@@ -20,7 +20,8 @@ class LidarScanner:
         self.BORDER_DISTANCE = 200
         self.FIELD_SIZE = (3000, 2000)
         self.scanning = True
-        self.perimetre_securite = 400 # rayon de sécurité en mm
+        self.perimetre_securite = 600 # rayon de sécurité en mm
+        self.en_mvt = False
 
         # Initialisation du robot virtuel
         self.ROBOT = Objet(0, 1500, 1000, 20)
@@ -42,9 +43,10 @@ class LidarScanner:
         points = []
         for point in scan:
             distance = point[2]
-            new_angle = point[1] - self.ROBOT_ANGLE + 180
+            new_angle = point[1] - self.ROBOT_ANGLE
             
-            x_r = self.map_value(self.ROBOT.x, 0, 3000, 3000, 0)
+            #x_r = self.map_value(self.ROBOT.x, 0, 3000, 3000, 0)
+            x_r = self.ROBOT.x
 
             new_angle %= 360
             if new_angle < 0:
@@ -52,7 +54,7 @@ class LidarScanner:
 
             if distance != 0:
                 x = distance * math.cos(math.radians(new_angle)) + x_r
-                y = distance * math.sin(math.radians(new_angle)) + self.ROBOT.y
+                y = distance * math.sin(math.radians(-new_angle)) + self.ROBOT.y
 
                 # Vérifier si le point est en dehors du terrain de jeu
                 if self.BORDER_DISTANCE < x < self.FIELD_SIZE[0] - self.BORDER_DISTANCE and self.BORDER_DISTANCE < y < self.FIELD_SIZE[1] - self.BORDER_DISTANCE:
@@ -313,12 +315,15 @@ class LidarScanner:
     def receive_to_server(self, message):
         if message["cmd"] == "stop":
             self.client_socket.stop()
-        else:
-            if message["cmd"] == "coord":
+        elif message["cmd"] == "coord":
                 coord = message["data"]
                 self.ROBOT.update_position(coord["x"], coord["y"])
                 self.ROBOT_ANGLE = coord["theta"]/10 # Angle en degrés * 10
-
+        elif message["cmd"] == "jack":
+            etat = message["data"]
+            if etat["etat"] == "start":
+                self.en_mvt = True
+            
     def run(self):
         
         self.connexion_lidar()
@@ -327,7 +332,9 @@ class LidarScanner:
         self.client_socket.set_callback(self.receive_to_server)
         self.client_socket.set_callback_stop(self.stop)
         self.client_socket.connect()
-
+        
+        self.en_mvt = False
+        
         while self.scanning:
             self.objets = []
             try:
@@ -346,14 +353,23 @@ class LidarScanner:
                         for objet in new_objets:
                             distance_objet = math.sqrt((objet.x - self.ROBOT.x)**2 + (objet.y - self.ROBOT.y)**2)
                             if distance_objet < self.perimetre_securite:
-                                # Envoyer un message d'alerte
-                                self.client_socket.add_to_send_list(self.client_socket.create_message(0, "lidar", {"etat": "stop", "distance": distance_objet}))
-                                
-                                # Arrêter le robot
-                                self.client_socket.add_to_send_list(self.client_socket.create_message(2, "CAN", {"id": 0x1F7, "byte1": 0}))
-                                time.sleep(0.05)
-                                self.client_socket.add_to_send_list(self.client_socket.create_message(2, "CAN", {"id": 0x1F7, "byte1": 0}))
-                                break
+                                if self.en_mvt:
+                                    # Envoyer un message d'alerte
+                                    self.client_socket.add_to_send_list(self.client_socket.create_message(0, "lidar", {"etat": "stop", "distance": distance_objet}))
+                                    
+                                    # Arrêter le robot
+                                    self.client_socket.add_to_send_list(self.client_socket.create_message(2, "CAN", {"id": 503, "byte1": 0}))
+                                    time.sleep(0.1)
+                                    self.client_socket.add_to_send_list(self.client_socket.create_message(2, "CAN", {"id": 503, "byte1": 1}))
+                                    break
+                            else:
+                                if not self.en_mvt:
+                                    # Envoyer un message de reprise
+                                    self.client_socket.add_to_send_list(self.client_socket.create_message(0, "lidar", {"etat": "start", "distance": distance_objet}))
+                                    
+                                    # Reprendre le mouvement du robot
+                                    self.client_socket.add_to_send_list(self.client_socket.create_message(2, "CAN", {"id": 503, "byte1": 1}))
+                                    #self.en_mvt = True
                         
                         self.client_socket.add_to_send_list(self.client_socket.create_message(10, "objects", self.generate_JSON_Objets(new_objets)))
             except RPLidarException as e:

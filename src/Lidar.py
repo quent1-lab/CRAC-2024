@@ -335,13 +335,13 @@ class LidarScanner:
                     if not self.scanning:
                         break
                     new_scan = self.transform_scan(scan)
-                    #self.client_socket.add_to_send_list(self.client_socket.create_message(10, "points", self.generate_JSON_Points(new_scan)))
+                    self.client_socket.add_to_send_list(self.client_socket.create_message(10, "points", self.generate_JSON_Points(new_scan)))
                     
-                    if len(new_scan) > 0:
+                    """if len(new_scan) > 0:
                         new_objets = self.detect_objects(new_scan)
-                        self.suivre_objet(new_objets, 100)
+                        self.suivre_objet(new_objets, 100)"""
                         
-                    self.client_socket.add_to_send_list(self.client_socket.create_message(10, "objects", self.generate_JSON_Objets()))
+                    #self.client_socket.add_to_send_list(self.client_socket.create_message(10, "objects", self.generate_JSON_Objets()))
             except RPLidarException as e:
                 # Code pour gérer RPLidarException
                 print(f"LIDAR  : Une erreur RPLidarException s'est produite dans le run : {e}")

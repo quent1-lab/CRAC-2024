@@ -44,8 +44,8 @@ class LidarScanner:
             distance = point[2]
             new_angle = point[1] - self.ROBOT_ANGLE + 180
             
-            #x_r = self.map_value(self.ROBOT.x, 0, 3000, 3000, 0)
-            x_r = self.ROBOT.x
+            x_r = self.map_value(self.ROBOT.x, 0, 3000, 3000, 0)
+            #x_r = self.ROBOT.x
             new_angle %= 360
             if new_angle < 0:
                 new_angle += 360
@@ -316,8 +316,7 @@ class LidarScanner:
         else:
             if message["cmd"] == "coord":
                 coord = message["data"]
-                x_r = self.map_value(coord["x"], 0, 3000, 3000, 0)
-                self.ROBOT.update_position(x_r, coord["y"])
+                self.ROBOT.update_position(coord["x"], coord["y"])
                 self.ROBOT_ANGLE = coord["theta"]/10 # Angle en degrés * 10
 
     def run(self):

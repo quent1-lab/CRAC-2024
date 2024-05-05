@@ -725,8 +725,9 @@ class IHM:
             self.objets = []
             json_string = json.loads(message["data"])
             for obj in json_string:
+                x_o = self.map_value(obj["x"], 0, self.FIELD_SIZE[0], self.FIELD_SIZE[0], 0)
                 self.objets.append(
-                    Objet(obj["id"], obj["x"], obj["y"], obj["taille"]))
+                    Objet(obj["id"], x_o, obj["y"], obj["taille"]))
                 
         elif message["cmd"] == "coord":
             coord = message["data"]

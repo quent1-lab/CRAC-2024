@@ -345,13 +345,15 @@ class LidarScanner:
                         # Vérifier si l'objet rentre dans le périmètre de sécurité
                         for objet in new_objets:
                             distance_objet = math.sqrt((objet.x - self.ROBOT.x)**2 + (objet.y - self.ROBOT.y)**2)
+                            logging.info(f"Distance to object: {distance_objet}")
                             if distance_objet < self.perimetre_securite:
                                 # Envoyer un message d'alerte
+                                logging.info("Object detected in security perimeter")
                                 self.client_socket.add_to_send_list(self.client_socket.create_message(0, "lidar", {"etat": "stop", "distance": distance_objet}))
                                 
                                 # Arrêter le robot
                                 self.client_socket.add_to_send_list(self.client_socket.create_message(2, "CAN", {"id": 503, "byte1": 0}))
-                                time.sleep(0.05)
+                                time.sleep(0.1)
                                 self.client_socket.add_to_send_list(self.client_socket.create_message(2, "CAN", {"id": 503, "byte1": 1}))
                                 break
                         

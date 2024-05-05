@@ -320,7 +320,7 @@ class LidarScanner:
                 if angle < 0:
                     angle += 360
                     
-                self.ROBOT.update_position(coord["x"], coord["y"])
+                self.ROBOT.update_position(x_robot, coord["y"])
                 self.ROBOT_ANGLE = angle # Angle en degrés * 10
 
     def run(self):

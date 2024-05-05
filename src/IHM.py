@@ -1129,7 +1129,7 @@ class IHM:
                     self.draw_object(objet)
                     
                     # Vérifie si l'objet est dans le périmètre de sécurité
-                    if math.sqrt((self.ROBOT.x - objet.x)**2 + (self.ROBOT.y - objet.y)**2) < 50:
+                    if math.sqrt((self.ROBOT.x - objet.x)**2 + (self.ROBOT.y - objet.y)**2) < self.perimetre_securite:
                         self.client_socket.add_to_send_list(self.client_socket.create_message(4, "lidar", {"etat": "stop"}))
                         print("Arrêt du lidar")
                     

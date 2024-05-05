@@ -45,7 +45,7 @@ class LidarScanner:
             new_angle = point[1] - self.ROBOT_ANGLE + 180
             
             x_r = self.map_value(self.ROBOT.x, 0, 3000, 3000, 0)
-            #x_r = self.ROBOT.x
+
             new_angle %= 360
             if new_angle < 0:
                 new_angle += 360
@@ -336,7 +336,7 @@ class LidarScanner:
                     if not self.scanning:
                         break
                     new_scan = self.transform_scan(scan)
-                    self.client_socket.add_to_send_list(self.client_socket.create_message(10, "points", self.generate_JSON_Points(new_scan)))
+                    #self.client_socket.add_to_send_list(self.client_socket.create_message(10, "points", self.generate_JSON_Points(new_scan)))
                     
                     if len(new_scan) > 0:
                         new_objets = self.detect_objects(new_scan)
@@ -345,7 +345,6 @@ class LidarScanner:
                         # Vérifier si l'objet rentre dans le périmètre de sécurité
                         for objet in new_objets:
                             distance_objet = math.sqrt((objet.x - self.ROBOT.x)**2 + (objet.y - self.ROBOT.y)**2)
-                            #logging.info(f"Distance to object: {distance_objet}")
                             if distance_objet < self.perimetre_securite:
                                 # Envoyer un message d'alerte
                                 logging.info("Object detected in security perimeter")

@@ -51,7 +51,7 @@ class LidarScanner:
                 new_angle += 360
 
             if distance != 0:
-                x = distance * math.cos(math.radians(new_angle)) + x_r
+                x = distance * math.cos(math.radians(new_angle)) + self.ROBOT.x
                 y = distance * math.sin(math.radians(new_angle)) + self.ROBOT.y
 
                 # Vérifier si le point est en dehors du terrain de jeu

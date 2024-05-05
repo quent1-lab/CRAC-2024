@@ -725,8 +725,9 @@ class IHM:
             self.objets = []
             json_string = json.loads(message["data"])
             for obj in json_string:
+                x_o = self.map_value(obj["x"], 0, self.FIELD_SIZE[0], self.FIELD_SIZE[0], 0)
                 self.objets.append(
-                    Objet(obj["id"], obj["x"], obj["y"], obj["taille"]))
+                    Objet(obj["id"], x_o, obj["y"], obj["taille"]))
                 
         elif message["cmd"] == "coord":
             coord = message["data"]
@@ -739,8 +740,9 @@ class IHM:
                 scan = json.loads(scan)
                 self.new_scan = []
                 for point in scan:
+                    x_p = self.map_value(point["x"], 0, self.FIELD_SIZE[0], self.FIELD_SIZE[0], 0)
                     self.new_scan.append(
-                        (point["x"], point["y"], point["dist"], point["angle"]))
+                        (x_p, point["y"], point["dist"], point["angle"]))
             except Exception as e:
                 print("Erreur dans la réception des points", e)
                 

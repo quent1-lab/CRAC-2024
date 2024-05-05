@@ -106,9 +106,8 @@ class IHM_Robot:
         
         self.button_strategie = []
         
-        path = "data/strategies"
-        liste_strategies = os.listdir(path)
-        nombre_strategies = len(liste_strategies)
+        self.path_strat = "data/strategies_cache"
+        liste_strategies = os.listdir(self.path_strat)
         x_depart = 10
         y_depart = 90
         
@@ -116,7 +115,8 @@ class IHM_Robot:
         
         for i, strategy in enumerate(liste_strategies):
             texte = strategy.split(".")[0]
-            button = Button(self.screen, (x_depart + 405 * int(i/4), y_depart + i * 90, 385, 80), self.theme_path, texte, font, lambda i=i: self.strategie_action(i+1))
+            name = texte.split("_")[1]
+            button = Button(self.screen, (x_depart + 405 * int(i/4), y_depart + i * 90, 385, 80), self.theme_path, texte, font, lambda i=i: self.strategie_action(name))
             self.button_strategie.append(button)
         
         self.button_autres = [
@@ -205,7 +205,7 @@ class IHM_Robot:
         self.client.add_to_send_list(self.client.create_message(0, "strategie", {"strategie": name}))
         
         # Charger la stratégie
-        with open(f"data/strategies/strategie_cache{name}.json", "r") as f:
+        with open(self.path_strat + f"/strategie_{name}.json", "r") as f:
             self.strategie = json.load(f)
             logging.info(f"Stratégie chargée : {self.strategie}")
         
@@ -340,7 +340,7 @@ class IHM_Robot:
             self.strategie_is_running = False
             self.PAGE = 1
         
-        strat = Strategie(f"strategie_{name}.json")
+        strat = Strategie(self.path_strat + f"/strategie_{name}.json")
         
         thread_play = threading.Thread(target=strat.play)
         thread_play.start()
@@ -569,15 +569,14 @@ class IHM_Robot:
                 strategie = data["strategie"]
                 
                 # Vérifie si le fichier de la stratégie existe
-                path = f"data/strategies/strategie_{id}.json"
+                path = self.path_strat + f"/strategie_{id}.json"
 
                 if not os.path.exists(path):
                     # Enregistre la stratégie dans un fichier
                     with open(path, "w") as f:
                         f.write(json.dumps(strategie))
                 
-                path = "data/strategies_cache"
-                liste_strategies = os.listdir(path)
+                liste_strategies = os.listdir(self.path_strat)
                 x_depart = 10
                 y_depart = 90
                 

@@ -106,7 +106,7 @@ class IHM_Robot:
         
         self.button_strategie = []
         
-        path = "data/strategies_cache"
+        path = "data/strategies"
         liste_strategies = os.listdir(path)
         nombre_strategies = len(liste_strategies)
         x_depart = 10
@@ -205,7 +205,7 @@ class IHM_Robot:
         self.client.add_to_send_list(self.client.create_message(0, "strategie", {"strategie": index}))
         
         # Charger la stratégie
-        with open(f"data/strategies_cache/strategie_{index}.json", "r") as f:
+        with open(f"data/strategies/strategie_{index}.json", "r") as f:
             self.strategie = json.load(f)
             logging.info(f"Stratégie chargée : {self.strategie}")
         
@@ -569,7 +569,8 @@ class IHM_Robot:
                 strategie = data["strategie"]
                 
                 # Vérifie si le fichier de la stratégie existe
-                path = f"data/strategies_cache/strategie_{id}.json"
+                path = f"data/strategies/strategie_{id}.json"
+                logging.info(f"Chargement de la stratégie {path}")
                 if not os.path.exists(path):
                     # Enregistre la stratégie dans un fichier
                     with open(path, "w") as f:

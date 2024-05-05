@@ -116,7 +116,7 @@ class IHM_Robot:
         for i, strategy in enumerate(liste_strategies):
             texte = strategy.split(".")[0]
             name = texte.split("_")[1]
-            button = Button(self.screen, (x_depart + 405 * int(i/4), y_depart + (i % 4) * 90, 385, 80), self.theme_path, texte, font, lambda i=i: self.strategie_action(name))
+            button = Button(self.screen, (x_depart + 400 * int(i/4), y_depart + (i % 4) * 90, 385, 80), self.theme_path, texte, font, lambda i=i: self.strategie_action(name))
             self.button_strategie.append(button)
         
         self.button_autres = [
@@ -570,19 +570,28 @@ class IHM_Robot:
                 
                 # Récupère la liste des fichiers de stratégies
                 liste_strategies = os.listdir(self.path_strat)
+            
+                # Vérifie si la stratégie existe
+                if f"strategie_{id}.json" not in liste_strategies:
+                    # Si la stratégie n'existe pas, on enregistre la nouvelle stratégie
+                    
+                    # Récupère le dernier numéro de stratégie pour enregistrer la nouvelle stratégie
+                    num_strategie = 0
+                    for strategy in liste_strategies:
+                        num = int(strategy.split("_")[1].split(".")[0])
+                        if num > num_strategie:
+                            num_strategie = num
+                    
+                    num_strategie += 1
+                    path = self.path_strat + f"/strategie_{num_strategie}.json"
+                    
+                    with open(path, "w") as f:
+                        f.write(json.dumps(strategie))
                 
-                # Récupère le dernier numéro de stratégie pour enregistrer la nouvelle stratégie
-                num_strategie = 0
-                for strategy in liste_strategies:
-                    num = int(strategy.split("_")[1].split(".")[0])
-                    if num > num_strategie:
-                        num_strategie = num
-                
-                num_strategie += 1
-                path = self.path_strat + f"/strategie_{num_strategie}.json"
-                
-                with open(path, "w") as f:
-                    f.write(json.dumps(strategie))
+                else:
+                    # Si la stratégie existe, on met à jour la stratégie existante
+                    with open(self.path_strat + f"/strategie_{id}.json", "w") as f:
+                        f.write(json.dumps(strategie))
                 
                 liste_strategies = os.listdir(self.path_strat)
                 x_depart = 10

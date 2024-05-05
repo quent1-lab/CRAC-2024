@@ -45,7 +45,7 @@ class LidarScanner:
             new_angle = point[1] - self.ROBOT_ANGLE + 180
             
             x_robot = self.map_value(self.ROBOT.x, 0, self.FIELD_SIZE[0], self.FIELD_SIZE[0], 0)
-            
+            logging.info(f"x_robot: {x_robot}")
             new_angle %= 360
             if new_angle < 0:
                 new_angle += 360

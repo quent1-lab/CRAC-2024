@@ -442,6 +442,9 @@ class IHM_Robot:
     def set_switch(self, num_switch, etat):
         if etat == 1:
             self.switch_on(num_switch)
+            if num_switch == 3:
+                # Activer l'asservissement
+                self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 0x1F7, "byte1": 0}))
         elif etat == 0:
             self.switch_off(num_switch)
         

@@ -592,6 +592,10 @@ class IHM_Robot:
             elif message["cmd"] == "get_pos":
                 data = message["data"]
                 self.value_get_pos["id_herk"] = data["pos"]
+            
+            elif message["cmd"] == "lidar":
+                data = message["data"]
+                logging.info(f"Lidar : {data}")
         
         except Exception as e:
             print(f"Erreur lors de la réception du message : {str(e)}")

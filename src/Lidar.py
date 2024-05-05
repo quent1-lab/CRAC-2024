@@ -21,6 +21,7 @@ class LidarScanner:
         self.FIELD_SIZE = (3000, 2000)
         self.scanning = True
         self.perimetre_securite = 600 # rayon de sécurité en mm
+        self.en_mvt = False
 
         # Initialisation du robot virtuel
         self.ROBOT = Objet(0, 1500, 1000, 20)
@@ -328,7 +329,9 @@ class LidarScanner:
         self.client_socket.set_callback(self.receive_to_server)
         self.client_socket.set_callback_stop(self.stop)
         self.client_socket.connect()
-
+        
+        self.en_mvt = False
+        
         while self.scanning:
             self.objets = []
             try:
@@ -347,15 +350,23 @@ class LidarScanner:
                         for objet in new_objets:
                             distance_objet = math.sqrt((objet.x - self.ROBOT.x)**2 + (objet.y - self.ROBOT.y)**2)
                             if distance_objet < self.perimetre_securite:
-                                # Envoyer un message d'alerte
-                                logging.info("Object detected in security perimeter")
-                                self.client_socket.add_to_send_list(self.client_socket.create_message(0, "lidar", {"etat": "stop", "distance": distance_objet}))
-                                
-                                # Arrêter le robot
-                                self.client_socket.add_to_send_list(self.client_socket.create_message(2, "CAN", {"id": 503, "byte1": 0}))
-                                time.sleep(0.1)
-                                self.client_socket.add_to_send_list(self.client_socket.create_message(2, "CAN", {"id": 503, "byte1": 1}))
-                                break
+                                if self.en_mvt:
+                                    # Envoyer un message d'alerte
+                                    self.client_socket.add_to_send_list(self.client_socket.create_message(0, "lidar", {"etat": "stop", "distance": distance_objet}))
+                                    
+                                    # Arrêter le robot
+                                    self.client_socket.add_to_send_list(self.client_socket.create_message(2, "CAN", {"id": 503, "byte1": 0}))
+                                    time.sleep(0.1)
+                                    self.client_socket.add_to_send_list(self.client_socket.create_message(2, "CAN", {"id": 503, "byte1": 1}))
+                                    break
+                            else:
+                                if not self.en_mvt:
+                                    # Envoyer un message de reprise
+                                    self.client_socket.add_to_send_list(self.client_socket.create_message(0, "lidar", {"etat": "start", "distance": distance_objet}))
+                                    
+                                    # Reprendre le mouvement du robot
+                                    self.client_socket.add_to_send_list(self.client_socket.create_message(2, "CAN", {"id": 503, "byte1": 1}))
+                                    self.en_mvt = True
                         
                         self.client_socket.add_to_send_list(self.client_socket.create_message(10, "objects", self.generate_JSON_Objets(new_objets)))
             except RPLidarException as e:

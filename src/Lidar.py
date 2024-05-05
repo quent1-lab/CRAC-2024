@@ -42,7 +42,7 @@ class LidarScanner:
         points = []
         for point in scan:
             distance = point[2]
-            new_angle = point[1] - self.ROBOT_ANGLE
+            new_angle = point[1] - self.ROBOT_ANGLE + 180
             
             x_r = self.map_value(self.ROBOT.x, 0, 3000, 3000, 0)
 

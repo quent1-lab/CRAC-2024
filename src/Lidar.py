@@ -20,7 +20,7 @@ class LidarScanner:
         self.BORDER_DISTANCE = 200
         self.FIELD_SIZE = (3000, 2000)
         self.scanning = True
-        self.perimetre_securite = 400 # rayon de sécurité en mm
+        self.perimetre_securite = 600 # rayon de sécurité en mm
 
         # Initialisation du robot virtuel
         self.ROBOT = Objet(0, 1500, 1000, 20)

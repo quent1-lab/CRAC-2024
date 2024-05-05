@@ -315,12 +315,15 @@ class LidarScanner:
     def receive_to_server(self, message):
         if message["cmd"] == "stop":
             self.client_socket.stop()
-        else:
-            if message["cmd"] == "coord":
+        elif message["cmd"] == "coord":
                 coord = message["data"]
                 self.ROBOT.update_position(coord["x"], coord["y"])
                 self.ROBOT_ANGLE = coord["theta"]/10 # Angle en degrés * 10
-
+        elif message["cmd"] == "jack":
+            etat = message["data"]
+            if etat["etat"] == "start":
+                self.en_mvt = True
+            
     def run(self):
         
         self.connexion_lidar()

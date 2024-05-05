@@ -381,7 +381,7 @@ class IHM_Robot:
     
     def page_play(self):
         # Cette page affiche la stratégie en cours
-        font = pygame.font.SysFont("Arial", 30)
+        font = pygame.font.SysFont("Arial", 40)
         draw_text_center(self.screen, self.text_page_play, x=self.width//2, y=self.height//2 + 15, font=font, color=(255, 255, 255))
     
     def page_mouvement(self):
@@ -405,6 +405,22 @@ class IHM_Robot:
             #self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 5, "byte2": i}))
             time.sleep(0.1)
             draw_text_center(self.screen, f"Position {i} : {value}", x=self.width//2, y=90 + i * 50, font=font, color=(255, 255, 255))
+    
+    def page_match(self):
+        # Dessine l'image du terrain de jeu en 720x480
+        self.screen.fill((0, 0, 0))
+        
+        # Dessine l'image
+        image = pygame.image.load("data/terrain.jpg")
+        # Redimensionne l'image
+        image = pygame.transform.scale(image, (720, 480))
+        # Dessine l'image
+        self.screen.blit(image, (40, 0))
+    
+    def page_points(self):
+        # Dessine les points estimés par le robot
+        
+        draw_text_center(self.screen, "Je ne sais pas compter sorry :|", x=self.width//2, y=250, font=self.font, color=(255, 255, 255))
     
     def taille_auto_batterie(self):
         nb_batteries_colonne = 0
@@ -611,6 +627,16 @@ class IHM_Robot:
             
             elif message["cmd"] == "lidar":
                 data = message["data"]
+                if "etat" in data:
+                    if data["etat"] == "start":
+                        self.PAGE = 20 # PAGE de match
+                        self.ETAT = 2
+                    elif data["etat"] == "stop":
+                        self.PAGE = 0
+                        self.ETAT = 0
+                    elif data["etat"] == "end":
+                        self.PAGE = 21 # PAGE de fin de match 'points'
+                        self.ETAT = 0
                 logging.info(f"Lidar : {data}")
         
         except Exception as e:
@@ -646,7 +672,7 @@ class IHM_Robot:
     def deconnexion(self):
         self.is_running = False
         self.strategie_is_running = False
-
+    
     def run(self):
         self.taille_auto_batterie()
         
@@ -695,9 +721,10 @@ class IHM_Robot:
                     elif self.PAGE == 12:
                         for button in self.button_tests_special:
                             button.handle_event(event)
-
-                    for button in self.button_menu:
-                        button.handle_event(event)
+                            
+                    if self.PAGE != 20: # Si on est pas sur la page de match on peut changer de page
+                        for button in self.button_menu:
+                            button.handle_event(event)
 
                 # Affichage
                 self.screen.fill(self.BACKGROUND_COLOR)
@@ -731,6 +758,11 @@ class IHM_Robot:
                     self.page_special()
                 elif self.PAGE == 13:
                     self.page_get_pos()
+                
+                elif self.PAGE == 20:
+                    self.page_match()
+                elif self.PAGE == 21:
+                    self.page_points()
 
                 pygame.display.flip()
                 self.clock.tick(30)

@@ -316,6 +316,7 @@ class LidarScanner:
         else:
             if message["cmd"] == "coord":
                 coord = message["data"]
+                logging.info(f"Received new position: {coord}")
                 self.ROBOT.update_position(coord["x"], coord["y"])
                 self.ROBOT_ANGLE = coord["theta"]/10 # Angle en degrés * 10
 

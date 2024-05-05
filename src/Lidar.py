@@ -369,7 +369,7 @@ class LidarScanner:
                                     
                                     # Reprendre le mouvement du robot
                                     self.client_socket.add_to_send_list(self.client_socket.create_message(2, "CAN", {"id": 503, "byte1": 1}))
-                                    self.en_mvt = True
+                                    #self.en_mvt = True
                         
                         self.client_socket.add_to_send_list(self.client_socket.create_message(10, "objects", self.generate_JSON_Objets(new_objets)))
             except RPLidarException as e:

@@ -233,7 +233,7 @@ class ComCAN:
                 self.send(messageCan)
                 #print("BusCAN : Message de restart envoyé")
             
-            elif message["cmd"] == "set_pos":
+            elif message["cmd"] == "set_odo":
                 x_y_t = message["data"]
                 # Format des données : x (short), y (short), theta (short)
                 dataCan = struct.pack('h', x_y_t["x"]) + struct.pack('h', x_y_t["y"]) + struct.pack('h', x_y_t["theta"])

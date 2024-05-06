@@ -203,7 +203,7 @@ class IHM_Robot:
     
     def draw_robot(self):
         x,y,angle = self.ROBOT_pos
-        x_r = int(self.map_value(x, 0, 3000, 720, 40))
+        x_r = int(self.map_value(x, 0, 3000, 760, 40))
         y_r = int(self.map_value(y, 0, 2000, 0, 480))
         
         dim_x = self.ROBOT_Dimension[0] * self.RATIO_x
@@ -289,7 +289,7 @@ class IHM_Robot:
         
         if self.PAGE == 9 and zone != 0:
             self.PAGE = 20
-            
+        
         # Si zone paire, equipe jaune, sinon equipe bleue
         if zone % 2 == 0:
             self.EQUIPE = "jaune"
@@ -450,7 +450,7 @@ class IHM_Robot:
     def page_autres(self):
         for button in self.button_autres:
             button.draw()
-        
+    
     def page_erreur(self):
         # Cette page affiche un message d'erreur si une erreur est survenue lors de la réception des données des batteries
         pygame.draw.rect(self.screen, (255, 0, 0), (self.width//2 - 350, 90, 700, 370), 0, 10)
@@ -477,7 +477,7 @@ class IHM_Robot:
     def page_action(self):
         for button in self.button_tests_action:
             button.draw()
-            
+    
     def page_special(self):
         for button in self.button_tests_special:
             button.draw()
@@ -516,7 +516,6 @@ class IHM_Robot:
         
         self.draw_robot()
 
-    
     def page_points(self):
         # Dessine les points estimés par le robot
         
@@ -535,8 +534,6 @@ class IHM_Robot:
         
         for button in self.button_recalages:
             button.draw()
-        
-        
     
     def taille_auto_batterie(self):
         nb_batteries_colonne = 0
@@ -580,7 +577,7 @@ class IHM_Robot:
                 self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 503, "byte1": 1}))
         elif etat == 0:
             self.switch_off(num_switch)
-        
+    
     def request_energy(self):
         if self.state_request_energy:
             return

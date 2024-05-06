@@ -821,4 +821,4 @@ if __name__ == "__main__":
         ihm = IHM_Robot()
         ihm.run()
     except Exception as e:
-        print(f"Erreur dans le run : {str(e)}")
+        logging.error(f"Erreur : {str(e)}")

@@ -340,6 +340,7 @@ class IHM_Robot:
                     y = action["can"]["y"]
                     theta = action["can"]["theta"]
                     
+                    logging.info(f"Recalage : x={x}, y={y}, theta={theta}")
                     self.client.add_to_send_list(self.client.create_message(2, "set_odo", {"x": x, "y": y, "theta": theta}))
             
             self.PAGE = 0

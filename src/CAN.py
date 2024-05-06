@@ -236,6 +236,7 @@ class ComCAN:
             elif message["cmd"] == "set_odo":
                 x_y_t = message["data"]
                 # Format des données : x (short), y (short), theta (short)
+                logging.info(f"BusCAN : x_y_t : {x_y_t}")
                 dataCan = struct.pack('h', x_y_t["x"]) + struct.pack('h', x_y_t["y"]) + struct.pack('h', x_y_t["theta"])
                 messageCan = can.Message(arbitration_id=0x30, data=dataCan, is_extended_id=False)
             

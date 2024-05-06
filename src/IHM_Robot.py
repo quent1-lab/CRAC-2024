@@ -477,9 +477,9 @@ class IHM_Robot:
         # Tourner l'image du robot
         robot_image = pygame.transform.rotate(robot_image, self.ROBOT_pos[2])
         # Dessiner l'image du robot
-        x = self.map_value(self.ROBOT_pos[0], 0, 3000, 760, 40)
-        y = self.map_value(self.ROBOT_pos[1], 0, 2000, 0, 480)
-        self.screen.blit(robot_image, (self.ROBOT_pos[0], self.ROBOT_pos[1]))
+        x = int(self.map_value(self.ROBOT_pos[0], 0, 3000, 760, 40))
+        y = int(self.map_value(self.ROBOT_pos[1], 0, 2000, 0, 480))
+        self.screen.blit(robot_image, x, y)
 
     
     def page_points(self):

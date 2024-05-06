@@ -100,10 +100,9 @@ class IHM_Robot:
         self.button_recalage = Button(self.screen, (420, 90, 360, 60), self.theme_path, "Recalage", font, self.recalage, color=(100, 0, 200))
         
         self.button_recalages = [
-            Button(self.screen, (40, 0, 50, 50), self.theme_path, "", self.font, self.recalage, color=(0, 0, 200)),
-            Button(self.screen, (10, 180, 150, 80), self.theme_path, "", self.font, self.recalage),
-            Button(self.screen, (10, 270, 150, 80), self.theme_path, "", self.font, self.recalage),
-            Button(self.screen, (10, 360, 150, 80), self.theme_path, "", self.font, self.recalage),
+            Button(self.screen, (40, 0, 120, 120), self.theme_path, "", self.font, self.recalage(1), color=(0, 0, 200)),
+            Button(self.screen, (40, 380, 120, 120), self.theme_path, "", self.font, self.recalage, color=(0, 0, 200)),
+            
         ]
         
         self.recalage_is_playing = False

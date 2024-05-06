@@ -105,8 +105,9 @@ class IHM_Robot:
         self.can_connect = False
         
         self.button_recalages = [
-            Button(self.screen, (40, 0, 120, 120), self.theme_path, "", self.font, self.recalage(1), color=(0, 0, 200)),
-            Button(self.screen, (40, 380, 120, 120), self.theme_path, "", self.font, self.recalage(2), color=(0, 0, 200))
+            Button(self.screen, (40, 0, 120, 120), self.theme_path, "", self.font,  lambda : self.recalage(1), color=(0, 0, 200)),
+            Button(self.screen, (40, 180, 120, 120), self.theme_path, "", self.font,  lambda :self.recalage(2), color=(200, 0, 200)),
+            Button(self.screen, (40, 360, 120, 120), self.theme_path, "", self.font,  lambda :self.recalage(3), color=(200, 200, 0))
             
         ]
         

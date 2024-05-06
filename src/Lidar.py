@@ -42,6 +42,10 @@ class LidarScanner:
         """
         points = []
         for point in scan:
+            # Supprime les points compris enrte 88 et 92 degrés et entre 268 et 272 degrés
+            if 88 < point[1] < 92 or 268 < point[1] < 272:
+                continue
+            
             distance = point[2]
             new_angle = point[1] - self.ROBOT_ANGLE
             

@@ -101,7 +101,7 @@ class IHM_Robot:
         
         self.button_recalages = [
             Button(self.screen, (40, 0, 120, 120), self.theme_path, "", self.font, self.recalage(1), color=(0, 0, 200)),
-            Button(self.screen, (40, 380, 120, 120), self.theme_path, "", self.font, self.recalage(2), color=(0, 0, 200)),
+            Button(self.screen, (40, 380, 120, 120), self.theme_path, "", self.font, self.recalage(2), color=(0, 0, 200))
             
         ]
         

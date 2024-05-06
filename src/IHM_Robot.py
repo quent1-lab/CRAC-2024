@@ -27,6 +27,11 @@ class IHM_Robot:
         }
         self.ban_battery = []
         
+        self.ROBOT_Dimension = (264, 269)
+        self.ROBOT_pos = (0, 0, 0)
+        self.RATIO_x = 720/3000
+        self.RATIO_y = 480/2000
+        
         self.PAGE = 0
         self.ETAT = 0
         self.EQUIPE = "jaune"
@@ -250,7 +255,7 @@ class IHM_Robot:
             return
         
         if self.PAGE == 9 and zone != 0:
-            self.PAGE = 0
+            self.PAGE = 20
             
         # Si zone paire, equipe jaune, sinon equipe bleue
         if zone % 2 == 0:
@@ -274,27 +279,37 @@ class IHM_Robot:
                 id = value["id"]
                 akn = value["aknowledge"]
                 action = value
-                if len(action["ordre"]) == 1:
-                    # Ordre de rotation
-                    angle = action["ordre"]["theta"]
-                    self.client.add_to_send_list(self.client.create_message(2, "rotation", {"angle" : angle*10}))
-                else:
-                    # Ordre de recalage
-                    distance = action["ordre"]["distance"]
-                    mode = action["ordre"]["mode"]
-                    recalage = action["ordre"]["recalage"]
-                    self.client.add_to_send_list(self.client.create_message(2, "recalage", {"distance": distance, "mode": mode, "recalage": recalage}))
                 
-                is_arrived = False
-                while self.recalage_is_playing and self.is_running and not is_arrived:
-                    time.sleep(0.1)
-                    if akn in self.liste_aknowledge:
-                        self.liste_aknowledge.remove(akn)
-                        is_arrived = True
+                if "ordre" in action:
+                    if len(action["ordre"]) == 1:
+                        # Ordre de rotation
+                        angle = action["ordre"]["theta"]
+                        self.client.add_to_send_list(self.client.create_message(2, "rotation", {"angle" : angle*10}))
+                    else:
+                        # Ordre de recalage
+                        distance = action["ordre"]["distance"]
+                        mode = action["ordre"]["mode"]
+                        recalage = action["ordre"]["recalage"]
+                        self.client.add_to_send_list(self.client.create_message(2, "recalage", {"distance": distance, "mode": mode, "recalage": recalage}))
                     
-                if self.is_running == False:
-                    break
+                    is_arrived = False
+                    while self.recalage_is_playing and self.is_running and not is_arrived:
+                        time.sleep(0.1)
+                        if akn in self.liste_aknowledge:
+                            self.liste_aknowledge.remove(akn)
+                            is_arrived = True
+                        
+                    if self.is_running == False:
+                        break
+                elif "can" in action:
+                    # Ordre CAN pour set odometrie
+                    x = action["can"]["x"]
+                    y = action["can"]["y"]
+                    theta = action["can"]["theta"]
+                    
+                    self.client.add_to_send_list(self.client.create_message(2, "set_odo", {"x": x, "y": y, "theta": theta}))
             
+            self.PAGE = 0
             self.recalage_is_playing = False
         
         thread_recalage = threading.Thread(target=task_recalage)
@@ -449,11 +464,23 @@ class IHM_Robot:
         self.screen.fill((0, 0, 0))
         
         # Dessine l'image
-        image = pygame.image.load("data/Terrain_Jeu.png")
+        image_terrain = pygame.image.load("data/Terrain_Jeu.png")
         # Redimensionne l'image
-        image = pygame.transform.scale(image, (720, 480))
+        image_terrain = pygame.transform.scale(image_terrain, (720, 480))
         # Dessine l'image
-        self.screen.blit(image, (40, 0))
+        self.screen.blit(image_terrain, (40, 0))
+        
+        # Dessine le robot
+        robot_image = pygame.image.load('data/robot.png').convert_alpha()
+        # Ajuster la taille de l'image du robot à la taille du terrain de jeu
+        robot_image = pygame.transform.scale(robot_image, self.ROBOT_Dimension[0] * self.RATIO_x, self.ROBOT_Dimension[1] * self.RATIO_y)
+        # Tourner l'image du robot
+        robot_image = pygame.transform.rotate(robot_image, self.ROBOT_pos[2])
+        # Dessiner l'image du robot
+        x = self.map_value(self.ROBOT_pos[0], 0, 3000, 760, 40)
+        y = self.map_value(self.ROBOT_pos[1], 0, 2000, 0, 480)
+        self.screen.blit(robot_image, (self.ROBOT_pos[0], self.ROBOT_pos[1]))
+
     
     def page_points(self):
         # Dessine les points estimés par le robot
@@ -632,7 +659,6 @@ class IHM_Robot:
                 elif data["data"] == "start":
                     self.text_page_play = "Straégie en cours..."
             
-            
             elif message["cmd"] == "strategie":
                 data = message["data"]
                 id = data["id"]
@@ -696,7 +722,10 @@ class IHM_Robot:
                         self.PAGE = 21 # PAGE de fin de match 'points'
                         self.ETAT = 0
                 logging.info(f"Lidar : {data}")
-        
+
+            elif message["cmd"] == "coord":
+                coord = message["data"]
+                self.ROBOT_pos = (coord["x"], coord["y"], coord["theta"])
         except Exception as e:
             print(f"Erreur lors de la réception du message : {str(e)}")
         
@@ -730,6 +759,9 @@ class IHM_Robot:
     def deconnexion(self):
         self.is_running = False
         self.strategie_is_running = False
+    
+    def map_value(self,x, in_min, in_max, out_min, out_max):
+        return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
     
     def run(self):
         self.taille_auto_batterie()

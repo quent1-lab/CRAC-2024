@@ -232,6 +232,19 @@ class ComCAN:
                     messageCan = can.Message(arbitration_id=0x34, data=[1], is_extended_id=False)
                 self.send(messageCan)
                 #print("BusCAN : Message de restart envoyé")
+            
+            elif message["cmd"] == "set_pos":
+                x_y_t = message["data"]
+                # Format des données : x (short), y (short), theta (short)
+                dataCan = struct.pack('h', x_y_t["x"]) + struct.pack('h', x_y_t["y"]) + struct.pack('h', x_y_t["theta"])
+                messageCan = can.Message(arbitration_id=0x28, data=dataCan, is_extended_id=False)
+            
+            elif message["cmd"] == "set_vit":
+                data = message["data"]
+                # Format des données : type (entier non signer 1 octet), vitesse (short)
+                dataCan = struct.pack('B', data["type"]) + struct.pack('h', data["vitesse"])
+                messageCan = can.Message(arbitration_id=0x29, data=dataCan, is_extended_id=False)
+                self.send(messageCan)
 
         except Exception as e:
             logging.error(f"Erreur lors du traitement du message serveur : {str(e)}")

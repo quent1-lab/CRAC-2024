@@ -251,17 +251,29 @@ class IHM_Robot:
         
         if self.PAGE == 9 and zone != 0:
             self.PAGE = 0
+            
+        # Si zone paire, equipe jaune, sinon equipe bleue
+        if zone % 2 == 0:
+            self.EQUIPE = "jaune"
+        else:
+            self.EQUIPE = "bleue"
         
         def task_recalage():
             self.recalage_is_playing = True
             
-            with open("data/recalage.json", "r", encoding="utf-8") as f:
+            # Vérifier si le fichier de recalage existe
+            if not os.path.exists(f"data/recalages/recalage_{zone}.json"):
+                logging.error(f"Le fichier de recalage_{zone}.json n'existe pas")
+                self.recalage_is_playing = False
+                return
+            
+            with open(f"data/recalages/recalage_{zone}.json", "r", encoding="utf-8") as f:
                 dict_recalage = json.load(f)
             
             for key, value in dict_recalage.items():
                 id = value["id"]
                 akn = value["aknowledge"]
-                action = value[self.EQUIPE]
+                action = value
                 if len(action["ordre"]) == 1:
                     # Ordre de rotation
                     angle = action["ordre"]["theta"]
@@ -772,6 +784,11 @@ class IHM_Robot:
                         for button in self.button_menu:
                             button.handle_event(event)
                     if self.PAGE == 9:
+                        # Si on appuie en dehors des boutons de recalage, on revient à la page d'accueil
+                        if event.type == pygame.MOUSEBUTTONDOWN:
+                            if event.pos[0] < 40 or event.pos[0] > 760:
+                                self.PAGE = 0
+                        
                         for button in self.button_recalages:
                             button.handle_event(event)
 

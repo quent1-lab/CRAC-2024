@@ -108,6 +108,11 @@ class IHM_Robot:
         
         self.path_strat = "data/strategies_cache"
         liste_strategies = os.listdir(self.path_strat)
+        
+        # Vérifie si le nombre de fichier est inférieur à 8, si plus de 8 fichiers, on affiche les 8 derniers
+        if len(liste_strategies) > 8:
+            liste_strategies = liste_strategies[-8:]
+        
         x_depart = 10
         y_depart = 90
         
@@ -411,7 +416,7 @@ class IHM_Robot:
         self.screen.fill((0, 0, 0))
         
         # Dessine l'image
-        image = pygame.image.load("data/terrain.jpg")
+        image = pygame.image.load("data/Terrain_Jeu.png")
         # Redimensionne l'image
         image = pygame.transform.scale(image, (720, 480))
         # Dessine l'image
@@ -421,6 +426,24 @@ class IHM_Robot:
         # Dessine les points estimés par le robot
         
         draw_text_center(self.screen, "Je ne sais pas compter sorry :|", x=self.width//2, y=250, font=self.font, color=(255, 255, 255))
+    
+    def page_recalage(self):
+        # Dessine le terrain de jeu en 720x480
+        self.screen.fill((0, 0, 0))
+        
+        # Dessine l'image
+        image = pygame.image.load("data/Terrain_Jeu.png")
+        # Redimensionne l'image
+        image = pygame.transform.scale(image, (720, 480))
+        # Dessine l'image
+        self.screen.blit(image, (40, 0))
+        
+        button_recalages = [
+            Button(self.screen, (40, 0, 50, 50), self.theme_path, "", self.font, self.recalage, color=(0, 0, 200)),
+            Button(self.screen, (10, 180, 150, 80), self.theme_path, "", self.font, self.recalage),
+            Button(self.screen, (10, 270, 150, 80), self.theme_path, "", self.font, self.recalage),
+            Button(self.screen, (10, 360, 150, 80), self.theme_path, "", self.font, self.recalage),
+        ]
     
     def taille_auto_batterie(self):
         nb_batteries_colonne = 0
@@ -586,6 +609,10 @@ class IHM_Robot:
                 
                 # Récupère la liste des fichiers de stratégies
                 liste_strategies = os.listdir(self.path_strat)
+                
+                # Vérifie si le nombre de fichier est inférieur à 8, si plus de 8 fichiers, on affiche les 8 derniers
+                if len(liste_strategies) > 8:
+                    liste_strategies = liste_strategies[-8:]
             
                 # Vérifie si la stratégie existe
                 if f"strategie_{id}.json" not in liste_strategies:

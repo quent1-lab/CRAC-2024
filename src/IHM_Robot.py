@@ -244,7 +244,8 @@ class IHM_Robot:
         if zone == 0:
             self.PAGE = 9
             return
-        if self.PAGE == 9:
+        
+        if self.PAGE == 9 and zone != 0:
             self.PAGE = 0
         
         def task_recalage():

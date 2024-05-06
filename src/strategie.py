@@ -89,15 +89,16 @@ class Strategie:
         self.client_strat.add_to_send_list(self.client_strat.create_message(9, "jack", {"data": "input_jack"}))
         self.JACK.wait_for_release() # Attend que le jack soit enclenché
         
+        # Reset la carte actionneur
+        self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 416, "byte1": 11}))
+        self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 417, "byte1": 11}))
+        
         self.client_strat.add_to_send_list(self.client_strat.create_message(9, "jack", {"data": "wait_start"}))
         self.JACK.wait_for_press() # Attend que le jack soit relaché
         self.TIMER = time.time()
 
         self.client_strat.add_to_send_list(self.client_strat.create_message(0, "jack", {"data": "start"}))
-        
-        # Reset la carte actionneur
-        self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 416, "byte1": 11}))
-        self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 417, "byte1": 11}))
+       
     
     def stop_with_timer(self):
         

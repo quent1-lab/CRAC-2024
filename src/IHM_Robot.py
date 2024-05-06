@@ -239,6 +239,8 @@ class IHM_Robot:
         if zone == 0:
             self.PAGE = 9
             return
+        if self.PAGE == 9:
+            self.PAGE = 0
         
         def task_recalage():
             self.recalage_is_playing = True

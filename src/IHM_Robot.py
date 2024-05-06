@@ -758,9 +758,6 @@ class IHM_Robot:
                             button.handle_event(event)
                     elif self.PAGE == 5:
                         pass
-                    elif self.PAGE == 9:
-                        for button in self.button_recalages:
-                            button.handle_event(event)
                     elif self.PAGE == 10:
                         for button in self.button_tests_mouvement:
                             button.handle_event(event)
@@ -773,6 +770,9 @@ class IHM_Robot:
                             
                     if self.PAGE != 20 and self.PAGE != 9: # Si on est pas sur la page de match on peut changer de page
                         for button in self.button_menu:
+                            button.handle_event(event)
+                    if self.PAGE == 9:
+                        for button in self.button_recalages:
                             button.handle_event(event)
 
                 # Affichage

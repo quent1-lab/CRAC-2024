@@ -696,6 +696,7 @@ class IHM_Robot:
                     self.text_page_play = "Prêt à démarrer le match"
                 elif data["data"] == "start":
                     self.text_page_play = "Straégie en cours..."
+                    self.PAGE = 20
             
             elif message["cmd"] == "strategie":
                 data = message["data"]

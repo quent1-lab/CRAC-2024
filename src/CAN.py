@@ -237,7 +237,7 @@ class ComCAN:
                 x_y_t = message["data"]
                 # Format des données : x (short), y (short), theta (short)
                 dataCan = struct.pack('h', x_y_t["x"]) + struct.pack('h', x_y_t["y"]) + struct.pack('h', x_y_t["theta"])
-                messageCan = can.Message(arbitration_id=0x28, data=dataCan, is_extended_id=False)
+                messageCan = can.Message(arbitration_id=0x30, data=dataCan, is_extended_id=False)
             
             elif message["cmd"] == "set_vit":
                 data = message["data"]

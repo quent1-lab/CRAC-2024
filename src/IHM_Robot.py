@@ -111,12 +111,12 @@ class IHM_Robot:
         self.can_connect = False
         
         self.button_recalages = [
-            Button(self.screen, (40, 0, 120, 120), self.theme_path, "", self.font,  lambda : self.recalage(1), color=(0, 0, 200)),
-            Button(self.screen, (40, 180, 120, 120), self.theme_path, "", self.font,  lambda : self.recalage(2), color=(200, 200, 0)),
-            Button(self.screen, (40, 360, 120, 120), self.theme_path, "", self.font,  lambda : self.recalage(3), color=(0, 0, 200)),
-            Button(self.screen, (640, 0, 120, 120), self.theme_path, "", self.font,  lambda : self.recalage(4), color=(200, 200, 0)),
-            Button(self.screen, (640, 180, 120, 120), self.theme_path, "", self.font,  lambda : self.recalage(5), color=(0, 0, 200)),
-            Button(self.screen, (640, 360, 120, 120), self.theme_path, "", self.font,  lambda : self.recalage(6), color=(200, 200, 0))
+            Button(self.screen, (40, 0, 120, 120), self.theme_path, "1", self.font,  lambda : self.recalage(1), color=(0, 0, 200)),
+            Button(self.screen, (40, 180, 120, 120), self.theme_path, "2", self.font,  lambda : self.recalage(2), color=(200, 200, 0)),
+            Button(self.screen, (40, 360, 120, 120), self.theme_path, "3", self.font,  lambda : self.recalage(3), color=(0, 0, 200)),
+            Button(self.screen, (640, 0, 120, 120), self.theme_path, "4", self.font,  lambda : self.recalage(4), color=(200, 200, 0)),
+            Button(self.screen, (640, 180, 120, 120), self.theme_path, "5", self.font,  lambda : self.recalage(5), color=(0, 0, 200)),
+            Button(self.screen, (640, 360, 120, 120), self.theme_path, "6", self.font,  lambda : self.recalage(6), color=(200, 200, 0))
         ]
         
         self.button_strategie = []

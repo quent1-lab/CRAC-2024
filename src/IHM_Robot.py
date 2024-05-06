@@ -309,6 +309,7 @@ class IHM_Robot:
                 dict_recalage = json.load(f)
             
             for key, value in dict_recalage.items():
+                logging.info(f"Recalage : {value}")
                 id = value["id"]
                 akn = value["aknowledge"]
                 action = value

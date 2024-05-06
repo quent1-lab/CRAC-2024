@@ -239,6 +239,7 @@ class ComCAN:
                 logging.info(f"BusCAN : x_y_t : {x_y_t}")
                 dataCan = struct.pack('h', x_y_t["x"]) + struct.pack('h', x_y_t["y"]) + struct.pack('h', x_y_t["theta"])
                 messageCan = can.Message(arbitration_id=0x30, data=dataCan, is_extended_id=False)
+                self.send(messageCan)
             
             elif message["cmd"] == "set_vit":
                 data = message["data"]

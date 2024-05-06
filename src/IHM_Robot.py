@@ -113,6 +113,11 @@ class IHM_Robot:
         self.button_strategie = []
         
         self.path_strat = "data/strategies_cache"
+        
+        # Vériication de l'existence du dossier
+        if not os.path.exists(self.path_strat):
+            os.makedirs(self.path_strat)
+        
         liste_strategies = os.listdir(self.path_strat)
         
         # Vérifie si le nombre de fichier est inférieur à 8, si plus de 8 fichiers, on affiche les 8 derniers

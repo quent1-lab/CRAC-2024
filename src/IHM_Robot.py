@@ -99,6 +99,13 @@ class IHM_Robot:
         font = pygame.font.SysFont("Arial", 36)
         self.button_recalage = Button(self.screen, (420, 90, 360, 60), self.theme_path, "Recalage", font, self.recalage, color=(100, 0, 200))
         
+        self.button_recalages = [
+            Button(self.screen, (40, 0, 50, 50), self.theme_path, "", self.font, self.recalage, color=(0, 0, 200)),
+            Button(self.screen, (10, 180, 150, 80), self.theme_path, "", self.font, self.recalage),
+            Button(self.screen, (10, 270, 150, 80), self.theme_path, "", self.font, self.recalage),
+            Button(self.screen, (10, 360, 150, 80), self.theme_path, "", self.font, self.recalage),
+        ]
+        
         self.recalage_is_playing = False
         self.robot_move = False
         self.strategie_is_running = False
@@ -227,8 +234,11 @@ class IHM_Robot:
     def tourner(self, angle):
         self.client.add_to_send_list(self.client.create_message(2, "rotation", {"angle": angle*10}))
     
-    def recalage(self):
+    def recalage(self, zone = 0):
         if self.recalage_is_playing:
+            return
+        if zone == 0:
+            self.PAGE = 9
             return
         
         def task_recalage():
@@ -438,12 +448,7 @@ class IHM_Robot:
         # Dessine l'image
         self.screen.blit(image, (40, 0))
         
-        button_recalages = [
-            Button(self.screen, (40, 0, 50, 50), self.theme_path, "", self.font, self.recalage, color=(0, 0, 200)),
-            Button(self.screen, (10, 180, 150, 80), self.theme_path, "", self.font, self.recalage),
-            Button(self.screen, (10, 270, 150, 80), self.theme_path, "", self.font, self.recalage),
-            Button(self.screen, (10, 360, 150, 80), self.theme_path, "", self.font, self.recalage),
-        ]
+        
     
     def taille_auto_batterie(self):
         nb_batteries_colonne = 0
@@ -739,6 +744,9 @@ class IHM_Robot:
                             button.handle_event(event)
                     elif self.PAGE == 5:
                         pass
+                    elif self.PAGE == 9:
+                        for button in self.button_recalages:
+                            button.handle_event(event)
                     elif self.PAGE == 10:
                         for button in self.button_tests_mouvement:
                             button.handle_event(event)
@@ -777,6 +785,8 @@ class IHM_Robot:
                     self.page_erreur()
                 elif self.PAGE == 5:
                     self.page_play()
+                elif self.PAGE == 9:
+                    self.page_recalage()
                 elif self.PAGE == 10:
                     self.page_mouvement()
                 elif self.PAGE == 11:

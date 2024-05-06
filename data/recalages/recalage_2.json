@@ -5,8 +5,8 @@
         "can":
         {
             "x": 2684,
-            "y": 1134,
-            "theta": 0
+            "y": 1091,
+            "theta": 1800
         },
         "aknowledge": 279
     },
@@ -16,7 +16,7 @@
         "ordre": {
             "distance": -300,
             "mode": 1,
-            "recalage": 134
+            "recalage": 2684
         },
         "aknowledge": 279
     },

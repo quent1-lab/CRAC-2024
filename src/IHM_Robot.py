@@ -312,36 +312,40 @@ class IHM_Robot:
                 id = value["id"]
                 akn = value["aknowledge"]
                 action = value
-                
-                if "ordre" in action:
-                    if len(action["ordre"]) == 1:
-                        # Ordre de rotation
-                        angle = action["ordre"]["theta"]
-                        self.client.add_to_send_list(self.client.create_message(2, "rotation", {"angle" : angle*10}))
-                    else:
-                        # Ordre de recalage
-                        distance = action["ordre"]["distance"]
-                        mode = action["ordre"]["mode"]
-                        recalage = action["ordre"]["recalage"]
-                        self.client.add_to_send_list(self.client.create_message(2, "recalage", {"distance": distance, "mode": mode, "recalage": recalage}))
-                    
-                    is_arrived = False
-                    while self.recalage_is_playing and self.is_running and not is_arrived:
-                        time.sleep(0.1)
-                        if akn in self.liste_aknowledge:
-                            self.liste_aknowledge.remove(akn)
-                            is_arrived = True
+                try:
+                    if "ordre" in action:
+                        if len(action["ordre"]) == 1:
+                            # Ordre de rotation
+                            angle = action["ordre"]["theta"]
+                            self.client.add_to_send_list(self.client.create_message(2, "rotation", {"angle" : angle*10}))
+                        else:
+                            # Ordre de recalage
+                            distance = action["ordre"]["distance"]
+                            mode = action["ordre"]["mode"]
+                            recalage = action["ordre"]["recalage"]
+                            self.client.add_to_send_list(self.client.create_message(2, "recalage", {"distance": distance, "mode": mode, "recalage": recalage}))
                         
-                    if self.is_running == False:
-                        break
-                elif "can" in action:
-                    # Ordre CAN pour set odometrie
-                    x = action["can"]["x"]
-                    y = action["can"]["y"]
-                    theta = action["can"]["theta"]
-                    
-                    logging.info(f"Recalage : x={x}, y={y}, theta={theta}")
-                    self.client.add_to_send_list(self.client.create_message(2, "set_odo", {"x": x, "y": y, "theta": theta}))
+                        is_arrived = False
+                        while self.recalage_is_playing and self.is_running and not is_arrived:
+                            time.sleep(0.1)
+                            if akn in self.liste_aknowledge:
+                                self.liste_aknowledge.remove(akn)
+                                is_arrived = True
+                            
+                        if self.is_running == False:
+                            break
+                    elif "can" in action:
+                        # Ordre CAN pour set odometrie
+                        x = action["can"]["x"]
+                        y = action["can"]["y"]
+                        theta = action["can"]["theta"]
+                        
+                        logging.info(f"Recalage : x={x}, y={y}, theta={theta}")
+                        self.client.add_to_send_list(self.client.create_message(2, "set_odo", {"x": x, "y": y, "theta": theta}))
+                except Exception as e:
+                    logging.error(f"Erreur lors du recalage {action} : {e}")
+                    self.recalage_is_playing = False
+                    break
             
             self.PAGE = 0
             self.recalage_is_playing = False

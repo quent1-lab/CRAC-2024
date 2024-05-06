@@ -43,11 +43,7 @@ class LidarScanner:
         points = []
         for point in scan:
             # Supprime les points compris enrte 88 et 92 degrés et entre 268 et 272 degrés
-            """if 80 < point[1] < 100 or 260 < point[1] < 280:
-                continue"""
-            
-            # Supprime les points avec une distance inférieure à 100 mm
-            if point[2] < 100:
+            if 79 < point[1] < 101 or 259 < point[1] < 281:
                 continue
             
             distance = point[2]
@@ -351,9 +347,9 @@ class LidarScanner:
                     if not self.scanning:
                         break
                     new_scan = self.transform_scan(scan)
-                    self.client_socket.add_to_send_list(self.client_socket.create_message(10, "points", self.generate_JSON_Points(new_scan)))
+                    #self.client_socket.add_to_send_list(self.client_socket.create_message(10, "points", self.generate_JSON_Points(new_scan)))
                     
-                    if len(new_scan) > 0 and False:
+                    if len(new_scan) > 0:
                         new_objets = self.detect_objects(new_scan)
                         #self.suivre_objet(new_objets, 100)
                         

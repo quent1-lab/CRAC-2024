@@ -31,6 +31,7 @@ class IHM_Robot:
         self.ROBOT_pos = (0, 0, 0)
         self.RATIO_x = 720/3000
         self.RATIO_y = 480/2000
+        self.perimetre_securite = 600
         
         self.PAGE = 0
         self.ETAT = 0
@@ -197,7 +198,43 @@ class IHM_Robot:
         
         with open("data/config_ordre_to_can.json", "r",encoding="utf-8") as f:
             self.config_strategie = json.load(f)
+    
+    # ============================ Fin du constructeur ============================
+    
+    def draw_robot(self):
+        x,y,angle = self.ROBOT_pos
+        x_r = int(self.map_value(x, 0, 3000, 720, 40))
+        y_r = int(self.map_value(y, 0, 2000, 0, 480))
         
+        dim_x = self.ROBOT_Dimension[0] * self.RATIO_x
+        dim_y = self.ROBOT_Dimension[1] * self.RATIO_y
+        
+        # Dessiner le robot en fonction de ses coordonnées et de son angle et de ses dimensions en rectangle
+        # Créer une nouvelle surface pour le robot
+        robot_surface = pygame.Surface((dim_x, dim_y), pygame.SRCALPHA)
+
+        # Dessiner le rectangle du robot sur la nouvelle surface
+        pygame.draw.rect(robot_surface, pygame.Color(101, 67, 33), (0, 0, dim_x, dim_y), 0,10)
+
+        # Dessiner la flèche sur la nouvelle surface
+        pygame.draw.polygon(robot_surface, pygame.Color(255, 0, 0), [(dim_x - 5, dim_y / 2), (dim_x /2, 10), (dim_x / 2, dim_y / 2 - 10),(10,dim_y / 2 - 10), (10,dim_y / 2 + 10), (dim_x / 2, dim_y / 2 + 10), (dim_x / 2, dim_y - 10), (dim_x-5, dim_y / 2)], 0)
+
+        # Dessine un périmètre de sécurité autour du robot
+        pygame.draw.circle(self.lcd, pygame.Color(255, 0, 0), (x_r, y_r), self.perimetre_securite * self.RATIO_x, 2)
+        
+        # Faire pivoter la surface du robot par rapport au centre
+        # Obtenir la position actuelle du centre de la surface
+        old_center = robot_surface.get_rect().center
+
+        # Faire pivoter la surface du robot
+        robot_surface = pygame.transform.rotate(robot_surface, angle+180)
+        robot_surface_rect = robot_surface.get_rect(center=(x_r, y_r))
+
+        # Obtenir la position du nouveau centre de la surface
+
+        # Dessiner la surface du robot sur l'écran en ajustant les coordonnées pour que le centre reste à la même position
+        self.lcd.blit(robot_surface, robot_surface_rect)
+    
     def button_menu_action(self, index):
         if self.PAGE < 4:
             self.button_menu[self.PAGE].update_color(None) # On remet la couleur par défaut du bouton actuel
@@ -471,7 +508,7 @@ class IHM_Robot:
         self.screen.blit(image_terrain, (40, 0))
         
         # Dessine le robot
-        robot_image = pygame.image.load('data/robot.png').convert_alpha()
+        """robot_image = pygame.image.load('data/robot.png').convert_alpha()
         # Ajuster la taille de l'image du robot à la taille du terrain de jeu
         robot_image = pygame.transform.scale(robot_image, (int(self.ROBOT_Dimension[0] * self.RATIO_x), int(self.ROBOT_Dimension[1] * self.RATIO_y)))
         # Tourner l'image du robot
@@ -479,7 +516,9 @@ class IHM_Robot:
         # Dessiner l'image du robot
         x = int(self.map_value(self.ROBOT_pos[0], 0, 3000, 760, 40))
         y = int(self.map_value(self.ROBOT_pos[1], 0, 2000, 0, 480))
-        self.screen.blit(robot_image, (x, y))
+        self.screen.blit(robot_image, (x, y))"""
+        
+        self.draw_robot()
 
     
     def page_points(self):

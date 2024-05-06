@@ -97,7 +97,7 @@ class IHM_Robot:
             self.button_menu.append(Button(self.screen, (10 + 120 * i + x, 10, 100, 50), self.theme_path, name, self.font, lambda i=i: self.button_menu_action(i), color=self.button_menu_colors[i]))
         
         font = pygame.font.SysFont("Arial", 36)
-        self.button_recalage = Button(self.screen, (420, 90, 360, 60), self.theme_path, "Recalage", font, self.recalage, color=(100, 0, 200))
+        self.button_recalage = Button(self.screen, (420, 90, 360, 60), self.theme_path, "Recalage", font, lambda : self.button_menu_action(9), color=(100, 0, 200))
         
         self.recalage_is_playing = False
         self.robot_move = False

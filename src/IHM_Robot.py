@@ -220,11 +220,7 @@ class IHM_Robot:
         pygame.draw.polygon(robot_surface, pygame.Color(255, 0, 0), [(dim_x - 5, dim_y / 2), (dim_x /2, 10), (dim_x / 2, dim_y / 2 - 10),(10,dim_y / 2 - 10), (10,dim_y / 2 + 10), (dim_x / 2, dim_y / 2 + 10), (dim_x / 2, dim_y - 10), (dim_x-5, dim_y / 2)], 0)
 
         # Dessine un périmètre de sécurité autour du robot
-        pygame.draw.circle(self.lcd, pygame.Color(255, 0, 0), (x_r, y_r), self.perimetre_securite * self.RATIO_x, 2)
-        
-        # Faire pivoter la surface du robot par rapport au centre
-        # Obtenir la position actuelle du centre de la surface
-        old_center = robot_surface.get_rect().center
+        pygame.draw.circle(self.screen, pygame.Color(255, 0, 0), (x_r, y_r), self.perimetre_securite * self.RATIO_x, 2)
 
         # Faire pivoter la surface du robot
         robot_surface = pygame.transform.rotate(robot_surface, angle+180)
@@ -233,7 +229,7 @@ class IHM_Robot:
         # Obtenir la position du nouveau centre de la surface
 
         # Dessiner la surface du robot sur l'écran en ajustant les coordonnées pour que le centre reste à la même position
-        self.lcd.blit(robot_surface, robot_surface_rect)
+        self.screen.blit(robot_surface, robot_surface_rect)
     
     def button_menu_action(self, index):
         if self.PAGE < 4:

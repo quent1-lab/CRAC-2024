@@ -43,7 +43,7 @@ class LidarScanner:
         points = []
         for point in scan:
             # Supprime les points compris enrte 88 et 92 degrés et entre 268 et 272 degrés
-            if 84 < point[1] < 96 or 264 < point[1] < 276:
+            if 80 < point[1] < 100 or 260 < point[1] < 280:
                 continue
             
             distance = point[2]

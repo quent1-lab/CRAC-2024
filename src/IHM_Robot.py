@@ -473,7 +473,7 @@ class IHM_Robot:
         # Dessine le robot
         robot_image = pygame.image.load('data/robot.png').convert_alpha()
         # Ajuster la taille de l'image du robot à la taille du terrain de jeu
-        robot_image = pygame.transform.scale(robot_image, self.ROBOT_Dimension[0] * self.RATIO_x, self.ROBOT_Dimension[1] * self.RATIO_y)
+        robot_image = pygame.transform.scale(robot_image, int(self.ROBOT_Dimension[0] * self.RATIO_x), int(self.ROBOT_Dimension[1] * self.RATIO_y))
         # Tourner l'image du robot
         robot_image = pygame.transform.rotate(robot_image, self.ROBOT_pos[2])
         # Dessiner l'image du robot
@@ -725,7 +725,7 @@ class IHM_Robot:
 
             elif message["cmd"] == "coord":
                 coord = message["data"]
-                self.ROBOT_pos = (coord["x"], coord["y"], coord["theta"])
+                self.ROBOT_pos = (int(coord["x"]), int(coord["y"]), int(coord["theta"]/10))
         except Exception as e:
             print(f"Erreur lors de la réception du message : {str(e)}")
         

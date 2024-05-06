@@ -448,6 +448,9 @@ class IHM_Robot:
         # Dessine l'image
         self.screen.blit(image, (40, 0))
         
+        for button in self.button_recalages:
+            button.draw()
+        
         
     
     def taille_auto_batterie(self):
@@ -757,7 +760,7 @@ class IHM_Robot:
                         for button in self.button_tests_special:
                             button.handle_event(event)
                             
-                    if self.PAGE != 20: # Si on est pas sur la page de match on peut changer de page
+                    if self.PAGE != 20 and self.PAGE != 9: # Si on est pas sur la page de match on peut changer de page
                         for button in self.button_menu:
                             button.handle_event(event)
 

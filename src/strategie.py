@@ -182,12 +182,8 @@ class Strategie:
             if self.EQUIPE == "bleu":
                 pos[0] = int(self.map_value(deplacement["Coord"]["X"], 0, 3000, 3000, 0))
                 pos[1] = deplacement["Coord"]["Y"]
-                pos[2] = int((deplacement["Coord"]["T"]))
-                if deplacement["Coord"]["S"] == "0":
-                    pos[3] = "1"
-                else:
-                    pos[3] = "0"
-                
+                pos[2] = int(deplacement["Coord"]["T"] + 1800 % 3600)
+                pos[3] = deplacement["Coord"]["S"]
             elif self.EQUIPE == "jaune":
                 # Envoi de la commande de déplacement
                 pos = [deplacement["Coord"]["X"], deplacement["Coord"]["Y"], int(deplacement["Coord"]["T"]), deplacement["Coord"]["S"]]                

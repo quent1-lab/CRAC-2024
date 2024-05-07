@@ -380,6 +380,7 @@ class LidarScanner:
                                     self.en_mvt = True
                         
                         self.client_socket.add_to_send_list(self.client_socket.create_message(10, "objects", self.generate_JSON_Objets(new_objets)))
+                        
             except RPLidarException as e:
                 # Code pour gérer RPLidarException
                 print(f"LIDAR  : Une erreur RPLidarException s'est produite dans le run : {e}")

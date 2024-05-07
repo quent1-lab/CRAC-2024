@@ -181,8 +181,8 @@ class Strategie:
             pos = [0, 0, 0, 0]
             if self.EQUIPE == "bleu":
                 pos[0] = int(self.map_value(deplacement["Coord"]["X"], 0, 3000, 3000, 0))
-                pos[1] = int(self.map_value(deplacement["Coord"]["Y"], 0, 2000, 2000, 0))
-                pos[2] = int((deplacement["Coord"]["T"] + 180) % 360)
+                pos[1] = deplacement["Coord"]["Y"]
+                pos[2] = int(-(deplacement["Coord"]["T"]))
                 pos[3] = deplacement["Coord"]["S"]
                 
             elif self.EQUIPE == "jaune":

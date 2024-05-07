@@ -296,7 +296,7 @@ class IHM_Robot:
         else:
             self.EQUIPE = "bleue"
         
-        self.client.add_to_send_list(self.client.create_message(0, "recalage", {"equipe": zone}))
+        self.client.add_to_send_list(self.client.create_message(0, "config", {"equipe": self.EQUIPE, "etat": 0}))
         
         def task_recalage():
             self.recalage_is_playing = True

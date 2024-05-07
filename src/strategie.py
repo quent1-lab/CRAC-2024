@@ -180,6 +180,11 @@ class Strategie:
             # Envoi de la commande de déplacement
             pos = (deplacement["Coord"]["X"], deplacement["Coord"]["Y"], int(deplacement["Coord"]["T"]), deplacement["Coord"]["S"])
             
+            if self.EQUIPE == "bleu":
+                pos[0] = self.map_value(pos[0], 0, 3000, 3000, 0)
+                pos[1] = self.map_value(pos[1], 0, 2000, 2000, 0)
+                pos[2] = (pos[2] + 180) % 360
+            
             # Envoyez la position au CAN
             self.client_strat.add_to_send_list(self.client_strat.create_message(
                 2, "clic", {"x": pos[0], "y": pos[1], "theta": pos[2], "sens": pos[3]}))
@@ -190,6 +195,9 @@ class Strategie:
     def rotate(self, deplacement):
         # Envoi de la commande de rotation
         angle = deplacement["Rotation"]
+        
+        if self.EQUIPE == "bleu":
+            angle = (angle + 180) % 360
         
         # Envoyez la position au CAN
         self.client_strat.add_to_send_list(self.client_strat.create_message(2, "rotation", {"angle": angle}))

@@ -296,6 +296,8 @@ class IHM_Robot:
         else:
             self.EQUIPE = "bleue"
         
+        self.client.add_to_send_list(self.client.create_message(0, "recalage", {"equipe": zone}))
+        
         def task_recalage():
             self.recalage_is_playing = True
             
@@ -359,83 +361,8 @@ class IHM_Robot:
         self.strategie_is_running = True
         self.PAGE = 5
         
-        def task_play(): # Fonction pour jouer la stratégie dans un thread
-            # Démarage au Jack
-            """while self.JACK.is_not_pressed:
-                self.text_page_play = "Veillez insérer le Jack"
-                time.sleep(0.1)
-            time.sleep(0.2)
-            while self.JACK.is_pressed:
-                self.text_page_play = "Robot prêt à démarer le match"
-                time.sleep(0.05)"""
-                
-            self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 416, "byte1": 11}))
-            
-            self.text_page_play = "Stratégie en cours..."
-            
-            for key, item in self.strategie.items():
-                
-                if not self.robot_move:
-                    self.robot_move = True
-
-                    pos = (item["Coord"]["X"], item["Coord"]["Y"], int(item["Coord"]["T"]), "0")
-                    logging.info(f"Position : {pos}")
-                    # Envoyez la position au CAN
-                    self.client.add_to_send_list(self.client.create_message(
-                        2, "clic", {"x": pos[0], "y": pos[1], "theta": pos[2], "sens": pos[3]}))
-
-                    while self.robot_move and self.strategie_is_running:
-                        time.sleep(0.1)
-                    
-                    if self.strategie_is_running == False:
-                        logging.info("Arrêt de la stratégie")
-                        break                  
-                    logging.info(f"Position {pos} atteinte")
-                    action = item["Action"]
-                    logging.info(f"Action : {action}")
-                    # Gérer les actions à effectuer
-                    for key, value in action.items():
-                        commande = []
-                        aknowledge = []
-                        if key == "Moteur":
-                            for ordre, cmd in action["Moteur"]["ordre"].items():
-                                commande.append(self.config_strategie["Moteur"]["ordre"][ordre][cmd])
-                                aknowledge.append(self.config_strategie["Moteur"]["aknowledge"][ordre])
-                        elif key == "HerkuleX":
-                            for key2, value2 in action["HerkuleX"].items():
-                                if key2 == "Peigne":
-                                    for ordre, cmd in action["HerkuleX"]["Peigne"]["ordre"].items():
-                                        commande.append(self.config_strategie["HerkuleX"]["Peigne"]["ordre"][ordre][cmd])
-                                    #aknowledge.append(self.config_strategie["HerkuleX"]["Peigne"]["aknowledge"][ordre])
-                                elif key2 == "Pinces":
-                                    for cote, value3 in action["HerkuleX"]["Pinces"].items():
-                                        for ordre, cmd in value3["ordre"].items():
-                                            commande.append(self.config_strategie["HerkuleX"]["Pinces"]["Gauche"]["ordre"][ordre][cmd])
-                                            #aknowledge.append(self.config_strategie["HerkuleX"]["Pinces"]["Gauche"]["aknowledge"][ordre])
-                                elif key2 == "Bras":
-                                    for ordre, cmd in action["HerkuleX"]["Bras"]["ordre"].items():
-                                        commande.append(self.config_strategie["HerkuleX"]["Bras"]["ordre"][ordre][cmd])
-                                        aknowledge.append(self.config_strategie["HerkuleX"]["Bras"]["aknowledge"][ordre])
-                        
-                        logging.info(f"Commande : {commande}")
-                        # Envoyer les commandes au CAN
-                        for i, cmd in enumerate(commande):
-                            self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 0x1A0, "byte1": cmd}))
-                            time.sleep(2)
-                            """while not self.robot_move and self.strategie_is_running and self.is_running:
-                                time.sleep(0.1)
-                                if aknowledge[i] in self.liste_aknowledge:
-                                    self.liste_aknowledge.remove(aknowledge[i])
-                                    break"""
-
-            logging.info("Fin de la stratégie")
-            self.strategie_is_running = False
-            self.PAGE = 1
-        
-        strat = Strategie(self.path_strat + f"/strategie_{name}.json")
-        
-        thread_play = threading.Thread(target=strat.play)
-        thread_play.start()
+        # Envoyer un message pour dire que la stratégie est choisie
+        self.client.add_to_send_list(self.client.create_message(0, "strategie", {"strategie": self.path_strat + f"/strategie_{name}.json"}))
     
     def page_favori(self):
         # Cette page comprend 4 grands rectangles correspondant aux batteries du robot
@@ -695,8 +622,12 @@ class IHM_Robot:
                 elif data["data"] == "wait_start":
                     self.text_page_play = "Prêt à démarrer le match"
                 elif data["data"] == "start":
-                    self.text_page_play = "Straégie en cours..."
+                    self.text_page_play = "Stratégie en cours..."
                     self.PAGE = 20
+            
+            elif message["cmd"] == "start":
+                self.text_page_play = "Stratégie en cours..."
+                self.PAGE = 20
             
             elif message["cmd"] == "strategie":
                 data = message["data"]

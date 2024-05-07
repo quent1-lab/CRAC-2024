@@ -8,17 +8,18 @@ import  os
 
 
 class Strategie:
-    def __init__(self, _path):
+    def __init__(self, _path = None):
         self.path_strat = _path
         self.strategie = None
         
         # Vérification de l'existence du fichier
-        if os.path.exists(self.path_strat):
-            with open(self.path_strat, "r") as file:
-                self.strategie = json.load(file)
-        else:
-            logging.error(f"La stratégie {self.path_strat} n'existe pas")
-            return
+        if self.path_strat:
+            if os.path.exists(self.path_strat):
+                with open(self.path_strat, "r") as file:
+                    self.strategie = json.load(file)
+            else:
+                logging.error(f"La stratégie {self.path_strat} n'existe pas")
+                return
         
         self.client_strat = Client("127.0.0.4", 22050, 4, self.receive_to_server)
         
@@ -35,10 +36,8 @@ class Strategie:
         self.temps_de_jeu = 100
         
         self.liste_aknowledge = []
-        
-
-    def __str__(self):
-        return self.nom
+    
+    # ============================== Fin du constructeur ==============================
     
     def receive_to_server(self, message):
         try:
@@ -66,14 +65,27 @@ class Strategie:
                 self.state_lidar = message["etat"]
                 if self.state_strat == "stop":
                     self.strategie_is_running = False
+            
+            elif message["cmd"] == "strategie":
+                strat_path = message["data"]["strategie"]
+                # Charger la stratégie
+                if os.path.exists(strat_path):
+                    with open(strat_path, "r") as file:
+                        self.strategie = json.load(file)
+                else:
+                    logging.error(f"La stratégie {strat_path} n'existe pas")
                 
+                self.strategie_is_running = True
+                self.state_strat = "wait_jack"
         
         except Exception as e:
             print(f"Erreur lors de la réception du message : {str(e)}")
-            
+
+    def map_value(self,x, in_min, in_max, out_min, out_max):
+        return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
+    
     def play(self):
         self.is_running = True
-        self.strategie_is_running = True
         self.client_strat.set_callback(self.receive_to_server)
         self.client_strat.set_callback_stop(self.stop)
         self.client_strat.connect()
@@ -97,8 +109,7 @@ class Strategie:
         self.JACK.wait_for_press() # Attend que le jack soit relaché
         self.TIMER = time.time()
 
-        self.client_strat.add_to_send_list(self.client_strat.create_message(0, "jack", {"data": "start"}))
-       
+        self.client_strat.add_to_send_list(self.client_strat.create_message(0, "start", None))     
     
     def stop_with_timer(self):
         

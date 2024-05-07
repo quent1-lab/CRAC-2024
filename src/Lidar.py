@@ -8,6 +8,7 @@ from    client import *
 import  logging
 import  numpy as np
 from    sklearn.cluster import DBSCAN
+import  threading
 
 # Configuration du logger
 logging.basicConfig(filename='lidar.log', level=logging.INFO, datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')

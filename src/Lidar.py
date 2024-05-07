@@ -46,6 +46,8 @@ class LidarScanner:
             if 79 < point[1] < 101 or 259 < point[1] < 281:
                 continue
             
+            logging.info(f"Quality: {point[0]}, Angle: {point[1]}, Distance: {point[2]}")
+            
             # Filtre les points qui ont une qualité inférieure à 1
             if point[0] < 1:
                 continue

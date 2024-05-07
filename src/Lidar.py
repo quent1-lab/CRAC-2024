@@ -46,8 +46,8 @@ class LidarScanner:
             if 79 < point[1] < 101 or 259 < point[1] < 281:
                 continue
             
-            # Filtre les points de qualité inférieure à 10
-            if point[0] < 10:
+            # Filtre les points qui ont une qualité inférieure à 1
+            if point[0] < 2:
                 continue
             
             distance = point[2]

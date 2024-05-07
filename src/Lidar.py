@@ -27,6 +27,7 @@ class LidarScanner:
         self.ROBOT = Objet(0, 1500, 1000, 20)
 
         self.objets = []  # Liste pour stocker les objets détectés
+        self.new_scan = []  # Liste pour stocker les scans du LiDAR
 
         self.client_socket = Client('127.0.0.3', 22050, 3)
 
@@ -331,6 +332,17 @@ class LidarScanner:
             etat = message["data"]
             if etat["etat"] == "start":
                 self.en_mvt = True
+                
+    def clustering_process(self):
+        while self.scanning:
+            # Récupérer les scans de la file d'attente toutes les 200 ms
+            try:
+                if len(self.new_scan) > 0:
+                    new_objets = self.detect_objects(self.new_scan)
+                    self.client_socket.add_to_send_list(self.client_socket.create_message(10, "objects", self.generate_JSON_Objets(new_objets)))
+                    time.sleep(0.2)
+            except Exception as e:
+                logging.error(f"Error in clustering process: {e}")
             
     def run(self):
         
@@ -343,17 +355,20 @@ class LidarScanner:
         
         self.en_mvt = False
         
+        # Création d'un thread pour le clustering
+        clustering_thread = threading.Thread(target=self.clustering_process)
+        clustering_thread.start()
+        
         while self.scanning:
             self.objets = []
             try:
-                logging.info("Starting LiDAR scan")
                 for scan in self.lidar.iter_scans():
                     if not self.scanning:
                         break
-                    new_scan = self.transform_scan(scan)
-                    self.client_socket.add_to_send_list(self.client_socket.create_message(10, "points", self.generate_JSON_Points(new_scan)))
+                    self.new_scan = self.transform_scan(scan)
+                    self.client_socket.add_to_send_list(self.client_socket.create_message(10, "points", self.generate_JSON_Points(self.new_scan)))
                     
-                    if len(new_scan) > 0 and False:
+                    """if len(new_scan) > 0:
                         new_objets = self.detect_objects(new_scan)
                         #self.suivre_objet(new_objets, 100)
                         
@@ -379,14 +394,12 @@ class LidarScanner:
                                     self.client_socket.add_to_send_list(self.client_socket.create_message(2, "CAN", {"id": 503, "byte1": 1}))
                                     self.en_mvt = True
                         
-                        self.client_socket.add_to_send_list(self.client_socket.create_message(10, "objects", self.generate_JSON_Objets(new_objets)))
+                        self.client_socket.add_to_send_list(self.client_socket.create_message(10, "objects", self.generate_JSON_Objets(new_objets)))"""
                         
             except RPLidarException as e:
                 # Code pour gérer RPLidarException
                 print(f"LIDAR  : Une erreur RPLidarException s'est produite dans le run : {e}")
                 self.lidar.stop()
-                #self.lidar.disconnect()
-                #self.connexion_lidar()
                 time.sleep(2)
                 
             except KeyboardInterrupt:

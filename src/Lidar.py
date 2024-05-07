@@ -46,6 +46,10 @@ class LidarScanner:
             if 79 < point[1] < 101 or 259 < point[1] < 281:
                 continue
             
+            # Filtre les points de qualité inférieure à 10
+            if point[0] < 10:
+                continue
+            
             distance = point[2]
             new_angle = point[1] - self.ROBOT_ANGLE
             

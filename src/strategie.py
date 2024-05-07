@@ -113,7 +113,7 @@ class Strategie:
         self.JACK.wait_for_press() # Attend que le jack soit relaché
         self.TIMER = time.time()
 
-        self.client_strat.add_to_send_list(self.client_strat.create_message(0, "start", None))     
+        self.client_strat.add_to_send_list(self.client_strat.create_message(0, "start", None))  
     
     def stop_with_timer(self):
         
@@ -225,5 +225,8 @@ class Strategie:
         self.strategie_is_running = False
         
 if __name__ == "__main__":
-    strat = Strategie()
-    strat.play()
+    try:
+        strat = Strategie()
+        strat.play()
+    except Exception as e:
+        logging.error(f"Erreur lors de l'exécution de la stratégie : {str(e)}")

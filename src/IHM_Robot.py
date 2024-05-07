@@ -294,7 +294,7 @@ class IHM_Robot:
         if zone % 2 == 0:
             self.EQUIPE = "jaune"
         else:
-            self.EQUIPE = "bleue"
+            self.EQUIPE = "bleu"
         
         self.client.add_to_send_list(self.client.create_message(0, "config", {"equipe": self.EQUIPE, "etat": 0}))
         

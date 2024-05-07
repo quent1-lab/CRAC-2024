@@ -184,12 +184,12 @@ class Strategie:
                 pos[1] = self.map_value(deplacement["Coord"]["Y"], 0, 2000, 2000, 0)
                 pos[2] = (deplacement["Coord"]["T"] + 180) % 360
                 pos[3] = deplacement["Coord"]["S"]
-                logging.info(f"STRAT : Position envoyée bleu : {pos}")
+                
             elif self.EQUIPE == "jaune":
                 # Envoi de la commande de déplacement
                 pos = [deplacement["Coord"]["X"], deplacement["Coord"]["Y"], int(deplacement["Coord"]["T"]), deplacement["Coord"]["S"]]                
             
-            
+            logging.info(f"STRAT : Position envoyée bleu : {pos}")
             # Envoyez la position au CAN
             self.client_strat.add_to_send_list(self.client_strat.create_message(
                 2, "clic", {"x": pos[0], "y": pos[1], "theta": pos[2], "sens": pos[3]}))

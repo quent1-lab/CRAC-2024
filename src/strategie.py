@@ -98,6 +98,7 @@ class Strategie:
                 self.start_jack()
                 
                 self.run_strategie_2()
+            time.sleep(0.1)
     
     def start_jack(self):
 
@@ -224,5 +225,5 @@ class Strategie:
         self.strategie_is_running = False
         
 if __name__ == "__main__":
-    strat = Strategie("strat_1")
+    strat = Strategie()
     strat.play()

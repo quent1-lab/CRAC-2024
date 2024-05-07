@@ -12,8 +12,8 @@ logging.basicConfig(filename='ihm_robot.log', level=logging.INFO, datefmt='%d/%m
 
 
 class IHM_Robot:
+    version = "1.024"
     def __init__(self):
-        self.version = "1.023"
         
         self.client = Client("127.0.0.9", 22050, 9, self.receive_to_server)
         

@@ -373,7 +373,7 @@ class IHM_Robot:
         self.button_recalage.draw()
         
         # Affiche la version du code en bas à droite en petit
-        draw_text(self.screen, "Version 1.022", x=self.width-100, y=self.height-20, font=self.font, color=(255, 255, 255))
+        draw_text(self.screen, "Version 1.022", x=self.width-150, y=self.height-20, font=self.font, color=(255, 255, 255))
     
     def page_strategie(self):
         # Cette page affiche les différentes stratégies possibles

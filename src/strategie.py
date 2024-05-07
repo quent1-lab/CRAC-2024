@@ -72,6 +72,7 @@ class Strategie:
                 if os.path.exists(strat_path):
                     with open(strat_path, "r") as file:
                         self.strategie = json.load(file)
+                    logging.info(f"Chargement de la stratégie {strat_path}")
                 else:
                     logging.error(f"La stratégie {strat_path} n'existe pas")
                 
@@ -119,45 +120,7 @@ class Strategie:
             self.strategie_is_running = False
         
         t = threading.Thread(target=timer)
-        t.start()
-        
-    def run_strategie(self):
-                
-        for key, item in self.strategie.items():
-            if self.strategie_is_running == False:
-                break
-            
-            logging.info(f"STRAT : {key} , {item}")
-            
-            deplacement = item["Déplacement"]
-            action = item["Action"]
-            special = item["Special"]
-            
-            action_en_mvt = []
-            action_apres_mvt = []
-            
-            try:
-                for key, act in action.items():
-                    if act["en_mvt"] == True:
-                        action_en_mvt.append(action[key])
-                    else:
-                        action_apres_mvt.append(action[key])
-            except Exception as e:
-                logging.error(f"Erreur lors de la lecture des actions : {str(e)}")
-            
-            if "Coord" in deplacement:
-                logging.info(f"STRAT : Déplacement en {deplacement['Coord']}")
-                self.move(deplacement)
-            elif "Rotation" in deplacement:
-                self.rotate(deplacement)
-            elif "Ligne_Droite" in deplacement:
-                self.ligne_droite(deplacement)
-            
-            self.send_actions(action_apres_mvt)
-            
-            if self.strategie_is_running == False:
-                logging.info("Arrêt de la stratégie")
-                break                  
+        t.start()           
     
     def run_strategie_2(self):
         # Excecute la stratégie de façon non bloquante

@@ -50,6 +50,7 @@ class Strategie:
                 data = message["data"]
                 self.ETAT = data["etat"]    
                 self.EQUIPE = data["equipe"]
+                logging.info(f"STRAT : Configuration reçue : {data}")
                 
             elif message["cmd"] == "akn_m":
                 self.robot_move = False
@@ -177,13 +178,17 @@ class Strategie:
     
     def move(self, deplacement):
         try:
-            # Envoi de la commande de déplacement
-            pos = (deplacement["Coord"]["X"], deplacement["Coord"]["Y"], int(deplacement["Coord"]["T"]), deplacement["Coord"]["S"])
-            
+            pos = [0, 0, 0, 0]
             if self.EQUIPE == "bleu":
-                pos[0] = self.map_value(pos[0], 0, 3000, 3000, 0)
-                pos[1] = self.map_value(pos[1], 0, 2000, 2000, 0)
-                pos[2] = (pos[2] + 180) % 360
+                pos[0] = self.map_value(deplacement["Coord"]["X"], 0, 3000, 3000, 0)
+                pos[1] = self.map_value(deplacement["Coord"]["Y"], 0, 2000, 2000, 0)
+                pos[2] = (deplacement["Coord"]["T"] + 180) % 360
+                pos[3] = deplacement["Coord"]["S"]
+                logging.info(f"STRAT : Position envoyée bleu : {pos}")
+            elif self.EQUIPE == "jaune":
+                # Envoi de la commande de déplacement
+                pos = [deplacement["Coord"]["X"], deplacement["Coord"]["Y"], int(deplacement["Coord"]["T"]), deplacement["Coord"]["S"]]                
+            
             
             # Envoyez la position au CAN
             self.client_strat.add_to_send_list(self.client_strat.create_message(

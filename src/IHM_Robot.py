@@ -6,8 +6,6 @@ import threading
 import time
 from batterie import Batterie
 import logging
-#import gpiozero
-from strategie import Strategie
 
 # Configuration du logger
 logging.basicConfig(filename='ihm_robot.log', level=logging.INFO, datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
@@ -261,17 +259,17 @@ class IHM_Robot:
         time.sleep(0.2)
     
     def strategie_action(self, name):
-        self.client.add_to_send_list(self.client.create_message(0, "strategie", {"strategie": name}))
+        #self.client.add_to_send_list(self.client.create_message(0, "strategie", {"strategie": name}))
         
-        # Charger la stratégie
+        """# Charger la stratégie
         with open(self.path_strat + f"/strategie_{name}.json", "r") as f:
             self.strategie = json.load(f)
-            logging.info(f"Stratégie chargée : {self.strategie}")
+            logging.info(f"Stratégie chargée : {self.strategie}")"""
         
         if self.ETAT == 0:
             self.zero_battery() # On bannit les batteries à 0V
             self.ETAT = 1
-            self.client.add_to_send_list(self.client.create_message(10, "config", {"etat": 1, "equipe": self.EQUIPE}))
+            #self.client.add_to_send_list(self.client.create_message(10, "config", {"etat": 1, "equipe": self.EQUIPE}))
         
         self.play_strategie(name)
     

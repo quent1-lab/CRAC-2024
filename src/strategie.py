@@ -6,6 +6,8 @@ import  time
 import  json
 import  os
 
+# configuration du logger
+logging.basicConfig(filename='strat.log', level=logging.INFO, datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
 
 class Strategie:
     def __init__(self, _path = None):
@@ -18,7 +20,7 @@ class Strategie:
                 with open(self.path_strat, "r") as file:
                     self.strategie = json.load(file)
             else:
-                logging.error(f"La stratégie {self.path_strat} n'existe pas")
+                logging.error(f"STRAT : La stratégie {self.path_strat} n'existe pas")
                 return
         
         self.client_strat = Client("127.0.0.4", 22050, 4, self.receive_to_server)
@@ -72,15 +74,15 @@ class Strategie:
                 if os.path.exists(strat_path):
                     with open(strat_path, "r") as file:
                         self.strategie = json.load(file)
-                    logging.info(f"Chargement de la stratégie {strat_path}")
+                    logging.info(f"STRAT : Chargement de la stratégie {strat_path}")
                 else:
-                    logging.error(f"La stratégie {strat_path} n'existe pas")
+                    logging.error(f"STRAT : La stratégie {strat_path} n'existe pas")
                 
                 self.strategie_is_running = True
                 self.state_strat = "wait_jack"
         
         except Exception as e:
-            print(f"Erreur lors de la réception du message : {str(e)}")
+            logging.error(f"STRAT : Erreur lors de la réception du message : {str(e)}")
 
     def map_value(self,x, in_min, in_max, out_min, out_max):
         return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min

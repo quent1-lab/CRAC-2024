@@ -11,7 +11,7 @@ import  os
 logging.basicConfig(filename='ihm_robot.log', level=logging.INFO, datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
 
 class IHM_Robot:
-    version = "1.040"
+    version = "1.041"
     def __init__(self):
         
         self.client = Client("127.0.0.9", 22050, 9, self.receive_to_server)
@@ -388,7 +388,11 @@ class IHM_Robot:
                     self.recalage_is_playing = False
                     break
             
-            self.PAGE = 0
+            if len(self.zone_recalage) > 0:
+                self.zone_recalage = []
+                self.play_strategie("Homologation")
+            else:
+                self.PAGE = 0
             self.recalage_is_playing = False
         
         thread_recalage = threading.Thread(target=task_recalage)

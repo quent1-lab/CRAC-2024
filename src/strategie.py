@@ -261,12 +261,14 @@ class Strategie:
                 if len(wait_aknowlodege) == 0:
                    self.state_strat = "action_apres_mvt"
                    self.liste_aknowledge = []
+                   logging.info("STRAT : Fin de l'attente des acquittements des actions en mouvement")
             
             elif self.state_strat == "action_apres_mvt":
                 # Etat d'attente de l'acquittement des actions après le mouvement
                 action_apres_mvt = []
                 
                 self.action_actuelle["state"] = "action_apres_mvt"
+                action = item["Action"]
                 
                 try:
                     for key, act in action.items():
@@ -279,6 +281,7 @@ class Strategie:
                 self.send_actions(action_apres_mvt,wait_aknowlodege)
                 
                 self.state_strat = "wait_aknowledge_apres_mvt"
+                logging.info(f"STRAT : Attente de l'acquittement des actions après le mouvement : {wait_aknowlodege}")
                 
             elif self.state_strat == "wait_aknowledge_apres_mvt":
                 # Etat d'attente de l'acquittement des actions après le mouvement
@@ -292,6 +295,7 @@ class Strategie:
                 if len(wait_aknowlodege) == 0:
                     self.state_strat = "idle"
                     self.liste_aknowledge = []
+                    logging.info("STRAT : Fin de l'attente des acquittements des actions après le mouvement")
             
             elif self.state_strat == "pause":
                 if self.state_lidar == "resume":

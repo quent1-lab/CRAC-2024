@@ -103,7 +103,7 @@ class IHM_Robot:
         
         self.button_favori = [
                 Button(self.screen, (420, 90, 360, 60), self.theme_path, "Recalage", font, lambda : self.button_menu_action(9), color=(100, 0, 200)),
-                Button(self.screen, (420, 160, 360, 100), self.theme_path, "Homologation", font, lambda : self.strategie_action("Homologation",recaler=True), color=(100, 200, 100))
+                Button(self.screen, (420, 160, 360, 100), self.theme_path, "Homologation", font, lambda : self.strategie_action("Homologation",True), color=(100, 200, 100))
         ]
         
         self.recalage_is_playing = False
@@ -275,13 +275,7 @@ class IHM_Robot:
         #self.client.add_to_send_list(self.client.create_message(0, "strategie", {"strategie": name}))
         
         # Charger la stratégie
-        try:
-            with open(self.path_strat + f"/strategie_{name}.json", "r") as f:
-                self.strategie = json.load(f)
-                logging.info(f"Chargement de la stratégie {name}")
-        except Exception as e:
-            logging.error(f"Erreur lors du chargement de la stratégie : {e}")
-            return
+        
         
         if self.ETAT == 0:
             self.zero_battery() # On bannit les batteries à 0V
@@ -292,6 +286,13 @@ class IHM_Robot:
         self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 11}))
           
         if recaler:
+            try:
+                with open(self.path_strat + f"/strategie_{name}.json", "r") as f:
+                    self.strategie = json.load(f)
+                    logging.info(f"Chargement de la stratégie {name}")
+            except Exception as e:
+                logging.error(f"Erreur lors du chargement de la stratégie : {e}")
+                return
             for equipe, zone in self.strategie["zone"]:
                 self.zone_recalage.append(zone)
             self.PAGE = 9

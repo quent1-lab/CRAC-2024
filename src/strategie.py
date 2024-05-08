@@ -252,9 +252,10 @@ class Strategie:
             elif self.state_strat == "wait_aknowledge_en_mvt":
                 # Etat d'attente de l'acquittement des actions et du déplacement
                 self.action_actuelle["state"] = "wait_aknowledge_en_mvt"
-                
+                logging.info(f"STRAT : Attente de l'acquittement des actions en mouvement : {wait_aknowlodege}")
                 for akn in wait_aknowlodege:
                     if akn in self.liste_aknowledge:
+                        logging.info(f"STRAT : Acquittement reçu : {akn}")
                         self.liste_aknowledge.remove(akn)
                         wait_aknowlodege.remove(akn)
                 

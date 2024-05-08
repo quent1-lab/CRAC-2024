@@ -49,6 +49,8 @@ class LidarScanner:
         points = []
         for i, point in enumerate(scan):
             
+            distance = point[2]
+            
             if distance > 600:
                 continue
             
@@ -56,7 +58,6 @@ class LidarScanner:
             if distance <  250 :
                 continue
             
-            distance = point[2]
             new_angle = point[1] - self.ROBOT_ANGLE
             
             #x_r = self.map_value(self.ROBOT.x, 0, 3000, 3000, 0)
@@ -209,7 +210,7 @@ class LidarScanner:
         self.client_socket.set_callback_stop(self.stop)
         self.client_socket.connect()
 
-        time.sleep(8)
+        time.sleep(1)
         self.connexion_lidar()
         time.sleep(0.5)
         

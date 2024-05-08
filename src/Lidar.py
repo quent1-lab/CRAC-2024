@@ -20,7 +20,7 @@ class LidarScanner:
         self.BORDER_DISTANCE = 200
         self.FIELD_SIZE = (3000, 2000)
         self.scanning = True
-        self.perimetre_securite = 600 # rayon de sécurité en mm
+        self.perimetre_securite = 700 # rayon de sécurité en mm
         
         self.is_started = False # Si le programme est démarré
         self.en_mvt = False # Si le robot est en mouvement
@@ -33,6 +33,10 @@ class LidarScanner:
         self.new_scan = []  # Liste pour stocker les scans du LiDAR
 
         self.client_socket = Client('127.0.0.3', 22050, 3)
+        
+        self.client_socket.set_callback(self.receive_to_server)
+        self.client_socket.set_callback_stop(self.stop)
+        self.client_socket.connect()
 
         logging.basicConfig(filename='lidar_scan.log', level=logging.INFO, datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -180,7 +184,7 @@ class LidarScanner:
                     
                     for objet in new_objets:
                             distance_objet = math.sqrt((objet.x - self.ROBOT.x)**2 + (objet.y - self.ROBOT.y)**2)
-                            logging.info(f"Objet détecté à {distance_objet} mm")
+                            #logging.info(f"Objet détecté à {distance_objet} mm")
                             if self.is_started:
                                 if distance_objet < self.perimetre_securite:
                                     if self.en_mvt:
@@ -197,7 +201,7 @@ class LidarScanner:
                                         # Envoyer un message de reprise
                                         self.client_socket.add_to_send_list(self.client_socket.create_message(0, "lidar", {"etat": "start", "distance": distance_objet}))
                     
-                    self.client_socket.add_to_send_list(self.client_socket.create_message(10, "objects", self.generate_JSON_Objets(new_objets)))
+                    #self.client_socket.add_to_send_list(self.client_socket.create_message(10, "objects", self.generate_JSON_Objets(new_objets)))
                     
                     time.sleep(0.2)
             except Exception as e:
@@ -206,10 +210,6 @@ class LidarScanner:
     def run(self):
         
         
-        self.client_socket.set_callback(self.receive_to_server)
-        self.client_socket.set_callback_stop(self.stop)
-        self.client_socket.connect()
-
         time.sleep(1)
         self.connexion_lidar()
         time.sleep(0.5)

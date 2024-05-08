@@ -453,18 +453,10 @@ class IHM_Robot:
         # Dessine l'image
         self.screen.blit(image_terrain, (40, 0))
         
-        # Dessine le robot
-        """robot_image = pygame.image.load('data/robot.png').convert_alpha()
-        # Ajuster la taille de l'image du robot à la taille du terrain de jeu
-        robot_image = pygame.transform.scale(robot_image, (int(self.ROBOT_Dimension[0] * self.RATIO_x), int(self.ROBOT_Dimension[1] * self.RATIO_y)))
-        # Tourner l'image du robot
-        robot_image = pygame.transform.rotate(robot_image, self.ROBOT_pos[2])
-        # Dessiner l'image du robot
-        x = int(self.map_value(self.ROBOT_pos[0], 0, 3000, 760, 40))
-        y = int(self.map_value(self.ROBOT_pos[1], 0, 2000, 0, 480))
-        self.screen.blit(robot_image, (x, y))"""
-        
         self.draw_robot()
+        
+        for objet in self.objets:
+            self.draw_object(objet)
 
     def page_points(self):
         # Dessine les points estimés par le robot
@@ -591,6 +583,9 @@ class IHM_Robot:
         try:
             if message["cmd"] == "stop":
                 self.client.stop()
+            
+            if message["cmd"] == "end":
+                self.PAGE = 21
                 
             if message["cmd"] == "objects":
                 self.objets = []

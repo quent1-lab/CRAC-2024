@@ -130,6 +130,7 @@ class Strategie:
             while time.time() - self.TIMER < self.temps_de_jeu and self.strategie_is_running:
                 time.sleep(1)
             self.strategie_is_running = False
+            self.client_strat.add_to_send_list(self.client_strat.create_message(0, "end", None))
         
         t = threading.Thread(target=timer)
         t.start()           

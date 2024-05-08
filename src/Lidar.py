@@ -215,8 +215,8 @@ class LidarScanner:
         self.en_mvt = False
         
         # Création d'un thread pour le clustering
-        #clustering_thread = threading.Thread(target=self.clustering_process)
-        #clustering_thread.start()
+        clustering_thread = threading.Thread(target=self.clustering_process)
+        clustering_thread.start()
         
         while self.scanning:
             self.objets = []

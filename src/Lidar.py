@@ -205,14 +205,16 @@ class LidarScanner:
             
     def run(self):
         
-        logging.info("LiDAR connected")
+        
         self.client_socket.set_callback(self.receive_to_server)
         self.client_socket.set_callback_stop(self.stop)
         self.client_socket.connect()
-        
+
         time.sleep(0.5)
         self.connexion_lidar()
         time.sleep(0.5)
+        
+        logging.info("LiDAR connected")
         
         self.en_mvt = False
         
@@ -249,15 +251,16 @@ class LidarScanner:
 if __name__ == '__main__':
     # Initialiser le client
     scanner = LidarScanner()
+    time.sleep(5)
     try :
-        print("LIDAR  : Démarrage du programme")
         logging.info("Starting LiDAR scanner")
         scanner.run()
     except KeyboardInterrupt:
         scanner.stop()
-    """except Exception as e:
+    except Exception as e:
             print(f"LIDAR  : Une erreur s'est produite : {e}")
             scanner.stop()
             time.sleep(2)
-            #scanner.run()
-    print("LIDAR  : Fin du programme")"""
+            scanner = None
+            scanner = LidarScanner()
+            scanner.run()

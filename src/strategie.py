@@ -74,9 +74,9 @@ class Strategie:
                     self.state_strat = "pause"
                     
                     # Arrêter le robot
-                    self.client_strat.add_to_send_list(self.client_socket.create_message(2, "CAN", {"id": 503, "byte1": 0}))
+                    self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 503, "byte1": 0}))
                     time.sleep(0.1)
-                    self.client_strat.add_to_send_list(self.client_socket.create_message(2, "CAN", {"id": 503, "byte1": 1}))               
+                    self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 503, "byte1": 1}))               
                     
                     
                 elif self.state_lidar == "resume":

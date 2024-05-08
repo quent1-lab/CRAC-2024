@@ -11,7 +11,7 @@ import  os
 logging.basicConfig(filename='ihm_robot.log', level=logging.INFO, datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
 
 class IHM_Robot:
-    version = "1.039"
+    version = "1.040"
     def __init__(self):
         
         self.client = Client("127.0.0.9", 22050, 9, self.receive_to_server)
@@ -281,9 +281,6 @@ class IHM_Robot:
             self.zero_battery() # On bannit les batteries à 0V
             self.ETAT = 1
             #self.client.add_to_send_list(self.client.create_message(10, "config", {"etat": 1, "equipe": self.EQUIPE}))  
-        
-        # Envoie un reset aux cartes action
-        self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 11}))
           
         if recaler:
             try:
@@ -297,11 +294,18 @@ class IHM_Robot:
                 self.zone_recalage.append(zone)
             self.PAGE = 9
             logging.info(f"Recalage de la zone {self.zone_recalage}")
-        
-        if self.ETAT == 0:
-            self.zero_battery() # On bannit les batteries à 0V
-            self.ETAT = 1
-            #self.client.add_to_send_list(self.client.create_message(10, "config", {"etat": 1, "equipe": self.EQUIPE}))
+        else:
+            # Envoie un reset aux cartes action
+            self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 416, "byte1": 11}))
+            self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 417, "byte1": 11}))
+            
+            # Fermé les pinces
+            self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 416, "byte1": 1}))
+            self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 417, "byte1": 1}))
+            
+            # Lever les peignes
+            self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 416, "byte1": 4}))
+            self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 417, "byte1": 4}))
         
         self.play_strategie(name)
     
@@ -494,8 +498,11 @@ class IHM_Robot:
         # Dessine l'image
         self.screen.blit(image, (40, 0))
         
-        for zone in self.zone_recalage:
-            self.button_recalages[zone-1].draw()
+        try:
+            for zone in self.zone_recalage:
+                self.button_recalages[zone-1].draw()
+        except Exception as e:
+            logging.error(f"Erreur lors de l'affichage des boutons de recalage : {e}")
     
     def taille_auto_batterie(self):
         nb_batteries_colonne = 0

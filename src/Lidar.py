@@ -346,6 +346,11 @@ class LidarScanner:
         elif message["cmd"] == "move":
             etat = message["data"]
             self.en_mvt = etat["etat"]
+        elif message["cmd"] == "sens":
+            sens = message["data"]
+            self.sens = sens["sens"]
+        elif message["cmd"] == "start":
+            self.is_started = True
                 
     def clustering_process(self):
         while self.scanning:

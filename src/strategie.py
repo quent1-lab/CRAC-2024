@@ -68,7 +68,8 @@ class Strategie:
                 self.strategie_is_running = False
 
             elif message["cmd"] == "lidar":
-                self.state_lidar = message["etat"]
+                self.state_lidar = message["data"]["etat"]
+                logging.info(f"STRAT : Etat du lidar : {message["data"]}")
                 """if self.state_lidar == "stop":
                     self.state_strat = "pause"
                     
@@ -219,6 +220,8 @@ class Strategie:
                     self.state_strat = "pause"
                     continue
                 
+                self.client_strat.add_to_send_list(self.client_strat.create_message(0, "move", {"etat": True}))
+                
                 if "Coord" in deplacement:
                     self.move(deplacement,wait_aknowlodege)
                 elif "Rotation" in deplacement:
@@ -257,6 +260,8 @@ class Strategie:
                     if akn in self.liste_aknowledge:
                         self.liste_aknowledge.remove(akn)
                         wait_aknowlodege.remove(akn)
+                        if akn == 276 or akn == 277:
+                            self.client_strat.add_to_send_list(self.client_strat.create_message(2, "move", {"etat": False}))
                 
                 if len(wait_aknowlodege) == 0:
                    self.state_strat = "action_apres_mvt"
@@ -303,6 +308,7 @@ class Strategie:
             
             elif self.state_strat == "resume":
                 self.state_strat = self.action_actuelle["state"]
+                self.client_strat.add_to_send_list(self.client_strat.create_message(3, "move", True))
             
             
     def move(self, deplacement, akn):

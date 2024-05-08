@@ -104,7 +104,7 @@ class Strategie:
             if self.strategie_is_running:
                 self.start_jack()
                 
-                self.run_strategie_2()
+                self.run_strategie_3()
             time.sleep(0.1)
     
     def start_jack(self):

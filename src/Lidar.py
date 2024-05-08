@@ -175,7 +175,7 @@ class LidarScanner:
         while self.scanning:
             # Récupérer les scans de la file d'attente toutes les 200 ms
             try:
-                if len(self.new_scan) > 0 and False:
+                if len(self.new_scan) > 0:
                     new_objets = self.detect_objects(self.new_scan)
                     
                     for objet in new_objets:
@@ -219,8 +219,8 @@ class LidarScanner:
         self.en_mvt = False
         
         # Création d'un thread pour le clustering
-        #clustering_thread = threading.Thread(target=self.clustering_process)
-        #clustering_thread.start()
+        clustering_thread = threading.Thread(target=self.clustering_process)
+        clustering_thread.start()
         try:
             logging.info(f"Status: {self.lidar.get_health()}")
         except Exception as e:
@@ -235,7 +235,7 @@ class LidarScanner:
                         break
                     self.new_scan = self.transform_scan(scan)
                     #logging.info(f"New scan: {self.new_scan}")
-                    self.client_socket.add_to_send_list(self.client_socket.create_message(10, "points", self.generate_JSON_Points(self.new_scan)))
+                    #self.client_socket.add_to_send_list(self.client_socket.create_message(10, "points", self.generate_JSON_Points(self.new_scan)))
                         
             except RPLidarException as e:
                 # Code pour gérer RPLidarException

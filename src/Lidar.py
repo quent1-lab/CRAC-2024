@@ -245,9 +245,12 @@ class LidarScanner:
                     if len(self.new_scan) > 0:
                         # Si 5 points consécutif sont détectés, on envoie une pause au serveur
                         new_objets = self.detect_objects(self.new_scan)
+                        logging.info(f"New objects: {new_objets}")
                         if self.en_mvt and len(new_objets) > 0:
+                            logging.info("Objet détecté")
                             self.client_socket.add_to_send_list(self.client_socket.create_message(4, "lidar", {"etat": "pause"}))
                         elif not self.en_mvt and len(new_objets) == 0:
+                            logging.info("Aucun objet détecté")
                             self.client_socket.add_to_send_list(self.client_socket.create_message(4, "lidar", {"etat": "resume"}))
                     
                     #logging.info(f"New scan: {self.new_scan}")

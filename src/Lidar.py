@@ -43,13 +43,17 @@ class LidarScanner:
         :return: Liste de tuples (x, y, distance)
         """
         points = []
-        for point in scan:
+        for i, point in enumerate(scan):
             # Supprime les points compris enrte 88 et 92 degrés et entre 268 et 272 degrés
             if 78 < point[1] < 102 or 258 < point[1] < 282:
                 continue
             
             # Filtre les points qui ont une qualité inférieure à 1
             if point[0] < 25:
+                continue
+            
+            # Filtre les points qui ne se suivent pas à -1 et 1 degré
+            if i > 0 and abs(scan[i-1][1] - point[1]) > 1:
                 continue
             
             distance = point[2]
@@ -153,7 +157,7 @@ class LidarScanner:
                     # Si le nombre d'objets max est atteint, retourner None
                     return None           
 
-    def detect_objects(self, scan, eps=20, min_samples=3):
+    def detect_objects(self, scan, eps=150, min_samples=3):
 
         # Regroupement des points avec DBSCAN
         X = np.array([(point[0], point[1]) for point in scan])

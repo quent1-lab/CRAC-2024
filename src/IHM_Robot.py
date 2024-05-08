@@ -843,8 +843,8 @@ class IHM_Robot:
                             if event.pos[0] < 40 or event.pos[0] > 760:
                                 self.PAGE = 0
                         
-                        for zone in self.zone_recalage:
-                            self.button_recalages[zone-1].handle_event(event)
+                        for button in self.button_recalages:
+                            button.handle_event(event)
 
                 # Affichage
                 self.screen.fill(self.BACKGROUND_COLOR)

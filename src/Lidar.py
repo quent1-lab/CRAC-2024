@@ -153,7 +153,7 @@ class LidarScanner:
                     # Si le nombre d'objets max est atteint, retourner None
                     return None           
 
-    def detect_objects(self, scan, eps=50, min_samples=3):
+    def detect_objects(self, scan, eps=20, min_samples=3):
 
         # Regroupement des points avec DBSCAN
         X = np.array([(point[0], point[1]) for point in scan])

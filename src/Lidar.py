@@ -357,8 +357,6 @@ class LidarScanner:
             # Récupérer les scans de la file d'attente toutes les 200 ms
             try:
                 if len(self.new_scan) > 0:
-                    self.client_socket.add_to_send_list(self.client_socket.create_message(10, "points", self.generate_JSON_Points(self.new_scan)))
-                    continue
                     new_objets = self.detect_objects(self.new_scan)
                     
                     for objet in new_objets:
@@ -398,8 +396,8 @@ class LidarScanner:
         self.en_mvt = False
         
         # Création d'un thread pour le clustering
-        clustering_thread = threading.Thread(target=self.clustering_process)
-        clustering_thread.start()
+        #clustering_thread = threading.Thread(target=self.clustering_process)
+        #clustering_thread.start()
         
         while self.scanning:
             self.objets = []
@@ -408,7 +406,8 @@ class LidarScanner:
                     if not self.scanning:
                         break
                     self.new_scan = self.transform_scan(scan)
-                    #self.client_socket.add_to_send_list(self.client_socket.create_message(10, "points", self.generate_JSON_Points(self.new_scan)))
+                    logging.info(f"New scan: {self.new_scan}")
+                    self.client_socket.add_to_send_list(self.client_socket.create_message(10, "points", self.generate_JSON_Points(self.new_scan)))
                         
             except RPLidarException as e:
                 # Code pour gérer RPLidarException
@@ -419,6 +418,7 @@ class LidarScanner:
             except KeyboardInterrupt:
                 self.stop()
                 break
+            
         self.lidar.stop()
         self.lidar.disconnect()
         exit(0)
@@ -432,9 +432,9 @@ if __name__ == '__main__':
         scanner.run()
     except KeyboardInterrupt:
         scanner.stop()
-    except Exception as e:
+    """except Exception as e:
             print(f"LIDAR  : Une erreur s'est produite : {e}")
             scanner.stop()
             time.sleep(2)
             #scanner.run()
-    print("LIDAR  : Fin du programme")
+    print("LIDAR  : Fin du programme")"""

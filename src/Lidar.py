@@ -259,9 +259,9 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         scanner.stop()
     except Exception as e:
-            print(f"LIDAR  : Une erreur s'est produite : {e}")
+            logging.error(f"An error occurred in the main: {e}")
             scanner.stop()
             time.sleep(2)
-            scanner = None
+            """scanner = None
             scanner = LidarScanner()
-            scanner.run()
+            scanner.run()"""

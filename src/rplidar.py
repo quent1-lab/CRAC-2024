@@ -148,7 +148,7 @@ class RPLidar(object):
         self.logger.info('Starting motor')
         cmd = SCAN_BYTE
         self._send_cmd(cmd)
-        time.sleep(3)
+        time.sleep(4)
     
     def start_motor_A3(self):
         '''Starts sensor motor'''

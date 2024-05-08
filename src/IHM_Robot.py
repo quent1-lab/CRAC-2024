@@ -1,19 +1,17 @@
-import os
-from client import Client
-import pygame
-from pygame_UI import *
-import threading
-import time
-from batterie import Batterie
-import logging
-import math
+from    batterie    import Batterie
+from    client      import Client
+from    pygame_UI   import *
+import  threading
+import  logging
+import  pygame
+import  time
+import  os
 
 # Configuration du logger
 logging.basicConfig(filename='ihm_robot.log', level=logging.INFO, datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
 
-
 class IHM_Robot:
-    version = "1.037"
+    version = "1.038"
     def __init__(self):
         
         self.client = Client("127.0.0.9", 22050, 9, self.receive_to_server)
@@ -89,10 +87,6 @@ class IHM_Robot:
         # Initialisation des variables
         self.is_running = True
 
-        # Initialisation des éléments graphiques
-        #self.background = pygame.image.load("images/background.png")
-        #self.background = pygame.transform.scale(self.background, (self.width, self.height))
-
         self.theme_path = "data/theme.json"
 
         self.button_menu = []
@@ -106,7 +100,11 @@ class IHM_Robot:
             self.button_menu.append(Button(self.screen, (10 + 120 * i + x, 10, 100, 50), self.theme_path, name, self.font, lambda i=i: self.button_menu_action(i), color=self.button_menu_colors[i]))
         
         font = pygame.font.SysFont("Arial", 36)
-        self.button_recalage = Button(self.screen, (420, 90, 360, 60), self.theme_path, "Recalage", font, lambda : self.button_menu_action(9), color=(100, 0, 200))
+        
+        self.button_favori = [
+                Button(self.screen, (420, 90, 360, 60), self.theme_path, "Recalage", font, lambda : self.button_menu_action(9), color=(100, 0, 200)),
+                Button(self.screen, (420, 160, 360, 60), self.theme_path, "Homologation", font, lambda : self.strategie_action, color=(100, 200, 100))
+        ]
         
         self.recalage_is_playing = False
         self.robot_move = False
@@ -193,6 +191,7 @@ class IHM_Robot:
         self.value_get_pos = [0, 0, 0]
         
         self.set_id_card_action(416)
+        self.zone_recalage = []
         
         self.strategie = None
         self.config_strategie = None
@@ -272,13 +271,17 @@ class IHM_Robot:
         self.PAGE = 10 + index
         time.sleep(0.2)
     
-    def strategie_action(self, name):
+    def strategie_action(self, name, recaler=False):
         #self.client.add_to_send_list(self.client.create_message(0, "strategie", {"strategie": name}))
         
-        """# Charger la stratégie
+        # Charger la stratégie
         with open(self.path_strat + f"/strategie_{name}.json", "r") as f:
             self.strategie = json.load(f)
-            logging.info(f"Stratégie chargée : {self.strategie}")"""
+            
+        if recaler:
+            for equipe, zone in self.strategie["zone"]:
+                self.zone_recalage.append(zone)
+            self.PAGE = 9
         
         if self.ETAT == 0:
             self.zero_battery() # On bannit les batteries à 0V
@@ -474,8 +477,8 @@ class IHM_Robot:
         # Dessine l'image
         self.screen.blit(image, (40, 0))
         
-        for button in self.button_recalages:
-            button.draw()
+        for zone in self.zone_recalage:
+            self.button_recalages[zone-1].draw()
     
     def taille_auto_batterie(self):
         nb_batteries_colonne = 0

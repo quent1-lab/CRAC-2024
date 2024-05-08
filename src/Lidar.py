@@ -221,8 +221,10 @@ class LidarScanner:
         # Création d'un thread pour le clustering
         #clustering_thread = threading.Thread(target=self.clustering_process)
         #clustering_thread.start()
-        
-        logging.info(f"Status: {self.lidar.get_health()}")
+        try:
+            logging.info(f"Status: {self.lidar.get_health()}")
+        except Exception as e:
+            logging.error(f"Error in getting LiDAR status: {e}")
         
         while self.scanning:
             self.objets = []

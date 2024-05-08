@@ -11,7 +11,7 @@ import  os
 logging.basicConfig(filename='ihm_robot.log', level=logging.INFO, datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
 
 class IHM_Robot:
-    version = "1.038"
+    version = "1.039"
     def __init__(self):
         
         self.client = Client("127.0.0.9", 22050, 9, self.receive_to_server)
@@ -275,13 +275,27 @@ class IHM_Robot:
         #self.client.add_to_send_list(self.client.create_message(0, "strategie", {"strategie": name}))
         
         # Charger la stratégie
-        with open(self.path_strat + f"/strategie_{name}.json", "r") as f:
-            self.strategie = json.load(f)
-            
+        try:
+            with open(self.path_strat + f"/strategie_{name}.json", "r") as f:
+                self.strategie = json.load(f)
+                logging.info(f"Chargement de la stratégie {name}")
+        except Exception as e:
+            logging.error(f"Erreur lors du chargement de la stratégie : {e}")
+            return
+        
+        if self.ETAT == 0:
+            self.zero_battery() # On bannit les batteries à 0V
+            self.ETAT = 1
+            #self.client.add_to_send_list(self.client.create_message(10, "config", {"etat": 1, "equipe": self.EQUIPE}))  
+        
+        # Envoie un reset aux cartes action
+        self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 11}))
+          
         if recaler:
             for equipe, zone in self.strategie["zone"]:
                 self.zone_recalage.append(zone)
             self.PAGE = 9
+            logging.info(f"Recalage de la zone {self.zone_recalage}")
         
         if self.ETAT == 0:
             self.zero_battery() # On bannit les batteries à 0V
@@ -815,8 +829,8 @@ class IHM_Robot:
                             if event.pos[0] < 40 or event.pos[0] > 760:
                                 self.PAGE = 0
                         
-                        for button in self.button_recalages:
-                            button.handle_event(event)
+                        for zone in self.zone_recalage:
+                            self.button_recalages[zone-1].handle_event(event)
 
                 # Affichage
                 self.screen.fill(self.BACKGROUND_COLOR)

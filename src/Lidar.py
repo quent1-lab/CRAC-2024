@@ -210,7 +210,7 @@ class LidarScanner:
         self.client_socket.set_callback_stop(self.stop)
         self.client_socket.connect()
 
-        time.sleep(0.5)
+        time.sleep(5)
         self.connexion_lidar()
         time.sleep(0.5)
         
@@ -251,7 +251,7 @@ class LidarScanner:
 if __name__ == '__main__':
     # Initialiser le client
     scanner = LidarScanner()
-    time.sleep(5)
+    time.sleep(2)
     try :
         logging.info("Starting LiDAR scanner")
         scanner.run()

@@ -69,7 +69,7 @@ class Strategie:
 
             elif message["cmd"] == "lidar":
                 self.state_lidar = message["data"]["etat"]
-                logging.info(f"STRAT : Etat du lidar : {message["data"]}")
+                logging.info(f"STRAT : Etat du lidar : {message['data']}")
                 """if self.state_lidar == "stop":
                     self.state_strat = "pause"
                     

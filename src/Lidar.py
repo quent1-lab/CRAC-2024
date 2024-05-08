@@ -357,6 +357,8 @@ class LidarScanner:
             # Récupérer les scans de la file d'attente toutes les 200 ms
             try:
                 if len(self.new_scan) > 0:
+                    self.client_socket.add_to_send_list(self.client_socket.create_message(10, "points", self.generate_JSON_Points(self.new_scan)))
+                    continue
                     new_objets = self.detect_objects(self.new_scan)
                     
                     for objet in new_objets:
@@ -406,7 +408,7 @@ class LidarScanner:
                     if not self.scanning:
                         break
                     self.new_scan = self.transform_scan(scan)
-                    self.client_socket.add_to_send_list(self.client_socket.create_message(10, "points", self.generate_JSON_Points(self.new_scan)))
+                    #self.client_socket.add_to_send_list(self.client_socket.create_message(10, "points", self.generate_JSON_Points(self.new_scan)))
                         
             except RPLidarException as e:
                 # Code pour gérer RPLidarException

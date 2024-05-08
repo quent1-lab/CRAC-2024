@@ -62,6 +62,15 @@ class LidarScanner:
             if distance <  250 :
                 continue
             
+            if self.sens == "arriere":
+                # On regarde derrière le robot
+                if not (120 < point[1] < 240) :
+                    continue
+            elif self.sens == "avant":
+                # On regarde devant le robot
+                if not (point[1] > 300 or point[1] < 60) :
+                    continue
+            
             new_angle = point[1] - self.ROBOT_ANGLE
             
             #x_r = self.map_value(self.ROBOT.x, 0, 3000, 3000, 0)
@@ -207,9 +216,7 @@ class LidarScanner:
             except Exception as e:
                 logging.error(f"Error in clustering process: {e}")
             
-    def run(self):
-        
-        
+    def run(self):  
         time.sleep(1)
         self.connexion_lidar()
         time.sleep(0.5)
@@ -219,8 +226,8 @@ class LidarScanner:
         self.en_mvt = False
         
         # Création d'un thread pour le clustering
-        clustering_thread = threading.Thread(target=self.clustering_process)
-        clustering_thread.start()
+        #clustering_thread = threading.Thread(target=self.clustering_process)
+        #clustering_thread.start()
         try:
             logging.info(f"Status: {self.lidar.get_health()}")
         except Exception as e:
@@ -234,6 +241,15 @@ class LidarScanner:
                     if not self.scanning:
                         break
                     self.new_scan = self.transform_scan(scan)
+                    
+                    if len(self.new_scan) > 0:
+                        # Si 5 points consécutif sont détectés, on envoie une pause au serveur
+                        new_objets = self.detect_objects(self.new_scan)
+                        if self.en_mvt and len(new_objets) > 0:
+                            self.client_socket.add_to_send_list(self.client_socket.create_message(4, "lidar", {"etat": "pause"}))
+                        elif not self.en_mvt and len(new_objets) == 0:
+                            self.client_socket.add_to_send_list(self.client_socket.create_message(4, "lidar", {"etat": "resume"}))
+                    
                     #logging.info(f"New scan: {self.new_scan}")
                     #self.client_socket.add_to_send_list(self.client_socket.create_message(10, "points", self.generate_JSON_Points(self.new_scan)))
                         

@@ -70,11 +70,17 @@ class Strategie:
             elif message["cmd"] == "lidar":
                 self.state_lidar = message["data"]["etat"]
                 logging.info(f"STRAT : Etat du lidar : {message['data']}")
-                """if self.state_lidar == "stop":
+                if self.state_lidar == "stop":
                     self.state_strat = "pause"
                     
+                    # Arrêter le robot
+                    self.client_strat.add_to_send_list(self.client_socket.create_message(2, "CAN", {"id": 503, "byte1": 0}))
+                    time.sleep(0.1)
+                    self.client_strat.add_to_send_list(self.client_socket.create_message(2, "CAN", {"id": 503, "byte1": 1}))               
+                    
+                    
                 elif self.state_lidar == "resume":
-                    self.state_strat = "resume"""
+                    self.state_strat = "resume"
             
             elif message["cmd"] == "strategie":
                 strat_path = message["data"]["strategie"]
@@ -351,6 +357,12 @@ class Strategie:
         distance = deplacement["Ligne_Droite"]
         
         akn.append(deplacement["aknowledge"])
+        
+        if distance < 0:
+            # Envoyez la position au CAN
+            self.client_strat.add_to_send_list(self.client_strat.create_message(2, "sens", {"sens": "arriere"}))
+        else :
+            self.client_strat.add_to_send_list(self.client_strat.create_message(2, "sens", {"sens": "avant"}))
         
         # Envoyez la position au CAN
         self.client_strat.add_to_send_list(self.client_strat.create_message(2, "deplacement", {"distance": distance}))

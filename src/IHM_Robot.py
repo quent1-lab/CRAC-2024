@@ -732,7 +732,7 @@ class IHM_Robot:
             
             elif message["cmd"] == "lidar":
                 data = message["data"]
-                if "etat" in data:
+                """if "etat" in data:
                     if data["etat"] == "start":
                         self.PAGE = 20 # PAGE de match
                         self.ETAT = 2
@@ -741,7 +741,7 @@ class IHM_Robot:
                         self.ETAT = 0
                     elif data["etat"] == "end":
                         self.PAGE = 21 # PAGE de fin de match 'points'
-                        self.ETAT = 0
+                        self.ETAT = 0"""
                 logging.info(f"Lidar : {data}")
 
             elif message["cmd"] == "coord":

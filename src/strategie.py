@@ -315,7 +315,7 @@ class Strategie:
             
             elif self.state_strat == "resume":
                 self.state_strat = self.action_actuelle["state"]
-                self.client_strat.add_to_send_list(self.client_strat.create_message(3, "move", True))
+                self.client_strat.add_to_send_list(self.client_strat.create_message(0, "move", {"etat": True}))
             
             
     def move(self, deplacement, akn):

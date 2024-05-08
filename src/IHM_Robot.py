@@ -103,7 +103,7 @@ class IHM_Robot:
         
         self.button_favori = [
                 Button(self.screen, (420, 90, 360, 60), self.theme_path, "Recalage", font, lambda : self.button_menu_action(9), color=(100, 0, 200)),
-                Button(self.screen, (420, 160, 360, 60), self.theme_path, "Homologation", font, lambda : self.strategie_action, color=(100, 200, 100))
+                Button(self.screen, (420, 160, 360, 100), self.theme_path, "Homologation", font, lambda : self.strategie_action("Homologation",recaler=True), color=(100, 200, 100))
         ]
         
         self.recalage_is_playing = False
@@ -387,7 +387,9 @@ class IHM_Robot:
 
         for batterie in self.batteries:
             batterie.draw()
-        self.button_recalage.draw()
+        
+        for button in self.button_favori:
+            button.draw()
         
         # Affiche la version du code en bas à droite en petit
         draw_text(self.screen, f"Version {self.version}", x=self.width-125, y=self.height-20, font=self.font, color=(255, 255, 255))
@@ -782,7 +784,8 @@ class IHM_Robot:
                     if self.PAGE == 0:
                         for batterie in self.batteries:
                             batterie.handle_event(event)
-                        self.button_recalage.handle_event(event)
+                        for button in self.button_favori:
+                            button.handle_event(event)
                     elif self.PAGE == 1:
                         for button in self.button_strategie:
                             button.handle_event(event)

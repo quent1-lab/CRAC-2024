@@ -6,13 +6,14 @@ import threading
 import time
 from batterie import Batterie
 import logging
+import math
 
 # Configuration du logger
 logging.basicConfig(filename='ihm_robot.log', level=logging.INFO, datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
 
 
 class IHM_Robot:
-    version = "1.036"
+    version = "1.037"
     def __init__(self):
         
         self.client = Client("127.0.0.9", 22050, 9, self.receive_to_server)
@@ -32,6 +33,8 @@ class IHM_Robot:
         self.RATIO_x = 720/3000
         self.RATIO_y = 480/2000
         self.perimetre_securite = 600
+        
+        self.objets = []
         
         self.PAGE = 0
         self.ETAT = 0
@@ -230,6 +233,17 @@ class IHM_Robot:
 
         # Dessiner la surface du robot sur l'écran en ajustant les coordonnées pour que le centre reste à la même position
         self.screen.blit(robot_surface, robot_surface_rect)
+    
+    def draw_object(self, objet):
+        x = int(self.map_value(objet[0], 0, 3000, 40, 760))
+        y = int(self.map_value(objet[1], 2000, 0, 0, 480))
+        pygame.draw.circle(self.lcd, pygame.Color(
+            255, 255, 0), (x * self.RATIO_x, y * self.RATIO_y), 10)
+        pygame.draw.circle(self.lcd, pygame.Color(50, 50, 200), (x * self.RATIO_x,
+                           y * self.RATIO_y), int(objet.taille / 2 * self.RATIO_x), 3)
+        
+        # Dessine le périmètre de sécurité autour de l'objet
+        pygame.draw.circle(self.lcd, pygame.Color(255, 0, 0), (x * self.RATIO_x, y * self.RATIO_y), self.perimetre_securite * self.RATIO_x, 2)
     
     def button_menu_action(self, index):
         if self.PAGE < 4:
@@ -578,6 +592,12 @@ class IHM_Robot:
             if message["cmd"] == "stop":
                 self.client.stop()
                 
+            if message["cmd"] == "objects":
+                self.objets = []
+                json_string = json.loads(message["data"])
+                for obj in json_string:
+                    self.objets.append(obj["x"], obj["y"], obj["taille"])
+
             elif message["cmd"] == "energie":
                 energie = message["data"]
                 self.update_energie(energie)

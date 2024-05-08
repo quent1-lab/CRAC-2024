@@ -53,7 +53,8 @@ class LidarScanner:
                 continue
             
             # Filtre les points qui ne se suivent pas à -1 et 1 degré
-            if i > 0 and abs(scan[i-1][1] - point[1]) > 1:
+            # et les points dont la distance est significativement différente de celle des points voisins
+            if i > 0 and (abs(scan[i-1][1] - point[1]) > 1 or abs(scan[i-1][0] - point[0]) > 30):
                 continue
             
             distance = point[2]

@@ -361,7 +361,7 @@ class Strategie:
         for action in actions:
             self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": action["id"], "byte1": action["ordre"]}))
             time.sleep(1.2)
-            akn.append(action["akn"])
+            #akn.append(action["akn"])
             #self.wait_for_aknowledge(action["aknowledge"])
     
     def stop(self):

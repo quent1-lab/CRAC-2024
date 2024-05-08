@@ -215,8 +215,8 @@ class LidarScanner:
         self.en_mvt = False
         
         # Création d'un thread pour le clustering
-        clustering_thread = threading.Thread(target=self.clustering_process)
-        clustering_thread.start()
+        #clustering_thread = threading.Thread(target=self.clustering_process)
+        #clustering_thread.start()
         
         while self.scanning:
             self.objets = []
@@ -226,7 +226,7 @@ class LidarScanner:
                         break
                     self.new_scan = self.transform_scan(scan)
                     #logging.info(f"New scan: {self.new_scan}")
-                    self.client_socket.add_to_send_list(self.client_socket.create_message(10, "points", self.generate_JSON_Points(self.new_scan)))
+                    #self.client_socket.add_to_send_list(self.client_socket.create_message(10, "points", self.generate_JSON_Points(self.new_scan)))
                         
             except RPLidarException as e:
                 # Code pour gérer RPLidarException

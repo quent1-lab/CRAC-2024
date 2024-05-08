@@ -289,19 +289,21 @@ class IHM_Robot:
                     logging.info(f"Chargement de la stratégie {name}")
             except Exception as e:
                 logging.error(f"Erreur lors du chargement de la stratégie : {e}")
-                return
             for equipe, zone in self.strategie["zone"].items():
                 self.zone_recalage.append(zone)
             self.PAGE = 9
             logging.info(f"Recalage de la zone {self.zone_recalage}")
+            return
         else:
             # Envoie un reset aux cartes action
             self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 416, "byte1": 11}))
             self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 417, "byte1": 11}))
+            time.sleep(0.05)
             
             # Fermé les pinces
             self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 416, "byte1": 1}))
             self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 417, "byte1": 1}))
+            time.sleep(0.05)
             
             # Lever les peignes
             self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 416, "byte1": 4}))

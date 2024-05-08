@@ -29,6 +29,9 @@ class Strategie:
         
         self.is_running = False
         self.strategie_is_running = False
+        self.action_actuelle = {"Item": None,
+                                "state": "idle",}
+        self.action = 0
         
         self.ETAT = 0
         self.EQUIPE = "jaune"
@@ -66,8 +69,11 @@ class Strategie:
 
             elif message["cmd"] == "lidar":
                 self.state_lidar = message["etat"]
-                if self.state_strat == "stop":
-                    self.strategie_is_running = False
+                """if self.state_lidar == "stop":
+                    self.state_strat = "pause"
+                    
+                elif self.state_lidar == "resume":
+                    self.state_strat = "resume"""
             
             elif message["cmd"] == "strategie":
                 strat_path = message["data"]["strategie"]
@@ -114,6 +120,7 @@ class Strategie:
         self.JACK.wait_for_press() # Attend que le jack soit relaché
         self.TIMER = time.time()
 
+        self.state_strat = "idle"
         self.client_strat.add_to_send_list(self.client_strat.create_message(0, "start", None))  
     
     def stop_with_timer(self):
@@ -176,7 +183,123 @@ class Strategie:
                 logging.info("Arrêt de la stratégie")
                 break
     
-    def move(self, deplacement):
+    def run_strategie_3(self):
+        # Excecute la stratégie de façon non bloquante
+        
+        while self.strategie_is_running:
+            if self.action > len(self.strategie):
+                self.state_strat = "end"
+                self.strategie_is_running = False
+                self.client_strat.add_to_send_list(self.client_strat.create_message(0, "end", None))
+                break
+            
+            if self.state_strat == "idle":
+                # Etat d'attente et de récupération de la nouvelle action
+                self.action += 1
+                try:
+                    self.action_actuelle["Item"] = self.strategie[str(self.action)]
+                    self.action_actuelle["state"] = "deplac"
+                except Exception as e:
+                    logging.error(f"Erreur lors de la lecture de l'action : {str(e)}")
+
+                self.state_strat = "idle"
+                
+                if self.strategie_is_running == False:
+                    break
+                
+                item = self.strategie[str(self.action)]
+                wait_aknowlodege = []
+                
+            elif self.state_strat == "deplac":
+                # Etat de déplacement
+                deplacement = item["Déplacement"]
+                self.action_actuelle["state"] = "deplac"
+                
+                if self.state_lidar == "stop":
+                    self.state_strat = "pause"
+                    continue
+                
+                if "Coord" in deplacement:
+                    self.move(deplacement,wait_aknowlodege)
+                elif "Rotation" in deplacement:
+                    self.rotate(deplacement,wait_aknowlodege)
+                elif "Ligne_Droite" in deplacement:
+                    self.ligne_droite(deplacement,wait_aknowlodege)
+                
+                self.state_strat = "action_en_mvt"
+                
+            elif self.state_strat == "action_en_mvt":
+                # Etat d'attente de l'acquittement des actions en mouvement
+                action = item["Action"]
+                action_en_mvt = []
+                
+                self.action_actuelle["state"] = "action_en_mvt"
+                
+                try:
+                    for key, act in action.items():
+                        if act["en_mvt"] == True:
+                            action_en_mvt.append(action[key])
+                except Exception as e:
+                    logging.error(f"Erreur lors de la lecture des actions : {str(e)}")
+                
+                # Envoi des actions en mouvement
+                self.send_actions(action_en_mvt,wait_aknowlodege)
+                
+                self.state_strat = "wait_aknowledge"
+            
+            elif self.state_strat == "wait_aknowledge_en_mvt":
+                # Etat d'attente de l'acquittement des actions et du déplacement
+                self.action_actuelle["state"] = "wait_aknowledge_en_mvt"
+                
+                for akn in wait_aknowlodege:
+                    if akn in self.liste_aknowledge:
+                        self.liste_aknowledge.remove(akn)
+                        wait_aknowlodege.remove(akn)
+                
+                if len(wait_aknowlodege) == 0:
+                   self.state_strat = "action_apres_mvt"
+                   self.liste_aknowledge = []
+            
+            elif self.state_strat == "action_apres_mvt":
+                # Etat d'attente de l'acquittement des actions après le mouvement
+                action_apres_mvt = []
+                
+                self.action_actuelle["state"] = "action_apres_mvt"
+                
+                try:
+                    for key, act in action.items():
+                        if act["en_mvt"] == False:
+                            action_apres_mvt.append(action[key])
+                except Exception as e:
+                    logging.error(f"Erreur lors de la lecture des actions : {str(e)}")
+                
+                # Envoi des actions après le mouvement
+                self.send_actions(action_apres_mvt,wait_aknowlodege)
+                
+                self.state_strat = "wait_aknowledge_apres_mvt"
+                
+            elif self.state_strat == "wait_aknowledge_apres_mvt":
+                # Etat d'attente de l'acquittement des actions après le mouvement
+                self.action_actuelle["state"] = "wait_aknowledge_apres_mvt"
+                
+                for akn in wait_aknowlodege:
+                    if akn in self.liste_aknowledge:
+                        self.liste_aknowledge.remove(akn)
+                        wait_aknowlodege.remove(akn)
+                
+                if len(wait_aknowlodege) == 0:
+                    self.state_strat = "idle"
+                    self.liste_aknowledge = []
+            
+            elif self.state_strat == "pause":
+                if self.state_lidar == "resume":
+                    self.state_strat = "resume"
+            
+            elif self.state_strat == "resume":
+                self.state_strat = self.action_actuelle["state"]
+            
+            
+    def move(self, deplacement, akn):
         try:
             pos = [0, 0, 0, 0]
             if self.EQUIPE == "bleu":
@@ -193,22 +316,28 @@ class Strategie:
             self.client_strat.add_to_send_list(self.client_strat.create_message(
                 2, "clic", {"x": pos[0], "y": pos[1], "theta": pos[2], "sens": pos[3]}))
             
+            akn.append(deplacement["aknowledge"])
+            
         except Exception as e:
             logging.error(f"Erreur lors de l'envoi de la position move : {str(e)}")
     
-    def rotate(self, deplacement):
+    def rotate(self, deplacement, akn):
         # Envoi de la commande de rotation
         angle = deplacement["Rotation"]
         
         if self.EQUIPE == "bleu":
             angle = (angle + 180) % 360
         
+        akn.append(deplacement["aknowledge"])
+        
         # Envoyez la position au CAN
         self.client_strat.add_to_send_list(self.client_strat.create_message(2, "rotation", {"angle": angle}))
     
-    def ligne_droite(self, deplacement):
+    def ligne_droite(self, deplacement, akn):
         # Envoi de la commande de rotation
         distance = deplacement["Ligne_Droite"]
+        
+        akn.append(deplacement["aknowledge"])
         
         # Envoyez la position au CAN
         self.client_strat.add_to_send_list(self.client_strat.create_message(2, "deplacement", {"distance": distance}))
@@ -226,10 +355,11 @@ class Strategie:
                 if id in self.liste_aknowledge:
                     self.liste_aknowledge.remove(id)
     
-    def send_actions(self, actions):
+    def send_actions(self, actions, akn):
         for action in actions:
             self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": action["id"], "byte1": action["ordre"]}))
             time.sleep(1.2)
+            akn.append(action["akn"])
             #self.wait_for_aknowledge(action["aknowledge"])
     
     def stop(self):

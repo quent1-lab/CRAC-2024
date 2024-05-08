@@ -301,6 +301,7 @@ class LidarScanner:
             # Code pour gérer RPLidarException
             logging.error(f"Failed to connect to RPLidar, retrying: {e}")
             self.lidar.stop()
+            self.port = None
             self.connexion_lidar()
         except Exception as e:
             logging.error(f"Failed to create an instance of RPLidar: {e}")

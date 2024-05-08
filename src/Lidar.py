@@ -180,7 +180,7 @@ class LidarScanner:
                     
                     for objet in new_objets:
                             distance_objet = math.sqrt((objet.x - self.ROBOT.x)**2 + (objet.y - self.ROBOT.y)**2)
-                            
+                            logging.info(f"Objet détecté à {distance_objet} mm")
                             if self.is_started:
                                 if distance_objet < self.perimetre_securite:
                                     if self.en_mvt:

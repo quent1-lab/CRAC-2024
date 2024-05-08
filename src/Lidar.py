@@ -249,6 +249,7 @@ class LidarScanner:
                         if self.en_mvt and len(new_objets) > 0:
                             logging.info("Objet détecté")
                             self.client_socket.add_to_send_list(self.client_socket.create_message(4, "lidar", {"etat": "pause"}))
+                            self.en_mvt = False
                         elif not self.en_mvt and len(new_objets) == 0:
                             logging.info("Aucun objet détecté")
                             self.client_socket.add_to_send_list(self.client_socket.create_message(4, "lidar", {"etat": "resume"}))

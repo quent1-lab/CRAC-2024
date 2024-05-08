@@ -293,7 +293,7 @@ class IHM_Robot:
             except Exception as e:
                 logging.error(f"Erreur lors du chargement de la stratégie : {e}")
                 return
-            for equipe, zone in self.strategie["zone"]:
+            for equipe, zone in self.strategie["zone"].items():
                 self.zone_recalage.append(zone)
             self.PAGE = 9
             logging.info(f"Recalage de la zone {self.zone_recalage}")

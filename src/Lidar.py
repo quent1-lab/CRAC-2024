@@ -130,7 +130,6 @@ class LidarScanner:
     def stop(self):
         self.scanning = False
         logging.info("Stopping LiDAR motor")
-        print("LIDAR  : Arrêt du moteur")
 
     def generate_JSON_Objets(self, objets):
         # Générer une chaîne de caractères au format JSON des objets détectés en fonction des id
@@ -244,7 +243,8 @@ class LidarScanner:
             except KeyboardInterrupt:
                 self.stop()
                 break
-            
+        
+        self.client_socket.stop()
         self.lidar.stop()
         self.lidar.disconnect()
         exit(0)

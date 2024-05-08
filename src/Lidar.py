@@ -210,7 +210,7 @@ class LidarScanner:
         self.client_socket.set_callback_stop(self.stop)
         self.client_socket.connect()
 
-        time.sleep(5)
+        time.sleep(8)
         self.connexion_lidar()
         time.sleep(0.5)
         
@@ -227,13 +227,13 @@ class LidarScanner:
         while self.scanning:
             self.objets = []
             try:
-                
+                logging.info("Scanning")
                 for scan in self.lidar.iter_scans():
                     if not self.scanning:
                         break
                     self.new_scan = self.transform_scan(scan)
                     logging.info(f"New scan: {self.new_scan}")
-                    self.client_socket.add_to_send_list(self.client_socket.create_message(10, "points", self.generate_JSON_Points(self.new_scan)))
+                    #self.client_socket.add_to_send_list(self.client_socket.create_message(10, "points", self.generate_JSON_Points(self.new_scan)))
                         
             except RPLidarException as e:
                 # Code pour gérer RPLidarException

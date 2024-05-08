@@ -198,11 +198,11 @@ class Strategie:
                 self.action += 1
                 try:
                     self.action_actuelle["Item"] = self.strategie[str(self.action)]
-                    self.action_actuelle["state"] = "deplac"
+                    self.action_actuelle["state"] = "idle"
                 except Exception as e:
                     logging.error(f"Erreur lors de la lecture de l'action : {str(e)}")
 
-                self.state_strat = "idle"
+                self.state_strat = "deplac"
                 
                 if self.strategie_is_running == False:
                     break
@@ -246,6 +246,8 @@ class Strategie:
                 self.send_actions(action_en_mvt,wait_aknowlodege)
                 
                 self.state_strat = "wait_aknowledge"
+                
+                logging.info(f"STRAT : Attente de l'acquittement des actions en mouvement : {wait_aknowlodege}")
             
             elif self.state_strat == "wait_aknowledge_en_mvt":
                 # Etat d'attente de l'acquittement des actions et du déplacement

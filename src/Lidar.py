@@ -227,6 +227,7 @@ class LidarScanner:
         while self.scanning:
             self.objets = []
             try:
+                
                 for scan in self.lidar.iter_scans():
                     if not self.scanning:
                         break
@@ -236,9 +237,9 @@ class LidarScanner:
                         
             except RPLidarException as e:
                 # Code pour gérer RPLidarException
-                print(f"LIDAR  : Une erreur RPLidarException s'est produite dans le run : {e}")
+                logging.error(f"An error occurred in the run: {e}")
                 self.lidar.stop()
-                time.sleep(2)
+                time.sleep(3)
                 
             except KeyboardInterrupt:
                 self.stop()

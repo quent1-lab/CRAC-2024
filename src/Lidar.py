@@ -45,7 +45,7 @@ class LidarScanner:
         points = []
         for point in scan:
             # Supprime les points compris enrte 88 et 92 degrés et entre 268 et 272 degrés
-            if 79 < point[1] < 101 or 259 < point[1] < 281:
+            if 78 < point[1] < 102 or 258 < point[1] < 282:
                 continue
             
             # Filtre les points qui ont une qualité inférieure à 1
@@ -153,7 +153,7 @@ class LidarScanner:
                     # Si le nombre d'objets max est atteint, retourner None
                     return None           
 
-    def detect_objects(self, scan, eps=300, min_samples=3):
+    def detect_objects(self, scan, eps=50, min_samples=3):
 
         # Regroupement des points avec DBSCAN
         X = np.array([(point[0], point[1]) for point in scan])
@@ -340,7 +340,30 @@ class LidarScanner:
             try:
                 if len(self.new_scan) > 0:
                     new_objets = self.detect_objects(self.new_scan)
+                    
+                    for objet in new_objets:
+                            distance_objet = math.sqrt((objet.x - self.ROBOT.x)**2 + (objet.y - self.ROBOT.y)**2)
+                            
+                            if distance_objet < self.perimetre_securite:
+                                if self.en_mvt:
+                                    # Envoyer un message d'alerte
+                                    self.client_socket.add_to_send_list(self.client_socket.create_message(0, "lidar", {"etat": "stop", "distance": distance_objet}))
+                                    
+                                    # Arrêter le robot
+                                    self.client_socket.add_to_send_list(self.client_socket.create_message(2, "CAN", {"id": 503, "byte1": 0}))
+                                    time.sleep(0.1)
+                                    self.client_socket.add_to_send_list(self.client_socket.create_message(2, "CAN", {"id": 503, "byte1": 1}))
+                                    break
+                            elif distance_objet < self.perimetre_securite + 200:
+                                if not self.en_mvt:
+                                    # Envoyer un message de reprise
+                                    self.client_socket.add_to_send_list(self.client_socket.create_message(0, "lidar", {"etat": "start", "distance": distance_objet}))
+                                    
+                                    # Reprendre le mouvement du robot
+                                    self.client_socket.add_to_send_list(self.client_socket.create_message(2, "CAN", {"id": 503, "byte1": 1}))
+                    
                     self.client_socket.add_to_send_list(self.client_socket.create_message(10, "objects", self.generate_JSON_Objets(new_objets)))
+                    
                     time.sleep(0.2)
             except Exception as e:
                 logging.error(f"Error in clustering process: {e}")

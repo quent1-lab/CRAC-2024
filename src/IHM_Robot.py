@@ -623,6 +623,7 @@ class IHM_Robot:
                 self.PAGE = 21
                 logging.info("Fin de la partie")
                 self.state_request_energy = False
+                self.is_started = False
                 if not self.state_request_energy:
                     self.request_energy()
                 
@@ -690,6 +691,8 @@ class IHM_Robot:
             elif message["cmd"] == "start":
                 self.text_page_play = "Stratégie en cours..."
                 self.PAGE = 20
+                self.is_started = True
+                logging.info("Début de la partie")
             
             elif message["cmd"] == "strategie":
                 data = message["data"]

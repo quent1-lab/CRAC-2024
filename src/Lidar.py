@@ -63,14 +63,10 @@ class LidarScanner:
             if distance <  200 :
                 continue
             
-            """if self.sens == "arriere":
-                # On regarde derrière le robot
-                if not (120 < point[1] < 240) :
-                    continue
-            elif self.sens == "avant":
-                # On regarde devant le robot
-                if not (point[1] > 300 or point[1] < 60) :
-                    continue"""
+            if self.sens == "avant" and (point[0] < 300 or point[0] > 60):
+                continue
+            elif self.sens == "arriere" and (120 > point[0] < 240):
+                continue
             
             new_angle = point[1] - self.ROBOT_ANGLE
             

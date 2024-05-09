@@ -72,6 +72,7 @@ class ComCAN:
         try:
             self.can.send(data)
             #logging.info("Message envoyé sur le bus CAN")
+            time.sleep(0.001)
         except Exception as e:
             logging.error(f"BusCAN : Erreur lors de l'envoi du message : {str(e)}")
     

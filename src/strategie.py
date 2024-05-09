@@ -342,22 +342,23 @@ class Strategie:
                     self.state_strat = "deplac"
             
             elif self.state_strat == "pause_en_mvt":
-                deplac = item["Déplacement"]
-                wait_aknowlodege = []
-                self.liste_aknowledge = []
-                
-                if "Coord" in deplac:
-                    self.move(deplac,wait_aknowlodege)
+                if self.state_lidar == "resume":
+                    deplac = item["Déplacement"]
+                    wait_aknowlodege = []
+                    self.liste_aknowledge = []
                     
-                elif "Ligne_Droite" in deplac:
-                    distance = deplac["Ligne_Droite"]
-                    x = self.ROBOT_coord[0] + distance * math.cos(math.radians(self.ROBOT_coord[2]))
-                    y = self.ROBOT_coord[1] + distance * math.sin(math.radians(self.ROBOT_coord[2]))
-                    # Calcul de l'angle du robot à la fin du déplacement
-                    theta = math.atan2(y - self.ROBOT_coord[1], x - self.ROBOT_coord[0])
-                    self.move({"Coord": {"X": x, "Y": y, "T": theta, "S": 0}, "aknowledge": 276},wait_aknowlodege)
-                    
-                self.state_strat = "action_en_mvt"
+                    if "Coord" in deplac:
+                        self.move(deplac,wait_aknowlodege)
+                        
+                    elif "Ligne_Droite" in deplac:
+                        distance = deplac["Ligne_Droite"]
+                        x = self.ROBOT_coord[0] + distance * math.cos(math.radians(self.ROBOT_coord[2]))
+                        y = self.ROBOT_coord[1] + distance * math.sin(math.radians(self.ROBOT_coord[2]))
+                        # Calcul de l'angle du robot à la fin du déplacement
+                        theta = math.atan2(y - self.ROBOT_coord[1], x - self.ROBOT_coord[0])
+                        self.move({"Coord": {"X": x, "Y": y, "T": theta, "S": 0}, "aknowledge": 276},wait_aknowlodege)
+                        
+                    self.state_strat = "action_en_mvt"
 
     def move(self, deplacement, akn):
         try:

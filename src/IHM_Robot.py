@@ -12,6 +12,7 @@ logging.basicConfig(filename='ihm_robot.log', level=logging.INFO, datefmt='%d/%m
 
 class IHM_Robot:
     version = "1.045"
+    points = 24
     def __init__(self):
         
         self.client = Client("127.0.0.9", 22050, 9, self.receive_to_server)
@@ -492,7 +493,7 @@ class IHM_Robot:
     def page_points(self):
         # Dessine les points estimés par le robot
         font = pygame.font.SysFont("Arial", 40)
-        draw_text_center(self.screen, "24 points :|", x=self.width//2, y=250, font=self.font, color=(255, 255, 255))
+        draw_text_center(self.screen, f"{self.points} points :|", x=self.width//2, y=250, font=self.font, color=(255, 255, 255))
     
     def page_recalage(self):
         # Dessine le terrain de jeu en 720x480

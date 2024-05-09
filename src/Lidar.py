@@ -67,7 +67,6 @@ class LidarScanner:
             angle = point[1]
             
             if self.sens == "avant" and (angle < 300 and angle > 60):
-                logging.info(f"Angle éliminé: {angle}")
                 continue
             elif self.sens == "arriere" and (120 > angle < 240):
                 continue
@@ -291,7 +290,7 @@ class LidarScanner:
                             self.client_socket.add_to_send_list(self.client_socket.create_message(4, "lidar", {"etat": "resume"}))                                                                          
                     
                     #logging.info(f"New scan: {self.new_scan}")
-                    #self.client_socket.add_to_send_list(self.client_socket.create_message(10, "points", self.generate_JSON_Points(self.new_scan)))
+                    self.client_socket.add_to_send_list(self.client_socket.create_message(10, "points", self.generate_JSON_Points(self.new_scan)))
                         
             except RPLidarException as e:
                 # Code pour gérer RPLidarException

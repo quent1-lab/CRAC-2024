@@ -84,8 +84,9 @@ class Strategie:
                         # Arrêter le robot
                         #self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 1, "byte1": 0}))
                         self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 503, "byte1": 0})) 
+                        time.sleep(0.25)
+                        self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 503, "byte1": 1}))
                         time.sleep(1)
-                        self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 503, "byte1": 1})) 
                         self.state_strat = "pause_en_mvt"
                         self.type_mvt = "immobile"
             

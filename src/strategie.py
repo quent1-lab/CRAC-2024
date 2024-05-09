@@ -77,21 +77,15 @@ class Strategie:
 
             elif message["cmd"] == "lidar":
                 self.state_lidar = message["data"]["etat"]
-                logging.info(f"STRAT : Etat du lidar : {message['data']}")
-                if self.state_lidar == "pause":
-                    
-                    
+                
+                if self.state_lidar == "pause":              
                     if self.type_mvt == "XYT" or self.type_mvt == "ligne":
+                        logging.info("STRAT : Pause du robot en mvt")
                         # Arrêter le robot
                         self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 503, "byte1": 0}))
                         time.sleep(0.05)
                         self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 503, "byte1": 1}))    
                         self.state_strat = "pause_en_mvt"
-                         
-                    
-                elif self.state_lidar == "resume":
-                    logging.info("STRAT : Reprise de la stratégie")
-                    #self.state_strat = "resume"
             
             elif message["cmd"] == "strategie":
                 strat_path = message["data"]["strategie"]
@@ -142,6 +136,8 @@ class Strategie:
         self.client_strat.add_to_send_list(self.client_strat.create_message(9, "jack", {"data": "wait_start"}))
         
         self.JACK.wait_for_press() # Attend que le jack soit relaché
+        
+        logging.info("STRAT : Démarrage de la stratégie")
         
         self.TIMER = time.time()
         self.stop_with_timer()
@@ -250,8 +246,6 @@ class Strategie:
                     elif item["Vitesse"] == "Normale":
                         self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 0x215, "byte1": 0, "byte2": 400}))"""
                 
-                
-                
                 if "Coord" in deplacement:
                     self.move(deplacement,wait_aknowlodege)
                 elif "Rotation" in deplacement:
@@ -343,14 +337,17 @@ class Strategie:
             
             elif self.state_strat == "pause_en_mvt":
                 if self.state_lidar == "resume":
+                    logging.info("STRAT : Reprise de la stratégie")
                     deplac = item["Déplacement"]
                     wait_aknowlodege = []
                     self.liste_aknowledge = []
                     
                     if "Coord" in deplac:
+                        logging.info("STRAT : Reprise du déplacement")
                         self.move(deplac,wait_aknowlodege)
                         
                     elif "Ligne_Droite" in deplac:
+                        logging.info("STRAT : Reprise du déplacement en ligne droite")
                         distance = deplac["Ligne_Droite"]
                         x = self.ROBOT_coord[0] + distance * math.cos(math.radians(self.ROBOT_coord[2]))
                         y = self.ROBOT_coord[1] + distance * math.sin(math.radians(self.ROBOT_coord[2]))

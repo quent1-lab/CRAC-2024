@@ -32,6 +32,7 @@ class Strategie:
         self.strategie_is_running = False
         self.action_actuelle = {"Item": None,
                                 "state": "idle",}
+        self.type_mvt = "immobile"
         self.action = 0
         
         self.ETAT = 0
@@ -78,17 +79,19 @@ class Strategie:
                 self.state_lidar = message["data"]["etat"]
                 logging.info(f"STRAT : Etat du lidar : {message['data']}")
                 if self.state_lidar == "pause":
-                    self.state_strat = "pause"
                     
-                    # Arrêter le robot
-                    self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 503, "byte1": 0}))
-                    time.sleep(0.1)
-                    self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 503, "byte1": 1}))               
                     
+                    if self.type_mvt == "XYT" or self.type_mvt == "ligne":
+                        # Arrêter le robot
+                        self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 503, "byte1": 0}))
+                        time.sleep(0.05)
+                        self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 503, "byte1": 1}))    
+                        self.state_strat = "pause_en_mvt"
+                         
                     
                 elif self.state_lidar == "resume":
                     logging.info("STRAT : Reprise de la stratégie")
-                    self.state_strat = "resume"
+                    #self.state_strat = "resume"
             
             elif message["cmd"] == "strategie":
                 strat_path = message["data"]["strategie"]
@@ -246,7 +249,8 @@ class Strategie:
                         self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 0x215, "byte1": 0, "byte2": 200}))
                     elif item["Vitesse"] == "Normale":
                         self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 0x215, "byte1": 0, "byte2": 400}))"""
-                        
+                
+                
                 
                 if "Coord" in deplacement:
                     self.move(deplacement,wait_aknowlodege)
@@ -292,6 +296,7 @@ class Strategie:
                    self.state_strat = "action_apres_mvt"
                    self.liste_aknowledge = []
                    logging.info("STRAT : Fin de l'attente des acquittements des actions en mouvement")
+                   self.type_mvt = "immobile"
             
             elif self.state_strat == "action_apres_mvt":
                 # Etat d'attente de l'acquittement des actions après le mouvement
@@ -334,36 +339,26 @@ class Strategie:
             
             elif self.state_strat == "pause":
                 if self.state_lidar == "resume":
-                    self.state_strat = "resume"
+                    self.state_strat = "deplac"
             
-            elif self.state_strat == "resume":
-                self.state_strat = self.action_actuelle["state"]
-                # Vérification des aknowledges
-                for akn in wait_aknowlodege:
-                    if akn in self.liste_aknowledge:
-                        self.liste_aknowledge.remove(akn)
-                        wait_aknowlodege.remove(akn)
+            elif self.state_strat == "pause_en_mvt":
+                deplac = item["Déplacement"]
+                wait_aknowlodege = []
+                self.liste_aknowledge = []
                 
-                # S'il y a des acquittements en attente, on refait l'action
-                if len(wait_aknowlodege) > 0:
-                    if 276 in wait_aknowlodege:
-                        wait_aknowlodege.remove(276)
-                        self.move(self.action_actuelle["Item"]["Déplacement"],wait_aknowlodege)
-                    elif 277 in wait_aknowlodege:
-                        # Calcul le X, Y et Theta du robot pour finir le déplacement ligne droite
-                        deplacement = self.action_actuelle["Item"]["Déplacement"]
-                        distance = deplacement["Ligne_Droite"]
-                        x = self.ROBOT_coord[0] + distance * math.cos(math.radians(self.ROBOT_coord[2]))
-                        y = self.ROBOT_coord[1] + distance * math.sin(math.radians(self.ROBOT_coord[2]))
-                        # Calcul de l'angle du robot à la fin du déplacement
-                        theta = math.atan2(y - self.ROBOT_coord[1], x - self.ROBOT_coord[0])
-                        
-                        wait_aknowlodege.remove(277)
-                        self.move({"Coord": {"X": x, "Y": y, "T": theta, "S": 0}, "aknowledge": 276},wait_aknowlodege)
-                        
-                    # Retour à l'état d'attente de l'acquittement
-                    self.state_strat = "wait_aknowledge_en_mvt"
-            
+                if "Coord" in deplac:
+                    self.move(deplac,wait_aknowlodege)
+                    
+                elif "Ligne_Droite" in deplac:
+                    distance = deplac["Ligne_Droite"]
+                    x = self.ROBOT_coord[0] + distance * math.cos(math.radians(self.ROBOT_coord[2]))
+                    y = self.ROBOT_coord[1] + distance * math.sin(math.radians(self.ROBOT_coord[2]))
+                    # Calcul de l'angle du robot à la fin du déplacement
+                    theta = math.atan2(y - self.ROBOT_coord[1], x - self.ROBOT_coord[0])
+                    self.move({"Coord": {"X": x, "Y": y, "T": theta, "S": 0}, "aknowledge": 276},wait_aknowlodege)
+                    
+                self.state_strat = "action_en_mvt"
+
     def move(self, deplacement, akn):
         try:
             
@@ -388,6 +383,7 @@ class Strategie:
                 2, "clic", {"x": pos[0], "y": pos[1], "theta": pos[2], "sens": pos[3]}))
             
             akn.append(deplacement["aknowledge"])
+            self.type_mvt = "XYT"
             
         except Exception as e:
             logging.error(f"Erreur lors de l'envoi de la position move : {str(e)}")
@@ -403,6 +399,8 @@ class Strategie:
         
         # Envoyez la position au CAN
         self.client_strat.add_to_send_list(self.client_strat.create_message(2, "rotation", {"angle": angle}))
+        
+        self.type_mvt = "rotate"
     
     def ligne_droite(self, deplacement, akn):
         # Envoi de la commande de rotation
@@ -420,6 +418,8 @@ class Strategie:
         
         # Envoyez la position au CAN
         self.client_strat.add_to_send_list(self.client_strat.create_message(2, "deplacement", {"distance": distance}))
+        
+        self.type_mvt = "ligne"
     
     def wait_for_aknowledge(self, id):
         while id not in self.liste_aknowledge and self.strategie_is_running:

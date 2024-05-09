@@ -265,10 +265,8 @@ class LidarScanner:
                                 self.state_robot = "pause"
                                 logging.info(f"Objet détecté à {distance_objet} mm")
                                 
-                            elif not self.en_mvt and distance_objet > 600 and self.state_robot == "pause":
+                            elif not self.en_mvt and distance_objet > 700 and self.state_robot == "pause":
                                 self.client_socket.add_to_send_list(self.client_socket.create_message(4, "lidar", {"etat": "resume"}))
-                                #time.sleep(0.1)
-                                #self.client_socket.add_to_send_list(self.client_socket.create_message(4, "lidar", {"etat": "resume"}))
                                 self.state_robot = "move"
                                 logging.info(f"Objet hors de portée à {distance_objet} mm")
                         

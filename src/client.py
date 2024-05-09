@@ -158,6 +158,9 @@ class Client:
 
             if self.id_client is None:
                 self.id_client = 2205
+            
+            time.sleep(1)
+            
             message = self.create_message(1, "init", None)
             self.send(message)
 

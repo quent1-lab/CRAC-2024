@@ -37,6 +37,7 @@ class LidarScanner:
         
         self.client_socket.set_callback(self.receive_to_server)
         self.client_socket.set_callback_stop(self.stop)
+        
         self.client_socket.connect()
 
         logging.basicConfig(filename='lidar_scan.log', level=logging.INFO, datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')

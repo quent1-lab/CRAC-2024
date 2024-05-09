@@ -254,7 +254,7 @@ class LidarScanner:
                         # Si le premier objet détecté est à moins de 500 mm du robot et que le robot est en mouvement 
                         # alors on arrête le robot
                         if len(new_objets) > 0:
-                            """objet = new_objets[0]
+                            objet = new_objets[0]
                             distance_objet = math.sqrt((objet.x - self.ROBOT.x)**2 + (objet.y - self.ROBOT.y)**2)
                             # Déterminé ou est l'objet par rapport au robot par rapport au coordonnées de l'objet
                             angle_objet = math.degrees(math.atan2(objet.y - self.ROBOT.y, objet.x - self.ROBOT.x))
@@ -263,8 +263,8 @@ class LidarScanner:
                                 continue
                             elif self.sens == "arriere" and (120 > angle_objet < 240):
                                 continue
-                            
-                            if distance_objet < 500 and self.en_mvt:
+                            logging.info(f"Objet à {distance_objet} mm")
+                            if distance_objet < 500 and self.en_mvt and self.state_robot == "move":
                                 self.client_socket.add_to_send_list(self.client_socket.create_message(4, "lidar", {"etat": "pause"}))
                                 self.en_mvt = False
                                 self.state_robot = "pause"
@@ -272,17 +272,17 @@ class LidarScanner:
                                 
                             elif not self.en_mvt and distance_objet > 600 and self.state_robot == "pause":
                                 self.client_socket.add_to_send_list(self.client_socket.create_message(4, "lidar", {"etat": "resume"}))
-                                time.sleep(0.1)
-                                self.client_socket.add_to_send_list(self.client_socket.create_message(4, "lidar", {"etat": "resume"}))
+                                #time.sleep(0.1)
+                                #self.client_socket.add_to_send_list(self.client_socket.create_message(4, "lidar", {"etat": "resume"}))
                                 self.state_robot = "move"
-                                logging.info(f"Objet détecté à {distance_objet} mm")"""
+                                logging.info(f"Objet détecté à {distance_objet} mm")
                             
                         
-                            if self.en_mvt and len(new_objets) > 0:
+                            """if self.en_mvt and len(new_objets) > 0:
                                 self.client_socket.add_to_send_list(self.client_socket.create_message(4, "lidar", {"etat": "pause"}))
                                 self.en_mvt = False
                             elif not self.en_mvt and len(new_objets) == 0:
-                                self.client_socket.add_to_send_list(self.client_socket.create_message(4, "lidar", {"etat": "resume"}))
+                                self.client_socket.add_to_send_list(self.client_socket.create_message(4, "lidar", {"etat": "resume"}))"""
                     
                     #logging.info(f"New scan: {self.new_scan}")
                     #self.client_socket.add_to_send_list(self.client_socket.create_message(10, "points", self.generate_JSON_Points(self.new_scan)))

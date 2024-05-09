@@ -11,7 +11,7 @@ import  os
 logging.basicConfig(filename='ihm_robot.log', level=logging.INFO, datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
 
 class IHM_Robot:
-    version = "1.044"
+    version = "1.045"
     def __init__(self):
         
         self.client = Client("127.0.0.9", 22050, 9, self.receive_to_server)
@@ -334,6 +334,8 @@ class IHM_Robot:
         
         self.client.add_to_send_list(self.client.create_message(0, "config", {"equipe": self.EQUIPE, "etat": 0}))
         
+        self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 0x032, "byte1": 1}))
+        
         def task_recalage():
             self.recalage_is_playing = True
             
@@ -488,7 +490,7 @@ class IHM_Robot:
 
     def page_points(self):
         # Dessine les points estimés par le robot
-        
+        font = pygame.font.SysFont("Arial", 40)
         draw_text_center(self.screen, "24 points :|", x=self.width//2, y=250, font=self.font, color=(255, 255, 255))
     
     def page_recalage(self):
@@ -698,7 +700,10 @@ class IHM_Robot:
                     # Récupère le dernier numéro de stratégie pour enregistrer la nouvelle stratégie
                     num_strategie = 0
                     for strategy in liste_strategies:
-                        num = int(strategy.split("_")[1].split(".")[0])
+                        try :
+                            num = int(strategy.split("_")[1].split(".")[0])
+                        except:
+                            pass
                         if num > num_strategie:
                             num_strategie = num
                     

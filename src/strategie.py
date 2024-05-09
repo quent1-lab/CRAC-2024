@@ -133,7 +133,7 @@ class Strategie:
         self.client_strat.add_to_send_list(self.client_strat.create_message(9, "jack", {"data": "wait_start"}))
         self.JACK.wait_for_press() # Attend que le jack soit relaché
         self.TIMER = time.time()
-
+        self.stop_with_timer()
         self.state_strat = "idle"
         self.client_strat.add_to_send_list(self.client_strat.create_message(0, "start", None))  
     

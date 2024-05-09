@@ -83,11 +83,8 @@ class Strategie:
                         logging.info("STRAT : Pause du robot en mvt")
                         # Arrêter le robot
                         #self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 1, "byte1": 0}))
-                        self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 503, "byte1": 0})) 
-                        time.sleep(0.25)
-                        self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 503, "byte1": 1}))
-                        time.sleep(1)
-                        self.state_strat = "pause_en_mvt"
+                        
+                        self.state_strat = "arret_urg"
                         self.type_mvt = "immobile"
             
             elif message["cmd"] == "strategie":
@@ -340,6 +337,13 @@ class Strategie:
             elif self.state_strat == "pause":
                 if self.state_lidar == "resume":
                     self.state_strat = "deplac"
+            
+            elif self.state_strat == "arret_urg":
+                self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 503, "byte1": 0})) 
+                time.sleep(0.25)
+                self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 503, "byte1": 1}))
+                time.sleep(1)
+                self.state_strat = "pause_en_mvt"
             
             elif self.state_strat == "pause_en_mvt":
                 if self.state_lidar == "resume":

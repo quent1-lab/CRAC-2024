@@ -126,6 +126,7 @@ class Serveur:
             if client[0] == connection:
                 client[2] = id
                 new_connection = True
+                logging.info(f"BusCOM : Connexion mise à jour : {self.client_names[id]}")
                 break
         if not new_connection:
             for client in self.clients:
@@ -135,6 +136,7 @@ class Serveur:
                     except Exception:
                         pass
                     client[0] = connection
+                    logging.info(f"BusCOM : Connexion mise à jour : {self.client_names[id]}")
                     break
 
     def handle_message(self, message, connection):

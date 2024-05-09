@@ -375,6 +375,7 @@ class Strategie:
                 pos = [deplacement["Coord"]["X"], deplacement["Coord"]["Y"], int(deplacement["Coord"]["T"]), deplacement["Coord"]["S"]]                
             
             self.client_strat.add_to_send_list(self.client_strat.create_message(0, "move", {"etat": True}))
+            self.client_strat.add_to_send_list(self.client_strat.create_message(3, "sens", {"sens": "avant"}))
             
             logging.info(f"STRAT : Position envoyée {self.EQUIPE} : {pos}")
             
@@ -405,13 +406,13 @@ class Strategie:
         
         akn.append(deplacement["aknowledge"])
         
-        self.client_strat.add_to_send_list(self.client_strat.create_message(0, "move", {"etat": True}))
+        self.client_strat.add_to_send_list(self.client_strat.create_message(3, "move", {"etat": True}))
         
         if distance < 0:
             # Envoyez la position au CAN
-            self.client_strat.add_to_send_list(self.client_strat.create_message(4, "sens", {"sens": "arriere"}))
+            self.client_strat.add_to_send_list(self.client_strat.create_message(3, "sens", {"sens": "arriere"}))
         else :
-            self.client_strat.add_to_send_list(self.client_strat.create_message(4, "sens", {"sens": "avant"}))
+            self.client_strat.add_to_send_list(self.client_strat.create_message(3, "sens", {"sens": "avant"}))
         
         # Envoyez la position au CAN
         self.client_strat.add_to_send_list(self.client_strat.create_message(2, "deplacement", {"distance": distance}))

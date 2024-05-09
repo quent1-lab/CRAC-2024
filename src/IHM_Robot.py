@@ -617,6 +617,7 @@ class IHM_Robot:
             
             if message["cmd"] == "end":
                 self.PAGE = 21
+                logging.info("Fin de la partie")
                 
             if message["cmd"] == "objects":
                 self.objets = []

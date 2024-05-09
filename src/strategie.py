@@ -202,7 +202,7 @@ class Strategie:
         # Excecute la stratégie de façon non bloquante
         
         while self.strategie_is_running:
-            if self.action > len(self.strategie):
+            if self.action >= len(self.strategie):
                 self.state_strat = "end"
                 self.strategie_is_running = False
                 self.client_strat.add_to_send_list(self.client_strat.create_message(0, "end", None))

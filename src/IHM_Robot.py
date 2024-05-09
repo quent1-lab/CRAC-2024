@@ -489,7 +489,7 @@ class IHM_Robot:
     def page_points(self):
         # Dessine les points estimés par le robot
         
-        draw_text_center(self.screen, "Je ne sais pas compter sorry :|", x=self.width//2, y=250, font=self.font, color=(255, 255, 255))
+        draw_text_center(self.screen, "24 points :|", x=self.width//2, y=250, font=self.font, color=(255, 255, 255))
     
     def page_recalage(self):
         # Dessine le terrain de jeu en 720x480

@@ -11,7 +11,7 @@ import  os
 logging.basicConfig(filename='ihm_robot.log', level=logging.INFO, datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
 
 class IHM_Robot:
-    version = "1.043"
+    version = "1.044"
     def __init__(self):
         
         self.client = Client("127.0.0.9", 22050, 9, self.receive_to_server)
@@ -58,12 +58,8 @@ class IHM_Robot:
             pygame.mouse.set_visible(True)
 
         # Fullscreen
-        #self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
         self.width, self.height = pygame.display.get_surface().get_size()
         pygame.display.set_caption("IHM Robot")
-        # Icone
-        #icon = pygame.image.load("images/icon.png")
-        #pygame.display.set_icon(icon)
         # Horloge
         self.clock = pygame.time.Clock()
         # Police
@@ -191,7 +187,7 @@ class IHM_Robot:
         self.value_get_pos = [0, 0, 0]
         
         self.set_id_card_action(416)
-        self.zone_recalage = []
+        self.zone_recalage = [1,2,3,4,5,6]
         
         self.strategie = None
         self.config_strategie = None
@@ -253,6 +249,8 @@ class IHM_Robot:
             pass            
         elif index == 4:
             self.client.add_to_send_list(self.client.create_message(1, "stop", None))
+        elif index == 9:
+            self.zone_recalage = [1,2,3,4,5,6]
 
     def set_id_card_action(self, id):
         self.id_card_action = id
@@ -843,8 +841,8 @@ class IHM_Robot:
                             if event.pos[0] < 40 or event.pos[0] > 760:
                                 self.PAGE = 0
                         
-                        for button in self.button_recalages:
-                            button.handle_event(event)
+                        for zone in self.zone_recalage:
+                            self.button_recalages[zone-1].handle_event(event)
 
                 # Affichage
                 self.screen.fill(self.BACKGROUND_COLOR)

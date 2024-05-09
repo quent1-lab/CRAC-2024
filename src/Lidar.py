@@ -25,6 +25,7 @@ class LidarScanner:
         self.is_started = False # Si le programme est démarré
         self.en_mvt = False # Si le robot est en mouvement
         self.sens = "avant" # Sens de déplacement du robot
+        self.state_robot = "waiting"
 
         # Initialisation du robot virtuel
         self.ROBOT = Objet(0, 1500, 1000, 20)
@@ -55,11 +56,11 @@ class LidarScanner:
             
             distance = point[2]
             
-            if distance > 600:
+            if distance > 700:
                 continue
             
             # Filtre tous les points qui sont à moins de 200 mm du robot
-            if distance <  250 :
+            if distance <  200 :
                 continue
             
             """if self.sens == "arriere":
@@ -181,8 +182,10 @@ class LidarScanner:
         elif message["cmd"] == "sens":
             sens = message["data"]
             self.sens = sens["sens"]
+            logging.info(f"Changement de sens: {self.sens}")
         elif message["cmd"] == "start":
             self.is_started = True
+            self.state_robot = "move"
                 
     def clustering_process(self):
         while self.scanning:
@@ -244,14 +247,41 @@ class LidarScanner:
                         break
                     self.new_scan = self.transform_scan(scan)
                     
-                    if len(self.new_scan) > 0:
-                        # Si 5 points consécutif sont détectés, on envoie une pause au serveur
+                    if len(self.new_scan) > 0 and self.is_started:
+                        # détecter les objets
                         new_objets = self.detect_objects(self.new_scan)
-                        if self.en_mvt and len(new_objets) > 0:
+                        
+                        # Si le premier objet détecté est à moins de 500 mm du robot et que le robot est en mouvement 
+                        # alors on arrête le robot
+                        objet = new_objets[0]
+                        distance_objet = math.sqrt((objet.x - self.ROBOT.x)**2 + (objet.y - self.ROBOT.y)**2)
+                        # Déterminé ou est l'objet par rapport au robot par rapport au coordonnées de l'objet
+                        angle_objet = math.degrees(math.atan2(objet.y - self.ROBOT.y, objet.x - self.ROBOT.x))
+                        
+                        if self.sens == "avant" and (angle_objet < 300 or angle_objet > 60):
+                            continue
+                        elif self.sens == "arriere" and (120 > angle_objet < 240):
+                            continue
+                        
+                        if distance_objet < 500 and self.en_mvt:
+                            self.client_socket.add_to_send_list(self.client_socket.create_message(4, "lidar", {"etat": "pause"}))
+                            self.en_mvt = False
+                            self.state_robot = "pause"
+                            
+                        elif not self.en_mvt and distance_objet > 600 and self.state_robot == "pause":
+                            self.client_socket.add_to_send_list(self.client_socket.create_message(4, "lidar", {"etat": "resume"}))
+                            time.sleep(0.1)
+                            self.client_socket.add_to_send_list(self.client_socket.create_message(4, "lidar", {"etat": "resume"}))
+                            self.state_robot = "move"
+                            
+                        
+                        """if self.en_mvt and len(new_objets) > 0:
                             self.client_socket.add_to_send_list(self.client_socket.create_message(4, "lidar", {"etat": "pause"}))
                             self.en_mvt = False
                         elif not self.en_mvt and len(new_objets) == 0:
                             self.client_socket.add_to_send_list(self.client_socket.create_message(4, "lidar", {"etat": "resume"}))
+                            time.sleep(0.1)
+                            self.client_socket.add_to_send_list(self.client_socket.create_message(4, "lidar", {"etat": "resume"}))"""
                     
                     #logging.info(f"New scan: {self.new_scan}")
                     #self.client_socket.add_to_send_list(self.client_socket.create_message(10, "points", self.generate_JSON_Points(self.new_scan)))

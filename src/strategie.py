@@ -3,6 +3,7 @@ import  threading
 import  gpiozero
 import  logging
 import  time
+import  math
 import  json
 import  os
 
@@ -40,6 +41,8 @@ class Strategie:
         self.TIMER = 0
         self.temps_de_jeu = 100
         
+        self.ROBOT_coord = [0, 0, 0]
+        
         self.liste_aknowledge = []
     
     # ============================== Fin du constructeur ==============================
@@ -66,6 +69,10 @@ class Strategie:
                 
             elif message["cmd"] == "ARU":
                 self.strategie_is_running = False
+            
+            elif message["cmd"] == "coord":
+                coord = message["data"]
+                self.ROBOT_coord = [coord["x"], coord["y"], int(coord["theta"]/10)]
 
             elif message["cmd"] == "lidar":
                 self.state_lidar = message["data"]["etat"]
@@ -223,11 +230,9 @@ class Strategie:
                 deplacement = item["Déplacement"]
                 self.action_actuelle["state"] = "deplac"
                 
-                if self.state_lidar == "stop":
+                if self.state_lidar == "pause":
                     self.state_strat = "pause"
                     continue
-                
-                self.client_strat.add_to_send_list(self.client_strat.create_message(0, "move", {"etat": True}))
                 
                 if "Coord" in deplacement:
                     self.move(deplacement,wait_aknowlodege)
@@ -267,10 +272,9 @@ class Strategie:
                     if akn in self.liste_aknowledge:
                         self.liste_aknowledge.remove(akn)
                         wait_aknowlodege.remove(akn)
-                        if akn == 276 or akn == 277:
-                            self.client_strat.add_to_send_list(self.client_strat.create_message(2, "move", {"etat": False}))
-                
+
                 if len(wait_aknowlodege) == 0:
+                   self.client_strat.add_to_send_list(self.client_strat.create_message(2, "move", {"etat": False})) 
                    self.state_strat = "action_apres_mvt"
                    self.liste_aknowledge = []
                    logging.info("STRAT : Fin de l'attente des acquittements des actions en mouvement")
@@ -315,12 +319,37 @@ class Strategie:
             
             elif self.state_strat == "resume":
                 self.state_strat = self.action_actuelle["state"]
-                self.client_strat.add_to_send_list(self.client_strat.create_message(0, "move", {"etat": True}))
-            
+                # Vérification des aknowledges
+                for akn in wait_aknowlodege:
+                    if akn in self.liste_aknowledge:
+                        self.liste_aknowledge.remove(akn)
+                        wait_aknowlodege.remove(akn)
+                
+                # S'il y a des acquittements en attente, on refait l'action
+                if len(wait_aknowlodege) > 0:
+                    if 276 in wait_aknowlodege:
+                        wait_aknowlodege.remove(276)
+                        self.move(self.action_actuelle["Item"]["Déplacement"],wait_aknowlodege)
+                    elif 277 in wait_aknowlodege:
+                        # Calcul le X, Y et Theta du robot pour finir le déplacement ligne droite
+                        deplacement = self.action_actuelle["Item"]["Déplacement"]
+                        distance = deplacement["Ligne_Droite"]
+                        x = self.ROBOT_coord[0] + distance * math.cos(math.radians(self.ROBOT_coord[2]))
+                        y = self.ROBOT_coord[1] + distance * math.sin(math.radians(self.ROBOT_coord[2]))
+                        # Calcul de l'angle du robot à la fin du déplacement
+                        theta = math.atan2(y - self.ROBOT_coord[1], x - self.ROBOT_coord[0])
+                        
+                        wait_aknowlodege.remove(277)
+                        self.move({"Coord": {"X": x, "Y": y, "T": theta, "S": 0}, "aknowledge": 276},wait_aknowlodege)
+                        
+                    # Retour à l'état d'attente de l'acquittement
+                    self.state_strat = "wait_aknowledge_en_mvt"
             
     def move(self, deplacement, akn):
         try:
+            
             pos = [0, 0, 0, 0]
+            
             if self.EQUIPE == "bleu":
                 pos[0] = int(self.map_value(deplacement["Coord"]["X"], 0, 3000, 3000, 0))
                 pos[1] = deplacement["Coord"]["Y"]
@@ -330,7 +359,10 @@ class Strategie:
                 # Envoi de la commande de déplacement
                 pos = [deplacement["Coord"]["X"], deplacement["Coord"]["Y"], int(deplacement["Coord"]["T"]), deplacement["Coord"]["S"]]                
             
+            self.client_strat.add_to_send_list(self.client_strat.create_message(0, "move", {"etat": True}))
+            
             logging.info(f"STRAT : Position envoyée {self.EQUIPE} : {pos}")
+            
             # Envoyez la position au CAN
             self.client_strat.add_to_send_list(self.client_strat.create_message(
                 2, "clic", {"x": pos[0], "y": pos[1], "theta": pos[2], "sens": pos[3]}))
@@ -358,11 +390,13 @@ class Strategie:
         
         akn.append(deplacement["aknowledge"])
         
+        self.client_strat.add_to_send_list(self.client_strat.create_message(0, "move", {"etat": True}))
+        
         if distance < 0:
             # Envoyez la position au CAN
-            self.client_strat.add_to_send_list(self.client_strat.create_message(2, "sens", {"sens": "arriere"}))
+            self.client_strat.add_to_send_list(self.client_strat.create_message(4, "sens", {"sens": "arriere"}))
         else :
-            self.client_strat.add_to_send_list(self.client_strat.create_message(2, "sens", {"sens": "avant"}))
+            self.client_strat.add_to_send_list(self.client_strat.create_message(4, "sens", {"sens": "avant"}))
         
         # Envoyez la position au CAN
         self.client_strat.add_to_send_list(self.client_strat.create_message(2, "deplacement", {"distance": distance}))

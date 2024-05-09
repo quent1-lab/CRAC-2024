@@ -56,7 +56,7 @@ class LidarScanner:
                 continue
             
             # Filtre tous les points qui sont à moins de 200 mm du robot
-            if distance <  250 :
+            if distance <  200 :
                 continue
             
             new_angle = point[1] - self.ROBOT_ANGLE

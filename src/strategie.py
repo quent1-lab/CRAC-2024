@@ -86,6 +86,7 @@ class Strategie:
                         time.sleep(0.05)
                         self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 503, "byte1": 1}))    
                         self.state_strat = "pause_en_mvt"
+                        self.type_mvt = "immobile"
             
             elif message["cmd"] == "strategie":
                 strat_path = message["data"]["strategie"]
@@ -353,9 +354,10 @@ class Strategie:
                         y = self.ROBOT_coord[1] + distance * math.sin(math.radians(self.ROBOT_coord[2]))
                         # Calcul de l'angle du robot à la fin du déplacement
                         theta = math.atan2(y - self.ROBOT_coord[1], x - self.ROBOT_coord[0])
-                        self.move({"Coord": {"X": x, "Y": y, "T": theta, "S": 0}, "aknowledge": 276},wait_aknowlodege)
+                        self.move({"Coord": {"X": x, "Y": y, "T": theta, "S": "0"}, "aknowledge": 276},wait_aknowlodege)
                         
                     self.state_strat = "action_en_mvt"
+                    logging.info("STRAT : Fin de la pause en mvt")
 
     def move(self, deplacement, akn):
         try:
@@ -367,6 +369,7 @@ class Strategie:
                 pos[1] = deplacement["Coord"]["Y"]
                 pos[2] = int((1800 - deplacement["Coord"]["T"]) % 3600)
                 pos[3] = deplacement["Coord"]["S"]
+                
             elif self.EQUIPE == "jaune":
                 # Envoi de la commande de déplacement
                 pos = [deplacement["Coord"]["X"], deplacement["Coord"]["Y"], int(deplacement["Coord"]["T"]), deplacement["Coord"]["S"]]                

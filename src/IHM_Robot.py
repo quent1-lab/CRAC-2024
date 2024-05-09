@@ -11,7 +11,7 @@ import  os
 logging.basicConfig(filename='ihm_robot.log', level=logging.INFO, datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
 
 class IHM_Robot:
-    version = "1.050"
+    version = "1.051"
     points = 34
     def __init__(self):
         
@@ -235,6 +235,9 @@ class IHM_Robot:
     def draw_object(self, objet):
         x = int(self.map_value(objet[0], 0, 3000, 40, 760))
         y = int(self.map_value(objet[1], 0, 2000, 0, 480))
+        
+        logging.info(f"Objet : {objet} - x={x}, y={y}")
+                
         pygame.draw.circle(self.lcd, pygame.Color(255, 255, 0), (x , y), 10)
         pygame.draw.circle(self.lcd, pygame.Color(50, 50, 200), (x, y), int(objet[2] / 2 * self.RATIO_x), 3)
         

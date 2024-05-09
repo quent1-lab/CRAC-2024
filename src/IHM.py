@@ -9,7 +9,7 @@ import math
 import os
 import random
 import numpy as np
-from sklearn.cluster import DBSCAN
+#from sklearn.cluster import DBSCAN
 from client import *
 import json
 import re
@@ -438,8 +438,8 @@ class IHM:
         return points
 
     def detect_objects(self, scan, eps=300, min_samples=3):
-
-        # Regroupement des points avec DBSCAN
+        pass
+        """# Regroupement des points avec DBSCAN
         X = np.array([(point[0], point[1]) for point in scan])
 
         #eps = 200  # À ajuster en fonction de la densité des points
@@ -469,7 +469,7 @@ class IHM:
                                  x=x_moyen, y=y_moyen, taille=taille)
             objets.append(nouvel_objet)
 
-        return objets
+        return objets"""
 
     def suivre_objet(self, objets, rayon_cercle=100):
 

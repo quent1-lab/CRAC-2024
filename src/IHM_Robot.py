@@ -641,7 +641,8 @@ class IHM_Robot:
                 try:
                     json_string = message["data"]
                     for obj in json_string:
-                        obj = json.loads(obj)
+                        logging.info(f"Objet : {obj}")
+                        #obj = json.loads(obj)
                         self.objets.append(obj["x"], obj["y"], obj["taille"])
                 except Exception as e:
                     logging.error(f"Erreur lors de la réception des objets : {e}")

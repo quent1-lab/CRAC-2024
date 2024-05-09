@@ -342,7 +342,7 @@ class Strategie:
             elif self.state_strat == "pause_en_mvt":
                 if self.state_lidar == "resume":
                     # Réactiver l'asservissement
-                    self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 503, "byte1": 1})) 
+                    self.client_strat.add_to_send_list(self.client_strat.create_message(2, "desa", False)) 
                     
                     logging.info("STRAT : Reprise de la stratégie")
                     deplac = item["Déplacement"]

@@ -386,7 +386,7 @@ class IHM_Robot:
                     self.recalage_is_playing = False
                     break
             
-            if len(self.zone_recalage) > 0:
+            if 6 > len(self.zone_recalage) > 0:
                 self.zone_recalage = []
                 self.play_strategie("Homologation")
             else:

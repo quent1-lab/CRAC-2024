@@ -2,9 +2,9 @@
     "1": {
         "D\u00e9placement": {
             "Coord": {
-                "X": 703,
-                "Y": 446,
-                "T": 219,
+                "X": 706,
+                "Y": 466,
+                "T": 380,
                 "S": "0"
             },
             "aknowledge": 276
@@ -24,9 +24,9 @@
     "2": {
         "D\u00e9placement": {
             "Coord": {
-                "X": 975,
-                "Y": 675,
-                "T": 400,
+                "X": 986,
+                "Y": 694,
+                "T": 391,
                 "S": "0"
             },
             "aknowledge": 276
@@ -46,9 +46,9 @@
     "3": {
         "D\u00e9placement": {
             "Coord": {
-                "X": 311,
-                "Y": 248,
-                "T": -1780,
+                "X": 269,
+                "Y": 218,
+                "T": -1800,
                 "S": "0"
             },
             "aknowledge": 276
@@ -70,24 +70,16 @@
             "Ligne_Droite": -300,
             "aknowledge": 277
         },
-        "Action": {
-            "_PG_av": {
-                "id": "0x1A0",
-                "en_mvt": false,
-                "ordre": 1,
-                "akn": 907,
-                "str": "Ferme"
-            }
-        },
+        "Action": {},
         "Special": {},
         "Vitesse": "Normal"
     },
     "5": {
         "D\u00e9placement": {
             "Coord": {
-                "X": 1003,
-                "Y": 942,
-                "T": -900,
+                "X": 762,
+                "Y": 1026,
+                "T": -1340,
                 "S": "0"
             },
             "aknowledge": 276
@@ -106,7 +98,7 @@
     },
     "6": {
         "D\u00e9placement": {
-            "Ligne_Droite": -500,
+            "Ligne_Droite": -300,
             "aknowledge": 277
         },
         "Action": {
@@ -124,8 +116,8 @@
     "7": {
         "D\u00e9placement": {
             "Coord": {
-                "X": 203,
-                "Y": 1762,
+                "X": 206,
+                "Y": 1766,
                 "T": -1800,
                 "S": "0"
             },

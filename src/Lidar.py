@@ -272,11 +272,11 @@ class LidarScanner:
                                 self.state_robot = "move"
                                 logging.info(f"Objet hors de portée à {distance_objet} mm")
                         
-                    elif len(new_objets) == 0 and not self.en_mvt and self.state_robot == "pause":
-                        self.client_socket.add_to_send_list(self.client_socket.create_message(4, "lidar", {"etat": "resume"}))
-                        self.state_robot = "move"
-                        logging.info(f"Objet hors de portée")
-                            
+                        elif len(new_objets) == 0 and not self.en_mvt and self.state_robot == "pause":
+                            self.client_socket.add_to_send_list(self.client_socket.create_message(4, "lidar", {"etat": "resume"}))
+                            self.state_robot = "move"
+                            logging.info(f"Objet hors de portée")
+                                
                         
                         """if self.en_mvt and len(new_objets) > 0:
                             self.client_socket.add_to_send_list(self.client_socket.create_message(4, "lidar", {"etat": "pause"}))

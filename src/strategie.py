@@ -136,6 +136,8 @@ class Strategie:
         
         self.client_strat.add_to_send_list(self.client_strat.create_message(9, "jack", {"data": "wait_start"}))
         
+        logging.info("STRAT : Attente du début de la partie")
+        
         self.JACK.wait_for_press() # Attend que le jack soit relaché
         
         logging.info("STRAT : Démarrage de la stratégie")

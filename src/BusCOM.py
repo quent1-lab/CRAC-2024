@@ -34,7 +34,7 @@ class Serveur:
                             self.handle_message(message, connection)
             except Exception as e:
                 logging.error(f"Erreur lors de la manipulation du client : {str(e)}")
-                pass
+                break
             time.sleep(0.01)  # Attendre 5 ms avant de vérifier à nouveau
         if not self.stop_threads:
             self.deconnect_client(connection, address)

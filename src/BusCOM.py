@@ -16,7 +16,7 @@ class Serveur:
         self.host = host
         self.port = port
         self.clients = []  # Liste pour stocker les informations sur les clients (socket, address, ID)
-        self.client_names = ["Broadcast", "Serveur", "BusCAN", "Lidar","","","","","","IHM_R","IHM"]
+        self.client_names = ["Broadcast", "Serveur", "BusCAN", "Lidar","","","","","PAMI","IHM_R","IHM"]
 
         self.tasks = []
         self.stop_threads = False
@@ -34,7 +34,7 @@ class Serveur:
                             self.handle_message(message, connection)
             except Exception as e:
                 logging.error(f"Erreur lors de la manipulation du client : {str(e)}")
-                break
+                pass
             time.sleep(0.01)  # Attendre 5 ms avant de vérifier à nouveau
         if not self.stop_threads:
             self.deconnect_client(connection, address)
@@ -44,14 +44,21 @@ class Serveur:
     def receive_messages(self, socket):
         buffer = ""
         while not self.stop_threads:
-            data = socket.recv(4096)
-            if not data:
+            try:
+                data = socket.recv(4096)
+                if not data:
+                    break
+                buffer += data.decode()
+                while "\n" in buffer:
+                    line, buffer = buffer.split("\n", 1)
+                    yield line
+                time.sleep(0.01)  # Attendre 5 ms avant de vérifier à nouveau
+            except ConnectionResetError:
+                logging.error("BusCOM : Erreur de connexion", exc_info=True)
                 break
-            buffer += data.decode()
-            while "\n" in buffer:
-                line, buffer = buffer.split("\n", 1)
-                yield line
-            time.sleep(0.01)  # Attendre 5 ms avant de vérifier à nouveau
+            except Exception as e:
+                logging.error(f"BusCOM : Erreur de réception : {str(e)}")
+                pass
 
     def handle_connection(self):
         while not self.stop_threads:
@@ -62,6 +69,8 @@ class Serveur:
                 with self.lock:
                     self.clients.append([connection, address, None])
                     self.tasks.append(thread)
+                if address == "192.168.22.108":
+                    self.init_connection(connection, 8)
             except socket.timeout:
                 pass
             except OSError as e:
@@ -82,6 +91,9 @@ class Serveur:
         except BrokenPipeError:
             logging.error("BusCOM : Erreur de connexion", exc_info=True)
             raise ServeurException("BusCOM : Erreur de connexion")
+        except Exception as e:
+            logging.error("BusCOM : Erreur d'envoi", exc_info=True)
+            raise ServeurException("BusCOM : Erreur d'envoi")
     
     def send_stop(self):
         message = {"id_s" : 0, "id_r" : 0, "cmd" : "stop", "data" : ""}
@@ -172,16 +184,6 @@ class Serveur:
             self.tasks.append(connection_thread)
 
             while not self.stop_threads:
-                """# Vérification des connexions inactives
-                with self.lock:
-                    for client in self.clients:
-                        try:
-                            client[0].send(b'')
-                        except Exception:
-                            logging.info(f"BusCOM : Déconnexion détectée : {client[1]}")
-                            self.deconnect_client(client[0], client[1])
-                            break
-                time.sleep(5)  # Attendre 5 secondes avant de vérifier à nouveau"""
                 pass
 
             logging.info("BusCOM : Arrêt des connexions...")

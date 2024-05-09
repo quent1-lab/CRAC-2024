@@ -247,7 +247,7 @@ class LidarScanner:
                         break
                     self.new_scan = self.transform_scan(scan)
                     
-                    if len(self.new_scan) > 0 and self.is_started:
+                    if len(self.new_scan) > 0:  
                         # détecter les objets
                         new_objets = self.detect_objects(self.new_scan)
                         

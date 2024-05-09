@@ -193,6 +193,7 @@ class IHM_Robot:
         self.config_strategie = None
         self.liste_aknowledge = []
         self.text_page_play = ""
+        self.is_started = False
         
         with open("data/config_ordre_to_can.json", "r",encoding="utf-8") as f:
             self.config_strategie = json.load(f)
@@ -569,7 +570,7 @@ class IHM_Robot:
             # Variable comptant le nombre de tentatives pour recevoir les données
             nb_tentatives = 0
             index = 0
-            while self.is_running:
+            while self.is_running and not self.is_started:
                 if index >= len(commande_energie): # On a fini de demander les énergies des batteries, on attend 0.5s avant de recommencer
                     index = 0
                     time.sleep(0.5)
@@ -620,6 +621,14 @@ class IHM_Robot:
             if message["cmd"] == "end":
                 self.PAGE = 21
                 logging.info("Fin de la partie")
+                self.state_request_energy = False
+                if not self.state_request_energy:
+                    self.request_energy()
+                
+                # Eteindre les switchs
+                self.set_switch(1, 0)
+                self.set_switch(2, 0)
+                self.set_switch(3, 0)
                 
             if message["cmd"] == "objects":
                 self.objets = []

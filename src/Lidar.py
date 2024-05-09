@@ -259,11 +259,15 @@ class LidarScanner:
                             # Déterminé ou est l'objet par rapport au robot par rapport au coordonnées de l'objet
                             angle_objet = math.degrees(math.atan2(objet.y - self.ROBOT.y, objet.x - self.ROBOT.x))
                             
+                            logging.info(f"Objet à {distance_objet} mm et angle: {angle_objet}")
+                            
                             if self.sens == "avant" and (angle_objet < 300 or angle_objet > 60):
                                 continue
                             elif self.sens == "arriere" and (120 > angle_objet < 240):
                                 continue
-                            logging.info(f"Objet à {distance_objet} mm")
+                            
+                            logging.info(f"L'Objet est {self.sens} du robot")
+                            
                             if distance_objet < 500 and self.en_mvt and self.state_robot == "move":
                                 self.client_socket.add_to_send_list(self.client_socket.create_message(4, "lidar", {"etat": "pause"}))
                                 self.en_mvt = False

@@ -70,6 +70,7 @@ class Serveur:
                     self.clients.append([connection, address, None])
                     self.tasks.append(thread)
                 if address == "192.168.22.108":
+                    logging.info("BusCOM : Connexion à serveur PAMI")
                     self.init_connection(connection, 8)
             except socket.timeout:
                 pass

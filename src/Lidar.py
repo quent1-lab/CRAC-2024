@@ -67,11 +67,12 @@ class LidarScanner:
             angle = point[1]
             
             if self.sens == "avant" and (angle < 300 or angle > 60):
+                logging.info(f"Angle éliminé: {angle}")
                 continue
             elif self.sens == "arriere" and (120 > angle < 240):
                 continue
             
-            new_angle = point[1] - self.ROBOT_ANGLE
+            new_angle = angle - self.ROBOT_ANGLE
             
             #x_r = self.map_value(self.ROBOT.x, 0, 3000, 3000, 0)
             x_r = self.ROBOT.x

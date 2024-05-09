@@ -266,12 +266,12 @@ class LidarScanner:
                                 Time = time.time()
                                 logging.info(f"Objet détecté à {distance_objet} mm")
                                 
-                            elif not self.en_mvt and distance_objet > 700 and self.state_robot == "pause":
+                            elif distance_objet > 600 and self.state_robot == "pause" or (time.time() - Time) > 3:
                                 self.client_socket.add_to_send_list(self.client_socket.create_message(4, "lidar", {"etat": "resume"}))
                                 self.state_robot = "move"
                                 logging.info(f"Objet hors de portée à {distance_objet} mm")
                         
-                        elif len(new_objets) == 0 and not self.en_mvt and self.state_robot == "pause" and (time.time() - Time) > 2:
+                        elif self.state_robot == "pause" and (time.time() - Time) > 2:
                             self.client_socket.add_to_send_list(self.client_socket.create_message(4, "lidar", {"etat": "resume"}))
                             self.state_robot = "move"
                             logging.info(f"Objet hors de portée")
@@ -284,7 +284,7 @@ class LidarScanner:
                             self.client_socket.add_to_send_list(self.client_socket.create_message(4, "lidar", {"etat": "resume"}))  """                                                                        
                     
                     #logging.info(f"New scan: {self.new_scan}")
-                    self.client_socket.add_to_send_list(self.client_socket.create_message(10, "points", self.generate_JSON_Points(self.new_scan)))
+                    #self.client_socket.add_to_send_list(self.client_socket.create_message(10, "points", self.generate_JSON_Points(self.new_scan)))
                         
             except RPLidarException as e:
                 # Code pour gérer RPLidarException

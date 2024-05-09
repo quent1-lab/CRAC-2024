@@ -255,6 +255,7 @@ class LidarScanner:
                         # alors on arrête le robot
                         if len(new_objets) > 0:
                             objet = new_objets[0]
+                            self.client_socket.add_to_send_list(self.client_socket.create_message(10, "objects", self.generate_JSON_Objets(new_objets)))
                             distance_objet = math.sqrt((objet.x - self.ROBOT.x)**2 + (objet.y - self.ROBOT.y)**2)
                             # Déterminé ou est l'objet par rapport au robot par rapport au coordonnées de l'objet
                             angle_objet = math.degrees(math.atan2(objet.y - self.ROBOT.y, objet.x - self.ROBOT.x))

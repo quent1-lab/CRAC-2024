@@ -87,21 +87,27 @@ class Strategie:
                     
                     
                 elif self.state_lidar == "resume":
+                    logging.info("STRAT : Reprise de la stratégie")
                     self.state_strat = "resume"
             
             elif message["cmd"] == "strategie":
                 strat_path = message["data"]["strategie"]
                 # Charger la stratégie
                 if os.path.exists(strat_path):
-                    with open(strat_path, "r") as file:
-                        self.strategie = json.load(file)
-                    logging.info(f"STRAT : Chargement de la stratégie {strat_path}")
+                    try :
+                        with open(strat_path, "r") as file:
+                            self.strategie = json.load(file)  
+                            
+                        self.strategie_is_running = True
+                        self.state_strat = "wait_jack"
+                        logging.info(f"STRAT : stratégie {strat_path} chargé")   
+                            
+                    except Exception as e:
+                        logging.error(f"STRAT : Erreur lors du chargement de la stratégie : {str(e)}")
+                        self.client_strat.add_to_send_list(self.client_strat.create_message(9, "strat", {"data": "erreur_charg"}))
                 else:
                     logging.error(f"STRAT : La stratégie {strat_path} n'existe pas")
                 
-                self.strategie_is_running = True
-                self.state_strat = "wait_jack"
-        
         except Exception as e:
             logging.error(f"STRAT : Erreur lors de la réception du message : {str(e)}")
 
@@ -131,9 +137,12 @@ class Strategie:
         self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 417, "byte1": 11}))
         
         self.client_strat.add_to_send_list(self.client_strat.create_message(9, "jack", {"data": "wait_start"}))
+        
         self.JACK.wait_for_press() # Attend que le jack soit relaché
+        
         self.TIMER = time.time()
         self.stop_with_timer()
+        
         self.state_strat = "idle"
         self.client_strat.add_to_send_list(self.client_strat.create_message(0, "start", None))  
     
@@ -202,11 +211,6 @@ class Strategie:
         # Excecute la stratégie de façon non bloquante
         
         while self.strategie_is_running:
-            if self.action > len(self.strategie):
-                self.state_strat = "end"
-                self.strategie_is_running = False
-                self.client_strat.add_to_send_list(self.client_strat.create_message(0, "end", None))
-                break
             
             if self.state_strat == "idle":
                 # Etat d'attente et de récupération de la nouvelle action

@@ -218,6 +218,7 @@ class IHM_Action_Aux:
         self.name_action_Bras = []
         self.name_action_Special = []
         self.name_recalage = []
+        self.name_Vitesse = []
         
         # Récupérer les ordres des actions pour les listes
         for ordre in self.config["Moteur"]["ordre"]:
@@ -232,6 +233,8 @@ class IHM_Action_Aux:
             self.name_action_Special.append(ordre)
         for ordre in self.config["Recalage"]["ordre"]:
             self.name_recalage.append(ordre)
+        for ordre in self.config["Vitesse"]:
+            self.name_Vitesse.append(ordre)
         
 
         # Ajouter des zones de texte et des labels correspondants
@@ -247,9 +250,9 @@ class IHM_Action_Aux:
                             "box2": {"type": "checkbox", "position": (120, 80), "size": (35, 35), "text": "Deplac", "id":"#c_Ligne_droite"},
                             "box3": {"type": "text", "position": (160, 80), "size": (110, 35), "id":"#t_Ligne_droite"}},            
             
-            "Angle_arrive": {"box1": {"type": "label", "position": (300, 50), "size": (150, 30), "text": "Angle d'arrivé (°)"},
+            "Angle_arrive": {"box1": {"type": "label", "position": (300, 50), "size": (120, 30), "text": "Angle d'arrivé (°)"},
                               "box2": {"type": "checkbox", "position": (300, 80), "size": (35, 35), "text": "Deplac", "id":"#c_Angle_arrive"},
-                              "box3": {"type": "text", "position": (340, 80), "size": (110, 35), "id":"#t_Angle_arrive"}},
+                              "box3": {"type": "text", "position": (340, 80), "size": (80, 35), "id":"#t_Angle_arrive"}},
             
             "Cote_a_controler": {"box1": {"type": "label", "position": (10, 120), "size": (230, 35), "text": "Côté à contrôler"},
                                 "box2": {"type": "button", "position": (15, 150), "size": (105, 35), "text": "Avant"},
@@ -293,6 +296,9 @@ class IHM_Action_Aux:
                         "box9": {"type": "text", "position": (440, 360), "size": (130, 30), "id":"#t_S"},
                         "box10": {"type": "checkbox", "position": (20, 310), "size": (35, 35), "id":"#c_New_coord"}},
             
+            "Vitesse": {"box1": {"type": "label", "position": (440, 50), "size": (80, 30), "text": "Vitesse"},
+                        "box2": {"type": "list", "position": (440, 80), "size": (80, 35),"text": self.name_Vitesse, "id":"#l_Vitesse"}},
+            
             "Back": {"box1": {"type": "button", "position": (20, 400), "size": (150, 30), "text": "Retour"}},
             "Save": {"box1": {"type": "button", "position": (180, 400), "size": (220, 30), "text": "Enregistrer"}},
             "Next": {"box1": {"type": "button", "position": (410, 400), "size": (150, 30), "text": "Suivant"}},
@@ -305,7 +311,8 @@ class IHM_Action_Aux:
                 "aknowledge": self.config["Coord"]["aknowledge"]
             },
             "Action" : {},
-            "Special" :{}
+            "Special" :{},
+            "Vitesse" : "Normal"
         }
 
         for label_text, box_info in box_infos.items():
@@ -616,6 +623,10 @@ class IHM_Action_Aux:
                             "akn" : self.config["Recalage"]["aknowledge"],
                             "str" : texte
                         }
+                        
+                elif id == "#l_Vitesse":
+                    self.data["Vitesse"] = texte
+                        
                                                         
             elif event.user_type == pygame_gui.UI_TEXT_ENTRY_CHANGED: # Si le texte change
                 id = event.ui_element.get_object_ids()[1]

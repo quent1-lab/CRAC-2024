@@ -99,5 +99,10 @@
             "X et Y": 0
         },
         "aknowledge": 279
+    },
+    "Vitesse": {
+        "Normal": 0,
+        "Lent": 0,
+        "Rapide": 0
     }
 }

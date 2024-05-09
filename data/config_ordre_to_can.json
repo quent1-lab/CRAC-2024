@@ -20,8 +20,8 @@
             "Bas": 9
         },
         "aknowledge": {
-            "avant": 901,
-            "arriere": 902
+            "avant": 382,
+            "arriere": 392
         }
     },
     "HerkuleX": {
@@ -34,8 +34,8 @@
                 "Deposer": 13
             },
             "aknowledge": {
-                "avant": 903,
-                "arriere": 904
+                "avant": 381,
+                "arriere": 391
             }
         },
         "Pinces": {
@@ -49,8 +49,8 @@
                     "Min": 0
                 },
                 "aknowledge": {
-                    "avant": 905,
-                    "arriere": 906
+                    "avant": 380,
+                    "arriere": 390
                 }
             },
             "gauche": {
@@ -63,8 +63,8 @@
                     "Min": 0
                 },
                 "aknowledge": {
-                    "avant": 907,
-                    "arriere": 908
+                    "avant": 380,
+                    "arriere": 390
                 }
             }
         },
@@ -77,7 +77,7 @@
                 "Ferme": 4,
                 "Min": 0
             },
-            "aknowledge": 909
+            "aknowledge": 383
         }
     },
     "Action_special": {

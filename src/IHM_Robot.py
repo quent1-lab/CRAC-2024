@@ -638,6 +638,7 @@ class IHM_Robot:
             if message["cmd"] == "objects":
                 self.objets = []
                 json_string = json.loads(message["data"])
+                logging.info(f"Objets : {json_string}")
                 for obj in json_string:
                     self.objets.append(obj["x"], obj["y"], obj["taille"])
 

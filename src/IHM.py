@@ -1190,5 +1190,9 @@ class IHM:
 
 
 if __name__ == '__main__':
-    Ihm = IHM()
-    Ihm.run()
+    try :
+        Ihm = IHM()
+        Ihm.run()
+    except Exception as e:
+        print("Erreur dans le programme", e)
+        exit(0)

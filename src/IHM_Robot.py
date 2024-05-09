@@ -235,13 +235,11 @@ class IHM_Robot:
     def draw_object(self, objet):
         x = int(self.map_value(objet[0], 0, 3000, 40, 760))
         y = int(self.map_value(objet[1], 0, 2000, 0, 480))
-        pygame.draw.circle(self.lcd, pygame.Color(
-            255, 255, 0), (x * self.RATIO_x, y * self.RATIO_y), 10)
-        pygame.draw.circle(self.lcd, pygame.Color(50, 50, 200), (x * self.RATIO_x,
-                           y * self.RATIO_y), int(objet.taille / 2 * self.RATIO_x), 3)
+        pygame.draw.circle(self.lcd, pygame.Color(255, 255, 0), (x , y), 10)
+        pygame.draw.circle(self.lcd, pygame.Color(50, 50, 200), (x, y), int(objet[2] / 2 * self.RATIO_x), 3)
         
         # Dessine le périmètre de sécurité autour de l'objet
-        pygame.draw.circle(self.lcd, pygame.Color(255, 0, 0), (x * self.RATIO_x, y * self.RATIO_y), self.perimetre_securite * self.RATIO_x, 2)
+        pygame.draw.circle(self.lcd, pygame.Color(255, 0, 0), (x, y), self.perimetre_securite * self.RATIO_x, 2)
     
     def button_menu_action(self, index):
         if self.PAGE < 4:
@@ -637,10 +635,12 @@ class IHM_Robot:
                 
             if message["cmd"] == "objects":
                 self.objets = []
-                json_string = json.loads(message["data"])
-                logging.info(f"Objets : {json_string}")
-                for obj in json_string:
-                    self.objets.append(obj["x"], obj["y"], obj["taille"])
+                try:
+                    json_string = json.loads(message["data"])
+                    for obj in json_string:
+                        self.objets.append(obj["x"], obj["y"], obj["taille"])
+                except Exception as e:
+                    logging.error(f"Erreur lors de la réception des objets : {e}")
 
             elif message["cmd"] == "energie":
                 energie = message["data"]

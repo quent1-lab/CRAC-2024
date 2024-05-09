@@ -246,6 +246,7 @@ class LidarScanner:
                     if len(self.new_scan) > 0:  
                         # détecter les objets
                         new_objets = self.detect_objects(self.new_scan)
+                        logging.info(f"Objets détectés: {len(new_objets)}")
                         self.client_socket.add_to_send_list(self.client_socket.create_message(9, "objects", self.generate_JSON_Objets(new_objets)))
                         # Si le premier objet détecté est à moins de 500 mm du robot et que le robot est en mouvement 
                         # alors on arrête le robot

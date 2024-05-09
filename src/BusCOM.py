@@ -37,9 +37,13 @@ class Serveur:
                 break
             time.sleep(0.01)  # Attendre 5 ms avant de vérifier à nouveau
         if not self.stop_threads:
-            self.deconnect_client(connection, address)
+            try :
+                self.deconnect_client(connection, address)
+            except:
+                pass
             #id = [_id for _id in range(1, 11) if address in [client[1] for client in self.clients]]
             print(f"BusCOM : Déconnecté de ({address})")
+            logging.info(f"BusCOM : Déconnecté de ({address})")
 
     def receive_messages(self, socket):
         buffer = ""
@@ -117,9 +121,13 @@ class Serveur:
     
     def deconnect_client(self, connection, address):
         logging.info(f"BusCOM : Déconnexion de {address}")
-        connection.close()
         with self.lock:
             self.clients = [client for client in self.clients if client[0] != connection]
+        try :
+            connection.close()
+        except Exception as e:
+            logging.error(f"BusCOM : Erreur lors de la déconnexion de {address} : {str(e)}")
+        
 
     def load_json(self, data):
         messages = []

@@ -11,7 +11,7 @@ import  os
 logging.basicConfig(filename='ihm_robot.log', level=logging.INFO, datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
 
 class IHM_Robot:
-    version = "1.049"
+    version = "1.050"
     points = 34
     def __init__(self):
         
@@ -147,6 +147,7 @@ class IHM_Robot:
             Button(self.screen, (280, 220, 200, 80), self.theme_path, "TEST Action", font, lambda : self.button_autres_action(1)),
             Button(self.screen, (520, 220, 240, 80), self.theme_path, "TEST Spécial", font, lambda : self.button_autres_action(2)),
             Button(self.screen, (280, 320, 200, 80), self.theme_path, "GET pos", font, lambda : self.button_autres_action(3)),
+            Button(self.screen, (280, 120, 200, 80), self.theme_path, "Terrain", font, lambda : self.button_autres_action(4))
         ]
         
         self.button_tests_mouvement = [
@@ -233,7 +234,7 @@ class IHM_Robot:
     
     def draw_object(self, objet):
         x = int(self.map_value(objet[0], 0, 3000, 40, 760))
-        y = int(self.map_value(objet[1], 2000, 0, 0, 480))
+        y = int(self.map_value(objet[1], 0, 2000, 0, 480))
         pygame.draw.circle(self.lcd, pygame.Color(
             255, 255, 0), (x * self.RATIO_x, y * self.RATIO_y), 10)
         pygame.draw.circle(self.lcd, pygame.Color(50, 50, 200), (x * self.RATIO_x,
@@ -269,6 +270,8 @@ class IHM_Robot:
     
     def button_autres_action(self, index):
         self.PAGE = 10 + index
+        if index == 14:
+            self.PAGE = 20
         time.sleep(0.2)
     
     def strategie_action(self, name, recaler=False):
@@ -492,8 +495,8 @@ class IHM_Robot:
 
     def page_points(self):
         # Dessine les points estimés par le robot
-        font = pygame.font.SysFont("Arial", 40)
-        draw_text_center(self.screen, f"{self.points} points :|", x=self.width//2, y=250, font=self.font, color=(255, 255, 255))
+        font = pygame.font.SysFont("Arial", 50)
+        draw_text_center(self.screen, f"{self.points} points :|", x=self.width//2, y=250, font=font, color=(255, 255, 255))
     
     def page_recalage(self):
         # Dessine le terrain de jeu en 720x480

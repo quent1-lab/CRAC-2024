@@ -349,7 +349,6 @@ class Strategie:
                 if self.state_lidar == "resume":
                     # Réactiver l'asservissement
                     #self.client_strat.add_to_send_list(self.client_strat.create_message(2, "desa", False)) 
-                    time.sleep(1)
                     logging.info("STRAT : Reprise de la stratégie")
                     deplac = item["Déplacement"]
                     wait_aknowlodege = []

@@ -16,7 +16,7 @@ class Serveur:
         self.host = host
         self.port = port
         self.clients = []  # Liste pour stocker les informations sur les clients (socket, address, ID)
-        self.client_names = ["Broadcast", "Serveur", "BusCAN", "Lidar","","","","","PAMI","IHM_R","IHM"]
+        self.client_names = ["Broadcast", "Serveur", "BusCAN", "Lidar","STRAT","","","","PAMI","IHM_R","IHM"]
 
         self.tasks = []
         self.stop_threads = False

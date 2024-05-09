@@ -236,7 +236,7 @@ class LidarScanner:
             logging.error(f"Error in getting LiDAR status: {e}")
         
         i = 0
-        
+        Time = time.time()
         while self.scanning:
             self.objets = []
             try:
@@ -263,6 +263,7 @@ class LidarScanner:
                                 self.client_socket.add_to_send_list(self.client_socket.create_message(4, "lidar", {"etat": "pause"}))
                                 self.en_mvt = False
                                 self.state_robot = "pause"
+                                Time = time.time()
                                 logging.info(f"Objet détecté à {distance_objet} mm")
                                 
                             elif not self.en_mvt and distance_objet > 700 and self.state_robot == "pause":
@@ -270,7 +271,7 @@ class LidarScanner:
                                 self.state_robot = "move"
                                 logging.info(f"Objet hors de portée à {distance_objet} mm")
                         
-                        elif len(new_objets) == 0 and not self.en_mvt and self.state_robot == "pause":
+                        elif len(new_objets) == 0 and not self.en_mvt and self.state_robot == "pause" and (time.time() - Time) > 5:
                             self.client_socket.add_to_send_list(self.client_socket.create_message(4, "lidar", {"etat": "resume"}))
                             self.state_robot = "move"
                             logging.info(f"Objet hors de portée")

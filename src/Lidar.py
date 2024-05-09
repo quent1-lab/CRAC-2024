@@ -61,7 +61,7 @@ class LidarScanner:
                 continue
             
             # Filtre tous les points qui sont à moins de 200 mm du robot
-            if distance <  200 :
+            if distance <  250 :
                 continue
             
             angle = point[1]
@@ -250,7 +250,7 @@ class LidarScanner:
                         # détecter les objets
                         new_objets = self.detect_objects(self.new_scan)
                         logging.info(f"Objets détectés: {len(new_objets)}")
-                        self.client_socket.add_to_send_list(self.client_socket.create_message(9, "objects", self.generate_JSON_Objets(new_objets)))
+                        self.client_socket.add_to_send_list(self.client_socket.create_message(10, "objects", self.generate_JSON_Objets(new_objets)))
                         # Si le premier objet détecté est à moins de 500 mm du robot et que le robot est en mouvement 
                         # alors on arrête le robot
                         """if len(new_objets) > 0:

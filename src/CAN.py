@@ -218,6 +218,9 @@ class ComCAN:
                     byte = data["byte1"]
                     dataCan = struct.pack('d', byte)
                     messageCan = can.Message(arbitration_id=commande, data=dataCan, is_extended_id=False)
+                elif commande == 0x030:
+                    id = data["byte1"]
+                    # Format des données : id (B), x (short), y (short), theta (short)
                 else:
                     # byte correspond à la liste des données à envoyer
                     byte = list(data.items())[1:]  # Convertir le dictionnaire en liste et supprimer la première valeur

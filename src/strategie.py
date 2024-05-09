@@ -234,6 +234,16 @@ class Strategie:
                     self.state_strat = "pause"
                     continue
                 
+                # Chargement de la vitesse
+                """if "Vitesse" in item:
+                    if item["Vitesse"] == "Rapide":
+                        self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 0x215, "byte1": 0, "byte2": 600}))
+                    elif item["Vitesse"] == "Lente":
+                        self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 0x215, "byte1": 0, "byte2": 200}))
+                    elif item["Vitesse"] == "Normale":
+                        self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 0x215, "byte1": 0, "byte2": 400}))"""
+                        
+                
                 if "Coord" in deplacement:
                     self.move(deplacement,wait_aknowlodege)
                 elif "Rotation" in deplacement:

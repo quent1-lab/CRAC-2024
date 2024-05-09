@@ -66,7 +66,7 @@ class LidarScanner:
             
             angle = point[1]
             
-            if self.sens == "avant" and (angle < 300 or angle > 60):
+            if self.sens == "avant" and (angle < 300 and angle > 60):
                 logging.info(f"Angle éliminé: {angle}")
                 continue
             elif self.sens == "arriere" and (120 > angle < 240):

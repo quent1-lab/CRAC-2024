@@ -270,7 +270,7 @@ class IHM_Robot:
     
     def button_autres_action(self, index):
         self.PAGE = 10 + index
-        if index == 14:
+        if index == 4:
             self.PAGE = 20
         time.sleep(0.2)
     

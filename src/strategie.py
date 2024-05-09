@@ -202,7 +202,7 @@ class Strategie:
         # Excecute la stratégie de façon non bloquante
         
         while self.strategie_is_running:
-            if self.action >= len(self.strategie):
+            if self.action > len(self.strategie):
                 self.state_strat = "end"
                 self.strategie_is_running = False
                 self.client_strat.add_to_send_list(self.client_strat.create_message(0, "end", None))
@@ -312,6 +312,11 @@ class Strategie:
                     self.state_strat = "idle"
                     self.liste_aknowledge = []
                     logging.info("STRAT : Fin de l'attente des acquittements des actions après le mouvement")
+                    if self.action == len(self.strategie):
+                        self.state_strat = "end"
+                        self.strategie_is_running = False
+                        self.client_strat.add_to_send_list(self.client_strat.create_message(0, "end", None))
+                        break
             
             elif self.state_strat == "pause":
                 if self.state_lidar == "resume":

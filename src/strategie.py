@@ -138,7 +138,8 @@ class Strategie:
         
         logging.info("STRAT : Attente du début de la partie")
         
-        self.JACK.wait_for_press() # Attend que le jack soit relaché
+        while self.JACK.value == 0:
+            time.sleep(0.1)
         
         logging.info("STRAT : Démarrage de la stratégie")
         

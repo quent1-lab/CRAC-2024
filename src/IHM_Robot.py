@@ -11,7 +11,7 @@ import  os
 logging.basicConfig(filename='ihm_robot.log', level=logging.INFO, datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
 
 class IHM_Robot:
-    version = "1.053"
+    version = "1.054"
     points = 34
     def __init__(self):
         

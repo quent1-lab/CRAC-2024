@@ -1,0 +1,167 @@
+{
+    "1": {
+        "D\u00e9placement": {
+            "Ligne_Droite": -30,
+            "aknowledge": 277
+        },
+        "Action": {},
+        "Special": {}
+    },
+    "2": {
+        "D\u00e9placement": {
+            "Rotation": 900,
+            "aknowledge": 278
+        },
+        "Action": {},
+        "Special": {}
+    },
+    "3": {
+        "D\u00e9placement": {
+            "Ligne_Droite": 400,
+            "aknowledge": 277
+        },
+        "Action": {},
+        "Special": {}
+    },
+    "4": {
+        "D\u00e9placement": {
+            "Coord": {
+                "X": 685,
+                "Y": 687,
+                "T": 71,
+                "S": "0"
+            },
+            "aknowledge": 276
+        },
+        "Action": {
+            "_PG_av": {
+                "id": "0x1A0",
+                "en_mvt": true,
+                "ordre": 2,
+                "akn": 380,
+                "str": "Ouvert"
+            }
+        },
+        "Special": {}
+    },
+    "5": {
+        "D\u00e9placement": {
+            "Coord": {
+                "X": 1000,
+                "Y": 687,
+                "T": 0,
+                "S": "0"
+            },
+            "aknowledge": 276
+        },
+        "Action": {
+            "_PG_av": {
+                "id": "0x1A0",
+                "en_mvt": false,
+                "ordre": 3,
+                "akn": 380,
+                "str": "Plante"
+            }
+        },
+        "Special": {}
+    },
+    "6": {
+        "D\u00e9placement": {
+            "Coord": {
+                "X": 996,
+                "Y": 931,
+                "T": -900,
+                "S": "0"
+            },
+            "aknowledge": 276
+        },
+        "Action": {
+            "_PG_ar": {
+                "id": "0x1A1",
+                "en_mvt": true,
+                "ordre": 2,
+                "akn": 390,
+                "str": "Ouvert"
+            }
+        },
+        "Special": {}
+    },
+    "7": {
+        "D\u00e9placement": {
+            "Ligne_Droite": -450,
+            "aknowledge": 277
+        },
+        "Action": {
+            "_PG_ar": {
+                "id": "0x1A1",
+                "en_mvt": false,
+                "ordre": 3,
+                "akn": 390,
+                "str": "Plante"
+            }
+        },
+        "Special": {}
+    },
+    "8": {
+        "D\u00e9placement": {
+            "Coord": {
+                "X": 171,
+                "Y": 1743,
+                "T": -900,
+                "S": "0"
+            },
+            "aknowledge": 276
+        },
+        "Action": {},
+        "Special": {}
+    },
+    "9": {
+        "D\u00e9placement": {
+            "Ligne_Droite": 300,
+            "aknowledge": 277
+        },
+        "Action": {},
+        "Special": {}
+    },
+    "10": {
+        "D\u00e9placement": {
+            "Coord": {
+                "X": 570,
+                "Y": 1392,
+                "T": -72,
+                "S": "0"
+            },
+            "aknowledge": 276
+        },
+        "Action": {},
+        "Special": {}
+    },
+    "11": {
+        "D\u00e9placement": {
+            "Coord": {
+                "X": 224,
+                "Y": 1793,
+                "T": -1800,
+                "S": "0"
+            },
+            "aknowledge": 276
+        },
+        "Action": {
+            "_PG_ar": {
+                "id": "0x1A1",
+                "en_mvt": false,
+                "ordre": 2,
+                "akn": 390,
+                "str": "Ouvert"
+            },
+            "_PG_av": {
+                "id": "0x1A0",
+                "en_mvt": false,
+                "ordre": 2,
+                "akn": 380,
+                "str": "Ouvert"
+            }
+        },
+        "Special": {}
+    }
+}

@@ -408,7 +408,7 @@ class Strategie:
             angle = (angle + 180) % 360
         
         akn.append(deplacement["aknowledge"])
-        
+        logging.info(f"STRAT : Envoi de la commande de rotation : {angle}")
         # Envoyez la position au CAN
         self.client_strat.add_to_send_list(self.client_strat.create_message(2, "rotation", {"angle": angle}))
         
@@ -419,7 +419,7 @@ class Strategie:
         distance = deplacement["Ligne_Droite"]
         
         akn.append(deplacement["aknowledge"])
-        
+        logging.info(f"STRAT : Envoi de la commande de déplacement en ligne droite : {distance}")
         self.client_strat.add_to_send_list(self.client_strat.create_message(3, "move", {"etat": True}))
         
         if distance < 0:

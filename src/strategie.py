@@ -278,12 +278,12 @@ class Strategie:
                     if item["Vitesse"] != self.ancienne_vit:
                         logging.info(f"STRAT : Changement de vitesse : {item['Vitesse']}")
                         if item["Vitesse"] == "Rapide":
-                            self.client_strat.add_to_send_list(self.client_strat.create_message(2, "set_vit",{ "vitesse": 800}))
+                            self.client_strat.add_to_send_list(self.client_strat.create_message(2, "set_vit",{ "vitesse": 1000}))
                         elif item["Vitesse"] == "Lent":
-                            self.client_strat.add_to_send_list(self.client_strat.create_message(2, "set_vit",{ "vitesse": 20}))
+                            self.client_strat.add_to_send_list(self.client_strat.create_message(2, "set_vit",{ "vitesse": 10}))
                         elif item["Vitesse"] == "Normal":
-                            self.client_strat.add_to_send_list(self.client_strat.create_message(2, "set_vit",{ "vitesse": 400}))
-                    time.sleep(0.1)
+                            self.client_strat.add_to_send_list(self.client_strat.create_message(2, "set_vit",{ "vitesse": 500}))
+                    time.sleep(0.05)
                 
                 if "Coord" in deplacement:
                     self.move(deplacement,wait_aknowlodege)

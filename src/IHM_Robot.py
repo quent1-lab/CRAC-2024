@@ -715,12 +715,15 @@ class IHM_Robot:
                 if len(liste_strategies) > 8:
                     liste_strategies = liste_strategies[-8:]
             
-                # Vérifie si la stratégie existe
-                if f"strategie_{id}.json" not in liste_strategies:
-                    # Si la stratégie n'existe pas, on enregistre la nouvelle stratégie
                     
-                    # Récupère le dernier numéro de stratégie pour enregistrer la nouvelle stratégie
-                    num_strategie = 0
+                # Récupère le dernier numéro de stratégie pour enregistrer la nouvelle stratégie
+                num_strategie = 0
+                if len(liste_strategies) == 0:
+                    path = self.path_strat + f"/strategie_1.json"
+                    
+                    with open(path, "w") as f:
+                        f.write(json.dumps(strategie))
+                else:
                     for strategy in liste_strategies:
                         try :
                             num = int(strategy.split("_")[1].split(".")[0])
@@ -735,10 +738,10 @@ class IHM_Robot:
                     with open(path, "w") as f:
                         f.write(json.dumps(strategie))
                 
-                else:
+                """else:
                     # Si la stratégie existe, on met à jour la stratégie existante
                     with open(self.path_strat + f"/strategie_{id}.json", "w") as f:
-                        f.write(json.dumps(strategie))
+                        f.write(json.dumps(strategie))"""
                 
                 liste_strategies = os.listdir(self.path_strat)
                 x_depart = 10

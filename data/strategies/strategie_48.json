@@ -74,9 +74,9 @@
             "_PG_ar": {
                 "id": "0x1A1",
                 "en_mvt": false,
-                "ordre": 1,
+                "ordre": 3,
                 "akn": 390,
-                "str": "Ferme"
+                "str": "Plante"
             }
         },
         "Special": {},

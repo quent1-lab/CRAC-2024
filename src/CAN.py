@@ -247,8 +247,8 @@ class ComCAN:
             
             elif message["cmd"] == "set_vit":
                 data = message["data"]
-                # Format des données : type (entier non signer 1 octet), vitesse (short)
-                dataCan = struct.pack('B', 0) + struct.pack('h', data["vitesse"])
+                # Format des données : vitesse (short)
+                dataCan = struct.pack('h', data["vitesse"])
                 messageCan = can.Message(arbitration_id=0x29, data=dataCan, is_extended_id=False)
                 self.send(messageCan)
 

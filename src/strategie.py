@@ -224,7 +224,7 @@ class Strategie:
 
             # Vérification de l'état du robot. Si le robot est à l'arrêt plus de 6 secondes, on relance l'action précédente
             # En fonction des coordonnées du robot
-            if (time.time() - self.temps_pause) > 6:
+            if (time.time() - self.temps_pause) > 4:
                 
                 if self.coord_prec != [0,0]:
                     # Si le robot n'a pas bougé d'un rayon de 3cm depuis 6 secondes, on relance l'action précédente
@@ -276,9 +276,10 @@ class Strategie:
                 # Chargement de la vitesse
                 if "Vitesse" in item:
                     if item["Vitesse"] != self.ancienne_vit:
+                        self.ancienne_vit = item["Vitesse"]
                         logging.info(f"STRAT : Changement de vitesse : {item['Vitesse']}")
                         if item["Vitesse"] == "Rapide":
-                            self.client_strat.add_to_send_list(self.client_strat.create_message(2, "set_vit",{ "vitesse": 1000}))
+                            self.client_strat.add_to_send_list(self.client_strat.create_message(2, "set_vit",{ "vitesse": 1200}))
                         elif item["Vitesse"] == "Lent":
                             self.client_strat.add_to_send_list(self.client_strat.create_message(2, "set_vit",{ "vitesse": 10}))
                         elif item["Vitesse"] == "Normal":

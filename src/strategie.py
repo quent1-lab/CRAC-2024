@@ -14,6 +14,9 @@ class Strategie:
     def __init__(self, _path = None):
         self.path_strat = _path
         self.strategie = None
+        self.temps_pause = 0
+        self.coord_prec = [0,0]
+        self.lidar_stop = False
         
         # Vérification de l'existence du fichier
         if self.path_strat:
@@ -78,7 +81,8 @@ class Strategie:
             elif message["cmd"] == "lidar":
                 self.state_lidar = message["data"]["etat"]
                 
-                if self.state_lidar == "pause":              
+                if self.state_lidar == "pause":      
+                    lidar_stop = True        
                     if self.type_mvt == "XYT" or self.type_mvt == "ligne":
                         logging.info("STRAT : Pause du robot en mvt")
                         # Arrêter le robot
@@ -213,6 +217,31 @@ class Strategie:
         # Excecute la stratégie de façon non bloquante
         
         while self.strategie_is_running:
+
+            # Vérification de l'état du robot. Si le robot est à l'arrêt plus de 6 secondes, on relance l'action précédente
+            # En fonction des coordonnées du robot
+            if time.time() - self.temps_pause > 6:
+                
+                if self.coord_prec != [0,0]:
+                    # Si le robot n'a pas bougé d'un rayon de 3cm depuis 6 secondes, on relance l'action précédente
+                    distance_ = math.sqrt((self.coord_prec[0] - self.ROBOT_coord[0])**2 + (self.coord_prec[1] - self.ROBOT_coord[1])**2)
+                    if distance_ < 30:
+                        if self.lidar_stop:
+                            self.action -= 1
+                            self.action_actuelle["Item"] = self.strategie[str(self.action)]
+                            self.action_actuelle["state"] = "idle"
+                            self.state_strat = "deplac"
+                            self.liste_aknowledge = []
+                            wait_aknowlodege = []
+                            self.lidar_stop = False
+                            logging.info("STRAT : Relance de l'action précédente")
+                    elif self.ldiar_stop and distance > 50:
+                        self.lidar_stop = False
+                        logging.info("STRAT : Flag lidar stop désactivé")
+
+                    self.temps_pause = time.time()
+                    self.coord_prec = self.ROBOT_coord[:2]
+
             
             if self.state_strat == "idle":
                 # Etat d'attente et de récupération de la nouvelle action

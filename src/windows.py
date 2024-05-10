@@ -312,7 +312,7 @@ class IHM_Action_Aux:
             },
             "Action" : {},
             "Special" :{},
-            "Vitesse" : "Normal"
+            "Vitesse" : "Normal",
         }
 
         for label_text, box_info in box_infos.items():

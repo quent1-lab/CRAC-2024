@@ -266,33 +266,6 @@ class Strategie:
             elif self.state_strat == "deplac":
 
                 # Etat de déplacement
-                if len(item["Recalage"]) > 0:
-                    # Envoi de la commande de recalage
-                    # Ordre de recalage
-                    action = item["Recalage"]
-                    ordre = action["ordre"]
-                    sens = -1 if ordre % 2 == 0 else 1
-                    mode = 0
-
-                    # Déterminer la valeur de recalage en fonction des coordonnées du robot
-                    if ordre % 2 == 0:
-                        # Recalage en Y
-                        mode = 2
-                        if self.ROBOT_coord[1] <= 1000:
-                            recal = 134
-                        else:
-                            recal = 1866
-                    else:
-                        # Recalage en X
-                        mode = 1
-                        if self.ROBOT_coord[0] <= 1500:
-                            recal = 134
-                        else:
-                            recal = 2866
-
-                    self.client.add_to_send_list(self.client.create_message(2, "recalage", {"distance": distance * sens, "mode": mode, "recalage": recal}))
-                    self.wait_for_aknowledge(action["aknowledge"])
-
                 deplacement = item["Déplacement"]
                 self.action_actuelle["state"] = "deplac"
                 
@@ -303,6 +276,7 @@ class Strategie:
                 # Chargement de la vitesse
                 if "Vitesse" in item:
                     if item["Vitesse"] != self.ancienne_vit:
+                        logging.info(f"STRAT : Changement de vitesse : {item['Vitesse']}")
                         if item["Vitesse"] == "Rapide":
                             self.client_strat.add_to_send_list(self.client_strat.create_message(2, "set_vit",{ "vitesse": 600}))
                         elif item["Vitesse"] == "Lent":
@@ -329,6 +303,32 @@ class Strategie:
                 
                 try:
                     for key, act in action.items():
+                        if act["id"] == 0x24:
+                            # Recalage
+                            action = item["Recalage"]
+                            ordre = action["ordre"]
+                            sens = -1 if ordre % 2 == 0 else 1
+                            mode = 0
+
+                            # Déterminer la valeur de recalage en fonction des coordonnées du robot
+                            if ordre % 2 == 0:
+                                # Recalage en Y
+                                mode = 2
+                                if self.ROBOT_coord[1] <= 1000:
+                                    recal = 134
+                                else:
+                                    recal = 1866
+                            else:
+                                # Recalage en X
+                                mode = 1
+                                if self.ROBOT_coord[0] <= 1500:
+                                    recal = 134
+                                else:
+                                    recal = 2866
+                            logging.info(f"STRAT : Recalage en cours : sens = {sens}, mode = {mode}, recal = {recal}")
+                            self.client_strat.add_to_send_list(self.client_strat.create_message(2, "recalage", {"distance": distance * sens, "mode": mode, "recalage": recal}))
+                            self.wait_for_aknowledge(action["aknowledge"])
+
                         if act["en_mvt"] == True:
                             action_en_mvt.append(action[key])
                 except Exception as e:

@@ -57,7 +57,7 @@ class LidarScanner:
             
             distance = point[2]
             
-            if distance > 800:
+            if distance > 700:
                 continue
             
             # Filtre tous les points qui sont à moins de 200 mm du robot
@@ -258,7 +258,7 @@ class LidarScanner:
                             distance_objet = math.sqrt((objet.x - self.ROBOT.x)**2 + (objet.y - self.ROBOT.y)**2)
                             # Déterminé ou est l'objet par rapport au robot par rapport au coordonnées de l'objet
                             
-                            if distance_objet < 500 and self.en_mvt and self.state_robot == "move":
+                            if distance_objet < 450 and self.en_mvt and self.state_robot == "move":
                                 self.client_socket.add_to_send_list(self.client_socket.create_message(4, "lidar", {"etat": "pause"}))
                                 self.en_mvt = False
                                 self.state_robot = "pause"

@@ -677,8 +677,12 @@ class IHM_Robot:
                 if data["etat"] == 1:
                     if 0x11 not in self.error:
                         self.strategie_is_running = False
+                        self.recalage_is_playing = False
                         self.robot_move = False
-                        self.error.append(0x11)
+                        if not self.is_started:
+                            self.error.append(0x11)
+                        else:
+                            self.PAGE = 21
                         self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 503, "byte1": 0}))
                 elif data["etat"] == 0:
                     if 0x11 in self.error:

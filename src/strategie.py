@@ -366,7 +366,7 @@ class Strategie:
 
                             logging.info(f"STRAT : Recalage en cours : sens = {sens}, mode = {mode}, recal = {recal}")
                             self.client_strat.add_to_send_list(self.client_strat.create_message(2, "recalage", {"distance": 300 * sens, "mode": mode, "recalage": recal}))
-                            self.wait_for_aknowledge(act["aknowledge"])
+                            self.wait_for_aknowledge(act["akn"])
                             logging.info("STRAT : Fin du recalage")
 
                         elif act["en_mvt"] == False:

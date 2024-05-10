@@ -226,19 +226,19 @@ class Strategie:
                     # Si le robot n'a pas bougé d'un rayon de 3cm depuis 6 secondes, on relance l'action précédente
                     distance_ = math.sqrt((self.coord_prec[0] - self.ROBOT_coord[0])**2 + (self.coord_prec[1] - self.ROBOT_coord[1])**2)
                     logging.info(f"STRAT : Distance parcourue en 6s : {distance_}")
-                    if distance_ < 30:
-                        if self.lidar_stop:
-                            self.action -= 1
-                            self.action_actuelle["Item"] = self.strategie[str(self.action)]
-                            self.action_actuelle["state"] = "idle"
-                            self.state_strat = "deplac"
-                            self.liste_aknowledge = []
-                            wait_aknowlodege = []
+                    if distance_ < 10:
+                        self.liste_aknowledge = []
+                        wait_aknowlodege = []
+                        if self.state_strat == "wait_aknowledge_apres_mvt":
+                            continue
+                        elif self.state_strat == "deplac":
+                            #self.action -= 1
                             self.lidar_stop = False
                             logging.info("STRAT : Relance de l'action précédente")
-                    elif self.lidar_stop:
-                        self.lidar_stop = False
-                        logging.info("STRAT : Flag lidar stop désactivé")
+                        elif self.state_strat == "pause":
+                            self.state_strat = "deplac"
+                            logging.info("STRAT : Relance de la pause")
+                        
 
                 self.temps_pause = time.time()
                 self.coord_prec = self.ROBOT_coord[:2]

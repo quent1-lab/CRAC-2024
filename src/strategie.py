@@ -220,11 +220,12 @@ class Strategie:
 
             # Vérification de l'état du robot. Si le robot est à l'arrêt plus de 6 secondes, on relance l'action précédente
             # En fonction des coordonnées du robot
-            if time.time() - self.temps_pause > 6:
+            if (time.time() - self.temps_pause) > 6:
                 
                 if self.coord_prec != [0,0]:
                     # Si le robot n'a pas bougé d'un rayon de 3cm depuis 6 secondes, on relance l'action précédente
                     distance_ = math.sqrt((self.coord_prec[0] - self.ROBOT_coord[0])**2 + (self.coord_prec[1] - self.ROBOT_coord[1])**2)
+                    logging.info(f"STRAT : Distance parcourue en 6s : {distance_}")
                     if distance_ < 30:
                         if self.lidar_stop:
                             self.action -= 1
@@ -239,8 +240,8 @@ class Strategie:
                         self.lidar_stop = False
                         logging.info("STRAT : Flag lidar stop désactivé")
 
-                    self.temps_pause = time.time()
-                    self.coord_prec = self.ROBOT_coord[:2]
+                self.temps_pause = time.time()
+                self.coord_prec = self.ROBOT_coord[:2]
 
             
             if self.state_strat == "idle":

@@ -88,7 +88,7 @@ class IHM:
         self.IHM_Robot = 9
         self.IHM = 10
         self.client_socket = Client("192.168.22.101", 22050, self.IHM)
-
+        self.image = pygame.image.load("data/Terrain_Jeu.png")
         pygame.font.init()
         self.font = pygame.font.SysFont("Arial", 20)
         pygame.mouse.set_visible(True)
@@ -167,11 +167,9 @@ class IHM:
         self.lcd.blit(robot_surface, robot_surface_rect)
         
     def draw_image(self, image_path):
-        # Charge l'image à partir du chemin du fichier
-        image = pygame.image.load(image_path)
 
         # Redimensionne l'image
-        image = pygame.transform.scale(image, ((self.FIELD_SIZE[0] - 2 * self.BORDER_DISTANCE) * self.X_RATIO,
+        image = pygame.transform.scale(self.image, ((self.FIELD_SIZE[0] - 2 * self.BORDER_DISTANCE) * self.X_RATIO,
                                                (self.FIELD_SIZE[1] - 2 * self.BORDER_DISTANCE) * self.Y_RATIO))
 
         # Dessine l'image à la position (x, y)

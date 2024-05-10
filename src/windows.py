@@ -312,7 +312,6 @@ class IHM_Action_Aux:
             },
             "Action" : {},
             "Special" :{},
-            "Vitesse" : "Normal"
         }
 
         for label_text, box_info in box_infos.items():
@@ -623,9 +622,6 @@ class IHM_Action_Aux:
                             "akn" : self.config["Recalage"]["aknowledge"],
                             "str" : texte
                         }
-                        
-                elif id == "#l_Vitesse":
-                    self.data["Vitesse"] = texte
                         
                                                         
             elif event.user_type == pygame_gui.UI_TEXT_ENTRY_CHANGED: # Si le texte change

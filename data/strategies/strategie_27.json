@@ -1,0 +1,129 @@
+{
+    "1": {
+        "D\u00e9placement": {
+            "Coord": {
+                "X": 860,
+                "Y": 542,
+                "T": 420,
+                "S": "0"
+            },
+            "aknowledge": 276
+        },
+        "Action": {
+            "_PG_av": {
+                "id": "0x1A0",
+                "en_mvt": true,
+                "ordre": 2,
+                "akn": 380,
+                "str": "Ouvert"
+            }
+        },
+        "Special": {},
+        "Vitesse": "Normal"
+    },
+    "2": {
+        "D\u00e9placement": {
+            "Coord": {
+                "X": 1108,
+                "Y": 794,
+                "T": 480,
+                "S": "0"
+            },
+            "aknowledge": 276
+        },
+        "Action": {
+            "_PG_av": {
+                "id": "0x1A0",
+                "en_mvt": false,
+                "ordre": 1,
+                "akn": 380,
+                "str": "Ferme"
+            }
+        },
+        "Special": {},
+        "Vitesse": "Normal"
+    },
+    "3": {
+        "D\u00e9placement": {
+            "Coord": {
+                "X": 1818,
+                "Y": 1183,
+                "T": 2080,
+                "S": "0"
+            },
+            "aknowledge": 276
+        },
+        "Action": {
+            "_PG_ar": {
+                "id": "0x1A1",
+                "en_mvt": false,
+                "ordre": 2,
+                "akn": 390,
+                "str": "Ouvert"
+            }
+        },
+        "Special": {},
+        "Vitesse": "Normal"
+    },
+    "4": {
+        "D\u00e9placement": {
+            "Ligne_Droite": -400,
+            "aknowledge": 277
+        },
+        "Action": {
+            "_PG_ar": {
+                "id": "0x1A1",
+                "en_mvt": false,
+                "ordre": 1,
+                "akn": 390,
+                "str": "Ferme"
+            }
+        },
+        "Special": {},
+        "Vitesse": "Normal"
+    },
+    "5": {
+        "D\u00e9placement": {
+            "Coord": {
+                "X": 2621,
+                "Y": 1152,
+                "T": 1420,
+                "S": "0"
+            },
+            "aknowledge": 276
+        },
+        "Action": {
+            "_PG_ar": {
+                "id": "0x1A1",
+                "en_mvt": false,
+                "ordre": 2,
+                "akn": 390,
+                "str": "Ouvert"
+            }
+        },
+        "Special": {},
+        "Vitesse": "Normal"
+    },
+    "6": {
+        "D\u00e9placement": {
+            "Coord": {
+                "X": 259,
+                "Y": 1762,
+                "T": 3660,
+                "S": "0"
+            },
+            "aknowledge": 276
+        },
+        "Action": {
+            "_PG_ar": {
+                "id": "0x1A1",
+                "en_mvt": true,
+                "ordre": 1,
+                "akn": 390,
+                "str": "Ferme"
+            }
+        },
+        "Special": {},
+        "Vitesse": "Normal"
+    }
+}

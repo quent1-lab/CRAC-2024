@@ -241,13 +241,13 @@ class Strategie:
                     continue
                 
                 # Chargement de la vitesse
-                if "Vitesse" in item:
+                """if "Vitesse" in item:
                     if item["Vitesse"] == "Rapide":
                         self.client_strat.add_to_send_list(self.client_strat.create_message(2, "set_vit",{ "vitesse": 600}))
                     elif item["Vitesse"] == "Lent":
                         self.client_strat.add_to_send_list(self.client_strat.create_message(2, "set_vit",{ "vitesse": 200}))
                     elif item["Vitesse"] == "Normal":
-                        self.client_strat.add_to_send_list(self.client_strat.create_message(2, "set_vit",{ "vitesse": 400}))
+                        self.client_strat.add_to_send_list(self.client_strat.create_message(2, "set_vit",{ "vitesse": 400}))"""
                 
                 if "Coord" in deplacement:
                     self.move(deplacement,wait_aknowlodege)

@@ -344,8 +344,7 @@ class Strategie:
                         logging.info(f"STRAT : Action : {act}")
                         if act["id"] == "0x24":
                             # Recalage
-                            action = item["Action"]["Recalage"]
-                            ordre = action["ordre"]
+                            ordre = act["ordre"]
                             sens = -1 if ordre % 2 == 0 else 1
                             mode = 0
 
@@ -367,7 +366,7 @@ class Strategie:
 
                             logging.info(f"STRAT : Recalage en cours : sens = {sens}, mode = {mode}, recal = {recal}")
                             self.client_strat.add_to_send_list(self.client_strat.create_message(2, "recalage", {"distance": distance * sens, "mode": mode, "recalage": recal}))
-                            self.wait_for_aknowledge(action["aknowledge"])
+                            self.wait_for_aknowledge(act["aknowledge"])
                             logging.info("STRAT : Fin du recalage")
 
                         elif act["en_mvt"] == False:

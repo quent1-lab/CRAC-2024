@@ -223,7 +223,7 @@ class Strategie:
 
             # Vérification de l'état du robot. Si le robot est à l'arrêt plus de 6 secondes, on relance l'action précédente
             # En fonction des coordonnées du robot
-            if (time.time() - self.temps_pause) > 3:
+            if (time.time() - self.temps_pause) > 6:
                 
                 if self.coord_prec != [0,0]:
                     # Si le robot n'a pas bougé d'un rayon de 3cm depuis 6 secondes, on relance l'action précédente

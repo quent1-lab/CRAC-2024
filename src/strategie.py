@@ -228,7 +228,7 @@ class Strategie:
                 
                 if self.coord_prec != [0,0]:
                     # Si le robot n'a pas bougé d'un rayon de 3cm depuis 6 secondes, on relance l'action précédente
-                    distance_ = math.sqrt((self.coord_prec[0] - self.ROBOT_coord[0])**2 + (self.coord_prec[1] - self.ROBOT_coord[1])**2)
+                    distance_ = int(math.sqrt((self.coord_prec[0] - self.ROBOT_coord[0])**2 + (self.coord_prec[1] - self.ROBOT_coord[1])**2))
                     logging.info(f"STRAT : Distance parcourue en 6s : {distance_}")
                     if distance_ == 0:
                         
@@ -304,32 +304,6 @@ class Strategie:
                 
                 try:
                     for key, act in action.items():
-                        if act["id"] == 0x24:
-                            # Recalage
-                            action = item["Recalage"]
-                            ordre = action["ordre"]
-                            sens = -1 if ordre % 2 == 0 else 1
-                            mode = 0
-
-                            # Déterminer la valeur de recalage en fonction des coordonnées du robot
-                            if ordre % 2 == 0:
-                                # Recalage en Y
-                                mode = 2
-                                if self.ROBOT_coord[1] <= 1000:
-                                    recal = 134
-                                else:
-                                    recal = 1866
-                            else:
-                                # Recalage en X
-                                mode = 1
-                                if self.ROBOT_coord[0] <= 1500:
-                                    recal = 134
-                                else:
-                                    recal = 2866
-                            logging.info(f"STRAT : Recalage en cours : sens = {sens}, mode = {mode}, recal = {recal}")
-                            self.client_strat.add_to_send_list(self.client_strat.create_message(2, "recalage", {"distance": distance * sens, "mode": mode, "recalage": recal}))
-                            self.wait_for_aknowledge(action["aknowledge"])
-
                         if act["en_mvt"] == True:
                             action_en_mvt.append(action[key])
                 except Exception as e:
@@ -367,7 +341,35 @@ class Strategie:
                 
                 try:
                     for key, act in action.items():
-                        if act["en_mvt"] == False:
+                        if act["id"] == 0x24:
+                            # Recalage
+                            action = item["Action"]["Recalage"]
+                            ordre = action["ordre"]
+                            sens = -1 if ordre % 2 == 0 else 1
+                            mode = 0
+
+                            # Déterminer la valeur de recalage en fonction des coordonnées du robot
+                            if ordre % 2 == 0:
+                                # Recalage en Y
+                                mode = 2
+                                if self.ROBOT_coord[1] <= 1000:
+                                    recal = 134
+                                else:
+                                    recal = 1866
+                            else:
+                                # Recalage en X
+                                mode = 1
+                                if self.ROBOT_coord[0] <= 1500:
+                                    recal = 134
+                                else:
+                                    recal = 2866
+
+                            logging.info(f"STRAT : Recalage en cours : sens = {sens}, mode = {mode}, recal = {recal}")
+                            self.client_strat.add_to_send_list(self.client_strat.create_message(2, "recalage", {"distance": distance * sens, "mode": mode, "recalage": recal}))
+                            self.wait_for_aknowledge(action["aknowledge"])
+                            logging.info("STRAT : Fin du recalage")
+
+                        elif act["en_mvt"] == False:
                             action_apres_mvt.append(action[key])
                 except Exception as e:
                     logging.error(f"Erreur lors de la lecture des actions : {str(e)}")

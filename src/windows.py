@@ -621,6 +621,7 @@ class IHM_Action_Aux:
                             "id": self.config["Recalage"]["id"],
                             "ordre": self.config["Recalage"]["ordre"][texte],
                             "akn" : self.config["Recalage"]["aknowledge"],
+                            "en_mvt" : False,
                             "str" : texte
                         }
                 

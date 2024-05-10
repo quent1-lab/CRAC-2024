@@ -37,6 +37,7 @@ class Strategie:
                                 "state": "idle",}
         self.type_mvt = "immobile"
         self.action = 0
+        self.ancienne_vit = "Normal"
         
         self.ETAT = 0
         self.EQUIPE = "jaune"
@@ -241,7 +242,6 @@ class Strategie:
                             logging.info("STRAT : Relance de la pause")
                         self.lidar_stop = False
                         
-
                 self.temps_pause = time.time()
                 self.coord_prec = self.ROBOT_coord[:2]
 
@@ -264,7 +264,35 @@ class Strategie:
                 wait_aknowlodege = []
                 
             elif self.state_strat == "deplac":
+
                 # Etat de déplacement
+                if len(item["Recalage"]) > 0:
+                    # Envoi de la commande de recalage
+                    # Ordre de recalage
+                    action = item["Recalage"]
+                    ordre = action["ordre"]
+                    sens = -1 if ordre % 2 == 0 else 1
+                    mode = 0
+
+                    # Déterminer la valeur de recalage en fonction des coordonnées du robot
+                    if ordre % 2 == 0:
+                        # Recalage en Y
+                        mode = 2
+                        if self.ROBOT_coord[1] <= 1000:
+                            recal = 134
+                        else:
+                            recal = 1866
+                    else:
+                        # Recalage en X
+                        mode = 1
+                        if self.ROBOT_coord[0] <= 1500:
+                            recal = 134
+                        else:
+                            recal = 2866
+
+                    self.client.add_to_send_list(self.client.create_message(2, "recalage", {"distance": distance * sens, "mode": mode, "recalage": recal}))
+                    self.wait_for_aknowledge(action["aknowledge"])
+
                 deplacement = item["Déplacement"]
                 self.action_actuelle["state"] = "deplac"
                 
@@ -273,13 +301,15 @@ class Strategie:
                     continue
                 
                 # Chargement de la vitesse
-                """if "Vitesse" in item:
-                    if item["Vitesse"] == "Rapide":
-                        self.client_strat.add_to_send_list(self.client_strat.create_message(2, "set_vit",{ "vitesse": 600}))
-                    elif item["Vitesse"] == "Lent":
-                        self.client_strat.add_to_send_list(self.client_strat.create_message(2, "set_vit",{ "vitesse": 200}))
-                    elif item["Vitesse"] == "Normal":
-                        self.client_strat.add_to_send_list(self.client_strat.create_message(2, "set_vit",{ "vitesse": 400}))"""
+                if "Vitesse" in item:
+                    if item["Vitesse"] != self.ancienne_vit:
+                        if item["Vitesse"] == "Rapide":
+                            self.client_strat.add_to_send_list(self.client_strat.create_message(2, "set_vit",{ "vitesse": 600}))
+                        elif item["Vitesse"] == "Lent":
+                            self.client_strat.add_to_send_list(self.client_strat.create_message(2, "set_vit",{ "vitesse": 200}))
+                        elif item["Vitesse"] == "Normal":
+                            self.client_strat.add_to_send_list(self.client_strat.create_message(2, "set_vit",{ "vitesse": 400}))
+                    time.sleep(1)
                 
                 if "Coord" in deplacement:
                     self.move(deplacement,wait_aknowlodege)

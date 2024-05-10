@@ -20,8 +20,8 @@
             "Bas": 9
         },
         "aknowledge": {
-            "avant": 382,
-            "arriere": 392
+            "avant": 135,
+            "arriere": 151
         }
     },
     "HerkuleX": {
@@ -34,8 +34,8 @@
                 "Deposer": 13
             },
             "aknowledge": {
-                "avant": 381,
-                "arriere": 391
+                "avant": 134,
+                "arriere": 150
             }
         },
         "Pinces": {
@@ -49,8 +49,8 @@
                     "Min": 0
                 },
                 "aknowledge": {
-                    "avant": 380,
-                    "arriere": 390
+                    "avant": 133,
+                    "arriere": 149
                 }
             },
             "gauche": {
@@ -71,13 +71,11 @@
         "Bras": {
             "ordre": {
                 "-": 0,
-                "Max": 0,
-                "Ouvert": 2,
-                "Plante": 3,
-                "Ferme": 4,
-                "Min": 0
+                "Lever": 20,
+                "Panneau": 21,
+                "Baisser": 22
             },
-            "aknowledge": 383
+            "aknowledge": 136
         }
     },
     "Action_special": {
@@ -94,9 +92,10 @@
         "id": "0x24",
         "ordre": {
             "-": 0,
-            "X": 0,
-            "Y": 0,
-            "X et Y": 0
+            "X avant": 1,
+            "Y avant": 2,
+            "X arriere": 3,
+            "Y arriere": 4
         },
         "aknowledge": 279
     },

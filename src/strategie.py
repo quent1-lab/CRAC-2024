@@ -236,7 +236,7 @@ class Strategie:
                             wait_aknowlodege = []
                             self.lidar_stop = False
                             logging.info("STRAT : Relance de l'action précédente")
-                    elif self.ldiar_stop and distance > 50:
+                    elif self.lidar_stop:
                         self.lidar_stop = False
                         logging.info("STRAT : Flag lidar stop désactivé")
 

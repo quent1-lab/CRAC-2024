@@ -71,9 +71,8 @@
         "Bras": {
             "ordre": {
                 "-": 0,
-                "Lever": 20,
-                "Panneau": 21,
-                "Baisser": 22
+                "Lever": 16,
+                "Panneau": 17
             },
             "aknowledge": 136
         }

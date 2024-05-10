@@ -90,6 +90,9 @@ class Strategie:
                         
                         self.state_strat = "arret_urg"
                         self.type_mvt = "immobile"
+                    else:
+                        logging.info("STRAT : Pause du robot")
+
             
             elif message["cmd"] == "strategie":
                 strat_path = message["data"]["strategie"]
@@ -227,12 +230,12 @@ class Strategie:
                     distance_ = math.sqrt((self.coord_prec[0] - self.ROBOT_coord[0])**2 + (self.coord_prec[1] - self.ROBOT_coord[1])**2)
                     logging.info(f"STRAT : Distance parcourue en 6s : {distance_}")
                     if distance_ < 10:
-                        self.liste_aknowledge = []
-                        wait_aknowlodege = []
+                        
                         if self.state_strat == "wait_aknowledge_apres_mvt" or self.state_strat == "action_apres_mvt":
                             continue
                         else:
-                            self.state_strat == "pause"
+                            self.liste_aknowledge = []
+                            wait_aknowlodege = []
                             self.state_strat = "deplac"
                             logging.info("STRAT : Relance de la pause")
                         

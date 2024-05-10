@@ -220,7 +220,7 @@ class Strategie:
 
             # Vérification de l'état du robot. Si le robot est à l'arrêt plus de 6 secondes, on relance l'action précédente
             # En fonction des coordonnées du robot
-            if (time.time() - self.temps_pause) > 6:
+            if (time.time() - self.temps_pause) > 3:
                 
                 if self.coord_prec != [0,0]:
                     # Si le robot n'a pas bougé d'un rayon de 3cm depuis 6 secondes, on relance l'action précédente
@@ -229,13 +229,10 @@ class Strategie:
                     if distance_ < 10:
                         self.liste_aknowledge = []
                         wait_aknowlodege = []
-                        if self.state_strat == "wait_aknowledge_apres_mvt":
+                        if self.state_strat == "wait_aknowledge_apres_mvt" or self.state_strat == "action_apres_mvt":
                             continue
-                        elif self.state_strat == "deplac":
-                            #self.action -= 1
-                            self.lidar_stop = False
-                            logging.info("STRAT : Relance de l'action précédente")
-                        elif self.state_strat == "pause":
+                        else:
+                            self.state_strat == "pause"
                             self.state_strat = "deplac"
                             logging.info("STRAT : Relance de la pause")
                         

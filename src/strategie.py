@@ -341,7 +341,8 @@ class Strategie:
                 
                 try:
                     for key, act in action.items():
-                        if act["id"] == 0x24:
+                        logging.info(f"STRAT : Action : {act}")
+                        if key == "Recalage":
                             # Recalage
                             action = item["Action"]["Recalage"]
                             ordre = action["ordre"]

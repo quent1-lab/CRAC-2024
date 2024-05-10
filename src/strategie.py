@@ -403,7 +403,7 @@ class Strategie:
             
             elif self.state_strat == "arret_urg":
                 self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 503, "byte1": 0})) 
-                time.sleep(0.05)
+                time.sleep(0.02)
                 self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 503, "byte1": 1}))
                 time.sleep(1)
                 self.state_strat = "pause_en_mvt"

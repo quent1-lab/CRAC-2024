@@ -280,10 +280,13 @@ class LidarScanner:
                         if self.en_mvt and len(new_objets) > 0:
                             i += 1
                             if i >= 5:
+                                logging.info(f"Objet détecté à {new_objets[0].x} mm")
                                 self.client_socket.add_to_send_list(self.client_socket.create_message(4, "lidar", {"etat": "pause"}))
                                 self.en_mvt = False
                                 i = 0
-                        elif not self.en_mvt and len(new_objets) == 0:
+                                Time = time.time()
+                        elif not self.en_mvt and len(new_objets) == 0 and (time.time() - Time) > 3:
+                            logging.info(f"Objet hors de portée")
                             self.client_socket.add_to_send_list(self.client_socket.create_message(4, "lidar", {"etat": "resume"}))                                                                      
                     
                     #logging.info(f"New scan: {self.new_scan}")

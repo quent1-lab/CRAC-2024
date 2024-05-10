@@ -229,7 +229,7 @@ class Strategie:
                     # Si le robot n'a pas bougé d'un rayon de 3cm depuis 6 secondes, on relance l'action précédente
                     distance_ = math.sqrt((self.coord_prec[0] - self.ROBOT_coord[0])**2 + (self.coord_prec[1] - self.ROBOT_coord[1])**2)
                     logging.info(f"STRAT : Distance parcourue en 6s : {distance_}")
-                    if distance_ < 10 and self.lidar_stop:
+                    if distance_ == 0:
                         
                         if self.state_strat == "wait_aknowledge_apres_mvt" or self.state_strat == "action_apres_mvt":
                             continue
@@ -237,6 +237,7 @@ class Strategie:
                             self.liste_aknowledge = []
                             wait_aknowlodege = []
                             self.state_strat = "deplac"
+                            self.state_lidar = "resume"
                             logging.info("STRAT : Relance de la pause")
                         self.lidar_stop = False
                         

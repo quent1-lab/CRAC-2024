@@ -514,9 +514,9 @@ class Strategie:
     def send_actions(self, actions, akn):
         for action in actions:
             self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": action["id"], "byte1": action["ordre"]}))
-            #time.sleep(1.2)
+            time.sleep(1.2)
             #akn.append(action["akn"])
-            self.wait_for_aknowledge(action["akn"])
+            #self.wait_for_aknowledge(action["akn"])
     
     def stop(self):
         self.is_running = False

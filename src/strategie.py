@@ -280,10 +280,10 @@ class Strategie:
                         if item["Vitesse"] == "Rapide":
                             self.client_strat.add_to_send_list(self.client_strat.create_message(2, "set_vit",{ "vitesse": 800}))
                         elif item["Vitesse"] == "Lent":
-                            self.client_strat.add_to_send_list(self.client_strat.create_message(2, "set_vit",{ "vitesse": 80}))
+                            self.client_strat.add_to_send_list(self.client_strat.create_message(2, "set_vit",{ "vitesse": 10}))
                         elif item["Vitesse"] == "Normal":
                             self.client_strat.add_to_send_list(self.client_strat.create_message(2, "set_vit",{ "vitesse": 400}))
-                    time.sleep(1)
+                    time.sleep(0.1)
                 
                 if "Coord" in deplacement:
                     self.move(deplacement,wait_aknowlodege)

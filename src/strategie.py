@@ -361,10 +361,10 @@ class Strategie:
                     elif "Ligne_Droite" in deplac:
                         logging.info("STRAT : Reprise du déplacement en ligne droite")
                         distance = deplac["Ligne_Droite"]
-                        x = self.ROBOT_coord[0] + distance * math.cos(math.radians(self.ROBOT_coord[2]))
-                        y = self.ROBOT_coord[1] + distance * math.sin(math.radians(self.ROBOT_coord[2]))
+                        x = int(self.ROBOT_coord[0] + distance * math.cos(math.radians(self.ROBOT_coord[2])))
+                        y = int(self.ROBOT_coord[1] + distance * math.sin(math.radians(self.ROBOT_coord[2])))
                         # Calcul de l'angle du robot à la fin du déplacement
-                        theta = math.atan2(y - self.ROBOT_coord[1], x - self.ROBOT_coord[0])
+                        theta = int(math.atan2(y - self.ROBOT_coord[1], x - self.ROBOT_coord[0]))
                         self.move({"Coord": {"X": x, "Y": y, "T": theta, "S": "0"}, "aknowledge": 276},wait_aknowlodege)
                         
                     self.state_strat = "action_en_mvt"

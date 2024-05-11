@@ -345,7 +345,10 @@ class Strategie:
                         if act["id"] == "0x24":
                             # Recalage
                             ordre = act["ordre"]
-                            sens = -1 if ordre % 2 == 0 else 1
+                            if ordre > 2:
+                                sens = -1
+                            else :
+                                sens = 1
                             mode = 0
 
                             # Déterminer la valeur de recalage en fonction des coordonnées du robot

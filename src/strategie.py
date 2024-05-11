@@ -257,6 +257,15 @@ class Strategie:
                     self.ligne_droite({"Ligne_Droite": -1600, "aknowledge": 277}, [])
                     self.wait_for_aknowledge(277)
                     self.state_strat = "idle"
+                elif self.action == 19 and self.EQUIPE == "bleu":
+                    self.ligne_droite({"Ligne_Droite": 100, "aknowledge": 277}, [])
+                    self.wait_for_aknowledge(277)
+                    self.state_strat = "idle"
+                elif self.action == 21 and self.EQUIPE == "bleu":
+                    self.ligne_droite({"Ligne_Droite": 400, "aknowledge": 277}, [])
+                    self.wait_for_aknowledge(277)
+                    self.send_actions([{"id": 0x1A1, "ordre": 3, "en_mvt": False, "akn": 149, "str" :"Plante"}], [])
+                    
                 else:
                     try:
                         self.action_actuelle["Item"] = self.strategie[str(self.action)]

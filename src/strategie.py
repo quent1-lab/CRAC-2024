@@ -284,7 +284,7 @@ class Strategie:
                             self.client_strat.add_to_send_list(self.client_strat.create_message(2, "set_vit",{ "vitesse": 10}))
                         elif item["Vitesse"] == "Normal":
                             self.client_strat.add_to_send_list(self.client_strat.create_message(2, "set_vit",{ "vitesse": 600}))
-                    time.sleep(0.05)
+                    time.sleep(0.02)
                 
                 if "Coord" in deplacement:
                     self.move(deplacement,wait_aknowlodege)
@@ -514,7 +514,7 @@ class Strategie:
     def send_actions(self, actions, akn):
         for action in actions:
             self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": action["id"], "byte1": action["ordre"]}))
-            time.sleep(1.2)
+            time.sleep(0.8)
             #akn.append(action["akn"])
             #self.wait_for_aknowledge(action["akn"])
     

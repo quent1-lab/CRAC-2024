@@ -252,7 +252,7 @@ class Strategie:
                 if self.action == 17 and self.EQUIPE == "bleu":
                     # Faire une exception pour la stratégie bleu
                     # Tourner de 180°
-                    self.rotate({"Rotation": 180, "aknowledge": 276}, [])
+                    self.rotate({"Rotation": 1800, "aknowledge": 276}, [])
                     self.wait_for_aknowledge(276)
                     self.ligne_droite({"Ligne_Droite": -1600, "aknowledge": 277}, [])
                     self.wait_for_aknowledge(277)

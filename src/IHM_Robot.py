@@ -295,6 +295,8 @@ class IHM_Robot:
                 logging.error(f"Erreur lors du chargement de la stratégie : {e}")
             for equipe, zone in self.strategie["zone"].items():
                 self.zone_recalage.append(zone)
+            if "points" in self.strategie:
+                self.points = self.strategie["points"]
             self.PAGE = 9
             logging.info(f"Recalage de la zone {self.zone_recalage}")
             return
@@ -302,16 +304,17 @@ class IHM_Robot:
             # Envoie un reset aux cartes action
             self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 416, "byte1": 11}))
             self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 417, "byte1": 11}))
-            time.sleep(0.05)
+            time.sleep(0.5)
             
             # Fermé les pinces
             self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 416, "byte1": 1}))
             self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 417, "byte1": 1}))
-            time.sleep(0.05)
+            time.sleep(0.5)
             
             # Lever les peignes
             self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 416, "byte1": 4}))
             self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 417, "byte1": 4}))
+            time.sleep(0.5)
         
         self.play_strategie(name)
     
@@ -756,7 +759,7 @@ class IHM_Robot:
                 for i, strategy in enumerate(liste_strategies):
                     texte = strategy.split(".")[0]
                     name = texte.split("_")[1]
-                    button = Button(self.screen, (x_depart + 405 * int(i/4), y_depart + (i % 4) * 90, 385, 80), self.theme_path, texte, font, lambda i=i: self.strategie_action(name))
+                    button = Button(self.screen, (x_depart + 405 * int(i/4), y_depart + (i % 4) * 90, 385, 80), self.theme_path, texte, font, lambda : self.strategie_action(name))
                     self.button_strategie.append(button)
             
             elif message["cmd"] == "get_pos":

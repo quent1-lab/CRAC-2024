@@ -249,6 +249,13 @@ class Strategie:
             if self.state_strat == "idle":
                 # Etat d'attente et de récupération de la nouvelle action
                 self.action += 1
+                if self.action == 17 and self.EQUIPE == "bleu":
+                    # Faire une exception pour la stratégie bleu
+                    # Tourner de 180°
+                    self.rotate({"Rotation": 180, "aknowledge": 276}, [])
+                    self.wait_for_aknowledge(276)
+                    self.ligne_droite({"Ligne_Droite": -1600, "aknowledge": 277}, [])
+                    self.wait_for_aknowledge(277)
                 try:
                     self.action_actuelle["Item"] = self.strategie[str(self.action)]
                     self.action_actuelle["state"] = "idle"
@@ -272,6 +279,8 @@ class Strategie:
                 if self.state_lidar == "pause":
                     self.state_strat = "pause"
                     continue
+
+                if 
                 
                 # Chargement de la vitesse
                 if "Vitesse" in item:
@@ -407,10 +416,10 @@ class Strategie:
                     self.state_strat = "deplac"
             
             elif self.state_strat == "arret_urg":
-                """self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 503, "byte1": 0})) 
+                self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 503, "byte1": 0})) 
                 time.sleep(0.02)
-                self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 503, "byte1": 1}))"""
-                self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 1, "byte1": 0}))
+                self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 503, "byte1": 1}))
+                #self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 1, "byte1": 0}))
                 time.sleep(1)
                 self.state_strat = "pause_en_mvt"
             

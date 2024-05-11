@@ -483,7 +483,7 @@ class Strategie:
         angle = deplacement["Rotation"]
         
         if self.EQUIPE == "bleu":
-            angle = (angle + 180) % 360
+            angle = (1800-angle) % 3600
         
         akn.append(deplacement["aknowledge"])
         logging.info(f"STRAT : Envoi de la commande de rotation : {angle}")

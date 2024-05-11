@@ -256,19 +256,21 @@ class Strategie:
                     self.wait_for_aknowledge(276)
                     self.ligne_droite({"Ligne_Droite": -1600, "aknowledge": 277}, [])
                     self.wait_for_aknowledge(277)
-                try:
-                    self.action_actuelle["Item"] = self.strategie[str(self.action)]
-                    self.action_actuelle["state"] = "idle"
-                except Exception as e:
-                    logging.error(f"Erreur lors de la lecture de l'action : {str(e)}")
+                    self.state_strat = "idle"
+                else:
+                    try:
+                        self.action_actuelle["Item"] = self.strategie[str(self.action)]
+                        self.action_actuelle["state"] = "idle"
+                    except Exception as e:
+                        logging.error(f"Erreur lors de la lecture de l'action : {str(e)}")
 
-                self.state_strat = "deplac"
-                
-                if self.strategie_is_running == False:
-                    break
-                
-                item = self.strategie[str(self.action)]
-                wait_aknowlodege = []
+                    self.state_strat = "deplac"
+                    
+                    if self.strategie_is_running == False:
+                        break
+                    
+                    item = self.strategie[str(self.action)]
+                    wait_aknowlodege = []
                 
             elif self.state_strat == "deplac":
 
@@ -279,8 +281,6 @@ class Strategie:
                 if self.state_lidar == "pause":
                     self.state_strat = "pause"
                     continue
-
-                if 
                 
                 # Chargement de la vitesse
                 if "Vitesse" in item:

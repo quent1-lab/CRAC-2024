@@ -407,9 +407,10 @@ class Strategie:
                     self.state_strat = "deplac"
             
             elif self.state_strat == "arret_urg":
-                self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 503, "byte1": 0})) 
+                """self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 503, "byte1": 0})) 
                 time.sleep(0.02)
-                self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 503, "byte1": 1}))
+                self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 503, "byte1": 1}))"""
+                self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 1, "byte1": 0}))
                 time.sleep(1)
                 self.state_strat = "pause_en_mvt"
             

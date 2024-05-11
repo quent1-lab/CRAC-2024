@@ -315,6 +315,8 @@ class IHM_Robot:
             self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 416, "byte1": 4}))
             self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 417, "byte1": 4}))
             time.sleep(0.5)
+
+            self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 416, "byte1" : 16}))
         
         self.play_strategie(name)
     

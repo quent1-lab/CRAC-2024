@@ -37,7 +37,7 @@ class Strategie:
                                 "state": "idle",}
         self.type_mvt = "immobile"
         self.action = 0
-        self.ancienne_vit = "Normal"
+        self.ancienne_vit = ""
         
         self.ETAT = 0
         self.EQUIPE = "jaune"
@@ -283,7 +283,7 @@ class Strategie:
                         elif item["Vitesse"] == "Lent":
                             self.client_strat.add_to_send_list(self.client_strat.create_message(2, "set_vit",{ "vitesse": 10}))
                         elif item["Vitesse"] == "Normal":
-                            self.client_strat.add_to_send_list(self.client_strat.create_message(2, "set_vit",{ "vitesse": 500}))
+                            self.client_strat.add_to_send_list(self.client_strat.create_message(2, "set_vit",{ "vitesse": 600}))
                     time.sleep(0.05)
                 
                 if "Coord" in deplacement:

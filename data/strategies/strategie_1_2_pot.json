@@ -20,9 +20,9 @@
             "_PG_av_": {
                 "id": "0x1A0",
                 "en_mvt": false,
-                "ordre": 2,
+                "ordre": 3,
                 "akn": 133,
-                "str": "Ouvert"
+                "str": "Plante"
             }
         },
         "Special": {},
@@ -95,7 +95,7 @@
     },
     "6": {
         "D\u00e9placement": {
-            "Rotation": 1800,
+            "Rotation": -1800,
             "aknowledge": 278
         },
         "Action": {

@@ -136,16 +136,9 @@
             "_PG_av": {
                 "id": "0x1A0",
                 "en_mvt": false,
-                "ordre": 9,
-                "akn": 135,
-                "str": "Bas"
-            },
-            "_P_av": {
-                "id": "0x1A0",
-                "en_mvt": false,
-                "ordre": 12,
-                "akn": 134,
-                "str": "Prendre"
+                "ordre": 1,
+                "akn": 133,
+                "str": "Ferme"
             }
         },
         "Special": {},

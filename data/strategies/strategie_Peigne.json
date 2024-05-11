@@ -150,5 +150,99 @@
         },
         "Special": {},
         "Vitesse": "Normal"
+    },
+    "9": {
+        "D\u00e9placement": {
+            "Ligne_Droite": 500,
+            "aknowledge": 277
+        },
+        "Action": {
+            "_P_av": {
+                "id": "0x1A0",
+                "en_mvt": false,
+                "ordre": 4,
+                "akn": 134,
+                "str": "Lever"
+            }
+        },
+        "Special": {},
+        "Vitesse": "Lent"
+    },
+    "10": {
+        "D\u00e9placement": {
+            "Ligne_Droite": -400,
+            "aknowledge": 277
+        },
+        "Action": {
+            "_PG_av": {
+                "id": "0x1A0",
+                "en_mvt": false,
+                "ordre": 1,
+                "akn": 133,
+                "str": "Ferme"
+            }
+        },
+        "Special": {},
+        "Vitesse": "Normal"
+    },
+    "11": {
+        "D\u00e9placement": {
+            "Rotation": 900,
+            "aknowledge": 278
+        },
+        "Action": {},
+        "Special": {},
+        "Vitesse": "Normal"
+    },
+    "12": {
+        "D\u00e9placement": {
+            "Ligne_Droite": 600,
+            "aknowledge": 277
+        },
+        "Action": {},
+        "Special": {},
+        "Vitesse": "Normal"
+    },
+    "13": {
+        "D\u00e9placement": {
+            "Rotation": -900,
+            "aknowledge": 278
+        },
+        "Action": {},
+        "Special": {},
+        "Vitesse": "Normal"
+    },
+    "14": {
+        "D\u00e9placement": {
+            "Ligne_Droite": 330,
+            "aknowledge": 277
+        },
+        "Action": {
+            "_R_": {
+                "id": "0x24",
+                "ordre": 2,
+                "akn": 279,
+                "en_mvt": false,
+                "str": "Y avant"
+            },
+            "_P_av": {
+                "id": "0x1A0",
+                "en_mvt": false,
+                "ordre": 13,
+                "akn": 134,
+                "str": "Deposer"
+            }
+        },
+        "Special": {},
+        "Vitesse": "Normal"
+    },
+    "15": {
+        "D\u00e9placement": {
+            "Ligne_Droite": -100,
+            "aknowledge": 277
+        },
+        "Action": {},
+        "Special": {},
+        "Vitesse": "Lent"
     }
 }

@@ -21,9 +21,26 @@
         "Special": {},
         "Vitesse": "Normal"
     },
+    "2": {
+        "D\u00e9placement": {
+            "Ligne_Droite": 300,
+            "aknowledge": 277
+        },
+        "Action": {
+            "_PG_av": {
+                "id": "0x1A0",
+                "en_mvt": false,
+                "ordre": 3,
+                "akn": 133,
+                "str": "Plante"
+            }
+        },
+        "Special": {},
+        "Vitesse": "Normal"
+    },
     "3": {
         "D\u00e9placement": {
-            "Rotation": -250,
+            "Rotation": -150,
             "aknowledge": 278
         },
         "Action": {

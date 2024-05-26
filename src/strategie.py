@@ -96,7 +96,7 @@ class Strategie:
 
             
             elif message["cmd"] == "strategie":
-                strat_path = message["data"]["strategie"]
+                strat_path = message["data"]["strategie_path"]
                 # Charger la stratégie
                 if os.path.exists(strat_path):
                     try :

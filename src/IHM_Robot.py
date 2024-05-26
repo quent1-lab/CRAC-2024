@@ -139,7 +139,7 @@ class IHM_Robot:
         for i, strategy in enumerate(liste_strategies):
             texte = strategy.split(".")[0]
             name = texte.split("_")[1]
-            button = Button(self.screen, (x_depart + 400 * int(i/4), y_depart + (i % 4) * 90, 385, 80), self.theme_path, texte, font, lambda i=i: self.strategie_action(name))
+            button = Button(self.screen, (x_depart + 400 * int(i/4), y_depart + (i % 4) * 90, 385, 80), self.theme_path, texte, font, lambda i=name: self.strategie_action(i))
             self.button_strategie.append(button)
         
         self.button_autres = [
@@ -316,6 +316,7 @@ class IHM_Robot:
             self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 417, "byte1": 4}))
             time.sleep(0.5)
 
+            # Lever le bras
             self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 416, "byte1" : 16}))
         
         self.play_strategie(name)
@@ -415,7 +416,7 @@ class IHM_Robot:
         self.PAGE = 5
         
         # Envoyer un message pour dire que la stratégie est choisie
-        self.client.add_to_send_list(self.client.create_message(0, "strategie", {"strategie": self.path_strat + f"/strategie_{name}.json"}))
+        self.client.add_to_send_list(self.client.create_message(4, "strategie", {"strategie_path": self.path_strat + f"/strategie_{name}.json"}))
     
     def page_favori(self):
         # Cette page comprend 4 grands rectangles correspondant aux batteries du robot
@@ -753,6 +754,8 @@ class IHM_Robot:
                         f.write(json.dumps(strategie))"""
                 
                 liste_strategies = os.listdir(self.path_strat)
+                if len(liste_strategies) > 8:
+                    liste_strategies = liste_strategies[-8:]
                 x_depart = 10
                 y_depart = 90
                 
@@ -761,7 +764,7 @@ class IHM_Robot:
                 for i, strategy in enumerate(liste_strategies):
                     texte = strategy.split(".")[0]
                     name = texte.split("_")[1]
-                    button = Button(self.screen, (x_depart + 405 * int(i/4), y_depart + (i % 4) * 90, 385, 80), self.theme_path, texte, font, lambda : self.strategie_action(name))
+                    button = Button(self.screen, (x_depart + 405 * int(i/4), y_depart + (i % 4) * 90, 385, 80), self.theme_path, texte, font, lambda i=name: self.strategie_action(i))
                     self.button_strategie.append(button)
             
             elif message["cmd"] == "get_pos":

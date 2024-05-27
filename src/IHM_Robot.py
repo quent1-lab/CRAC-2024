@@ -5,7 +5,7 @@ import  threading
 import  logging
 import  pygame
 import  time
-import  os
+import  os, re
 
 # Configuration du logger
 logging.basicConfig(filename='ihm_robot.log', level=logging.INFO, datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
@@ -44,6 +44,7 @@ class IHM_Robot:
         self.BACKGROUND_COLOR = (100, 100, 100)
         
         self.temp_raspberry = 0
+        self.mode_test = False
 
         # Initialisation de la fenêtre
         pygame.init()
@@ -55,6 +56,7 @@ class IHM_Robot:
         else:
             self.screen = pygame.display.set_mode((800, 480))
             pygame.mouse.set_visible(True)
+            self.mode_test = True
 
         # Fullscreen
         self.width, self.height = pygame.display.get_surface().get_size()
@@ -329,8 +331,20 @@ class IHM_Robot:
         liste_strategies = os.listdir(self.path_strat)
         
         # Mettre les stratégies dans l'ordre alphabétique
-        liste_strategies.sort()
+        def key_func(strategie):
+            match = re.match(r"strategie_(\d+)", strategie)
+            if match:
+                # Pour les stratégies numérotées, renvoyer le numéro pour le tri
+                return int(match.group(1))
+            else:
+                # Pour les stratégies nommées, renvoyer une valeur élevée pour les placer à la fin
+                return float('inf')
         
+        if self.mode_test:
+            liste_strategies = ['strategie_5', 'strategie_beta', 'strategie_3','strategie_6','strategie_9','strategie_12', 'strategie_1', 'strategie_alpha', 'strategie_2']
+        
+        liste_strategies = sorted(liste_strategies, key=key_func)
+
         # Vérifie si le nombre de fichier est inférieur à 8, si plus de 8 fichiers, on affiche les 8 derniers
         if len(liste_strategies) > 8:
             liste_strategies = liste_strategies[-8:]
@@ -632,7 +646,7 @@ class IHM_Robot:
                         temps = 0
                     
                     if nb_tentatives > 1: # On a essayé 1 fois de recevoir les données, on affiche un message d'erreur
-                        if 0x10 not in self.error:
+                        if 0x10 not in self.error and not self.mode_test:
                             self.error.append(0x10)
                             for batterie in self.batteries:
                                 batterie.mode_error()

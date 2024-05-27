@@ -11,13 +11,11 @@ import  os
 logging.basicConfig(filename='ihm_robot.log', level=logging.INFO, datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
 
 class IHM_Robot:
-    version = "1.058"
+    version = "1.059"
     points = 50
     def __init__(self):
         
         self.client = Client("127.0.0.9", 22050, 9, self.receive_to_server)
-        
-        #self.JACK = gpiozero.Button(16, pull_up=True)
 
         self.Energie = {
             "Batterie 1": {"Tension": 0, "Courant": 0, "Switch": 0},
@@ -118,6 +116,7 @@ class IHM_Robot:
         ]
         
         self.button_strategie = []
+        self.supprimer_start = False
         
         self.path_strat = "data/strategies_cache"
         
@@ -130,17 +129,23 @@ class IHM_Robot:
         # Vérifie si le nombre de fichier est inférieur à 8, si plus de 8 fichiers, on affiche les 8 derniers
         if len(liste_strategies) > 8:
             liste_strategies = liste_strategies[-8:]
+            
+        # Mettre les stratégies dans l'ordre alphabétique
+        liste_strategies.sort()
         
         x_depart = 10
-        y_depart = 90
+        y_depart = 180
         
         font = pygame.font.SysFont("Arial", 40)
         
         for i, strategy in enumerate(liste_strategies):
             texte = strategy.split(".")[0]
             name = texte.split("_")[1]
-            button = Button(self.screen, (x_depart + 400 * int(i/4), y_depart + (i % 4) * 90, 385, 80), self.theme_path, texte, font, lambda i=name: self.strategie_action(i))
+            button = Button(self.screen, (x_depart + 400 * int(i/4), y_depart + (i % 4) * 90, 385, 75), self.theme_path, texte, font, lambda i=name: self.strategie_action(i))
             self.button_strategie.append(button)
+        
+        button_supp = Button(self.screen, (10, 10, 100, 50), self.theme_path, "Supprimer", self.font, lambda : self.strategie_action("Homologation", supprimer=True))
+        self.button_strategie.append(button_supp)
         
         self.button_autres = [
             Button(self.screen, (40, 220, 200, 80), self.theme_path, "TEST Mouvement", font, lambda : self.button_autres_action(0)),
@@ -275,12 +280,13 @@ class IHM_Robot:
             self.PAGE = 20
         time.sleep(0.2)
     
+    def supprimer_acton(self):
+        self.supprimer_start = not self.supprimer_start
+        time.sleep(0.1)
+    
     def strategie_action(self, name, recaler=False):
-        #self.client.add_to_send_list(self.client.create_message(0, "strategie", {"strategie": name}))
         
         # Charger la stratégie
-        
-        
         if self.ETAT == 0:
             self.zero_battery() # On bannit les batteries à 0V
             self.ETAT = 1
@@ -299,6 +305,13 @@ class IHM_Robot:
                 self.points = self.strategie["points"]
             self.PAGE = 9
             logging.info(f"Recalage de la zone {self.zone_recalage}")
+            return
+        elif self.supprimer_start:
+            # Supprimer la stratégie
+            if os.path.exists(self.path_strat + f"/strategie_{name}.json"):
+                os.remove(self.path_strat + f"/strategie_{name}.json")
+                logging.info(f"Suppression de la stratégie {name}")
+            self.supprimer_start = False
             return
         else:
             # Envoie un reset aux cartes action

@@ -796,18 +796,21 @@ class IHM:
         
         elif event.type == MOUSEBUTTONDOWN and event.button == 1:
             # Si le clic droit est dans les alentours d'un point de la liste d'attente, ouvrir le gestionnaire de stratégie
-            for i, pos in enumerate(self.pos_waiting_list):
-                x = self.map_value(pos[0], 0, self.FIELD_SIZE[0], self.WINDOW_SIZE[0]-5-self.BORDER_DISTANCE*self.X_RATIO, self.BORDER_DISTANCE*self.X_RATIO+5)
-                y = self.map_value(pos[1], 0, self.FIELD_SIZE[1], self.BORDER_DISTANCE*self.Y_RATIO+5 ,self.WINDOW_SIZE[1]-5-self.BORDER_DISTANCE*self.Y_RATIO)
-                x = int(x)
-                y = int(y)
-                # Vérifiez si le clic est à proximité d'un point de la liste d'attente à moins de 10 pixels
-                if math.sqrt((event.pos[0] - x)**2 + (event.pos[1] - y)**2) < 10:
-                    if self.action_window is None:
-                        with open("data/strategie.json", "r") as file:
-                            strategie = json.load(file)
-                        self.action_window = IHM_Action_Aux(self.manager, i+1, (pos[0], pos[1], 0), _callback_save=self.save_action, _config = strategie[str(i+1)], _callback_delete=self.delete_action)
-                    break
+            try:
+                for i, pos in enumerate(self.pos_waiting_list):
+                    x = self.map_value(pos[0], 0, self.FIELD_SIZE[0], self.WINDOW_SIZE[0]-5-self.BORDER_DISTANCE*self.X_RATIO, self.BORDER_DISTANCE*self.X_RATIO+5)
+                    y = self.map_value(pos[1], 0, self.FIELD_SIZE[1], self.BORDER_DISTANCE*self.Y_RATIO+5 ,self.WINDOW_SIZE[1]-5-self.BORDER_DISTANCE*self.Y_RATIO)
+                    x = int(x)
+                    y = int(y)
+                    # Vérifiez si le clic est à proximité d'un point de la liste d'attente à moins de 10 pixels
+                    if math.sqrt((event.pos[0] - x)**2 + (event.pos[1] - y)**2) < 10:
+                        if self.action_window is None:
+                            with open("data/strategie.json", "r") as file:
+                                strategie = json.load(file)
+                            self.action_window = IHM_Action_Aux(self.manager, i+1, (pos[0], pos[1], 0), _callback_save=self.save_action, _config = strategie[str(i+1)], _callback_delete=self.delete_action)
+                        break
+            except Exception as e:
+                print("Erreur dans la gestion des clics", e)
 
     def is_within_game_area(self, pos):
         # Vérifie si les coordonnées du clic sont dans la zone de jeu

@@ -268,7 +268,7 @@ class IHM_Robot:
     def strategie_action(self, name, recaler=False):
         
         # Charger la stratégie
-        if self.ETAT == 0:
+        if self.ETAT == 0 and not self.supprimer_start:
             self.zero_battery() # On bannit les batteries à 0V
             self.ETAT = 1
             #self.client.add_to_send_list(self.client.create_message(10, "config", {"etat": 1, "equipe": self.EQUIPE}))  

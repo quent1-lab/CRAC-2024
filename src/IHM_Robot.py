@@ -261,7 +261,7 @@ class IHM_Robot:
             self.button_strategie[-1].update_color((200, 0, 0))
             self.button_strategie[-1].update_text("Annuler")
         else:
-            self.button_strategie[-1].update_color((100, 100, 100))
+            self.button_strategie[-1].update_color((200, 200, 200))
             self.button_strategie[-1].update_text("Supprimer")
         time.sleep(0.1)
     
@@ -336,7 +336,7 @@ class IHM_Robot:
         liste_strategies.sort()
         
         x_depart = 10
-        y_depart = 160
+        y_depart = 140
         
         font = pygame.font.SysFont("Arial", 40)
         
@@ -346,7 +346,7 @@ class IHM_Robot:
             button = Button(self.screen, (x_depart + 400 * int(i/4), y_depart + (i % 4) * 90, 385, 75), self.theme_path, texte, font, lambda i=name: self.strategie_action(i))
             self.button_strategie.append(button)
         
-        button_supp = Button(self.screen, (300, 90, 200, 60), self.theme_path, "Supprimer", self.font, lambda : self.supprimer_acton(), color=(100, 100, 100))
+        button_supp = Button(self.screen, (300, 80, 200, 50), self.theme_path, "Supprimer", self.font, lambda : self.supprimer_acton(), color=(200, 200, 200))
         self.button_strategie.append(button_supp)
     
     def ligne_droite(self, distance):

@@ -7,14 +7,5 @@
         "Action": {},
         "Special": {},
         "Vitesse": "Normal"
-    },
-    "2": {
-        "D\u00e9placement": {
-            "Rotation": -900,
-            "aknowledge": 278
-        },
-        "Action": {},
-        "Special": {},
-        "Vitesse": "Normal"
     }
 }

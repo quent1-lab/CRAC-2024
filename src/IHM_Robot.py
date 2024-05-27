@@ -11,7 +11,7 @@ import  os
 logging.basicConfig(filename='ihm_robot.log', level=logging.INFO, datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
 
 class IHM_Robot:
-    version = "1.059"
+    version = "1.060"
     points = 50
     def __init__(self):
         
@@ -120,32 +120,7 @@ class IHM_Robot:
         
         self.path_strat = "data/strategies_cache"
         
-        # Vériication de l'existence du dossier
-        if not os.path.exists(self.path_strat):
-            os.makedirs(self.path_strat)
-        
-        liste_strategies = os.listdir(self.path_strat)
-        
-        # Vérifie si le nombre de fichier est inférieur à 8, si plus de 8 fichiers, on affiche les 8 derniers
-        if len(liste_strategies) > 8:
-            liste_strategies = liste_strategies[-8:]
-            
-        # Mettre les stratégies dans l'ordre alphabétique
-        liste_strategies.sort()
-        
-        x_depart = 10
-        y_depart = 180
-        
-        font = pygame.font.SysFont("Arial", 40)
-        
-        for i, strategy in enumerate(liste_strategies):
-            texte = strategy.split(".")[0]
-            name = texte.split("_")[1]
-            button = Button(self.screen, (x_depart + 400 * int(i/4), y_depart + (i % 4) * 90, 385, 75), self.theme_path, texte, font, lambda i=name: self.strategie_action(i))
-            self.button_strategie.append(button)
-        
-        button_supp = Button(self.screen, (10, 10, 100, 50), self.theme_path, "Supprimer", self.font, lambda : self.strategie_action("Homologation", supprimer=True))
-        self.button_strategie.append(button_supp)
+        self.create_button_strategie()
         
         self.button_autres = [
             Button(self.screen, (40, 220, 200, 80), self.theme_path, "TEST Mouvement", font, lambda : self.button_autres_action(0)),
@@ -282,6 +257,12 @@ class IHM_Robot:
     
     def supprimer_acton(self):
         self.supprimer_start = not self.supprimer_start
+        if self.supprimer_start:
+            self.button_strategie[-1].update_color((200, 0, 0))
+            self.button_strategie[-1].update_text("Annuler")
+        else:
+            self.button_strategie[-1].update_color((100, 100, 100))
+            self.button_strategie[-1].update_text("Supprimer")
         time.sleep(0.1)
     
     def strategie_action(self, name, recaler=False):
@@ -312,6 +293,9 @@ class IHM_Robot:
                 os.remove(self.path_strat + f"/strategie_{name}.json")
                 logging.info(f"Suppression de la stratégie {name}")
             self.supprimer_start = False
+            
+            self.create_button_strategie()
+            
             return
         else:
             # Envoie un reset aux cartes action
@@ -333,6 +317,37 @@ class IHM_Robot:
             self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 416, "byte1" : 16}))
         
         self.play_strategie(name)
+    
+    def create_button_strategie(self):
+        self.button_strategie = []
+        self.supprimer_start = False
+        
+        # Vériication de l'existence du dossier
+        if not os.path.exists(self.path_strat):
+            os.makedirs(self.path_strat)
+        
+        liste_strategies = os.listdir(self.path_strat)
+        
+        # Vérifie si le nombre de fichier est inférieur à 8, si plus de 8 fichiers, on affiche les 8 derniers
+        if len(liste_strategies) > 8:
+            liste_strategies = liste_strategies[-8:]
+            
+        # Mettre les stratégies dans l'ordre alphabétique
+        liste_strategies.sort()
+        
+        x_depart = 10
+        y_depart = 160
+        
+        font = pygame.font.SysFont("Arial", 40)
+        
+        for i, strategy in enumerate(liste_strategies):
+            texte = strategy.split(".")[0]
+            name = texte.split("_")[1]
+            button = Button(self.screen, (x_depart + 400 * int(i/4), y_depart + (i % 4) * 90, 385, 75), self.theme_path, texte, font, lambda i=name: self.strategie_action(i))
+            self.button_strategie.append(button)
+        
+        button_supp = Button(self.screen, (300, 90, 200, 60), self.theme_path, "Supprimer", self.font, lambda : self.supprimer_acton(), color=(100, 100, 100))
+        self.button_strategie.append(button_supp)
     
     def ligne_droite(self, distance):
         self.client.add_to_send_list(self.client.create_message(2, "deplacement", {"distance": distance}))
@@ -766,19 +781,7 @@ class IHM_Robot:
                     with open(self.path_strat + f"/strategie_{id}.json", "w") as f:
                         f.write(json.dumps(strategie))"""
                 
-                liste_strategies = os.listdir(self.path_strat)
-                if len(liste_strategies) > 8:
-                    liste_strategies = liste_strategies[-8:]
-                x_depart = 10
-                y_depart = 90
-                
-                font = pygame.font.SysFont("Arial", 40)
-                self.button_strategie = []
-                for i, strategy in enumerate(liste_strategies):
-                    texte = strategy.split(".")[0]
-                    name = texte.split("_")[1]
-                    button = Button(self.screen, (x_depart + 405 * int(i/4), y_depart + (i % 4) * 90, 385, 80), self.theme_path, texte, font, lambda i=name: self.strategie_action(i))
-                    self.button_strategie.append(button)
+                self.create_button_strategie()
             
             elif message["cmd"] == "get_pos":
                 data = message["data"]

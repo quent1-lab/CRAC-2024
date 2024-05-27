@@ -328,13 +328,13 @@ class IHM_Robot:
         
         liste_strategies = os.listdir(self.path_strat)
         
+        # Mettre les stratégies dans l'ordre alphabétique
+        liste_strategies.sort()
+        
         # Vérifie si le nombre de fichier est inférieur à 8, si plus de 8 fichiers, on affiche les 8 derniers
         if len(liste_strategies) > 8:
             liste_strategies = liste_strategies[-8:]
             
-        # Mettre les stratégies dans l'ordre alphabétique
-        liste_strategies.sort()
-        
         x_depart = 10
         y_depart = 140
         
@@ -343,7 +343,7 @@ class IHM_Robot:
         for i, strategy in enumerate(liste_strategies):
             texte = strategy.split(".")[0]
             name = texte.split("_")[1]
-            button = Button(self.screen, (x_depart + 400 * int(i/4), y_depart + (i % 4) * 90, 385, 75), self.theme_path, texte, font, lambda i=name: self.strategie_action(i))
+            button = Button(self.screen, (x_depart + 400 * int(i/4), y_depart + (i % 4) * 90, 385, 60), self.theme_path, texte, font, lambda i=name: self.strategie_action(i))
             self.button_strategie.append(button)
         
         button_supp = Button(self.screen, (300, 80, 200, 50), self.theme_path, "Supprimer", self.font, lambda : self.supprimer_acton(), color=(200, 200, 200))

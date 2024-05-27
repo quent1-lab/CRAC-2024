@@ -15,8 +15,9 @@ class Serveur:
     def __init__(self, host, port):
         self.host = host
         self.port = port
-        self.clients = []  # Liste pour stocker les informations sur les clients (socket, address, ID)
-        self.client_names = ["Broadcast", "Serveur", "BusCAN", "Lidar","STRAT","","","","PAMI","IHM_R","IHM"]
+        self.authenticated_clients = []  # Liste pour les clients authentifiés
+        self.pending_clients = []  # Liste pour les clients non authentifiés
+        self.client_names = ["Broadcast", "Serveur", "BusCAN", "Lidar","Strategie","","","","PAMI","IHM_R","IHM"]
 
         self.tasks = []
         self.stop_threads = False
@@ -35,13 +36,12 @@ class Serveur:
             except Exception as e:
                 logging.error(f"Erreur lors de la manipulation du client : {str(e)}")
                 break
-            time.sleep(0.01)  # Attendre 5 ms avant de vérifier à nouveau
+            time.sleep(0.01)
         if not self.stop_threads:
-            try :
+            try:
                 self.deconnect_client(connection, address)
             except:
                 pass
-            #id = [_id for _id in range(1, 11) if address in [client[1] for client in self.clients]]
             print(f"BusCOM : Déconnecté de ({address})")
             logging.info(f"BusCOM : Déconnecté de ({address})")
 
@@ -56,13 +56,13 @@ class Serveur:
                 while "\n" in buffer:
                     line, buffer = buffer.split("\n", 1)
                     yield line
-                time.sleep(0.01)  # Attendre 5 ms avant de vérifier à nouveau
+                time.sleep(0.01)
             except ConnectionResetError:
                 logging.error("BusCOM : Erreur de connexion", exc_info=True)
                 break
             except Exception as e:
                 logging.error(f"BusCOM : Erreur de réception : {str(e)}")
-                pass
+                break
 
     def handle_connection(self):
         while not self.stop_threads:
@@ -71,11 +71,8 @@ class Serveur:
                 thread = threading.Thread(target=self.handle_client, args=(connection, address))
                 thread.start()
                 with self.lock:
-                    self.clients.append([connection, address, None])
+                    self.pending_clients.append([connection, address])
                     self.tasks.append(thread)
-                if address == "192.168.22.108":
-                    logging.info("BusCOM : Connexion à serveur PAMI")
-                    self.init_connection(connection, 8)
             except socket.timeout:
                 pass
             except OSError as e:
@@ -84,16 +81,13 @@ class Serveur:
                     break
                 else:
                     logging.error("BusCOM : Erreur de connexion", exc_info=True)
-            time.sleep(0.01)  # Attendre 5 ms avant de vérifier à nouveau
+            time.sleep(0.01)
 
     def send(self, client_socket, message):
         messageJSON = json.dumps(message) + "\n"
         try:
             client_socket.sendall(messageJSON.encode())
-        except ConnectionResetError:
-            logging.error("BusCOM : Erreur de connexion", exc_info=True)
-            raise ServeurException("BusCOM : Erreur de connexion")
-        except BrokenPipeError:
+        except (ConnectionResetError, BrokenPipeError):
             logging.error("BusCOM : Erreur de connexion", exc_info=True)
             raise ServeurException("BusCOM : Erreur de connexion")
         except Exception as e:
@@ -102,19 +96,29 @@ class Serveur:
     
     def send_stop(self):
         message = {"id_s" : 0, "id_r" : 0, "cmd" : "stop", "data" : ""}
-        for client in self.clients:
-            self.send(client[0], message)
+        for client in self.authenticated_clients:
+            try:
+                self.send(client[0], message)
+            except:
+                pass
     
     def deconnection(self):
         self.stop_threads = True
         self.send_stop()
         for task in self.tasks:
-            if task.is_alive():  # Check if the thread is alive before joining
-                task.join()
-        for client in self.clients:
-            if client[0].fileno() != -1:  # Check if the socket is open before closing
-                client[0].close()
-        if self.server_socket.fileno() != -1:  # Check if the server socket is open before closing
+            try:
+                if task.is_alive():
+                    task.join()
+            except:
+                pass
+        for client in self.authenticated_clients + self.pending_clients:
+            try:
+                if client[0].fileno() != -1:
+                    client[0].close()
+            except:
+                pass
+            
+        if self.server_socket.fileno() != -1:
             self.server_socket.close()
         logging.info("BusCOM : Serveur arrêté")
         print("BusCOM : Serveur arrêté")
@@ -122,8 +126,9 @@ class Serveur:
     def deconnect_client(self, connection, address):
         logging.info(f"BusCOM : Déconnexion de {address}")
         with self.lock:
-            self.clients = [client for client in self.clients if client[0] != connection]
-        try :
+            self.authenticated_clients = [client for client in self.authenticated_clients if client[0] != connection]
+            self.pending_clients = [client for client in self.pending_clients if client[0] != connection]
+        try:
             connection.close()
         except Exception as e:
             logging.error(f"BusCOM : Erreur lors de la déconnexion de {address} : {str(e)}")
@@ -132,7 +137,7 @@ class Serveur:
     def load_json(self, data):
         messages = []
         for message in data.split('\n'):
-            if message:  # ignore empty lines
+            if message:
                 try:
                     messages.append(json.loads(message))
                 except json.JSONDecodeError:
@@ -140,25 +145,13 @@ class Serveur:
         return messages
 
     def init_connection(self, connection, id):
-        # Si la connexion est nouvelle, on met à jour l'ID
-        # Sinon, on le remplace par le nouvel ID
-        new_connection = False
-        for client in self.clients:
+        for client in self.pending_clients:
             if client[0] == connection:
                 client[2] = id
-                new_connection = True
-                logging.info(f"BusCOM : Connexion mise à jour : {self.client_names[id]}")
+                self.authenticated_clients.append(client)
+                self.pending_clients.remove(client)
+                logging.info(f"BusCOM : Connexion authentifiée : {self.client_names[id]}")
                 break
-        if not new_connection:
-            for client in self.clients:
-                if client[2] == id:
-                    try:
-                        client[0].close()
-                    except Exception:
-                        pass
-                    client[0] = connection
-                    logging.info(f"BusCOM : Connexion mise à jour : {self.client_names[id]}")
-                    break
 
     def handle_message(self, message, connection):
         if message["cmd"] == "stop":
@@ -168,13 +161,11 @@ class Serveur:
             self.init_connection(connection, client_id)
         else:
             if message["id_r"] == 0:
-                # Envoie les coordonnées à tous les clients
-                for client in self.clients:
+                for client in self.authenticated_clients:
                     if client[0] != connection:
                         self.send(client[0], message)
             else:
-                # Envoie les coordonnées à un client spécifique
-                for client in self.clients:
+                for client in self.authenticated_clients:
                     if client[2] == message["id_r"]:
                         self.send(client[0], message)
 
@@ -182,7 +173,7 @@ class Serveur:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as self.server_socket:
             logging.info("BusCOM : Démarrage du serveur...")
             print("BusCOM : Démarrage du serveur...")
-            self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) # Permet de réutiliser le port après un arrêt brutal
+            self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             self.server_socket.bind((self.host, self.port))
             self.server_socket.listen()
             self.server_socket.settimeout(1)
@@ -198,7 +189,6 @@ class Serveur:
             logging.info("BusCOM : Arrêt des connexions...")
             print("BusCOM : Arrêt des connexions...")
             self.deconnection()
-            
 
 if __name__ == "__main__":
     serveur = Serveur("0.0.0.0", 22050)

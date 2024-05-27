@@ -26,19 +26,5 @@
         "Action": {},
         "Special": {},
         "Vitesse": "Normal"
-    },
-    "3": {
-        "D\u00e9placement": {
-            "Coord": {
-                "X": 854,
-                "Y": 682,
-                "T": -41,
-                "S": "0"
-            },
-            "aknowledge": 276
-        },
-        "Action": {},
-        "Special": {},
-        "Vitesse": "Normal"
     }
 }

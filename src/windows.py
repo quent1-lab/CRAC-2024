@@ -739,6 +739,7 @@ class IHM_Action_Aux:
             self.pos_actuelle = [data["Déplacement"]["Coord"]["X"], data["Déplacement"]["Coord"]["Y"]]
             self.labels[2].set_text(f"X: {self.pos_actuelle[0]}  Y: {self.pos_actuelle[1]}")
             self.angle = data["Déplacement"]["Coord"]["T"]
+            self.texts[1].set_text(str(self.angle))
         elif "Ligne_Droite" in data["Déplacement"]:
             self.distance = data["Déplacement"]["Ligne_Droite"]
             self.checkboxes[0].set_checked(False)

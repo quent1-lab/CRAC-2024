@@ -129,6 +129,8 @@ class IHM:
         logging.basicConfig(filename='ihm.log', level=logging.INFO,
                             datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
 
+    # ======================== Fin de constructeur ==========================
+    
     def draw_robot(self):
         x = self.ROBOT.x
         y = self.ROBOT.y

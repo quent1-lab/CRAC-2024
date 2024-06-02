@@ -639,8 +639,8 @@ class IHM:
             new_scan = self.transform_scan(scan, self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)
 
             # self.detect_object(new_scan)
-            new_objets = self.detect_objects(new_scan)
-            self.suivre_objet(new_objets, 100)
+            #new_objets = self.detect_objects(new_scan)
+            #self.suivre_objet(new_objets, 100)
 
             self.draw_background()
             self.draw_list_position()
@@ -807,9 +807,10 @@ class IHM:
                     # Vérifiez si le clic est à proximité d'un point de la liste d'attente à moins de 10 pixels
                     if math.sqrt((event.pos[0] - x)**2 + (event.pos[1] - y)**2) < 10:
                         if self.action_window is None:
-                            with open("data/strategie.json", "r") as file:
+                            with open("data/strategie.json", "r") as file: # BUG: Suite jamais exécutée
                                 strategie = json.load(file)
-                            self.action_window = IHM_Action_Aux(self.manager, i+1, (pos[0], pos[1], 0), _callback_save=self.save_action, _config = strategie[str(i+1)], _callback_delete=self.delete_action)
+                                len(strategie)
+                            self.action_window = IHM_Action_Aux(self.manager, i+1, (pos[0], pos[1], 0), _callback_save=self.save_action, _config = strategie[str(i)], _callback_delete=self.delete_action)
                         break
             except Exception as e:
                 print("Erreur dans la gestion des clics", e)
@@ -922,9 +923,9 @@ class IHM:
         
         # Gérer la commandes de nouvelles coordonnées
         try:
-            if strat["New_coord"]["X"] !=  "" and strat["New_coord"]["Y"] != "" and strat["New_coord"]["T"] != "": 
+            if strat["New_coord"]["X"] !=  new_pos[0] or strat["New_coord"]["Y"] != new_pos[1] or strat["New_coord"]["T"] != new_pos[2]:
                 if strat["New_coord"]["S"] != "":
-                    new_pos = (int(strat["New_coord"]["X"]), int(strat["New_coord"]["Y"]), int(strat["New_coord"]["T"]), strat["New_coord"]["S"])
+                    new_pos = (int(strat["New_coord"]["X"]), int(strat["New_coord"]["Y"]), int(strat["New_coord"]["T"]), str(strat["New_coord"]["S"]))
                 else:
                     new_pos = (int(strat["New_coord"]["X"]), int(strat["New_coord"]["Y"]), int(strat["New_coord"]["T"]), "0")
                 new_window = IHM_Action_Aux(self.manager, self.numero_strategie+2, (int(strat["New_coord"]["X"]), int(strat["New_coord"]["Y"]), int(strat["New_coord"]["T"])), _callback_save=self.save_action,_id="New_coord")
@@ -939,7 +940,7 @@ class IHM:
         with open("data/strategie.json", "r") as file:
             try:
                 data = json.load(file)
-                print("Stratégie chargée", data)
+                #print("Stratégie chargée", data)
             except:
                 data = {}
             try :
@@ -1099,7 +1100,7 @@ class IHM:
         self.client_socket.add_to_send_list(self.client_socket.create_message(self.IHM_Robot, "config", {"equipe": self.EQUIPE, "etat": self.ETAT}))
 
     def run(self):
-        #self.programme_simulation()
+        self.programme_simulation()
         
         self.client_socket.set_callback(self.receive_to_server)
         self.client_socket.set_callback_stop(self.stop)

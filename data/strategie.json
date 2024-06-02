@@ -2,51 +2,9 @@
     "1": {
         "D\u00e9placement": {
             "Coord": {
-                "X": 704,
-                "Y": 526,
-                "T": 302,
-                "S": "0"
-            },
-            "aknowledge": 276
-        },
-        "Action": {},
-        "Special": {},
-        "Vitesse": "Normal"
-    },
-    "2": {
-        "D\u00e9placement": {
-            "Coord": {
-                "X": 1709,
-                "Y": 1285,
-                "T": 370,
-                "S": "0"
-            },
-            "aknowledge": 276
-        },
-        "Action": {},
-        "Special": {},
-        "Vitesse": "Normal"
-    },
-    "3": {
-        "D\u00e9placement": {
-            "Coord": {
-                "X": 1028,
-                "Y": 1288,
-                "T": 1797,
-                "S": "0"
-            },
-            "aknowledge": 276
-        },
-        "Action": {},
-        "Special": {},
-        "Vitesse": "Normal"
-    },
-    "4": {
-        "D\u00e9placement": {
-            "Coord": {
-                "X": 1520,
-                "Y": 714,
-                "T": -493,
+                "X": 1057,
+                "Y": 552,
+                "T": 214,
                 "S": "0"
             },
             "aknowledge": 276

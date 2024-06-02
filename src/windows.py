@@ -157,7 +157,7 @@ class IHM_Command:
             except ValueError:
                 pass
                 
-        print(self.command_CAN)
+        #print(self.command_CAN)
         self.CAN_callback(self.command_CAN)
 
     def send_command_XYT(self):
@@ -285,7 +285,7 @@ class IHM_Action_Aux:
                     "box3": {"type": "label", "position": (450, 260), "size": (70, 35), "text": "Deplac"},
                     "box4": {"type": "checkbox", "position": (515, 260), "size": (35, 35), "text": "Bras", "id":"#c_Bras"}},            
             
-            "New_coord": {"box1": {"type": "label", "position": (60, 310), "size": (270, 30), "text": "Nouvelle coordonnée (optionnel) :"},
+            "New_coord": {"box1": {"type": "label", "position": (20, 310), "size": (150, 30), "text": "Coordonnée du point"},
                         "box2": {"type": "label", "position": (20, 335), "size": (130, 30), "text": "X"},
                         "box3": {"type": "text", "position": (20, 360), "size": (130, 30), "id":"#t_X"},
                         "box4": {"type": "label", "position": (160, 335), "size": (130, 30), "text": "Y"},
@@ -293,8 +293,7 @@ class IHM_Action_Aux:
                         "box6": {"type": "label", "position": (300, 335), "size": (130, 30), "text": "T"},
                         "box7": {"type": "text", "position": (300, 360), "size": (130, 30), "id":"#t_T"},
                         "box8": {"type": "label", "position": (440, 335), "size": (130, 30), "text": "S"},
-                        "box9": {"type": "text", "position": (440, 360), "size": (130, 30), "id":"#t_S"},
-                        "box10": {"type": "checkbox", "position": (20, 310), "size": (35, 35), "id":"#c_New_coord"}},
+                        "box9": {"type": "text", "position": (440, 360), "size": (130, 30), "id":"#t_S"}},
             
             "Vitesse": {"box1": {"type": "label", "position": (440, 50), "size": (80, 30), "text": "Vitesse"},
                         "box2": {"type": "list", "position": (440, 80), "size": (80, 35),"text": self.name_Vitesse, "id":"#l_Vitesse"}},
@@ -362,11 +361,6 @@ class IHM_Action_Aux:
         # Activer checkbox deplacement
         self.checkboxes[0].set_checked(True)
         
-        # Désactiver les textes de la nouvelle coordonnée
-        for i, text in enumerate(self.texts):
-            if i != 1:
-                text.disable()
-        
         # Désactiver les boutons back et next
         self.buttons[-1].disable()
         self.buttons[-3].disable()
@@ -375,7 +369,11 @@ class IHM_Action_Aux:
         if _angle:
             self.texts[1].set_text(str(_angle))
             self.data["Déplacement"]["Coord"]["T"] = _angle
-            
+        
+        # Mise à jour des coordonnées
+        self.texts[-4].set_text(str(_pos_actuelle[0]))
+        self.texts[-3].set_text(str(_pos_actuelle[1]))
+        self.texts[-2].set_text(str(self.angle))      
         
         if _config:
             # Charger tous les paramètres
@@ -455,6 +453,8 @@ class IHM_Action_Aux:
                                     self.labels[5].set_text("Angle d'arrivé (°)")
                                     self.texts[1].set_text("")
                                     
+                                    self.set_box_text_coord(True)
+                                    
                                 else:
                                     # Supprimer les données de coord
                                     self.data["Déplacement"] = {}
@@ -470,6 +470,8 @@ class IHM_Action_Aux:
                                     self.checkboxes[2].enable()
                                     self.texts[1].enable()
                                     self.labels[5].set_text("Rotation (°)")
+                                    
+                                    self.set_box_text_coord(False)
                                                                
                             elif id == "#c_Ligne_droite":
                                 # Activer ou non la checkbox et text ligne droite
@@ -485,6 +487,8 @@ class IHM_Action_Aux:
                                     
                                     # Retirer les données de rotation et coord
                                     self.data["Déplacement"] = {}
+                                    
+                                    self.set_box_text_coord(False)
                                 else:
                                     # Activer rotation
                                     self.checkboxes[2].enable()
@@ -497,6 +501,8 @@ class IHM_Action_Aux:
                                     # Ajouter les données de coord et supprimer les données de ligne droite
                                     self.data["Déplacement"] = {"Coord": {"X": self.pos_actuelle[0], "Y": self.pos_actuelle[1], "T": "", "S": "0"},
                                                                 "aknowledge": self.config["Coord"]["aknowledge"]}
+                                    
+                                    self.set_box_text_coord(True)
                                     
                             elif id == "#c_New_coord":
                                 if checkbox.get_checked():
@@ -747,6 +753,7 @@ class IHM_Action_Aux:
             self.texts[0].enable()
             self.labels[5].set_text("Rotation (°)")
             self.texts[1].disable()
+            self.set_box_text_coord(False)
         elif "Rotation" in data["Déplacement"]:
             self.angle = data["Déplacement"]["Rotation"]
             self.checkboxes[0].set_checked(False)
@@ -755,6 +762,7 @@ class IHM_Action_Aux:
             self.texts[1].enable()
             self.labels[5].set_text("Rotation (°)")
             self.texts[0].disable()
+            self.set_box_text_coord(False)
             
         self.update_listes()
         self.enable_listes()
@@ -769,7 +777,15 @@ class IHM_Action_Aux:
                                                         manager=self.manager,
                                                         container=self.window,
                                                         object_id=ObjectID(object_id="#b_Delete"))
-        
+    
+    def set_box_text_coord(self, state):
+        if state:
+            for text in self.texts[-4:]:
+                text.enable()
+        else:
+            for text in self.texts[-4:]:
+                text.disable()    
+    
     def close(self):
         self.window.kill()
 

@@ -373,6 +373,9 @@ class IHM:
                 self.lcd, pygame.Color(0, 255, 0),
                 (x, y),
                 (new_waiting_list[0][0], new_waiting_list[0][1]), 3)
+            
+            # Dessine le points de départ
+            pygame.draw.circle(self.lcd, pygame.Color(0, 0, 255), (x, y), 5)
 
             # Dessine le chemin entre les points
             for i in range(len(new_waiting_list) - 1):
@@ -874,8 +877,6 @@ class IHM:
             
         self.action_window.close()
         self.action_window = None
-        
-        print("Action supprimée")
     
     def save_action(self, strat):
         action = strat["Action"]
@@ -1011,7 +1012,7 @@ class IHM:
                 if "Coord" in action["Déplacement"]:
                     coord = action["Déplacement"]["Coord"]
                         
-                    new_pos = (int(coord["X"]), int(coord["Y"]), coord["T"]/10, "0")
+                    new_pos = (int(coord["X"]), int(coord["Y"]), (coord["T"]//10), "0")
                         
                 elif "Ligne_Droite" in action["Déplacement"]:
                     distance = action["Déplacement"]["Ligne_Droite"]
@@ -1020,10 +1021,10 @@ class IHM:
                     if len(self.pos_waiting_list) > 0: # Récupérer les coordonnées précédentes
                         coord_prec = self.pos_waiting_list[-1]
                     else:
-                        coord_prec = (self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE, "0")
+                        coord_prec = (225, 225, 0, "0")
                         
-                    x = coord_prec[0] + distance * math.cos(math.radians(coord_prec[2]/10))
-                    y = coord_prec[1] + distance * math.sin(math.radians(coord_prec[2]/10))
+                    x = coord_prec[0] + distance * math.cos(math.radians((coord_prec[2])))
+                    y = coord_prec[1] + distance * math.sin(math.radians((coord_prec[2])))
                     new_pos = (int(x), int(y), coord_prec[2], "0")
                     
                 elif "Rotation" in action["Déplacement"]:
@@ -1033,12 +1034,13 @@ class IHM:
                     if len(self.pos_waiting_list) > 0: # Récupérer les coordonnées précédentes
                         coord_prec = self.pos_waiting_list[-1]
                     else:
-                        coord_prec = (self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE, "0")
-                    
-                    new_angle = angle
+                        coord_prec = (225, 225, 0, "0")
+                    # Calculer le nouvel angle en fonction de l'angle précédent
+                    new_angle = coord_prec[2] + angle//10
                     new_pos = (coord_prec[0], coord_prec[1], new_angle, "0")
             
                 self.pos_waiting_list.append(new_pos)
+                print(new_pos)
                 self.numero_strategie += 1
         else:
             print("Aucune stratégie sauvegardée")

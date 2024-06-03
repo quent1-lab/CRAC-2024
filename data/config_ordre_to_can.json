@@ -14,7 +14,7 @@
     },
     "Moteur": {
         "ordre": {
-            "-": 0,
+            "--": 0,
             "Haut": 7,
             "Milieu": 8,
             "Bas": 9
@@ -27,7 +27,7 @@
     "HerkuleX": {
         "Peigne": {
             "ordre": {
-                "-": 0,
+                "--": 0,
                 "Lever": 4,
                 "Prendre": 12,
                 "Vibrer": 10,
@@ -41,7 +41,7 @@
         "Pinces": {
             "droite": {
                 "ordre": {
-                    "-": 0,
+                    "--": 0,
                     "Max": 0,
                     "Ouvert": 2,
                     "Plante": 3,
@@ -55,7 +55,7 @@
             },
             "gauche": {
                 "ordre": {
-                    "-": 0,
+                    "--": 0,
                     "Max": 0,
                     "Ouvert": 2,
                     "Plante": 3,
@@ -70,7 +70,7 @@
         },
         "Bras": {
             "ordre": {
-                "-": 0,
+                "--": 0,
                 "Lever": 16,
                 "Panneau": 17
             },
@@ -78,7 +78,7 @@
         }
     },
     "Action_special": {
-        "-": 0,
+        "--": 0,
         "Vibrer": {
             "ordre": 0,
             "aknowledge": {
@@ -90,7 +90,7 @@
     "Recalage": {
         "id": "0x24",
         "ordre": {
-            "-": 0,
+            "--": 0,
             "X avant": 1,
             "Y avant": 2,
             "X arriere": 3,

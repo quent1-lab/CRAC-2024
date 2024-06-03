@@ -2,9 +2,9 @@
     "1": {
         "D\u00e9placement": {
             "Coord": {
-                "X": 1510,
-                "Y": 488,
-                "T": 120,
+                "X": 1500,
+                "Y": 1000,
+                "T": 3000,
                 "S": "0"
             },
             "aknowledge": 276
@@ -30,17 +30,13 @@
     },
     "2": {
         "D\u00e9placement": {
-            "Rotation": -320,
-            "aknowledge": 278
-        },
-        "Action": {
-            "_PG_ar": {
-                "id": "0x1A1",
-                "en_mvt": true,
-                "ordre": 2,
-                "akn": 149,
-                "str": "Ouvert"
-            }
+            "Coord": {
+                "X": 763,
+                "Y": 1346,
+                "T": 1605,
+                "S": "0"
+            },
+            "aknowledge": 276
         },
         "Special": {},
         "Vitesse": "Normal"
@@ -65,9 +61,9 @@
     "4": {
         "D\u00e9placement": {
             "Coord": {
-                "X": 206,
-                "Y": 210,
-                "T": 900,
+                "X": 1526,
+                "Y": 730,
+                "T": -389,
                 "S": "0"
             },
             "aknowledge": 276

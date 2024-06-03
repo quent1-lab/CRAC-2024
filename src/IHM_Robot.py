@@ -290,6 +290,15 @@ class IHM_Robot:
             logging.info(f"Recalage de la zone {self.zone_recalage}")
             return
         elif self.supprimer_start:
+            
+            # Enrigister la stratégie dans un dossier de backup
+            
+            if not os.path.exists("data/strategies_backup"):
+                os.makedirs("data/strategies_backup")
+            if os.path.exists(self.path_strat + f"/strategie_{name}_bkp.json"):
+                os.remove(self.path_strat + f"/strategie_{name}_bkp.json")
+            os.rename(self.path_strat + f"/strategie_{name}.json", self.path_strat + f"/strategie_{name}_bkp.json")
+            
             # Supprimer la stratégie
             if os.path.exists(self.path_strat + f"/strategie_{name}.json"):
                 os.remove(self.path_strat + f"/strategie_{name}.json")

@@ -157,7 +157,7 @@ class IHM_Command:
             except ValueError:
                 pass
                 
-        print(self.command_CAN)
+        #print(self.command_CAN)
         self.CAN_callback(self.command_CAN)
 
     def send_command_XYT(self):
@@ -285,7 +285,7 @@ class IHM_Action_Aux:
                     "box3": {"type": "label", "position": (450, 260), "size": (70, 35), "text": "Deplac"},
                     "box4": {"type": "checkbox", "position": (515, 260), "size": (35, 35), "text": "Bras", "id":"#c_Bras"}},            
             
-            "New_coord": {"box1": {"type": "label", "position": (60, 310), "size": (270, 30), "text": "Nouvelle coordonnée (optionnel) :"},
+            "New_coord": {"box1": {"type": "label", "position": (20, 310), "size": (150, 30), "text": "Coordonnée du point"},
                         "box2": {"type": "label", "position": (20, 335), "size": (130, 30), "text": "X"},
                         "box3": {"type": "text", "position": (20, 360), "size": (130, 30), "id":"#t_X"},
                         "box4": {"type": "label", "position": (160, 335), "size": (130, 30), "text": "Y"},
@@ -293,8 +293,7 @@ class IHM_Action_Aux:
                         "box6": {"type": "label", "position": (300, 335), "size": (130, 30), "text": "T"},
                         "box7": {"type": "text", "position": (300, 360), "size": (130, 30), "id":"#t_T"},
                         "box8": {"type": "label", "position": (440, 335), "size": (130, 30), "text": "S"},
-                        "box9": {"type": "text", "position": (440, 360), "size": (130, 30), "id":"#t_S"},
-                        "box10": {"type": "checkbox", "position": (20, 310), "size": (35, 35), "id":"#c_New_coord"}},
+                        "box9": {"type": "text", "position": (440, 360), "size": (130, 30), "id":"#t_S"}},
             
             "Vitesse": {"box1": {"type": "label", "position": (440, 50), "size": (80, 30), "text": "Vitesse"},
                         "box2": {"type": "list", "position": (440, 80), "size": (80, 35),"text": self.name_Vitesse, "id":"#l_Vitesse"}},
@@ -362,11 +361,6 @@ class IHM_Action_Aux:
         # Activer checkbox deplacement
         self.checkboxes[0].set_checked(True)
         
-        # Désactiver les textes de la nouvelle coordonnée
-        for i, text in enumerate(self.texts):
-            if i != 1:
-                text.disable()
-        
         # Désactiver les boutons back et next
         self.buttons[-1].disable()
         self.buttons[-3].disable()
@@ -375,12 +369,16 @@ class IHM_Action_Aux:
         if _angle:
             self.texts[1].set_text(str(_angle))
             self.data["Déplacement"]["Coord"]["T"] = _angle
-            
+        
+        # Mise à jour des coordonnées
+        self.texts[-4].set_text(str(_pos_actuelle[0]))
+        self.texts[-3].set_text(str(_pos_actuelle[1]))
+        self.texts[-2].set_text(str(self.angle))      
         
         if _config:
             # Charger tous les paramètres
             self.load_data(_config)
-        
+
         # Cacher la liste pince gauche
         self.listes[5].hide()
 
@@ -388,7 +386,7 @@ class IHM_Action_Aux:
         if event.type == pygame.USEREVENT:
             if event.user_type == pygame_gui.UI_BUTTON_PRESSED: # Si un bouton est pressé
                 if len(event.ui_element.get_object_ids()) > 1:
-                    id = event.ui_element.get_object_ids()[1]
+                    id = event.ui_element.get_object_ids()[1] 
                 else:
                     id = ""
                 if id == "#b_Avant":
@@ -455,6 +453,8 @@ class IHM_Action_Aux:
                                     self.labels[5].set_text("Angle d'arrivé (°)")
                                     self.texts[1].set_text("")
                                     
+                                    self.set_box_text_coord(True)
+                                    
                                 else:
                                     # Supprimer les données de coord
                                     self.data["Déplacement"] = {}
@@ -470,6 +470,8 @@ class IHM_Action_Aux:
                                     self.checkboxes[2].enable()
                                     self.texts[1].enable()
                                     self.labels[5].set_text("Rotation (°)")
+                                    
+                                    self.set_box_text_coord(False)
                                                                
                             elif id == "#c_Ligne_droite":
                                 # Activer ou non la checkbox et text ligne droite
@@ -485,6 +487,8 @@ class IHM_Action_Aux:
                                     
                                     # Retirer les données de rotation et coord
                                     self.data["Déplacement"] = {}
+                                    
+                                    self.set_box_text_coord(False)
                                 else:
                                     # Activer rotation
                                     self.checkboxes[2].enable()
@@ -497,6 +501,8 @@ class IHM_Action_Aux:
                                     # Ajouter les données de coord et supprimer les données de ligne droite
                                     self.data["Déplacement"] = {"Coord": {"X": self.pos_actuelle[0], "Y": self.pos_actuelle[1], "T": "", "S": "0"},
                                                                 "aknowledge": self.config["Coord"]["aknowledge"]}
+                                    
+                                    self.set_box_text_coord(True)
                                     
                             elif id == "#c_New_coord":
                                 if checkbox.get_checked():
@@ -529,7 +535,7 @@ class IHM_Action_Aux:
                 texte = event.text
                 if self.cote_actif != "":
                     if id == "#l_Moteur":
-                        if texte == "-":
+                        if texte == "--":
                             if "_M_av" in self.data["Action"] and self.cote_actif == "avant":
                                 self.data["Action"].pop("_M_av")
                             elif "_M_ar" in self.data["Action"] and self.cote_actif == "arriere":
@@ -544,7 +550,7 @@ class IHM_Action_Aux:
                                                                             }
                             
                     elif id == "#l_Peigne":
-                        if texte == "-":
+                        if texte == "--":
                             if "_P_av" in self.data["Action"] and self.cote_actif == "avant":
                                 self.data["Action"].pop("_P_av")
                             elif "_P_ar" in self.data["Action"] and self.cote_actif == "arriere":
@@ -559,7 +565,7 @@ class IHM_Action_Aux:
                                                                             }
                             
                     elif id == "#l_Pince_G":
-                        if texte == "-":
+                        if texte == "--":
                             if "_PG_av" in self.data["Action"] and self.cote_actif == "avant":
                                 self.data["Action"].pop("_PG_av")
                             elif "_PG_ar" in self.data["Action"] and self.cote_actif == "arriere":
@@ -574,7 +580,7 @@ class IHM_Action_Aux:
                                                                             }
                             
                     elif id == "#l_Pince_D":
-                        if texte == "-":
+                        if texte == "--":
                             if "_PD_av" in self.data["Action"] and self.cote_actif == "avant":
                                 self.data["Action"].pop("_PD_av")
                             elif "_PD_ar" in self.data["Action"] and self.cote_actif == "arriere":
@@ -589,7 +595,7 @@ class IHM_Action_Aux:
                                                                             }
                     
                     elif id == "#l_Action_special":
-                        if texte == "-":
+                        if texte == "--":
                             self.data["Special"] = {}
                         else:
                             self.data["Special"] = {
@@ -600,7 +606,7 @@ class IHM_Action_Aux:
                             }
                     
                 if id == "#l_Bras":
-                    if texte == "-":
+                    if texte == "--":
                         if "_B_" in self.data["Action"]:
                             self.data["Action"].pop("_B_")
                     else:
@@ -613,7 +619,7 @@ class IHM_Action_Aux:
                                                     }
                 
                 elif id == "#l_Recalage":
-                    if texte == "-":
+                    if texte == "--":
                         if "_R_" in self.data["Action"]:
                             self.data["Action"].pop("_R_")
                     else:
@@ -632,26 +638,87 @@ class IHM_Action_Aux:
                 id = event.ui_element.get_object_ids()[1]
                 try:
                     if id == "#t_Angle_arrive":
-                        self.angle = int(event.text)
-                        if not self.checkboxes[0].get_checked():
-                            self.data["Déplacement"] = {"Rotation": self.angle * 10,
-                                                        "aknowledge": self.config["Rotation"]["aknowledge"]}
-                        else:
-                            self.data["Déplacement"]["Coord"]["T"] = int(event.text)
+                        try:
+                            self.angle = int(event.text) if -360 <= int(event.text) <= 360 else 0
+                            if not self.checkboxes[0].get_checked():
+                                self.data["Déplacement"] = {"Rotation": self.angle * 10,
+                                                            "aknowledge": self.config["Rotation"]["aknowledge"]}
+                            else:
+                                self.data["Déplacement"]["Coord"]["T"] = self.angle
+                        except ValueError:
+                            if event.text != "-" and event.text != "" and event.text != "0-":
+                                self.angle = 0
+                                if not self.checkboxes[0].get_checked():
+                                    self.data["Déplacement"] = {"Rotation": 0,
+                                                                "aknowledge": self.config["Rotation"]["aknowledge"]}
+                                else:
+                                    self.data["Déplacement"]["Coord"]["T"] = 0
+                            elif event.text == "-":
+                                self.angle = "-"
+                            elif event.text == "":
+                                self.angle = ""
+                            elif event.text == "0-":
+                                self.angle = "-"
+                        self.texts[1].set_text(str(self.angle))
+                                
                     elif id == "#t_Ligne_droite":
-                        self.distance = int(event.text)
-                        self.data["Déplacement"] = {"Ligne_Droite": self.distance,
-                                                    "aknowledge": self.config["Ligne_Droite"]["aknowledge"]}
+                        try:
+                            self.distance = int(event.text) if -3000 <= int(event.text) <= 3000 else 0
+                            self.data["Déplacement"] = {"Ligne_Droite": self.distance,
+                                                        "aknowledge": self.config["Ligne_Droite"]["aknowledge"]}
+                        except ValueError:
+                            self.distance = 0
+                            self.data["Déplacement"] = {"Ligne_Droite": 0,
+                                                        "aknowledge": self.config["Ligne_Droite"]["aknowledge"]}
+                            if event.text != "-" and event.text != "" and event.text != "0-":
+                                self.distance = 0
+                                self.data["Déplacement"] = {"Ligne_Droite": 0,
+                                                            "aknowledge": self.config["Ligne_Droite"]["aknowledge"]}
+                            elif event.text == "-":
+                                self.distance = "-"
+                            elif event.text == "":
+                                self.distance = ""
+                            elif event.text == "0-":
+                                self.distance = "-"
+                        self.texts[0].set_text(str(self.distance))
+                    
+                    
                     elif id == "#t_X":
-                        self.data["New_coord"]["X"] = int(event.text) 
+                        try:
+                            x = int(event.text)
+                            self.data["Déplacement"]["Coord"]["X"] = x if 0 <= x <= 3000 else 0
+                        except ValueError:
+                            self.data["Déplacement"]["Coord"]["X"] = 0
+
                     elif id == "#t_Y":
-                        self.data["New_coord"]["Y"] = int(event.text)
+                        try:
+                            y = int(event.text)
+                            self.data["Déplacement"]["Coord"]["Y"] = y if 0 <= y <= 2000 else 0
+                        except ValueError:
+                            self.data["Déplacement"]["Coord"]["Y"] = 0
+
                     elif id == "#t_T":
-                        self.data["New_coord"]["T"] = int(event.text)
+                        try:
+                            t = int(event.text)
+                            self.data["Déplacement"]["Coord"]["T"] = t
+                        except ValueError:
+                            self.data["Déplacement"]["Coord"]["T"] = 0
+
                     elif id == "#t_S":
-                        self.data["New_coord"]["S"] = int(event.text)
+                        try:
+                            s = int(event.text)
+                            self.data["Déplacement"]["Coord"]["S"] = s if 0 <= s <= 1 else 0
+                        except ValueError:
+                            self.data["Déplacement"]["Coord"]["S"] = 0
+                    
+                    # Mise à jour des coordonnées
+                    if "Coord" in self.data["Déplacement"]:
+                        self.texts[-4].set_text(str(self.data["Déplacement"]["Coord"]["X"]))
+                        self.texts[-3].set_text(str(self.data["Déplacement"]["Coord"]["Y"]))
+                        self.texts[-2].set_text(str(self.data["Déplacement"]["Coord"]["T"]))   
+                        self.labels[2].set_text(f"X: {self.data['Déplacement']['Coord']['X']}  Y: {self.data['Déplacement']['Coord']['Y']}")
                 except Exception as e:
-                    print(e)
+                    print(f"Erreur lors de la modification du texte : {e}")
                             
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_TAB:
@@ -678,28 +745,31 @@ class IHM_Action_Aux:
             liste.enable()
     
     def update_listes(self):
-        action = self.data.get("Action", {})
-        moteur_ordre = action.get("_M_"+self.cote_actif[:2], {"str": "-"})
-        herkulex_peigne_ordre = action.get("_P_"+self.cote_actif[:2], {"str": "-"})
-        herkulex_pince_gauche = action.get("_PG_"+self.cote_actif[:2], {"str": "-"})
-        herkulex_pince_droite = action.get("_PD_"+self.cote_actif[:2], {"str": "-"})
-        herkulex_bras = action.get("_B_", {"str": "-"})
-        action_special = self.data.get("Special", {"str": "-"})
-        
-        if "str" in action_special:        
-            self.rebuild_liste(self.listes[1],action_special["str"])
-        else:
-            self.rebuild_liste(self.listes[1],"-")
-        
-        self.rebuild_liste(self.listes[2],moteur_ordre["str"])
-        
-        self.rebuild_liste(self.listes[3],herkulex_peigne_ordre["str"])
-        
-        self.rebuild_liste(self.listes[4],herkulex_pince_gauche["str"])
-            
-        self.rebuild_liste(self.listes[5],herkulex_pince_droite["str"])
-        
-        self.rebuild_liste(self.listes[6],herkulex_bras["str"])
+        try:
+            action = self.data.get("Action", {})
+            moteur_ordre = action.get("_M_"+self.cote_actif[:2], {"str": "--"})
+            herkulex_peigne_ordre = action.get("_P_"+self.cote_actif[:2], {"str": "--"})
+            herkulex_pince_gauche = action.get("_PG_"+self.cote_actif[:2], {"str": "--"})
+            herkulex_pince_droite = action.get("_PD_"+self.cote_actif[:2], {"str": "--"})
+            herkulex_bras = action.get("_B_", {"str": "--"})
+            action_special = self.data.get("Special", {"str": "--"})
+
+            if "str" in action_special:       
+                self.rebuild_liste(self.listes[1], (action_special["str"], action_special["str"]))
+            else:
+                self.rebuild_liste(self.listes[1], ("--", "--"))
+
+            self.rebuild_liste(self.listes[2], (moteur_ordre["str"], moteur_ordre["str"]))
+
+            self.rebuild_liste(self.listes[3], (herkulex_peigne_ordre["str"], herkulex_peigne_ordre["str"]))
+
+            self.rebuild_liste(self.listes[4], (herkulex_pince_gauche["str"], herkulex_pince_gauche["str"]))
+
+            self.rebuild_liste(self.listes[5], (herkulex_pince_droite["str"], herkulex_pince_droite["str"]))
+
+            self.rebuild_liste(self.listes[6], (herkulex_bras["str"], herkulex_bras["str"]))
+        except Exception as e:
+            print(f"Erreur lors de la mise à jour des listes : {e}")
             
     def update_checkboxes(self):
         action = self.data.get("Action", {})
@@ -717,15 +787,25 @@ class IHM_Action_Aux:
         self.checkboxes[6].set_checked(herkulex_bras["en_mvt"])
     
     def rebuild_liste(self,liste,option):
-        liste.selected_option = option
-        liste.menu_states['closed'].selected_option = option
-        liste.menu_states['closed'].finish()
-        liste.menu_states['closed'].start()
-        liste.rebuild()
+        try:
+            liste.selected_option = option
+            
+            liste.menu_states['closed'].finish()
+            liste.menu_states['closed'].selected_option = option
+            
+            if 'closed' in liste.menu_states:
+                liste.menu_states['closed'].start()
+            else:
+                print("'closed' n'est pas une clé valide dans menu_states.")
+
+            liste.rebuild()
+        except Exception as e:
+            print(f"Erreur lors de la reconstruction de la liste : {e}")
     
     def load_data(self,data):
         self.data = data
         self.data["id_action"] = self.action_numero
+        
         for key in data["Action"]:
             if key[-2:] == "av":
                 self.cote_actif = "avant"
@@ -748,6 +828,7 @@ class IHM_Action_Aux:
             self.texts[0].enable()
             self.labels[5].set_text("Rotation (°)")
             self.texts[1].disable()
+            self.set_box_text_coord(False)
         elif "Rotation" in data["Déplacement"]:
             self.angle = data["Déplacement"]["Rotation"]
             self.checkboxes[0].set_checked(False)
@@ -756,7 +837,8 @@ class IHM_Action_Aux:
             self.texts[1].enable()
             self.labels[5].set_text("Rotation (°)")
             self.texts[0].disable()
-            
+            self.set_box_text_coord(False)
+
         self.update_listes()
         self.enable_listes()
         self.update_checkboxes()
@@ -770,7 +852,15 @@ class IHM_Action_Aux:
                                                         manager=self.manager,
                                                         container=self.window,
                                                         object_id=ObjectID(object_id="#b_Delete"))
-        
+    
+    def set_box_text_coord(self, state):
+        if state:
+            for text in self.texts[-4:]:
+                text.enable()
+        else:
+            for text in self.texts[-4:]:
+                text.disable()    
+    
     def close(self):
         self.window.kill()
 

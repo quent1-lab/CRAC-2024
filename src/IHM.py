@@ -809,11 +809,14 @@ class IHM:
                         if self.action_window is None:
                             with open("data/strategie.json", "r") as file: # BUG: Suite jamais exécutée
                                 strategie = json.load(file)
-                                len(strategie)
-                            self.action_window = IHM_Action_Aux(self.manager, i+1, (pos[0], pos[1], 0), _callback_save=self.save_action, _config = strategie[str(i)], _callback_delete=self.delete_action)
+                            key = str(i+1)
+                            try:
+                                self.action_window = IHM_Action_Aux(self.manager, i+1, (pos[0], pos[1], 0), _callback_save=self.save_action, _config = strategie[key], _callback_delete=self.delete_action)
+                            except Exception as e:
+                                print(f"Erreur dans l'ouverture de la fenêtre de configuration de l'action {i+1} :", e)                               
                         break
             except Exception as e:
-                print("Erreur dans la gestion des clics", e)
+                print("Erreur dans la gestion des clics :", e)
 
     def is_within_game_area(self, pos):
         # Vérifie si les coordonnées du clic sont dans la zone de jeu

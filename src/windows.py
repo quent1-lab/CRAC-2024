@@ -378,7 +378,7 @@ class IHM_Action_Aux:
         if _config:
             # Charger tous les paramètres
             self.load_data(_config)
-        
+
         # Cacher la liste pince gauche
         self.listes[5].hide()
 
@@ -386,7 +386,7 @@ class IHM_Action_Aux:
         if event.type == pygame.USEREVENT:
             if event.user_type == pygame_gui.UI_BUTTON_PRESSED: # Si un bouton est pressé
                 if len(event.ui_element.get_object_ids()) > 1:
-                    id = event.ui_element.get_object_ids()[1]
+                    id = event.ui_element.get_object_ids()[1] 
                 else:
                     id = ""
                 if id == "#b_Avant":
@@ -535,7 +535,7 @@ class IHM_Action_Aux:
                 texte = event.text
                 if self.cote_actif != "":
                     if id == "#l_Moteur":
-                        if texte == "-":
+                        if texte == "--":
                             if "_M_av" in self.data["Action"] and self.cote_actif == "avant":
                                 self.data["Action"].pop("_M_av")
                             elif "_M_ar" in self.data["Action"] and self.cote_actif == "arriere":
@@ -550,7 +550,7 @@ class IHM_Action_Aux:
                                                                             }
                             
                     elif id == "#l_Peigne":
-                        if texte == "-":
+                        if texte == "--":
                             if "_P_av" in self.data["Action"] and self.cote_actif == "avant":
                                 self.data["Action"].pop("_P_av")
                             elif "_P_ar" in self.data["Action"] and self.cote_actif == "arriere":
@@ -565,7 +565,7 @@ class IHM_Action_Aux:
                                                                             }
                             
                     elif id == "#l_Pince_G":
-                        if texte == "-":
+                        if texte == "--":
                             if "_PG_av" in self.data["Action"] and self.cote_actif == "avant":
                                 self.data["Action"].pop("_PG_av")
                             elif "_PG_ar" in self.data["Action"] and self.cote_actif == "arriere":
@@ -580,7 +580,7 @@ class IHM_Action_Aux:
                                                                             }
                             
                     elif id == "#l_Pince_D":
-                        if texte == "-":
+                        if texte == "--":
                             if "_PD_av" in self.data["Action"] and self.cote_actif == "avant":
                                 self.data["Action"].pop("_PD_av")
                             elif "_PD_ar" in self.data["Action"] and self.cote_actif == "arriere":
@@ -595,7 +595,7 @@ class IHM_Action_Aux:
                                                                             }
                     
                     elif id == "#l_Action_special":
-                        if texte == "-":
+                        if texte == "--":
                             self.data["Special"] = {}
                         else:
                             self.data["Special"] = {
@@ -606,7 +606,7 @@ class IHM_Action_Aux:
                             }
                     
                 if id == "#l_Bras":
-                    if texte == "-":
+                    if texte == "--":
                         if "_B_" in self.data["Action"]:
                             self.data["Action"].pop("_B_")
                     else:
@@ -619,7 +619,7 @@ class IHM_Action_Aux:
                                                     }
                 
                 elif id == "#l_Recalage":
-                    if texte == "-":
+                    if texte == "--":
                         if "_R_" in self.data["Action"]:
                             self.data["Action"].pop("_R_")
                     else:
@@ -684,28 +684,31 @@ class IHM_Action_Aux:
             liste.enable()
     
     def update_listes(self):
-        action = self.data.get("Action", {})
-        moteur_ordre = action.get("_M_"+self.cote_actif[:2], {"str": "-"})
-        herkulex_peigne_ordre = action.get("_P_"+self.cote_actif[:2], {"str": "-"})
-        herkulex_pince_gauche = action.get("_PG_"+self.cote_actif[:2], {"str": "-"})
-        herkulex_pince_droite = action.get("_PD_"+self.cote_actif[:2], {"str": "-"})
-        herkulex_bras = action.get("_B_", {"str": "-"})
-        action_special = self.data.get("Special", {"str": "-"})
-        
-        if "str" in action_special:        
-            self.rebuild_liste(self.listes[1],action_special["str"])
-        else:
-            self.rebuild_liste(self.listes[1],"-")
-        
-        self.rebuild_liste(self.listes[2],moteur_ordre["str"])
-        
-        self.rebuild_liste(self.listes[3],herkulex_peigne_ordre["str"])
-        
-        self.rebuild_liste(self.listes[4],herkulex_pince_gauche["str"])
-            
-        self.rebuild_liste(self.listes[5],herkulex_pince_droite["str"])
-        
-        self.rebuild_liste(self.listes[6],herkulex_bras["str"])
+        try:
+            action = self.data.get("Action", {})
+            moteur_ordre = action.get("_M_"+self.cote_actif[:2], {"str": "--"})
+            herkulex_peigne_ordre = action.get("_P_"+self.cote_actif[:2], {"str": "--"})
+            herkulex_pince_gauche = action.get("_PG_"+self.cote_actif[:2], {"str": "--"})
+            herkulex_pince_droite = action.get("_PD_"+self.cote_actif[:2], {"str": "--"})
+            herkulex_bras = action.get("_B_", {"str": "--"})
+            action_special = self.data.get("Special", {"str": "--"})
+
+            if "str" in action_special:       
+                self.rebuild_liste(self.listes[1], (action_special["str"], action_special["str"]))
+            else:
+                self.rebuild_liste(self.listes[1], ("--", "--"))
+
+            self.rebuild_liste(self.listes[2], (moteur_ordre["str"], moteur_ordre["str"]))
+
+            self.rebuild_liste(self.listes[3], (herkulex_peigne_ordre["str"], herkulex_peigne_ordre["str"]))
+
+            self.rebuild_liste(self.listes[4], (herkulex_pince_gauche["str"], herkulex_pince_gauche["str"]))
+
+            self.rebuild_liste(self.listes[5], (herkulex_pince_droite["str"], herkulex_pince_droite["str"]))
+
+            self.rebuild_liste(self.listes[6], (herkulex_bras["str"], herkulex_bras["str"]))
+        except Exception as e:
+            print(f"Erreur lors de la mise à jour des listes : {e}")
             
     def update_checkboxes(self):
         action = self.data.get("Action", {})
@@ -723,15 +726,25 @@ class IHM_Action_Aux:
         self.checkboxes[6].set_checked(herkulex_bras["en_mvt"])
     
     def rebuild_liste(self,liste,option):
-        liste.selected_option = option
-        liste.menu_states['closed'].selected_option = option
-        liste.menu_states['closed'].finish()
-        liste.menu_states['closed'].start()
-        liste.rebuild()
+        try:
+            liste.selected_option = option
+            
+            liste.menu_states['closed'].finish()
+            liste.menu_states['closed'].selected_option = option
+            
+            if 'closed' in liste.menu_states:
+                liste.menu_states['closed'].start()
+            else:
+                print("'closed' n'est pas une clé valide dans menu_states.")
+
+            liste.rebuild()
+        except Exception as e:
+            print(f"Erreur lors de la reconstruction de la liste : {e}")
     
     def load_data(self,data):
         self.data = data
         self.data["id_action"] = self.action_numero
+        
         for key in data["Action"]:
             if key[-2:] == "av":
                 self.cote_actif = "avant"
@@ -763,7 +776,7 @@ class IHM_Action_Aux:
             self.labels[5].set_text("Rotation (°)")
             self.texts[0].disable()
             self.set_box_text_coord(False)
-            
+
         self.update_listes()
         self.enable_listes()
         self.update_checkboxes()

@@ -638,26 +638,87 @@ class IHM_Action_Aux:
                 id = event.ui_element.get_object_ids()[1]
                 try:
                     if id == "#t_Angle_arrive":
-                        self.angle = int(event.text)
-                        if not self.checkboxes[0].get_checked():
-                            self.data["Déplacement"] = {"Rotation": self.angle * 10,
-                                                        "aknowledge": self.config["Rotation"]["aknowledge"]}
-                        else:
-                            self.data["Déplacement"]["Coord"]["T"] = int(event.text)
+                        try:
+                            self.angle = int(event.text) if -360 <= int(event.text) <= 360 else 0
+                            if not self.checkboxes[0].get_checked():
+                                self.data["Déplacement"] = {"Rotation": self.angle * 10,
+                                                            "aknowledge": self.config["Rotation"]["aknowledge"]}
+                            else:
+                                self.data["Déplacement"]["Coord"]["T"] = self.angle
+                        except ValueError:
+                            if event.text != "-" and event.text != "" and event.text != "0-":
+                                self.angle = 0
+                                if not self.checkboxes[0].get_checked():
+                                    self.data["Déplacement"] = {"Rotation": 0,
+                                                                "aknowledge": self.config["Rotation"]["aknowledge"]}
+                                else:
+                                    self.data["Déplacement"]["Coord"]["T"] = 0
+                            elif event.text == "-":
+                                self.angle = "-"
+                            elif event.text == "":
+                                self.angle = ""
+                            elif event.text == "0-":
+                                self.angle = "-"
+                        self.texts[1].set_text(str(self.angle))
+                                
                     elif id == "#t_Ligne_droite":
-                        self.distance = int(event.text)
-                        self.data["Déplacement"] = {"Ligne_Droite": self.distance,
-                                                    "aknowledge": self.config["Ligne_Droite"]["aknowledge"]}
+                        try:
+                            self.distance = int(event.text) if -3000 <= int(event.text) <= 3000 else 0
+                            self.data["Déplacement"] = {"Ligne_Droite": self.distance,
+                                                        "aknowledge": self.config["Ligne_Droite"]["aknowledge"]}
+                        except ValueError:
+                            self.distance = 0
+                            self.data["Déplacement"] = {"Ligne_Droite": 0,
+                                                        "aknowledge": self.config["Ligne_Droite"]["aknowledge"]}
+                            if event.text != "-" and event.text != "" and event.text != "0-":
+                                self.distance = 0
+                                self.data["Déplacement"] = {"Ligne_Droite": 0,
+                                                            "aknowledge": self.config["Ligne_Droite"]["aknowledge"]}
+                            elif event.text == "-":
+                                self.distance = "-"
+                            elif event.text == "":
+                                self.distance = ""
+                            elif event.text == "0-":
+                                self.distance = "-"
+                        self.texts[0].set_text(str(self.distance))
+                    
+                    
                     elif id == "#t_X":
-                        self.data["New_coord"]["X"] = int(event.text) 
+                        try:
+                            x = int(event.text)
+                            self.data["Déplacement"]["Coord"]["X"] = x if 0 <= x <= 3000 else 0
+                        except ValueError:
+                            self.data["Déplacement"]["Coord"]["X"] = 0
+
                     elif id == "#t_Y":
-                        self.data["New_coord"]["Y"] = int(event.text)
+                        try:
+                            y = int(event.text)
+                            self.data["Déplacement"]["Coord"]["Y"] = y if 0 <= y <= 2000 else 0
+                        except ValueError:
+                            self.data["Déplacement"]["Coord"]["Y"] = 0
+
                     elif id == "#t_T":
-                        self.data["New_coord"]["T"] = int(event.text)
+                        try:
+                            t = int(event.text)
+                            self.data["Déplacement"]["Coord"]["T"] = t
+                        except ValueError:
+                            self.data["Déplacement"]["Coord"]["T"] = 0
+
                     elif id == "#t_S":
-                        self.data["New_coord"]["S"] = int(event.text)
+                        try:
+                            s = int(event.text)
+                            self.data["Déplacement"]["Coord"]["S"] = s if 0 <= s <= 1 else 0
+                        except ValueError:
+                            self.data["Déplacement"]["Coord"]["S"] = 0
+                    
+                    # Mise à jour des coordonnées
+                    if "Coord" in self.data["Déplacement"]:
+                        self.texts[-4].set_text(str(self.data["Déplacement"]["Coord"]["X"]))
+                        self.texts[-3].set_text(str(self.data["Déplacement"]["Coord"]["Y"]))
+                        self.texts[-2].set_text(str(self.data["Déplacement"]["Coord"]["T"]))   
+                        self.labels[2].set_text(f"X: {self.data['Déplacement']['Coord']['X']}  Y: {self.data['Déplacement']['Coord']['Y']}")
                 except Exception as e:
-                    print(e)
+                    print(f"Erreur lors de la modification du texte : {e}")
                             
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_TAB:

@@ -363,12 +363,15 @@ class IHM:
                 new_waiting_list.append((int(x), int(y)))
 
             # Dessine le chemin entre le robot et le prochain point
-            x = self.ROBOT.x
-            y = self.ROBOT.y
-            x = int(self.map_value(x, 0, self.FIELD_SIZE[0], self.FIELD_SIZE[0], 0))
+            x = 225
+            y = 225
+            x = int(self.map_value(x, 0, self.FIELD_SIZE[0], self.WINDOW_SIZE[0]-5-self.BORDER_DISTANCE*self.X_RATIO, self.BORDER_DISTANCE*self.X_RATIO+5))
+            y = int(self.map_value(y, 0, self.FIELD_SIZE[1], self.BORDER_DISTANCE*self.Y_RATIO+5 ,self.WINDOW_SIZE[1]-5-self.BORDER_DISTANCE*self.Y_RATIO))
+            # Dessine un point bleu sur le point de départ
+            pygame.draw.circle(self.lcd, pygame.Color(0, 0, 255), (x, y), 5)
             pygame.draw.line(
                 self.lcd, pygame.Color(0, 255, 0),
-                (x * self.X_RATIO, y * self.Y_RATIO),
+                (x, y),
                 (new_waiting_list[0][0], new_waiting_list[0][1]), 3)
 
             # Dessine le chemin entre les points
@@ -879,7 +882,7 @@ class IHM:
         numero = strat["id_action"]
         strat.pop("id_action")
         
-        print("| Déplacement", strat["Déplacement"], "\n| Action", action, "| Special", strat["Special"])
+        print(f"| ID : {numero} | Déplacement", strat["Déplacement"], "\n| Action", action, "| Special", strat["Special"])
         
         if "Coord" in strat["Déplacement"]:
             coord = strat["Déplacement"]["Coord"]
@@ -889,12 +892,12 @@ class IHM:
                 if len(self.pos_waiting_list) > 0: # Récupérer les coordonnées précédentes
                     coord_prec = self.pos_waiting_list[-1]
                 else:
-                    coord_prec = (self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE, "0")
+                    coord_prec = (225, 225, self.ROBOT_ANGLE, "0")
                     
                 angle = math.degrees(math.atan2(coord["Y"] - coord_prec[1], coord["X"] - coord_prec[0]))
                 coord["T"] = int(angle*10)
             else:
-                coord["T"] = int(coord["T"]*10)
+                coord["T"] = int(coord["T"]*10) if -360 <= int(coord["T"]) <= 360 else int(coord["T"])
                 
             new_pos = (int(coord["X"]), int(coord["Y"]), coord["T"], "0")
                 
@@ -905,53 +908,35 @@ class IHM:
             if len(self.pos_waiting_list) > 0: # Récupérer les coordonnées précédentes
                 coord_prec = self.pos_waiting_list[-1]
             else:
-                coord_prec = (self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE, "0")
+                coord_prec = (225, 225, self.ROBOT_ANGLE, "0")
                 
             x = coord_prec[0] + distance * math.cos(math.radians(coord_prec[2]/10))
             y = coord_prec[1] + distance * math.sin(math.radians(coord_prec[2]/10))
             new_pos = (int(x), int(y), coord_prec[2], "0")
+            
         elif "Rotation" in strat["Déplacement"]:
             angle = strat["Déplacement"]["Rotation"]
-            
             # Calcul de l'angle d'arrivée en fonction de l'angle précédent
             if len(self.pos_waiting_list) > 0: # Récupérer les coordonnées précédentes
                 coord_prec = self.pos_waiting_list[-1]
             else:
-                coord_prec = (self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE, "0")
+                coord_prec = (225, 225, self.ROBOT_ANGLE, "0")
             
-            new_angle = angle
+            new_angle = angle if -360 <= angle <= 360 else angle//10
             new_pos = (coord_prec[0], coord_prec[1], new_angle, "0")
         
-        new_window = None
-        
-        # Gérer la commandes de nouvelles coordonnées
-        try:
-            if strat["New_coord"]["X"] !=  new_pos[0] or strat["New_coord"]["Y"] != new_pos[1] or strat["New_coord"]["T"] != new_pos[2]:
-                if strat["New_coord"]["S"] != "":
-                    new_pos = (int(strat["New_coord"]["X"]), int(strat["New_coord"]["Y"]), int(strat["New_coord"]["T"]), str(strat["New_coord"]["S"]))
-                else:
-                    new_pos = (int(strat["New_coord"]["X"]), int(strat["New_coord"]["Y"]), int(strat["New_coord"]["T"]), "0")
-                new_window = IHM_Action_Aux(self.manager, self.numero_strategie+2, (int(strat["New_coord"]["X"]), int(strat["New_coord"]["Y"]), int(strat["New_coord"]["T"])), _callback_save=self.save_action,_id="New_coord")
-            
-           # Retirer New_coord et New_angle de l'action
-            strat.pop("New_coord")
-        except KeyError:
-            pass
-        
+        new_window = None 
         strategie = {str(numero): strat}
         
         with open("data/strategie.json", "r") as file:
             try:
                 data = json.load(file)
-                #print("Stratégie chargée", data)
             except:
                 data = {}
             try :
-                #data[numero] = strat
                 data.update(strategie)
             except KeyError:
                 pass
-                #data.update(strategie)
                 
         with open("data/strategie.json", "w") as file:
             json.dump(data, file, indent=4)
@@ -962,6 +947,8 @@ class IHM:
         if numero > self.numero_strategie :
             self.numero_strategie += 1
             self.pos_waiting_list.append(new_pos)
+        else:
+            self.pos_waiting_list[numero-1] = new_pos
     
     def save_action_live(self):
         # Permet de sauvegarder la position actuelle du robot

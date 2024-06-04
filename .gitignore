@@ -11,5 +11,6 @@ client.log
 lidar.log
 CRAC-2024.code-workspace
 data/strategies_cache
+data/strategies_backup
 strat.log
 ```

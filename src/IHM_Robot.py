@@ -11,7 +11,7 @@ import  os, re
 logging.basicConfig(filename='ihm_robot.log', level=logging.INFO, datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
 
 class IHM_Robot:
-    version = "1.060"
+    version = "1.061"
     points = 50
     def __init__(self):
         
@@ -295,9 +295,9 @@ class IHM_Robot:
             
             if not os.path.exists("data/strategies_backup"):
                 os.makedirs("data/strategies_backup")
-            if os.path.exists(self.path_strat + f"/strategie_{name}_bkp.json"):
-                os.remove(self.path_strat + f"/strategie_{name}_bkp.json")
-            os.rename(self.path_strat + f"/strategie_{name}.json", self.path_strat + f"/strategie_{name}_bkp.json")
+            if os.path.exists(f"data/strategies_backup/strategie_{name}_bkp.json"):
+                os.remove(self.path_strat + f"data/strategies_backup/strategie_{name}_bkp.json")
+            os.rename(self.path_strat + f"/strategie_{name}.json", f"data/strategies_backup/strategie_{name}_bkp.json")
             
             # Supprimer la stratégie
             if os.path.exists(self.path_strat + f"/strategie_{name}.json"):

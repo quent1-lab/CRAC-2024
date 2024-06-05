@@ -948,13 +948,11 @@ class IHM:
         # Si l'action est next ou back, on ouvre une nouvelle fenêtre de configuration avec les valeurs de l'action suivante ou précédente
         if _action == "next" and numero < self.numero_strategie:
             try:
-                print("Next :",self.pos_waiting_list[numero])
                 new_window = IHM_Action_Aux(self.manager, numero+1, self.pos_waiting_list[numero], _callback_save=self.save_action, _config = data[str(numero+1)], _callback_delete=self.delete_action, _id="New_wind")
             except KeyError:
                 print("Erreur dans la récupération de la configuration de l'action")
         elif _action == "back" and numero > 1:
             try:
-                print("Back :", self.pos_waiting_list[numero-2])
                 new_window = IHM_Action_Aux(self.manager, numero-1, self.pos_waiting_list[numero-2], _callback_save=self.save_action, _config = data[str(numero-1)], _callback_delete=self.delete_action, _id="New_wind")
             except KeyError:
                 print("Erreur dans la récupération de la configuration de l'action")
@@ -968,7 +966,6 @@ class IHM:
             self.pos_waiting_list.append(new_pos)
         else:
             self.pos_waiting_list[numero-1] = new_pos
-        print(self.pos_waiting_list)
     
     def save_action_live(self):
         # Permet de sauvegarder la position actuelle du robot

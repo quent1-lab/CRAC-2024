@@ -29,13 +29,10 @@ class Serveur:
         while not self.stop_threads:
             try:
                 for data in self.receive_messages(connection):
-                    logging.info("*")
                     messages = self.load_json(data)
-                    logging.info('**')
                     with self.lock:
                         for message in messages:
                             self.handle_message(message, connection)
-                            logging.info("***")
             except Exception as e:
                 logging.error(f"Erreur lors de la manipulation du client : {str(e)}")
                 break
@@ -74,7 +71,7 @@ class Serveur:
                 thread = threading.Thread(target=self.handle_client, args=(connection, address))
                 thread.start()
                 with self.lock:
-                    self.pending_clients.append([connection, address])
+                    self.pending_clients.append([connection, address,0])
                     self.tasks.append(thread)
             except socket.timeout:
                 pass
@@ -136,7 +133,6 @@ class Serveur:
         except Exception as e:
             logging.error(f"BusCOM : Erreur lors de la déconnexion de {address} : {str(e)}")
         
-
     def load_json(self, data):
         messages = []
         for message in data.split('\n'):

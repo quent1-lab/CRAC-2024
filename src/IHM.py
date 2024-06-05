@@ -665,12 +665,11 @@ class IHM:
 
             for event in pygame.event.get():
                 self.manager.process_events(event)
-                
                 if event.type == UI_WINDOW_CLOSE: # BUG: Fermeture de la fenêtre non personnalisée
                     if self.command_window:
                         self.command_window = None
                     elif self.action_window:
-                        if self.action_window.get_id() != "New_coord":
+                        if self.action_window.get_id() != "New_wind":
                             self.action_window = None
                 if self.command_window:
                     self.command_window.process_events(event)
@@ -686,6 +685,7 @@ class IHM:
                     self.load_strategie_button.handle_event(event)
                     self.add_position_button.handle_event(event)
                     self.play_strategie_button.handle_event(event)
+            
             self.draw_robot()
 
             for objet in self.objets:
@@ -878,11 +878,11 @@ class IHM:
         self.action_window.close()
         self.action_window = None
     
-    def save_action(self, strat):
+    def save_action(self, strat, _action = ""):
         action = strat["Action"]
         numero = strat["id_action"]
         strat.pop("id_action")
-        
+
         print(f"| ID : {numero} | Déplacement", strat["Déplacement"], "\n| Action", action, "| Special", strat["Special"])
         
         if "Coord" in strat["Déplacement"]:
@@ -943,13 +943,32 @@ class IHM:
             json.dump(data, file, indent=4)
         
         self.action_window.close()
+        self.action_window = None
+        
+        # Si l'action est next ou back, on ouvre une nouvelle fenêtre de configuration avec les valeurs de l'action suivante ou précédente
+        if _action == "next" and numero < self.numero_strategie:
+            try:
+                print("Next :",self.pos_waiting_list[numero])
+                new_window = IHM_Action_Aux(self.manager, numero+1, self.pos_waiting_list[numero], _callback_save=self.save_action, _config = data[str(numero+1)], _callback_delete=self.delete_action, _id="New_wind")
+            except KeyError:
+                print("Erreur dans la récupération de la configuration de l'action")
+        elif _action == "back" and numero > 1:
+            try:
+                print("Back :", self.pos_waiting_list[numero-2])
+                new_window = IHM_Action_Aux(self.manager, numero-1, self.pos_waiting_list[numero-2], _callback_save=self.save_action, _config = data[str(numero-1)], _callback_delete=self.delete_action, _id="New_wind")
+            except KeyError:
+                print("Erreur dans la récupération de la configuration de l'action")
+        else:
+            new_window = None
+        
         self.action_window = new_window
         
-        if numero > self.numero_strategie :
+        if numero > self.numero_strategie and _action == "":
             self.numero_strategie += 1
             self.pos_waiting_list.append(new_pos)
         else:
             self.pos_waiting_list[numero-1] = new_pos
+        print(self.pos_waiting_list)
     
     def save_action_live(self):
         # Permet de sauvegarder la position actuelle du robot
@@ -1131,7 +1150,8 @@ class IHM:
                         if self.command_window:
                             self.command_window = None
                         elif self.action_window:
-                            if self.action_window.get_id() != "New_coord":
+                            if self.action_window.get_id() != "New_wind":
+                                print("Fermeture de la fenêtre de configuration de l'action")
                                 self.action_window = None
                     if self.command_window:
                         self.command_window.process_events(event)

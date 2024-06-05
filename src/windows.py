@@ -361,7 +361,7 @@ class IHM_Action_Aux:
         # Activer checkbox deplacement
         self.checkboxes[0].set_checked(True)
         
-        # Désactiver les boutons back et next
+        # Désactiver les boutons next et back
         self.buttons[-1].disable()
         self.buttons[-3].disable()
         
@@ -378,13 +378,17 @@ class IHM_Action_Aux:
         if _config:
             # Charger tous les paramètres
             self.load_data(_config)
-
+            self.buttons[-1].enable()
+            if self.action_numero > 1:
+                self.buttons[-3].enable()
+        
         # Cacher la liste pince gauche
         self.listes[5].hide()
 
     def process_events(self, event):
         if event.type == pygame.USEREVENT:
             if event.user_type == pygame_gui.UI_BUTTON_PRESSED: # Si un bouton est pressé
+                self.id = ""
                 if len(event.ui_element.get_object_ids()) > 1:
                     id = event.ui_element.get_object_ids()[1] 
                 else:
@@ -420,13 +424,13 @@ class IHM_Action_Aux:
                         self.update_checkboxes()
                         
                 elif id == "#b_Retour":
-                    if self.back_callback:
-                        self.back_callback()
+                    if self.action_numero > 1:
+                        print(f"ID : {self.id}")
+                        self.save_data(self.data,"back")
                 elif id == "#b_Enregistrer":
                     self.save_data(self.data)
                 elif id == "#b_Suivant":
-                    if self.next_callback:
-                        self.next_callback()
+                    self.save_data(self.data,"next")
                 
                 elif id == "#b_Delete":
                     if self.delete_callback:
@@ -727,14 +731,17 @@ class IHM_Action_Aux:
     def set_callback_json(self, callback):
         self.desactive_callback = callback
     
-    def save_data(self,data):
-        if self.save_callback:
-            self.save_callback(data)
+    def save_data(self,data, action=""):
+        if self.save_callback and self.id != "New_wind":
+            self.save_callback(data, action)
         else:
             print(data)
         
     def get_id(self):
         return self.id
+    
+    def set_id(self, id):
+        self.id = id
     
     def disable_listes(self):
         for liste in self.listes[1:-1]:

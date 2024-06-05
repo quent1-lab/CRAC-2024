@@ -29,10 +29,13 @@ class Serveur:
         while not self.stop_threads:
             try:
                 for data in self.receive_messages(connection):
+                    logging.info("*")
                     messages = self.load_json(data)
+                    logging.info('**')
                     with self.lock:
                         for message in messages:
                             self.handle_message(message, connection)
+                            logging.info("***")
             except Exception as e:
                 logging.error(f"Erreur lors de la manipulation du client : {str(e)}")
                 break

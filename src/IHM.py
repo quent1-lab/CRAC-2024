@@ -14,7 +14,7 @@ from client import *
 import json
 import re
 
-from windows import IHM_Command, IHM_Action_Aux
+from windows import IHM_Command, IHM_Action_Aux, IHM_Save_Strat
 
 class IHM:
     def __init__(self, port=None):
@@ -101,6 +101,7 @@ class IHM:
         self.manager = pygame_gui.UIManager(self.WINDOW_SIZE)
         self.command_window = None
         self.action_window = None
+        self.save_window = None
 
         self.start_button = Button(self.lcd, pygame.Rect(self.WINDOW_SIZE[0]/2-50, self.WINDOW_SIZE[1]-55, 100, 40),"data/theme.json", "Démarrer", color=(20,200,20),on_click= self.start_match)
         self.command_button = Button(self.lcd, pygame.Rect(70, self.WINDOW_SIZE[1]-65, 120, 40),"data/theme.json", "Commandes",
@@ -112,7 +113,7 @@ class IHM:
         
         # Bouton pour enregistrer la stratégie en cours
         self.save_strategie_button = Button(self.lcd, pygame.Rect(210, self.WINDOW_SIZE[1]-65, 180, 40),"data/theme.json", "Enregistrer Stratégie",
-                                    on_click= self.save_strategie)
+                                    on_click= self.page_sauvegarde)
         
         # Bouton pour charger une stratégie
         self.load_strategie_button = Button(self.lcd, pygame.Rect(410, self.WINDOW_SIZE[1]-65, 160, 40),"data/theme.json", "Charger Stratégie",
@@ -668,13 +669,17 @@ class IHM:
                 if event.type == UI_WINDOW_CLOSE: # BUG: Fermeture de la fenêtre non personnalisée
                     if self.command_window:
                         self.command_window = None
+                    elif self.save_window:
+                        self.save_window = None
                     elif self.action_window:
                         if self.action_window.get_id() != "New_wind":
-                            self.action_window = None
+                            self.action_window = None          
                 if self.command_window:
                     self.command_window.process_events(event)
                 elif self.action_window:
                     self.action_window.process_events(event)
+                elif self.save_window:
+                    self.save_window.process_events(event)
                 elif self.ETAT == 1:
                     self.handle_mouse_click(event)
 
@@ -851,6 +856,27 @@ class IHM:
             
             print("Fin du trajet")
 
+    def page_sauvegarde(self):
+        # Page de sauvegarde de la stratégie / permet de choisir le nombre de points de la stratégie
+        
+        if self.numero_strategie > 0 and self.save_window is None:
+            # Extraire les numéros des fichiers existants
+            files = os.listdir("data/strategies")
+            numbers = [int(re.search(r'\d+', file).group()) for file in files if re.search(r'\d+', file)]
+
+            # Trouver le numéro le plus élevé et l'incrémenter pour le nouveau fichier
+            if numbers:
+                numero = max(numbers) + 1
+            else:
+                numero = 1
+                
+            name_strat = "strategie_" + str(numero)
+            
+            self.save_window = IHM_Save_Strat(self.manager, name_strat)
+            self.save_window.set_callback_save(self.save_strategie)
+        else:
+            print("Aucune stratégie à sauvegarder")
+    
     def delete_action(self, numero):
         # Permet de supprimer une action de la stratégie
         with open("data/strategie.json", "r") as file:
@@ -973,33 +999,23 @@ class IHM:
         new_pos = (self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE, "0")
         self.pos_waiting_list.append(new_pos)
     
-    def save_strategie(self):
+    def save_strategie(self, data):
         # Permet de sauvegarder la stratégie en cours
+        name_strat = data["Nom"].split('_')[-1]        
+        nb_points = data["Nb_points"]
+        
         # Chargement de la stratégie actuelle
-        if self.numero_strategie > 0:
-            with open("data/strategie.json", "r") as file:
-                strategie = json.load(file)
+        with open("data/strategie.json", "r") as file:
+            strategie = json.load(file)
+        
+        # Ajout des méta-données de la stratégie
+        strategie["meta"] = {"Nom": data["Nom"], "Nb_points": nb_points}
+
+        # Sauvegarde de la stratégie
+        with open(f"data/strategies/strategie_{name_strat}.json", "w") as file:
+            json.dump(strategie, file, indent=4)
             
-            # Récupérer la liste des fichiers dans le dossier
-            files = os.listdir("data/strategies")
-
-            # Extraire les numéros des fichiers existants
-            numbers = [int(re.search(r'\d+', file).group()) for file in files if re.search(r'\d+', file)]
-
-            # Trouver le numéro le plus élevé et l'incrémenter pour le nouveau fichier
-            if numbers:
-                numero = max(numbers) + 1
-            else:
-                numero = 1
-
-            # Sauvegarde de la stratégie
-            with open(f"data/strategies/strategie_{numero}.json", "w") as file:
-                json.dump(strategie, file, indent=4)
-                
-            self.client_socket.add_to_send_list(self.client_socket.create_message(self.IHM_Robot,"strategie", {"id": numero,"strategie": strategie}))           
-                
-        else:
-            print("Aucune stratégie à sauvegarder")
+        self.client_socket.add_to_send_list(self.client_socket.create_message(self.IHM_Robot,"strategie", {"id": name_strat,"strategie": strategie}))           
     
     def load_strategie(self):
         # Permet de charger une stratégie sauvegardée
@@ -1108,7 +1124,7 @@ class IHM:
         self.client_socket.add_to_send_list(self.client_socket.create_message(self.IHM_Robot, "config", {"equipe": self.EQUIPE, "etat": self.ETAT}))
 
     def run(self):
-        #self.programme_simulation()
+        self.programme_simulation()
         
         self.client_socket.set_callback(self.receive_to_server)
         self.client_socket.set_callback_stop(self.stop)

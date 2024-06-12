@@ -871,6 +871,60 @@ class IHM_Action_Aux:
     def close(self):
         self.window.kill()
 
+class IHM_Save_Strat:
+    def __init__(self, manager, name_strat):
+        self.manager = manager
+        self.window = pygame_gui.elements.UIWindow(pygame.Rect((100, 100), (400, 250)),
+                                                self.manager,
+                                                window_display_title="Enregistrer la stratégie",
+                                                object_id=ObjectID(object_id="New_wind"))
+        self.data = {"Nom": name_strat, "Nb_points": 0}
+        self.label1 = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((20, 50), (140, 35)),
+                                                text="Nom de la stratégie",
+                                                manager=self.manager,
+                                                container=self.window)
+        self.text = pygame_gui.elements.UITextEntryBox(relative_rect=pygame.Rect((160, 50), (190, 35)),
+                                                        manager=self.manager,
+                                                        container=self.window,
+                                                        initial_text=name_strat,
+                                                        object_id=ObjectID(object_id="#t_Nom_strat"))
+        self.label2 = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((20, 90), (130, 30)),
+                                                text="Nombre de points",
+                                                manager=self.manager,
+                                                container=self.window)
+        self.points = pygame_gui.elements.UITextEntryBox(relative_rect=pygame.Rect((160, 90), (190, 30)),
+                                                        manager=self.manager,
+                                                        container=self.window,
+                                                        initial_text="0",
+                                                        object_id=ObjectID(object_id="#t_Nb_points"))
+        self.button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((50, 140), (300, 30)),
+                                                    text='Enregistrer',
+                                                    manager=self.manager,
+                                                    container=self.window,
+                                                    object_id=ObjectID(object_id="#b_Enregistrer"))
+        self.button2 = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((50, 180), (300, 30)),
+                                                    text='Annuler',
+                                                    manager=self.manager,
+                                                    container=self.window,
+                                                    object_id=ObjectID(object_id="#b_Annuler"))
+    
+    def process_events(self, event):
+        if event.type == pygame.USEREVENT:
+            if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
+                if event.ui_element.get_object_ids()[0] is not None:
+                    if event.ui_element.get_object_ids()[1] == "#b_Enregistrer":
+                        self.data["Nom"] = self.text.get_text()
+                        self.data["Nb_points"] = int(self.points.get_text())
+                        self.save_callback(self.data)
+                        self.window.kill()
+                    elif event.ui_element.get_object_ids()[1] == "#b_Annuler":
+                        self.window.kill()
+    
+    def set_callback_save(self, callback):
+        self.save_callback = callback
+
+    def close(self):
+        self.window.kill()
 class MainWindow:
     def __init__(self):
         pygame.init()
@@ -894,7 +948,7 @@ class MainWindow:
                 if event.type == pygame.USEREVENT:
                     if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
                         if event.ui_element == self.button:
-                            self.new_window = IHM_Action_Aux(self.manager,1,(3000,1500,360))
+                            self.new_window = IHM_Save_Strat(self.manager,"Stratégie 1")
                 self.manager.process_events(event)
                 if self.new_window:
                     self.new_window.process_events(event)

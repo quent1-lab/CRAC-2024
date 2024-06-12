@@ -511,6 +511,7 @@ class IHM_Robot:
     def page_play(self):
         # Cette page affiche la stratégie en cours
         font = pygame.font.SysFont("Arial", 40)
+        draw_text_center(self.screen, f"Score prévu : {self.points}", x=self.width//2, y=100, font=font, color=(255, 255, 255))
         draw_text_center(self.screen, self.text_page_play, x=self.width//2, y=self.height//2 + 15, font=font, color=(255, 255, 255))
     
     def page_mouvement(self):
@@ -685,8 +686,8 @@ class IHM_Robot:
                 logging.info("Fin de la partie")
                 self.state_request_energy = False
                 self.is_started = False
-                if not self.state_request_energy:
-                    self.request_energy()
+                """if not self.state_request_energy:
+                    self.request_energy()"""
                 
                 # Eteindre les switchs
                 self.set_switch(1, 0)
@@ -696,14 +697,13 @@ class IHM_Robot:
             if message["cmd"] == "objects":
                 self.objets = []
                 try:
-                    json_string = message["data"]
-                    for obj in json_string:
-                        logging.info(f"Objet : {obj}")
-                        #obj = json.loads(obj)
-                        self.objets.append(obj["x"], obj["y"], obj["taille"])
+                    json_objets = json.loads(message["data"])
+                    for obj in json_objets:
+                        x_o = self.map_value(obj["x"], 0, 3000, 3000, 0)
+                        self.objets.append(x_o, obj["y"], obj["taille"])
                 except Exception as e:
                     logging.error(f"Erreur lors de la réception des objets : {e}")
-
+                
             elif message["cmd"] == "energie":
                 energie = message["data"]
                 self.update_energie(energie)
@@ -744,7 +744,8 @@ class IHM_Robot:
                 elif data["etat"] == 0:
                     if 0x11 in self.error:
                         self.error.remove(0x11)
-                        self.PAGE = 0
+                        if self.PAGE != 21:
+                            self.PAGE = 0
                         self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 503, "byte1": 1}))
             
             elif message["cmd"] == "jack":
@@ -757,6 +758,11 @@ class IHM_Robot:
                 elif data["data"] == "start":
                     self.text_page_play = "Stratégie en cours..."
                     self.PAGE = 20
+            
+            elif message["cmd"] == "strat_info":
+                data = message["data"]
+                if data["data"] == 'points':
+                    self.points = data["points"]
             
             elif message["cmd"] == "start":
                 self.text_page_play = "Stratégie en cours..."
@@ -877,7 +883,7 @@ class IHM_Robot:
         while self.is_running:
             try:
                 # Si une erreur est survenue lors de la réception des données des batteries
-                if len(self.error) > 0:
+                if len(self.error) > 0 and self.PAGE != 21 and self.PAGE != 4:
                     self.PAGE = 4
                 else:
                     self.PAGE = self.PAGE

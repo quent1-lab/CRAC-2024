@@ -1,5 +1,6 @@
 import math
 import time
+import json
 
 class Objet:
     def __init__(self, id, x, y, taille):
@@ -95,5 +96,8 @@ class Objet:
     
     def __str__(self):
         # Retourne une chaîne de caractères représentant l'objet sous format JSON
-        return f"{{\"id\": {self.id}, \"x\": {int(self.x)}, \"y\": {int(self.y)}, \"taille\": {int(self.taille)}}}"
+        #return f"{{\"id\": {self.id}, \"x\": {int(self.x)}, \"y\": {int(self.y)}, \"taille\": {int(self.taille)}}}"
+        return json.dumps(self.__dict__)
     
+    def __dict__(self):
+        return {"id": self.id, "x": int(self.x), "y": int(self.y), "taille": int(self.taille)}

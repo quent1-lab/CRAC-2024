@@ -18,6 +18,9 @@ class Strategie:
         self.coord_prec = [0,0]
         self.lidar_stop = False
         
+        self.points = 0
+        self.nom = ""
+        
         # Vérification de l'existence du fichier
         if self.path_strat:
             if os.path.exists(self.path_strat):
@@ -102,7 +105,18 @@ class Strategie:
                     try :
                         with open(strat_path, "r") as file:
                             self.strategie = json.load(file)  
+                        
+                        # Chargement des méta-données de la stratégie
+                        if "meta" in self.strategie:
+                            self.points = self.strategie["meta"]["Nb_points"]
+                            self.nom = self.strategie["meta"]["Nom"]
                             
+                            # Retirer les méta-données de la stratégie
+                            self.strategie.pop("meta")
+                            
+                            # Envoie du nombre de points à l'interface
+                            self.client_strat.add_to_send_list(self.client_strat.create_message(9, "strat_info", {"data": "points", "points": self.points}))
+                        
                         self.strategie_is_running = True
                         self.state_strat = "wait_jack"
                         logging.info(f"STRAT : stratégie {strat_path} chargé")   
@@ -166,56 +180,6 @@ class Strategie:
         
         t = threading.Thread(target=timer)
         t.start()           
-    
-    def run_strategie_2(self):
-        # Excecute la stratégie de façon non bloquante
-        for key, item in self.strategie.items():
-            if self.strategie_is_running == False:
-                break
-            
-            logging.info(f"STRAT : {key} , {item}")
-            
-            deplacement = item["Déplacement"]
-            action = item["Action"]
-            special = item["Special"]
-            
-            action_en_mvt = []
-            action_apres_mvt = []
-            
-            try:
-                for key, act in action.items():
-                    if act["en_mvt"] == True:
-                        action_en_mvt.append(action[key])
-                    else:
-                        action_apres_mvt.append(action[key])
-            except Exception as e:
-                logging.error(f"Erreur lors de la lecture des actions : {str(e)}")
-            
-            if "Coord" in deplacement:
-                self.move(deplacement)
-            elif "Rotation" in deplacement:
-                self.rotate(deplacement)
-            elif "Ligne_Droite" in deplacement:
-                self.ligne_droite(deplacement)
-            
-            # Envoi des actions en mouvement
-            self.send_actions(action_en_mvt)
-            
-            if self.strategie_is_running == False:
-                break
-            
-            # Attend l'acquittement du mouvement
-            self.wait_for_aknowledge(deplacement["aknowledge"])
-            
-            if self.strategie_is_running == False:
-                break
-            
-            # Envoi des actions après le mouvement
-            self.send_actions(action_apres_mvt)
-            
-            if self.strategie_is_running == False:
-                logging.info("Arrêt de la stratégie")
-                break
     
     def run_strategie_3(self):
         # Excecute la stratégie de façon non bloquante
@@ -298,11 +262,11 @@ class Strategie:
                         self.ancienne_vit = item["Vitesse"]
                         logging.info(f"STRAT : Changement de vitesse : {item['Vitesse']}")
                         if item["Vitesse"] == "Rapide":
-                            self.client_strat.add_to_send_list(self.client_strat.create_message(2, "set_vit",{ "vitesse": 1200}))
+                            self.client_strat.add_to_send_list(self.client_strat.create_message(2, "set_vit",{ "vitesse": 1400}))
                         elif item["Vitesse"] == "Lent":
-                            self.client_strat.add_to_send_list(self.client_strat.create_message(2, "set_vit",{ "vitesse": 10}))
+                            self.client_strat.add_to_send_list(self.client_strat.create_message(2, "set_vit",{ "vitesse": 5}))
                         elif item["Vitesse"] == "Normal":
-                            self.client_strat.add_to_send_list(self.client_strat.create_message(2, "set_vit",{ "vitesse": 600}))
+                            self.client_strat.add_to_send_list(self.client_strat.create_message(2, "set_vit",{ "vitesse": 800}))
                     time.sleep(0.02)
                 
                 if "Coord" in deplacement:

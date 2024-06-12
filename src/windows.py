@@ -925,6 +925,52 @@ class IHM_Save_Strat:
 
     def close(self):
         self.window.kill()
+
+class IHM_Load_Strat:
+    def __init__(self, manager, strats):
+        self.manager = manager
+        self.load_callback = None
+        self.window = pygame_gui.elements.UIWindow(pygame.Rect((100, 100), (400, 250)),
+                                                self.manager,
+                                                window_display_title="Charger une stratégie",
+                                                object_id=ObjectID(object_id="New_wind"))
+        self.strats = strats
+        self.liste = pygame_gui.elements.UIDropDownMenu(relative_rect=pygame.Rect((50, 50), (300, 30)),
+                                                        options_list=self.strats,
+                                                        starting_option=self.strats[0],
+                                                        manager=self.manager,
+                                                        container=self.window,
+                                                        object_id=ObjectID(object_id="#l_Strats"))
+        self.button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((50, 90), (300, 30)),
+                                                    text='Charger',
+                                                    manager=self.manager,
+                                                    container=self.window,
+                                                    object_id=ObjectID(object_id="#b_Charger"))
+        self.button2 = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((50, 130), (300, 30)),
+                                                    text='Annuler',
+                                                    manager=self.manager,
+                                                    container=self.window,
+                                                    object_id=ObjectID(object_id="#b_Annuler"))
+    
+    def process_events(self, event):
+        if event.type == pygame.USEREVENT:
+            if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
+                if event.ui_element.get_object_ids()[0] is not None:
+                    if event.ui_element.get_object_ids()[1] == "#b_Charger":
+                        if self.load_callback:
+                            self.load_callback(self.liste.selected_option[0])
+                            self.window.kill()
+                        else:
+                            raise Exception("Aucune fonction de chargement définie")
+                    elif event.ui_element.get_object_ids()[1] == "#b_Annuler":
+                        self.window.kill()
+    
+    def set_callback_load(self, callback):
+        self.load_callback = callback
+
+    def close(self):
+        self.window.kill()
+
 class MainWindow:
     def __init__(self):
         pygame.init()
@@ -948,7 +994,7 @@ class MainWindow:
                 if event.type == pygame.USEREVENT:
                     if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
                         if event.ui_element == self.button:
-                            self.new_window = IHM_Save_Strat(self.manager,"Stratégie 1")
+                            self.new_window = IHM_Load_Strat(self.manager,["strat1","strat2","strat3"])
                 self.manager.process_events(event)
                 if self.new_window:
                     self.new_window.process_events(event)

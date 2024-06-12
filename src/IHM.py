@@ -14,7 +14,7 @@ from client import *
 import json
 import re
 
-from windows import IHM_Command, IHM_Action_Aux, IHM_Save_Strat
+from windows import IHM_Command, IHM_Action_Aux, IHM_Save_Strat, IHM_Load_Strat
 
 class IHM:
     def __init__(self, port=None):
@@ -102,6 +102,7 @@ class IHM:
         self.command_window = None
         self.action_window = None
         self.save_window = None
+        self.load_window = None
 
         self.start_button = Button(self.lcd, pygame.Rect(self.WINDOW_SIZE[0]/2-50, self.WINDOW_SIZE[1]-55, 100, 40),"data/theme.json", "Démarrer", color=(20,200,20),on_click= self.start_match)
         self.command_button = Button(self.lcd, pygame.Rect(70, self.WINDOW_SIZE[1]-65, 120, 40),"data/theme.json", "Commandes",
@@ -117,7 +118,7 @@ class IHM:
         
         # Bouton pour charger une stratégie
         self.load_strategie_button = Button(self.lcd, pygame.Rect(410, self.WINDOW_SIZE[1]-65, 160, 40),"data/theme.json", "Charger Stratégie",
-                                    on_click= self.load_strategie)
+                                    on_click= self.page_chargement)
         
         # Bouton pour ajouter la position actuelle du robot à la stratégie
         self.add_position_button = Button(self.lcd, pygame.Rect(590, self.WINDOW_SIZE[1]-65, 200, 40),"data/theme.json", "Ajouter Position",
@@ -671,6 +672,8 @@ class IHM:
                         self.command_window = None
                     elif self.save_window:
                         self.save_window = None
+                    elif self.load_window:
+                        self.load_window = None
                     elif self.action_window:
                         if self.action_window.get_id() != "New_wind":
                             self.action_window = None          
@@ -680,6 +683,8 @@ class IHM:
                     self.action_window.process_events(event)
                 elif self.save_window:
                     self.save_window.process_events(event)
+                elif self.load_window:
+                    self.load_window.process_events(event)
                 elif self.ETAT == 1:
                     self.handle_mouse_click(event)
 
@@ -877,6 +882,30 @@ class IHM:
         else:
             print("Aucune stratégie à sauvegarder")
     
+    def page_chargement(self):
+        # Page de chargement de la stratégie / permet de choisir le fichier à charger
+        
+        files = os.listdir("data/strategies")
+        files = [file for file in files if file.endswith(".json")]
+        
+        # Mettre les stratégies dans l'ordre alphabétique
+        def key_func(strategie):
+            match = re.match(r"strategie_(\d+)", strategie)
+            if match:
+                # Pour les stratégies numérotées, renvoyer le numéro pour le tri
+                return int(match.group(1))
+            else:
+                # Pour les stratégies nommées, renvoyer une valeur élevée pour les placer à la fin
+                return float('inf')
+        
+        files = sorted(files, key=key_func)
+        
+        if files and self.load_window is None:
+            self.load_window = IHM_Load_Strat(self.manager, files)
+            self.load_window.set_callback_load(self.load_strategie)
+        else:
+            print("Aucune stratégie à charger")
+    
     def delete_action(self, numero):
         # Permet de supprimer une action de la stratégie
         with open("data/strategie.json", "r") as file:
@@ -1017,65 +1046,55 @@ class IHM:
             
         self.client_socket.add_to_send_list(self.client_socket.create_message(self.IHM_Robot,"strategie", {"id": name_strat,"strategie": strategie}))           
     
-    def load_strategie(self):
+    def load_strategie(self, name_strat):
         # Permet de charger une stratégie sauvegardée
-        # Charger les fichiers de stratégies
-        files = os.listdir("data/strategies")
 
-        if len(files) > 0:
-            # Afficher les fichiers de stratégies
-            for i, file in enumerate(files):
-                print(f"{i+1}: {file}")
-            # Demander à l'utilisateur de choisir une stratégie
-            choix = int(input("Choisir une stratégie: "))
-            # Charger la stratégie
-            with open(f"data/strategies/{files[choix-1]}", "r") as file:
-                strategie = json.load(file)
-            # Charger la stratégie dans le programme
-            with open("data/strategie.json", "w") as file:
-                json.dump(strategie, file, indent=4)
-                
-            self.pos_waiting_list = []
-            self.numero_strategie = 1
-        
-            for key in strategie:
-                action = strategie[key]
-                
-                if "Coord" in action["Déplacement"]:
-                    coord = action["Déplacement"]["Coord"]
-                        
-                    new_pos = (int(coord["X"]), int(coord["Y"]), (coord["T"]//10), "0")
-                        
-                elif "Ligne_Droite" in action["Déplacement"]:
-                    distance = action["Déplacement"]["Ligne_Droite"]
-                    
-                    # Calcul de la position d'arrivée en fonction de la coordonnée précédente
-                    if len(self.pos_waiting_list) > 0: # Récupérer les coordonnées précédentes
-                        coord_prec = self.pos_waiting_list[-1]
-                    else:
-                        coord_prec = (225, 225, 0, "0")
-                        
-                    x = coord_prec[0] + distance * math.cos(math.radians((coord_prec[2])))
-                    y = coord_prec[1] + distance * math.sin(math.radians((coord_prec[2])))
-                    new_pos = (int(x), int(y), coord_prec[2], "0")
-                    
-                elif "Rotation" in action["Déplacement"]:
-                    angle = action["Déplacement"]["Rotation"]
-                    
-                    # Calcul de l'angle d'arrivée en fonction de l'angle précédent
-                    if len(self.pos_waiting_list) > 0: # Récupérer les coordonnées précédentes
-                        coord_prec = self.pos_waiting_list[-1]
-                    else:
-                        coord_prec = (225, 225, 0, "0")
-                    # Calculer le nouvel angle en fonction de l'angle précédent
-                    new_angle = coord_prec[2] + angle//10
-                    new_pos = (coord_prec[0], coord_prec[1], new_angle, "0")
+        # Charger la stratégie
+        with open(f"data/strategies/{name_strat}", "r") as file:
+            strategie = json.load(file)
+        # Charger la stratégie dans le programme
+        with open("data/strategie.json", "w") as file:
+            json.dump(strategie, file, indent=4)
             
-                self.pos_waiting_list.append(new_pos)
-                print(new_pos)
-                self.numero_strategie += 1
-        else:
-            print("Aucune stratégie sauvegardée")
+        self.pos_waiting_list = []
+        self.numero_strategie = 1
+    
+        for key in strategie:
+            action = strategie[key]
+            
+            if "Coord" in action["Déplacement"]:
+                coord = action["Déplacement"]["Coord"]
+                    
+                new_pos = (int(coord["X"]), int(coord["Y"]), (coord["T"]//10), "0")
+                    
+            elif "Ligne_Droite" in action["Déplacement"]:
+                distance = action["Déplacement"]["Ligne_Droite"]
+                
+                # Calcul de la position d'arrivée en fonction de la coordonnée précédente
+                if len(self.pos_waiting_list) > 0: # Récupérer les coordonnées précédentes
+                    coord_prec = self.pos_waiting_list[-1]
+                else:
+                    coord_prec = (225, 225, 0, "0")
+                    
+                x = coord_prec[0] + distance * math.cos(math.radians((coord_prec[2])))
+                y = coord_prec[1] + distance * math.sin(math.radians((coord_prec[2])))
+                new_pos = (int(x), int(y), coord_prec[2], "0")
+                
+            elif "Rotation" in action["Déplacement"]:
+                angle = action["Déplacement"]["Rotation"]
+                
+                # Calcul de l'angle d'arrivée en fonction de l'angle précédent
+                if len(self.pos_waiting_list) > 0: # Récupérer les coordonnées précédentes
+                    coord_prec = self.pos_waiting_list[-1]
+                else:
+                    coord_prec = (225, 225, 0, "0")
+                # Calculer le nouvel angle en fonction de l'angle précédent
+                new_angle = coord_prec[2] + angle//10
+                new_pos = (coord_prec[0], coord_prec[1], new_angle, "0")
+        
+            self.pos_waiting_list.append(new_pos)
+            print(new_pos)
+            self.numero_strategie += 1
             
     def add_position(self):
         pass

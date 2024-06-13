@@ -347,11 +347,11 @@ class IHM:
         self.draw_text("ID: " + str(objet.id), x + 20, y - 30)
 
         # Affichage de la direction et de la vitesse de l'objet avec un vecteur
-        direction, vitesse = objet.get_direction_speed()
-        pygame.draw.line(
-            self.lcd, pygame.Color(255, 255, 0),
-            (x, y),
-            ((objet.x + vitesse * math.cos(direction)) * self.X_RATIO, (objet.y + vitesse * math.sin(direction)) * self.Y_RATIO), 3)
+        # direction, vitesse = objet.get_direction_speed()
+        # pygame.draw.line(
+        #     self.lcd, pygame.Color(255, 255, 0),
+        #     (x, y),
+        #     ((objet.x + vitesse * math.cos(direction)) * self.X_RATIO, (objet.y + vitesse * math.sin(direction)) * self.Y_RATIO), 3)
 
     def draw_list_position(self):
         # Dessine les positions de la liste d'attente par un point rouge

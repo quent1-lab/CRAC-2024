@@ -15,7 +15,7 @@ import  os, re
 logging.basicConfig(filename='ihm_robot.log', level=logging.INFO, datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
 
 class IHM_Robot:
-    version = "1.063"
+    version = "1.064"
     points = 50
     def __init__(self):
         
@@ -701,6 +701,8 @@ class IHM_Robot:
             if message["cmd"] == "objects":
                 self.objets = []
                 try:
+                    if len(message["data"]) <= 2:
+                        return
                     json_objets = json.loads(message["data"])
                     for obj in json_objets:
                         x_o = self.map_value(obj["x"], 0, 3000, 3000, 0)

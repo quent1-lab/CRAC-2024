@@ -741,8 +741,9 @@ class IHM:
         if message["cmd"] == "objects":
             try:
                 self.objets = []
+                if len(message["data"]) <= 2:
+                    return
                 json_string = json.loads(message["data"])
-                print(json_string)
                 for obj in json_string:
                     x_o = self.map_value(obj["x"], 0, self.FIELD_SIZE[0], self.FIELD_SIZE[0], 0)
                     self.objets.append(
@@ -761,7 +762,8 @@ class IHM:
                 scan = json.loads(scan)
                 self.new_scan = []
                 for point in scan:
-                    x_r = self.map_value(point["x"], 0, self.FIELD_SIZE[0], self.FIELD_SIZE[0], 0)
+                    x_r = self.map_value(point["x"], 0, self.FIELD_SIZE[0], self.WINDOW_SIZE[0]-5-self.BORDER_DISTANCE*self.X_RATIO, self.BORDER_DISTANCE*self.X_RATIO+5)
+                    #x_r = self.map_value(point["x"], 0, self.FIELD_SIZE[0], self.FIELD_SIZE[0], 0)
                     self.new_scan.append(
                         (x_r, point["y"], point["dist"], point["angle"]))
             except Exception as e:

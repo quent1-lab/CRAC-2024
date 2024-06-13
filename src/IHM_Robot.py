@@ -706,7 +706,7 @@ class IHM_Robot:
                     json_objets = json.loads(message["data"])
                     for obj in json_objets:
                         x_o = self.map_value(obj["x"], 0, 3000, 3000, 0)
-                        self.objets.append(x_o, obj["y"], obj["taille"])
+                        self.objets.append((x_o, obj["y"], obj["taille"]))
                 except Exception as e:
                     logging.error(f"Erreur lors de la réception des objets : {e}")
                 

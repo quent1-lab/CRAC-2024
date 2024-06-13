@@ -7,8 +7,8 @@ import  math
 import  json
 import  os
 
-if os.path.exists("strat.log"):
-    os.remove("strat.log")
+# if os.path.exists("strat.log"):
+#     os.remove("strat.log")
 
 # configuration du logger
 logging.basicConfig(filename='strat.log', level=logging.INFO, datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')

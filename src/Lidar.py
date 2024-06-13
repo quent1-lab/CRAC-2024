@@ -9,8 +9,8 @@ import  numpy as np
 from    sklearn.cluster import DBSCAN
 import  threading
 
-if os.path.exists('lidar.log'):
-    os.remove('lidar.log')
+# if os.path.exists('lidar.log'):
+#     os.remove('lidar.log')
 
 # Configuration du logger
 logging.basicConfig(filename='lidar.log', level=logging.INFO, datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')

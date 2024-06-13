@@ -739,13 +739,16 @@ class IHM:
 
     def receive_to_server(self, message):
         if message["cmd"] == "objects":
-            self.objets = []
-            json_string = json.loads(message["data"])
-            print(json_string)
-            for obj in json_string:
-                x_o = self.map_value(obj["x"], 0, self.FIELD_SIZE[0], self.FIELD_SIZE[0], 0)
-                self.objets.append(
-                    Objet(obj["id"], x_o, obj["y"], obj["taille"]))
+            try:
+                self.objets = []
+                json_string = json.loads(message["data"])
+                print(json_string)
+                for obj in json_string:
+                    x_o = self.map_value(obj["x"], 0, self.FIELD_SIZE[0], self.FIELD_SIZE[0], 0)
+                    self.objets.append(
+                        Objet(obj["id"], x_o, obj["y"], obj["taille"]))
+            except Exception as e:
+                print("Erreur dans la réception des objets", e)
                 
         elif message["cmd"] == "coord":
             coord = message["data"]
@@ -1022,12 +1025,6 @@ class IHM:
             self.pos_waiting_list.append(new_pos)
         else:
             self.pos_waiting_list[numero-1] = new_pos
-    
-    def save_action_live(self):
-        # Permet de sauvegarder la position actuelle du robot
-          
-        new_pos = (self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE, "0")
-        self.pos_waiting_list.append(new_pos)
     
     def save_strategie(self, data):
         # Permet de sauvegarder la stratégie en cours

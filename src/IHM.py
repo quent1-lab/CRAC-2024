@@ -741,6 +741,7 @@ class IHM:
         if message["cmd"] == "objects":
             self.objets = []
             json_string = json.loads(message["data"])
+            print(json_string)
             for obj in json_string:
                 x_o = self.map_value(obj["x"], 0, self.FIELD_SIZE[0], self.FIELD_SIZE[0], 0)
                 self.objets.append(
@@ -1056,6 +1057,11 @@ class IHM:
         with open("data/strategie.json", "w") as file:
             json.dump(strategie, file, indent=4)
             
+        if "meta" in strategie:
+            meta = strategie["meta"]
+            points = meta["Nb_points"]
+            strategie.pop("meta")
+            
         self.pos_waiting_list = []
         self.numero_strategie = 1
     
@@ -1181,14 +1187,21 @@ class IHM:
                     if event.type == UI_WINDOW_CLOSE: # BUG: Fermeture de la fenêtre non personnalisée
                         if self.command_window:
                             self.command_window = None
+                        elif self.save_window:
+                            self.save_window = None
+                        elif self.load_window:
+                            self.load_window = None
                         elif self.action_window:
                             if self.action_window.get_id() != "New_wind":
-                                print("Fermeture de la fenêtre de configuration de l'action")
-                                self.action_window = None
+                                self.action_window = None          
                     if self.command_window:
                         self.command_window.process_events(event)
                     elif self.action_window:
                         self.action_window.process_events(event)
+                    elif self.save_window:
+                        self.save_window.process_events(event)
+                    elif self.load_window:
+                        self.load_window.process_events(event)
                     elif self.ETAT == 1:
                         self.handle_mouse_click(event)
 

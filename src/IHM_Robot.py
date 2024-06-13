@@ -7,6 +7,10 @@ import  pygame
 import  time
 import  os, re
 
+# Si fichier log existant, on le supprime
+if os.path.exists("ihm_robot.log"):
+    os.remove("ihm_robot.log")
+
 # Configuration du logger
 logging.basicConfig(filename='ihm_robot.log', level=logging.INFO, datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
 

@@ -242,7 +242,7 @@ class IHM:
                         robot_image.set_alpha(128)
 
                         # Tourner l'image du robot en fonction de l'angle du robot
-                        robot_image = pygame.transform.rotate(robot_image, pos_r[2]/10)
+                        robot_image = pygame.transform.rotate(robot_image, pos_r[2])
                         
                         # Ajuster la position pour que le robot soit centré le point de la liste d'attente
                         x_r = self.map_value(pos_r[0], 0, self.FIELD_SIZE[0], self.WINDOW_SIZE[0]-5-self.BORDER_DISTANCE*self.X_RATIO, self.BORDER_DISTANCE*self.X_RATIO+5)
@@ -629,114 +629,6 @@ class IHM:
             scan.append((0, angle, distance))
         return scan
 
-    def programme_simulation(self):
-        print("Programme de simulation")
-        logging.info("Starting simulation program")
-        last_time = time.time()
-        self.ROBOT.x = 225
-        self.ROBOT.y = 225
-
-        while True:
-            keys = pygame.key.get_pressed()
-            quit = pygame.event.get(pygame.QUIT)
-            if quit or keys[pygame.K_ESCAPE] or keys[pygame.K_SPACE]:
-                exit(0)
-            
-
-            scan = self.valeur_de_test()
-            new_scan = self.transform_scan(scan, self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)
-
-            # self.detect_object(new_scan)
-            #new_objets = self.detect_objects(new_scan)
-            #self.suivre_objet(new_objets, 100)
-
-            self.draw_background()
-            self.draw_list_position()
-
-            if self.ETAT == 0:
-                self.draw_text_center("INITIALISATION DU MATCH", self.WINDOW_SIZE[0] / 2, 35, self.RED)
-                self.init_match()
-            elif self.ETAT == 1:
-                self.draw_text_center("MATCH EN COURS", self.WINDOW_SIZE[0] / 2, 35, self.RED)
-
-                self.command_button.draw()
-                self.save_strategie_button.draw()
-                self.load_strategie_button.draw()
-                self.add_position_button.draw()
-                self.play_strategie_button.draw()
-
-            for event in pygame.event.get():
-                self.manager.process_events(event)
-                if event.type == UI_WINDOW_CLOSE: # BUG: Fermeture de la fenêtre non personnalisée
-                    if self.command_window:
-                        self.command_window = None
-                    elif self.save_window:
-                        self.save_window = None
-                    elif self.load_window:
-                        self.load_window = None
-                    elif self.action_window:
-                        if self.action_window.get_id() != "New_wind":
-                            self.action_window = None          
-                if self.command_window:
-                    self.command_window.process_events(event)
-                elif self.action_window:
-                    self.action_window.process_events(event)
-                elif self.save_window:
-                    self.save_window.process_events(event)
-                elif self.load_window:
-                    self.load_window.process_events(event)
-                elif self.ETAT == 1:
-                    self.handle_mouse_click(event)
-
-                if self.ETAT == 1:
-                    self.go_to_position()
-                    self.command_button.handle_event(event)
-                    self.save_strategie_button.handle_event(event)
-                    self.load_strategie_button.handle_event(event)
-                    self.add_position_button.handle_event(event)
-                    self.play_strategie_button.handle_event(event)
-            
-            self.draw_robot()
-
-            for objet in self.objets:
-                self.draw_object(objet)
-                trajectoire_actuel, trajectoire_adverse, trajectoire_evitement = self.trajectoires_anticipation(
-                    self.ROBOT, objet, 1.5, 0.1, 50)
-                self.draw_all_trajectoires(
-                    trajectoire_actuel, trajectoire_adverse, trajectoire_evitement)
-
-            for point in new_scan:
-                self.draw_point(point[0], point[1])
-            
-            self.draw_mouse_coordinates()
-
-            # Affiche les fps sur l'écran (en bas a gauche)
-            self.draw_text(
-                "FPS: " + str(int(1 / (time.time() - last_time))), 10, self.WINDOW_SIZE[1] - 30)
-            last_time = time.time()
-
-            self.manager.update(1/60.0)
-            self.manager.draw_ui(self.lcd)
-            pygame.display.update()
-            self.lcd.fill(self.WHITE)
-            #self.ROBOT_ANGLE += 1
-
-            # Déplacement du robot virtuel avec des touches du clavier
-            x = self.ROBOT.x
-            y = self.ROBOT.y
-
-            if keys[pygame.K_LEFT]:
-                x += 10
-            if keys[pygame.K_RIGHT]:
-                x -= 10
-            if keys[pygame.K_UP]:
-                y -= 10
-            if keys[pygame.K_DOWN]:
-                y += 10
-            self.ROBOT.update_position(x, y)
-
-            time.sleep(0.01)
-
     def receive_to_server(self, message):
         if message["cmd"] == "objects":
             try:
@@ -1095,6 +987,8 @@ class IHM:
                     coord_prec = (225, 225, 0, "0")
                 # Calculer le nouvel angle en fonction de l'angle précédent
                 new_angle = coord_prec[2] + angle//10
+                new_angle %= 360
+                print("Angle:", new_angle, "Angle précédent:", coord_prec[2], "Angle ajouté:", angle//10)
                 new_pos = (coord_prec[0], coord_prec[1], new_angle, "0")
         
             self.pos_waiting_list.append(new_pos)
@@ -1147,8 +1041,111 @@ class IHM:
         self.ETAT = 1
         self.client_socket.add_to_send_list(self.client_socket.create_message(self.IHM_Robot, "config", {"equipe": self.EQUIPE, "etat": self.ETAT}))
 
+    def programme_simulation(self):
+        print("Programme de simulation")
+        logging.info("Starting simulation program")
+        last_time = time.time()
+        self.ROBOT.x = 225
+        self.ROBOT.y = 225
+
+        while True:
+            keys = pygame.key.get_pressed()
+            quit = pygame.event.get(pygame.QUIT)
+            if quit or keys[pygame.K_ESCAPE] or keys[pygame.K_SPACE]:
+                exit(0)
+
+            scan = self.valeur_de_test()
+            new_scan = self.transform_scan(scan, self.ROBOT.x, self.ROBOT.y, self.ROBOT_ANGLE)
+
+            # self.detect_object(new_scan)
+            #new_objets = self.detect_objects(new_scan)
+            #self.suivre_objet(new_objets, 100)
+
+            self.draw_background()
+            self.draw_list_position()
+
+            if self.ETAT == 0:
+                self.draw_text_center("INITIALISATION DU MATCH", self.WINDOW_SIZE[0] / 2, 35, self.RED)
+                self.init_match()
+            elif self.ETAT == 1:
+                self.draw_text_center("MATCH EN COURS", self.WINDOW_SIZE[0] / 2, 35, self.RED)
+
+                self.command_button.draw()
+                self.save_strategie_button.draw()
+                self.load_strategie_button.draw()
+                self.add_position_button.draw()
+                self.play_strategie_button.draw()
+
+            for event in pygame.event.get():
+                self.manager.process_events(event)
+                if event.type == UI_WINDOW_CLOSE: # BUG: Fermeture de la fenêtre non personnalisée
+                    if self.command_window:
+                        self.command_window = None
+                    elif self.save_window:
+                        self.save_window = None
+                    elif self.load_window:
+                        self.load_window = None
+                    elif self.action_window:
+                        if self.action_window.get_id() != "New_wind":
+                            self.action_window = None          
+                if self.command_window:
+                    self.command_window.process_events(event)
+                elif self.action_window:
+                    self.action_window.process_events(event)
+                elif self.save_window:
+                    self.save_window.process_events(event)
+                elif self.load_window:
+                    self.load_window.process_events(event)
+                elif self.ETAT == 1:
+                    self.handle_mouse_click(event)
+
+                if self.ETAT == 1:
+                    self.go_to_position()
+                    self.command_button.handle_event(event)
+                    self.save_strategie_button.handle_event(event)
+                    self.load_strategie_button.handle_event(event)
+                    self.add_position_button.handle_event(event)
+                    self.play_strategie_button.handle_event(event)
+            
+            self.draw_robot()
+
+            for objet in self.objets:
+                self.draw_object(objet)
+
+            for point in new_scan:
+                self.draw_point(point[0], point[1])
+            
+            self.draw_mouse_coordinates()
+
+            # Affiche les fps sur l'écran (en bas a gauche)
+            self.draw_text(
+                "FPS: " + str(int(1 / (time.time() - last_time))), 10, self.WINDOW_SIZE[1] - 30)
+            last_time = time.time()
+
+            self.manager.update(1/60.0)
+            self.manager.draw_ui(self.lcd)
+            pygame.display.update()
+            self.lcd.fill(self.WHITE)
+            #self.ROBOT_ANGLE += 1
+
+            # Déplacement du robot virtuel avec des touches du clavier
+            x = self.ROBOT.x
+            y = self.ROBOT.y
+
+            if keys[pygame.K_LEFT]:
+                x += 10
+            if keys[pygame.K_RIGHT]:
+                x -= 10
+            if keys[pygame.K_UP]:
+                y -= 10
+            if keys[pygame.K_DOWN]:
+                y += 10
+            self.ROBOT.update_position(x, y)
+
+            time.sleep(0.01)
+    
     def run(self):
-        #self.programme_simulation()
+        self.programme_simulation()
         
         self.client_socket.set_callback(self.receive_to_server)
         self.client_socket.set_callback_stop(self.stop)
@@ -1225,16 +1222,6 @@ class IHM:
                     
                 for objet in self.objets:
                     self.draw_object(objet)
-                    
-                    # Vérifie si l'objet est dans le périmètre de sécurité
-                    """if math.sqrt((self.ROBOT.x - objet.x)**2 + (self.ROBOT.y - objet.y)**2) < self.perimetre_securite:
-                        self.client_socket.add_to_send_list(self.client_socket.create_message(4, "lidar", {"etat": "stop"}))
-                        print("Arrêt du lidar")"""
-                    
-                    """trajectoire_actuel, trajectoire_adverse, trajectoire_evitement = self.trajectoires_anticipation(
-                        self.ROBOT, objet, 1.5, 0.1, 50)
-                    self.draw_all_trajectoires(
-                        trajectoire_actuel, trajectoire_adverse, trajectoire_evitement)"""
 
                 self.manager.update(1/60.0)
                 self.manager.draw_ui(self.lcd)

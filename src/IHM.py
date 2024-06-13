@@ -334,23 +334,23 @@ class IHM:
             self.POINT_COLOR), (x * self.X_RATIO, y * self.Y_RATIO), 3)
 
     def draw_object(self, objet):
+        x = self.map_value(objet.x, self.FIELD_SIZE[0], 0, self.WINDOW_SIZE[0]-5-self.BORDER_DISTANCE*self.X_RATIO, self.BORDER_DISTANCE*self.X_RATIO+5)
+        y = self.map_value(objet.y, 0, self.FIELD_SIZE[1], self.BORDER_DISTANCE*self.Y_RATIO+5 ,self.WINDOW_SIZE[1]-5-self.BORDER_DISTANCE*self.Y_RATIO)
         pygame.draw.circle(self.lcd, pygame.Color(
-            255, 255, 0), (objet.x * self.X_RATIO, objet.y * self.Y_RATIO), 10)
-        pygame.draw.circle(self.lcd, pygame.Color(50, 50, 200), (objet.x * self.X_RATIO,
-                           objet.y * self.Y_RATIO), int(objet.taille / 2 * self.X_RATIO), 3)
+            255, 255, 0), (x, y), 10)
+        pygame.draw.circle(self.lcd, pygame.Color(50, 50, 200), (x, y), int(objet.taille / 2 * self.X_RATIO), 3)
         
         # Dessine le périmètre de sécurité autour de l'objet
-        pygame.draw.circle(self.lcd, pygame.Color(255, 0, 0), (objet.x * self.X_RATIO, objet.y * self.Y_RATIO), self.perimetre_securite * self.X_RATIO, 2)
+        pygame.draw.circle(self.lcd, pygame.Color(255, 0, 0), (x, y), self.perimetre_securite * self.X_RATIO, 2)
 
         # Affichage des coordonnées de l'objet et de son ID
-        self.draw_text("ID: " + str(objet.id), objet.x *
-                       self.X_RATIO + 20, objet.y * self.Y_RATIO - 30)
+        self.draw_text("ID: " + str(objet.id), x + 20, y - 30)
 
         # Affichage de la direction et de la vitesse de l'objet avec un vecteur
         direction, vitesse = objet.get_direction_speed()
         pygame.draw.line(
             self.lcd, pygame.Color(255, 255, 0),
-            (objet.x * self.X_RATIO, objet.y * self.Y_RATIO),
+            (x, y),
             ((objet.x + vitesse * math.cos(direction)) * self.X_RATIO, (objet.y + vitesse * math.sin(direction)) * self.Y_RATIO), 3)
 
     def draw_list_position(self):
@@ -762,8 +762,8 @@ class IHM:
                 scan = json.loads(scan)
                 self.new_scan = []
                 for point in scan:
-                    x_r = self.map_value(point["x"], 0, self.FIELD_SIZE[0], self.WINDOW_SIZE[0]-5-self.BORDER_DISTANCE*self.X_RATIO, self.BORDER_DISTANCE*self.X_RATIO+5)
-                    #x_r = self.map_value(point["x"], 0, self.FIELD_SIZE[0], self.FIELD_SIZE[0], 0)
+                    #x_r = self.map_value(point["x"], 0, self.FIELD_SIZE[0], self.WINDOW_SIZE[0]-5-self.BORDER_DISTANCE*self.X_RATIO, self.BORDER_DISTANCE*self.X_RATIO+5)
+                    x_r = self.map_value(point["x"], 0, self.FIELD_SIZE[0], self.FIELD_SIZE[0], 0)
                     self.new_scan.append(
                         (x_r, point["y"], point["dist"], point["angle"]))
             except Exception as e:

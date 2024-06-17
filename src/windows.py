@@ -760,6 +760,7 @@ class IHM_Action_Aux:
             herkulex_pince_droite = action.get("_PD_"+self.cote_actif[:2], {"str": "--"})
             herkulex_bras = action.get("_B_", {"str": "--"})
             action_special = self.data.get("Special", {"str": "--"})
+            vitesse = self.data.get("Vitesse", "Normal")
 
             if "str" in action_special:       
                 self.rebuild_liste(self.listes[1], (action_special["str"], action_special["str"]))
@@ -775,6 +776,8 @@ class IHM_Action_Aux:
             self.rebuild_liste(self.listes[5], (herkulex_pince_droite["str"], herkulex_pince_droite["str"]))
 
             self.rebuild_liste(self.listes[6], (herkulex_bras["str"], herkulex_bras["str"]))
+            
+            self.rebuild_liste(self.listes[7], (vitesse, vitesse))
         except Exception as e:
             print(f"Erreur lors de la mise à jour des listes : {e}")
             

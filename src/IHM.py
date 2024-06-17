@@ -23,14 +23,14 @@ class IHM:
         self.lcd = None
         self.BLACK = (0, 0, 0)
         self.WHITE = (255, 255, 255)
-        self.LIGHT_GREY = (200, 200, 200)
         self.GREEN = (0, 255, 0)
-        self.BLUE = (0, 0, 255)
-        self.RED = (255, 0, 0)
+        self.BLUE  = (0, 0, 255)
+        self.RED   = (255, 0, 0)
+        self.LIGHT_GREY = (200, 200, 200)
         self.DARK_GREEN = (0, 100, 0)
         self.FIELD_SIZE = (3000, 2000)
-        self.BORDER_DISTANCE = 200
         self.POINT_COLOR = (255, 0, 0)
+        self.BORDER_DISTANCE = 200
         self.BACKGROUND_COLOR = self.LIGHT_GREY
         self.FONT_COLOR = self.BLACK
 
@@ -40,8 +40,8 @@ class IHM:
         self.ROBOT_ANGLE = 0
 
         self.path_picture = "data/Terrain_Jeu.png"
-        self.id_compteur = 0  # Compteur pour les identifiants d'objet
-        self.objets = []  # Liste pour stocker les objets détectés
+        self.id_compteur = 0    # Compteur pour les identifiants d'objet
+        self.objets = []        # Liste pour stocker les objets détectés
         self.new_scan = []
         self.scanning = True
         self.ETAT = 0
@@ -56,11 +56,11 @@ class IHM:
             "Batterie Main": {"Tension": 30, "Courant": 0, "Switch": 0}
         }
 
-        self.pos_waiting_list = [] # Liste pour stocker les futurs positions positions du robot à atteindre 
-        self.robot_move = True # Variable pour savoir si le robot est en mouvement
-        self.numero_strategie = 0 # Numéro de la stratégie en cours
-        self.angle_mouse = 0 # Angle de la souris
-        self.perimetre_securite = 400 # Périmètre de sécurité autour des objets
+        self.pos_waiting_list = {}      # Liste pour stocker les futurs positions positions du robot à atteindre 
+        self.robot_move = True          # Variable pour savoir si le robot est en mouvement
+        self.numero_strategie = 0       # Numéro de la stratégie en cours
+        self.angle_mouse = 0            # Angle de la souris
+        self.perimetre_securite = 400   # Périmètre de sécurité autour des objets
         
         # Vider le fichier de sauvegarde des stratégies
         with open("data/strategie.json", "w") as f:
@@ -71,7 +71,7 @@ class IHM:
         info_object = pygame.display.Info()
         screen_width, screen_height = info_object.current_w, info_object.current_h - 100
         target_ratio = 3/2
-        target_width = min(screen_width, int(screen_height * target_ratio))
+        target_width  = min(screen_width, int(screen_height * target_ratio))
         target_height = min(screen_height, int(screen_width / target_ratio))
         self.WINDOW_SIZE = (target_width, target_height)
         self.X_RATIO = self.WINDOW_SIZE[0] / self.FIELD_SIZE[0]
@@ -231,7 +231,7 @@ class IHM:
             else:
                 self.angle_mouse = 0
                 # Dessine le robot si la souris est a proximité d'un point de la liste d'attente
-                for pos_r in self.pos_waiting_list:
+                for idx, pos_r in self.pos_waiting_list.items():
                     if math.sqrt((pos_r[0] - x)**2 + (pos_r[1] - y)**2) < 25:
                         robot_image = pygame.image.load('data/robot.png').convert_alpha()
                         
@@ -359,7 +359,7 @@ class IHM:
         new_waiting_list = []
         if self.pos_waiting_list:
             # Remettre dans la bonne origine les valeurs de position
-            for pos in self.pos_waiting_list:
+            for idx, pos in self.pos_waiting_list.items():
                 x = self.map_value(pos[0], 0, self.FIELD_SIZE[0], self.WINDOW_SIZE[0]-5-self.BORDER_DISTANCE*self.X_RATIO, self.BORDER_DISTANCE*self.X_RATIO+5)
                 y = self.map_value(pos[1], 0, self.FIELD_SIZE[1], self.BORDER_DISTANCE*self.Y_RATIO+5 ,self.WINDOW_SIZE[1]-5-self.BORDER_DISTANCE*self.Y_RATIO)
                 new_waiting_list.append((int(x), int(y)))
@@ -667,7 +667,7 @@ class IHM:
             
         elif message["cmd"] == "akn_m":
             self.robot_move = False
-            self.pos_waiting_list.pop(0)
+            #self.pos_waiting_list.pop(0)
         
         elif message["cmd"] == "config":
             config = message["data"]
@@ -713,7 +713,8 @@ class IHM:
         elif event.type == MOUSEBUTTONDOWN and event.button == 1:
             # Si le clic droit est dans les alentours d'un point de la liste d'attente, ouvrir le gestionnaire de stratégie
             try:
-                for i, pos in enumerate(self.pos_waiting_list):
+                for idx, pos in self.pos_waiting_list.items():
+                    i = int(idx)
                     x = self.map_value(pos[0], 0, self.FIELD_SIZE[0], self.WINDOW_SIZE[0]-5-self.BORDER_DISTANCE*self.X_RATIO, self.BORDER_DISTANCE*self.X_RATIO+5)
                     y = self.map_value(pos[1], 0, self.FIELD_SIZE[1], self.BORDER_DISTANCE*self.Y_RATIO+5 ,self.WINDOW_SIZE[1]-5-self.BORDER_DISTANCE*self.Y_RATIO)
                     x = int(x)
@@ -725,7 +726,7 @@ class IHM:
                                 strategie = json.load(file)
                             key = str(i+1)
                             try:
-                                self.action_window = IHM_Action_Aux(self.manager, i+1, (pos[0], pos[1], 0), _callback_save=self.save_action, _config = strategie[key], _callback_delete=self.delete_action)
+                                self.action_window = IHM_Action_Aux(self.manager, i, (pos[0], pos[1], 0), _callback_save=self.save_action, _config = strategie[key], _callback_delete=self.delete_action)
                             except Exception as e:
                                 print(f"Erreur dans l'ouverture de la fenêtre de configuration de l'action {i+1} :", e)                               
                         break
@@ -748,7 +749,7 @@ class IHM:
             if not self.robot_move:
                 self.robot_move = True
                 # Prenez la première position de la liste
-                pos = self.pos_waiting_list[0]
+                pos = self.pos_waiting_list[str(0)]
                 # Envoyez la position au CAN
                 self.client_socket.add_to_send_list(self.client_socket.create_message(
                     self.CAN, "clic", {"x": pos[0], "y": pos[1], "theta": pos[2], "sens": pos[3]}))
@@ -814,7 +815,7 @@ class IHM:
             pass
         
         # Supprimer les coordonnées de la liste d'attente
-        self.pos_waiting_list.pop(numero-1)
+        self.pos_waiting_list.pop(str(numero))
         self.numero_strategie -= 1
         
         # Modifier les numéros des actions suivantes
@@ -822,6 +823,10 @@ class IHM:
             strat = strategie.pop(str(i))
             strategie[str(i-1)] = strat
             strat["id_action"] = i-1
+            
+            # Modifier les numéros des coordonnées de la liste d'attente
+            pos = self.pos_waiting_list.pop(str(i))
+            self.pos_waiting_list[str(i-1)] = pos
         
         print("Stratégie modifiée", strategie)
         
@@ -834,60 +839,113 @@ class IHM:
     def save_action(self, strat, _action = ""):
         action = strat["Action"]
         numero = strat["id_action"]
+        id_action = numero
         strat.pop("id_action")
-
-        print(f"| ID : {numero} | Déplacement", strat["Déplacement"], "\n| Action", action, "| Special", strat["Special"])
+        
+        strategie = {str(numero): strat}
+        print(f"\n| ID : {numero} | Déplacement", strat["Déplacement"], "\n| Action", action, "| Special", strat["Special"])
+        
+        if len(self.pos_waiting_list) > 0: # Récupérer les coordonnées précédentes
+            coord_prec = self.pos_waiting_list[numero-1]
+            print("Coord précédente", coord_prec)
+        else:
+            coord_prec = (225, 225, 0, "0")
         
         if "Coord" in strat["Déplacement"]:
             coord = strat["Déplacement"]["Coord"]
             
-            if coord["T"] == "":
+            """if coord["T"] == "":
                 # Si l'angle d'arrivée n'est pas renseigné, on calcule l'angle entre le robot et la position d'arrivée
-                if len(self.pos_waiting_list) > 0: # Récupérer les coordonnées précédentes
-                    coord_prec = self.pos_waiting_list[-1]
-                else:
-                    coord_prec = (225, 225, self.ROBOT_ANGLE, "0")
-                    
                 angle = math.degrees(math.atan2(coord["Y"] - coord_prec[1], coord["X"] - coord_prec[0]))
                 coord["T"] = int(angle*10)
             else:
                 coord["T"] = int(coord["T"]*10) if -360 <= int(coord["T"]) <= 360 else int(coord["T"])
                 
-            new_pos = (int(coord["X"]), int(coord["Y"]), coord["T"], "0")
+            new_pos = (int(coord["X"]), int(coord["Y"]), coord["T"], "0")"""
+            
+            coord = strat["Déplacement"]["Coord"]
+    
+            # Calcul de l'angle de rotation nécessaire
+            angle_destination = math.degrees(math.atan2(coord["Y"] - coord_prec[1], coord["X"] - coord_prec[0]))
+            # Normalisation de l'angle entre -180 et 180
+            angle_destination = angle_destination if angle_destination < 180 else angle_destination - 360
+            angle_destination = int(angle_destination)
+            
+            # Conversion de l'angle actuel en une valeur entre 0 et 360
+            angle_arrivee = int(coord["T"]) % 360 if coord["T"] != "" else None
+            
+            # Conversion angle actuel en une valeur entre -180 et 180
+            angle_prec = coord_prec[2] if coord_prec[2] < 180 else coord_prec[2] - 360
+            
+            if angle_arrivee is None:
+                # Si l'angle d'arrivée n'est pas renseigné, utilisez l'angle calculé
+                coord["T"] = int(angle_destination % 360)
+                
+            # Calcul de la différence d'angle la plus courte
+            delta_angle = angle_destination - angle_prec
+            delta_angle = (delta_angle + 180) % 360 - 180  # Ajustement pour le chemin le plus court
+            print("Delta angle", delta_angle, "Angle destination", angle_destination, "Angle actuel", angle_prec)
+            
+            # Si la rotation nécessaire est inf"rieur à 90 degrés, il peut être plus efficace de reculer
+            if abs(delta_angle) > 90:
+                # Ajustement de l'angle pour la marche arrière
+                #delta_angle = (delta_angle + 180) % 360 - 180                    
+                
+                # Calcul de la distance à parcourir pour atteindre la position en marche arrière
+                distance = int(math.sqrt((coord["X"] - coord_prec[0])**2 + (coord["Y"] - coord_prec[1])**2))
+                print("Distance", distance, "Delta angle", delta_angle, "Angle destination", angle_destination, "Angle actuel", angle_prec)
+                # Si la distance n'est pas nulle, on les actions tourner et avancer
+                if distance != 0:
+                    # On ajoute l'action de rotation
+                    new_pos = (coord_prec[0], coord_prec[1], angle_destination + 180, "0")
+                    self.pos_waiting_list[numero] = new_pos
+                    
+                    new_pos = (int(coord["X"]), int(coord["Y"]), angle_destination + 180, "0") # Ajout coord après distance
+                    self.pos_waiting_list[numero+1] = new_pos
+                    
+                    # Création de la nouvelle action
+                    strategie = {}
+                    strategie[str(numero)] = {"Déplacement": {"Rotation": delta_angle * 10}, "Action": {}, "Special": {}}
+                    strategie[str(numero+1)] = {"Déplacement": {"Ligne_Droite": -distance}, "Action": {}, "Special": {}}
+                    numero += 1
+                    if angle_arrivee is not None:
+                        # Calcul le delta angle pour l'angle d'arrivée en fonction de l'angle de destination
+                        coord["T"] = int((angle_arrivee - angle_destination + 180) % 360)
+                        strategie[str(numero+1)] = {"Déplacement": {"Rotation": coord["T"]*10}, "Action": {}, "Special": {}}
+                        new_pos = (int(coord["X"]), int(coord["Y"]), coord["T"], "0")
+                        self.pos_waiting_list[numero+1] = new_pos
+                        numero += 1
+                else:
+                    pass
+            else:
+                new_pos = (int(coord["X"]), int(coord["Y"]), coord["T"], "0")
+                strategie[str(numero)]["Déplacement"]["Coord"]["T"] = int(coord["T"] * 10)
+                self.pos_waiting_list[numero] = new_pos
                 
         elif "Ligne_Droite" in strat["Déplacement"]:
             distance = strat["Déplacement"]["Ligne_Droite"]
-            
-            # Calcul de la position d'arrivée en fonction de la coordonnée précédente
-            if len(self.pos_waiting_list) > 0: # Récupérer les coordonnées précédentes
-                coord_prec = self.pos_waiting_list[-1]
-            else:
-                coord_prec = (225, 225, self.ROBOT_ANGLE, "0")
-                
-            x = coord_prec[0] + distance * math.cos(math.radians(coord_prec[2]/10))
-            y = coord_prec[1] + distance * math.sin(math.radians(coord_prec[2]/10))
+            # Calcul de la position d'arrivée en fonction de la coordonnée précédente       
+            x = coord_prec[0] + distance * math.cos(math.radians(coord_prec[2]))
+            y = coord_prec[1] + distance * math.sin(math.radians(coord_prec[2]))
             new_pos = (int(x), int(y), coord_prec[2], "0")
+            self.pos_waiting_list[numero] = new_pos
             
         elif "Rotation" in strat["Déplacement"]:
             angle = strat["Déplacement"]["Rotation"]
             # Calcul de l'angle d'arrivée en fonction de l'angle précédent
-            if len(self.pos_waiting_list) > 0: # Récupérer les coordonnées précédentes
-                coord_prec = self.pos_waiting_list[-1]
-            else:
-                coord_prec = (225, 225, self.ROBOT_ANGLE, "0")
             
-            new_angle = angle if -360 <= angle <= 360 else angle//10
+            new_angle = angle//10
             new_pos = (coord_prec[0], coord_prec[1], new_angle, "0")
+            self.pos_waiting_list[numero] = new_pos
         
         new_window = None 
-        strategie = {str(numero): strat}
         
         with open("data/strategie.json", "r") as file:
             try:
                 data = json.load(file)
             except:
                 data = {}
-            try :
+            try:
                 data.update(strategie)
             except KeyError:
                 pass
@@ -895,18 +953,19 @@ class IHM:
         with open("data/strategie.json", "w") as file:
             json.dump(data, file, indent=4)
         
-        self.action_window.close()
-        self.action_window = None
+        if self.action_window is not None:
+            self.action_window.close()
+            self.action_window = None
         
         # Si l'action est next ou back, on ouvre une nouvelle fenêtre de configuration avec les valeurs de l'action suivante ou précédente
         if _action == "next" and numero < self.numero_strategie:
             try:
-                new_window = IHM_Action_Aux(self.manager, numero+1, self.pos_waiting_list[numero], _callback_save=self.save_action, _config = data[str(numero+1)], _callback_delete=self.delete_action, _id="New_wind")
+                new_window = IHM_Action_Aux(self.manager, numero+1, self.pos_waiting_list[str(numero+1)], _callback_save=self.save_action, _config = data[str(numero+1)], _callback_delete=self.delete_action, _id="New_wind")
             except KeyError:
                 print("Erreur dans la récupération de la configuration de l'action")
         elif _action == "back" and numero > 1:
             try:
-                new_window = IHM_Action_Aux(self.manager, numero-1, self.pos_waiting_list[numero-2], _callback_save=self.save_action, _config = data[str(numero-1)], _callback_delete=self.delete_action, _id="New_wind")
+                new_window = IHM_Action_Aux(self.manager, numero-1, self.pos_waiting_list[str(numero-1)], _callback_save=self.save_action, _config = data[str(numero-1)], _callback_delete=self.delete_action, _id="New_wind")
             except KeyError:
                 print("Erreur dans la récupération de la configuration de l'action")
         else:
@@ -914,11 +973,8 @@ class IHM:
         
         self.action_window = new_window
         
-        if numero > self.numero_strategie and _action == "":
-            self.numero_strategie += 1
-            self.pos_waiting_list.append(new_pos)
-        else:
-            self.pos_waiting_list[numero-1] = new_pos
+        if numero >= self.numero_strategie and _action == "":
+            self.numero_strategie += 1 + (numero - id_action)
     
     def save_strategie(self, data):
         # Permet de sauvegarder la stratégie en cours
@@ -953,47 +1009,50 @@ class IHM:
             points = meta["Nb_points"]
             strategie.pop("meta")
             
-        self.pos_waiting_list = []
+        self.pos_waiting_list = {}
         self.numero_strategie = 1
-    
-        for key in strategie:
-            action = strategie[key]
-            
-            if "Coord" in action["Déplacement"]:
-                coord = action["Déplacement"]["Coord"]
-                    
-                new_pos = (int(coord["X"]), int(coord["Y"]), (coord["T"]//10), "0")
-                    
-            elif "Ligne_Droite" in action["Déplacement"]:
-                distance = action["Déplacement"]["Ligne_Droite"]
-                
-                # Calcul de la position d'arrivée en fonction de la coordonnée précédente
-                if len(self.pos_waiting_list) > 0: # Récupérer les coordonnées précédentes
-                    coord_prec = self.pos_waiting_list[-1]
-                else:
-                    coord_prec = (225, 225, 0, "0")
-                    
-                x = coord_prec[0] + distance * math.cos(math.radians((coord_prec[2])))
-                y = coord_prec[1] + distance * math.sin(math.radians((coord_prec[2])))
-                new_pos = (int(x), int(y), coord_prec[2], "0")
-                
-            elif "Rotation" in action["Déplacement"]:
-                angle = action["Déplacement"]["Rotation"]
-                
-                # Calcul de l'angle d'arrivée en fonction de l'angle précédent
-                if len(self.pos_waiting_list) > 0: # Récupérer les coordonnées précédentes
-                    coord_prec = self.pos_waiting_list[-1]
-                else:
-                    coord_prec = (225, 225, 0, "0")
-                # Calculer le nouvel angle en fonction de l'angle précédent
-                new_angle = coord_prec[2] + angle//10
-                new_angle %= 360
-                print("Angle:", new_angle, "Angle précédent:", coord_prec[2], "Angle ajouté:", angle//10)
-                new_pos = (coord_prec[0], coord_prec[1], new_angle, "0")
         
-            self.pos_waiting_list.append(new_pos)
-            print(new_pos)
-            self.numero_strategie += 1
+        for key, strat in strategie.items():
+            # Ajout du numéro de l'action
+            strat["id_action"] = self.numero_strategie
+            # Division par 10 pour la valeur de l'angle
+            if "Coord" in strat["Déplacement"]:
+                strat["Déplacement"]["Coord"]["T"] = strat["Déplacement"]["Coord"]["T"]//10
+            try:
+                self.save_action(strat)
+            except Exception as e:
+                raise Exception(f"Erreur dans le chargement de l'action {key} :", e)
+    
+        # for key in strategie:
+        #     action = strategie[key]
+        #     self.numero_strategie = key
+            
+        #     if len(self.pos_waiting_list) > 1: # Récupérer les coordonnées précédentes
+        #         coord_prec = self.pos_waiting_list[str(self.numero_strategie-1)]
+        #     else:
+        #         coord_prec = (225, 225, 0, "0")
+            
+        #     if "Coord" in action["Déplacement"]:
+        #         coord = action["Déplacement"]["Coord"]
+                    
+        #         new_pos = (int(coord["X"]), int(coord["Y"]), (coord["T"]//10), "0")
+                    
+        #     elif "Ligne_Droite" in action["Déplacement"]:
+        #         distance = action["Déplacement"]["Ligne_Droite"]
+                    
+        #         x = coord_prec[0] + distance * math.cos(math.radians((coord_prec[2])))
+        #         y = coord_prec[1] + distance * math.sin(math.radians((coord_prec[2])))
+        #         new_pos = (int(x), int(y), coord_prec[2], "0")
+                
+        #     elif "Rotation" in action["Déplacement"]:
+        #         angle = action["Déplacement"]["Rotation"]
+                
+        #         # Calculer le nouvel angle en fonction de l'angle précédent
+        #         new_angle = coord_prec[2] + angle//10
+        #         new_angle %= 360
+        #         new_pos = (coord_prec[0], coord_prec[1], new_angle, "0")
+        
+        #     self.pos_waiting_list[str(self.numero_strategie)] = new_pos
             
     def add_position(self):
         pass

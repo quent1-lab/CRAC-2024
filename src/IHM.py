@@ -807,6 +807,8 @@ class IHM:
     
     def delete_action(self, numero):
         # Permet de supprimer une action de la stratégie
+        print("Suppression de l'action", numero)
+        
         with open("data/strategie.json", "r") as file:
             strategie = json.load(file)
         try:
@@ -815,20 +817,17 @@ class IHM:
             pass
         
         # Supprimer les coordonnées de la liste d'attente
-        self.pos_waiting_list.pop(str(numero))
+        self.pos_waiting_list.pop(numero)
         self.numero_strategie -= 1
-        
         # Modifier les numéros des actions suivantes
         for i in range(numero+1, len(strategie)+2):
             strat = strategie.pop(str(i))
-            strategie[str(i-1)] = strat
             strat["id_action"] = i-1
+            strategie[str(i-1)] = strat
             
             # Modifier les numéros des coordonnées de la liste d'attente
-            pos = self.pos_waiting_list.pop(str(i))
-            self.pos_waiting_list[str(i-1)] = pos
-        
-        print("Stratégie modifiée", strategie)
+            pos = self.pos_waiting_list.pop(i)
+            self.pos_waiting_list[i-1] = pos
         
         with open("data/strategie.json", "w") as file:
             json.dump(strategie, file, indent=4)

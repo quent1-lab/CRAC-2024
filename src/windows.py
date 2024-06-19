@@ -425,7 +425,11 @@ class IHM_Action_Aux:
                         
                 elif id == "#b_Retour":
                     if self.action_numero > 1:
-                        print(f"ID : {self.id}")
+                        # Vérifier si la rotation à changé
+                        # if "Rotation" in self.data["Déplacement"]:
+                        #     if self.config["Déplacement"]["Rotation"] != self.data["Déplacement"]["Rotation"]:
+                        #         self.config["Déplacement"]["Coord"]["T"] = self.data["Déplacement"]["Coord"]["T"]
+                        #         self.save_data(self.data,"back")
                         self.save_data(self.data,"back")
                 elif id == "#b_Enregistrer":
                     self.save_data(self.data)
@@ -645,7 +649,7 @@ class IHM_Action_Aux:
                         try:
                             self.angle = int(event.text) if -360 <= int(event.text) <= 360 else 0
                             if not self.checkboxes[0].get_checked():
-                                self.data["Déplacement"] = {"Rotation": self.angle * 10,
+                                self.data["Déplacement"] = {"Rotation": self.angle,
                                                             "aknowledge": self.config["Rotation"]["aknowledge"]}
                             else:
                                 self.data["Déplacement"]["Coord"]["T"] = self.angle

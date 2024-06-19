@@ -73,5 +73,9 @@
         "Action": {},
         "Special": {},
         "Vitesse": "Normal"
+    },
+    "meta": {
+        "Nom": "strategie_7",
+        "Nb_points": 0
     }
 }

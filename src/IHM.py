@@ -935,10 +935,12 @@ class IHM:
                         numero += 1
                         if angle_arrivee is not None:
                             # Calcul le delta angle pour l'angle d'arrivée en fonction de l'angle de destination
-                            coord["T"] = int((angle_arrivee - angle_deplacement) % 360)
-                            strategie[str(numero+1)] = {"Déplacement": {"Rotation": int(coord["T"]*10)}, "Action": {}, "Special": {}, "Vitesse": vitesse}
+                            angle_a = int(angle_arrivee - angle_deplacement)
+                            
+                            coord["T"] = angle_a
+                            strategie[str(numero+1)] = {"Déplacement": {"Rotation": int(coord["T"]*10), 'aknowledge' : 278}, "Action": {}, "Special": {}, "Vitesse": vitesse}
                             print(f"|  Rotation : {delta_angle} | Distance : {distance} | Reculer | Rotation : {coord['T']}")
-                            new_pos = (new_x, new_y, coord["T"], "0")
+                            new_pos = (new_x, new_y, angle_arrivee, "0")
                             self.pos_waiting_list[numero+1] = new_pos
                             numero += 1
                         else:

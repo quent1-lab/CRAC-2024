@@ -2,8 +2,8 @@
     "1": {
         "D\u00e9placement": {
             "Coord": {
-                "X": 1406,
-                "Y": 488,
+                "X": 1403,
+                "Y": 495,
                 "T": 120,
                 "S": "0"
             },
@@ -16,14 +16,21 @@
                 "ordre": 2,
                 "akn": 133,
                 "str": "Ouvert"
+            },
+            "_PG_av_": {
+                "id": "0x1A0",
+                "en_mvt": false,
+                "ordre": 3,
+                "akn": 133,
+                "str": "Plante"
             }
         },
         "Special": {},
-        "Vitesse": "Normal"
+        "Vitesse": "Rapide"
     },
     "2": {
         "D\u00e9placement": {
-            "Rotation": -396,
+            "Rotation": -399,
             "aknowledge": 278
         },
         "Action": {
@@ -36,42 +43,61 @@
             }
         },
         "Special": {},
-        "Vitesse": "Normal"
+        "Vitesse": "Rapide"
     },
     "3": {
         "D\u00e9placement": {
-            "Ligne_Droite": -371,
+            "Ligne_Droite": -352,
             "aknowledge": 277
         },
-        "Action": {},
+        "Action": {
+            "_PG_ar": {
+                "id": "0x1A1",
+                "en_mvt": false,
+                "ordre": 3,
+                "akn": 149,
+                "str": "Plante"
+            }
+        },
         "Special": {},
-        "Vitesse": "Normal"
+        "Vitesse": "Rapide"
     },
     "4": {
         "D\u00e9placement": {
-            "Rotation": 525,
+            "Rotation": 532,
             "aknowledge": 278
         },
-        "Action": {},
+        "Action": {
+            "_PG_av": {
+                "id": "0x1A0",
+                "en_mvt": true,
+                "ordre": 2,
+                "akn": 133,
+                "str": "Ouvert"
+            }
+        },
         "Special": {},
-        "Vitesse": "Normal"
+        "Vitesse": "Rapide"
     },
     "5": {
         "D\u00e9placement": {
-            "Ligne_Droite": -940,
+            "Ligne_Droite": -956,
             "aknowledge": 277
         },
         "Action": {},
         "Special": {},
-        "Vitesse": "Normal"
+        "Vitesse": "Rapide"
     },
     "6": {
         "D\u00e9placement": {
-            "Rotation": -1140,
-            "aknowledge": 278
+            "Rotation": -1430
         },
         "Action": {},
         "Special": {},
-        "Vitesse": "Normal"
+        "Vitesse": "Rapide"
+    },
+    "meta": {
+        "Nom": "strategie_5",
+        "Nb_points": 0
     }
 }

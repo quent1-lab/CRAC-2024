@@ -300,7 +300,7 @@ class IHM_Robot:
             if not os.path.exists("data/strategies_backup"):
                 os.makedirs("data/strategies_backup")
             if os.path.exists(f"data/strategies_backup/strategie_{name}_bkp.json"):
-                os.remove(self.path_strat + f"data/strategies_backup/strategie_{name}_bkp.json")
+                os.remove(f"data/strategies_backup/strategie_{name}_bkp.json")
             os.rename(self.path_strat + f"/strategie_{name}.json", f"data/strategies_backup/strategie_{name}_bkp.json")
             
             # Supprimer la stratégie

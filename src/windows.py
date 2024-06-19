@@ -388,7 +388,7 @@ class IHM_Action_Aux:
     def process_events(self, event):
         if event.type == pygame.USEREVENT:
             if event.user_type == pygame_gui.UI_BUTTON_PRESSED: # Si un bouton est pressé
-                self.id = ""
+                self.id = "" if self.id != "save" else self.id
                 if len(event.ui_element.get_object_ids()) > 1:
                     id = event.ui_element.get_object_ids()[1] 
                 else:

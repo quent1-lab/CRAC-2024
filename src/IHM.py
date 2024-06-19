@@ -730,7 +730,7 @@ class IHM:
                             elif "Rotation" in strat["Déplacement"]:
                                 strat["Déplacement"]["Rotation"] = strat["Déplacement"]["Rotation"]//10
                             try:
-                                self.action_window = IHM_Action_Aux(self.manager, i, (pos[0], pos[1], 0), _callback_save=self.save_action, _config = strat, _callback_delete=self.delete_action)
+                                self.action_window = IHM_Action_Aux(self.manager, i, (pos[0], pos[1], 0), _callback_save=self.save_action, _config = strat, _callback_delete=self.delete_action, _id = "save")
                             except Exception as e:
                                 print(f"Erreur dans l'ouverture de la fenêtre de configuration de l'action {i+1} :", e)                               
                         break
@@ -840,187 +840,194 @@ class IHM:
         self.action_window = None
     
     def save_action(self, strat, _action = ""):
-        action = strat["Action"]
-        numero = strat["id_action"]
-        id_action = numero
-        strat.pop("id_action")
-        
-        strategie = {str(numero): strat}
-        print(f"\n[ Enregistrement ...\n| ID : {numero} | Déplacement", strat["Déplacement"], "\n| Action", action, "| Special", strat["Special"])
-        
-        if numero > 1: # Récupérer les coordonnées précédentes
-            coord_prec = self.pos_waiting_list[numero-1]
-        else:
-            coord_prec = (225, 225, 0, "0")
-        
-        if "Coord" in strat["Déplacement"]:
-            coord = strat["Déplacement"]["Coord"]
+        try:
+            action = strat["Action"]
+            numero = strat["id_action"]
+            vitesse = strat.get("Vitesse", "Normal")
+            id_action = numero
+            strat.pop("id_action")
             
+            strategie = {str(numero): strat}
+            print(f"\n[ Enregistrement ...\n| ID : {numero} | Déplacement", strat["Déplacement"], "\n| Action", action, "| Special", strat["Special"])
             
-            """if coord["T"] == "":
-                # Si l'angle d'arrivée n'est pas renseigné, on calcule l'angle entre le robot et la position d'arrivée
-                angle = math.degrees(math.atan2(coord["Y"] - coord_prec[1], coord["X"] - coord_prec[0]))
-                coord["T"] = int(angle*10)
+            if numero > 1: # Récupérer les coordonnées précédentes
+                coord_prec = self.pos_waiting_list[numero-1]
             else:
-                coord["T"] = int(coord["T"]*10) if -360 <= int(coord["T"]) <= 360 else int(coord["T"])
+                coord_prec = (225, 225, 0, "0")
+            
+            if "Coord" in strat["Déplacement"]:
+                coord = strat["Déplacement"]["Coord"]
                 
-            new_pos = (int(coord["X"]), int(coord["Y"]), coord["T"], "0")"""
-            
-            coord = strat["Déplacement"]["Coord"]
-    
-    
-            """if coord["T"] == "":
-                # Si l'angle d'arrivée n'est pas renseigné, on calcule l'angle entre le robot et la position d'arrivée
-                angle = math.degrees(math.atan2(coord["Y"] - coord_prec[1], coord["X"] - coord_prec[0]))
-                coord["T"] = int(angle*10)
-            else:
-                coord["T"] = int(coord["T"]*10) if -360 <= int(coord["T"]) <= 360 else int(coord["T"])
                 
-            new_pos = (int(coord["X"]), int(coord["Y"]), coord["T"], "0")"""
-            
-            coord = strat["Déplacement"]["Coord"]
-    
-            # Calcul de l'angle de rotation nécessaire
-            angle_destination = math.degrees(math.atan2(coord["Y"] - coord_prec[1], coord["X"] - coord_prec[0]))
-            # Normalisation de l'angle entre -180 et 180
-            angle_deplacement = angle_destination if angle_destination < 180 else angle_destination - 360
-            angle_deplacement = angle_deplacement
-            
-            # Conversion de l'angle actuel en une valeur entre 0 et 360
-            angle_arrivee = coord["T"] if coord["T"] != "" else None
-            
-            # Conversion angle actuel en une valeur entre -180 et 180
-            angle_prec = coord_prec[2] if coord_prec[2] < 180 else coord_prec[2] - 360
-            
-            if angle_arrivee is None:
-                # Si l'angle d'arrivée n'est pas renseigné, utilisez l'angle calculé
-                coord["T"] = int(angle_deplacement)
+                """if coord["T"] == "":
+                    # Si l'angle d'arrivée n'est pas renseigné, on calcule l'angle entre le robot et la position d'arrivée
+                    angle = math.degrees(math.atan2(coord["Y"] - coord_prec[1], coord["X"] - coord_prec[0]))
+                    coord["T"] = int(angle*10)
+                else:
+                    coord["T"] = int(coord["T"]*10) if -360 <= int(coord["T"]) <= 360 else int(coord["T"])
+                    
+                new_pos = (int(coord["X"]), int(coord["Y"]), coord["T"], "0")"""
                 
-            # Calcul de la différence d'angle la plus courte
-            delta_angle = angle_deplacement - angle_prec
-            delta_angle = (delta_angle + 180) % 360 - 180  # Ajustement pour le chemin le plus court
-            
-            # Si la rotation nécessaire est inf"rieur à 90 degrés, il peut être plus efficace de reculer
-            if abs(delta_angle) > 90:
-                # Ajustement de l'angle pour la marche arrière
-                delta_angle = delta_angle - 180                  
+                coord = strat["Déplacement"]["Coord"]
+        
+        
+                """if coord["T"] == "":
+                    # Si l'angle d'arrivée n'est pas renseigné, on calcule l'angle entre le robot et la position d'arrivée
+                    angle = math.degrees(math.atan2(coord["Y"] - coord_prec[1], coord["X"] - coord_prec[0]))
+                    coord["T"] = int(angle*10)
+                else:
+                    coord["T"] = int(coord["T"]*10) if -360 <= int(coord["T"]) <= 360 else int(coord["T"])
+                    
+                new_pos = (int(coord["X"]), int(coord["Y"]), coord["T"], "0")"""
                 
-                # Calcul de la distance à parcourir pour atteindre la position en marche arrière
-                distance = int(math.sqrt((coord["X"] - coord_prec[0])**2 + (coord["Y"] - coord_prec[1])**2))
-                #print("Distance", distance, "Delta angle", delta_angle, "Angle destination", angle_destination, "Angle actuel", angle_prec)
-                # Si la distance n'est pas nulle, on les actions tourner et avancer
-                if distance != 0:
-                    # On ajoute l'action de rotation
-                    angle_deplacement = angle_deplacement + 180
-                    new_pos = (coord_prec[0], coord_prec[1], angle_deplacement, "0")
-                    print(180 - angle_destination)
+                coord = strat["Déplacement"]["Coord"]
+        
+                # Calcul de l'angle de rotation nécessaire
+                angle_destination = math.degrees(math.atan2(coord["Y"] - coord_prec[1], coord["X"] - coord_prec[0]))
+                # Normalisation de l'angle entre -180 et 180
+                angle_deplacement = angle_destination if angle_destination < 180 else angle_destination - 360
+                angle_deplacement = angle_deplacement
+                
+                # Conversion de l'angle actuel en une valeur entre 0 et 360
+                angle_arrivee = coord["T"] if coord["T"] != "" else None
+                
+                # Conversion angle actuel en une valeur entre -180 et 180
+                angle_prec = coord_prec[2] if coord_prec[2] < 180 else coord_prec[2] - 360
+                
+                if angle_arrivee is None:
+                    # Si l'angle d'arrivée n'est pas renseigné, utilisez l'angle calculé
+                    coord["T"] = int(angle_deplacement)
+                    
+                # Calcul de la différence d'angle la plus courte
+                delta_angle = angle_deplacement - angle_prec
+                delta_angle = (delta_angle + 180) % 360 - 180  # Ajustement pour le chemin le plus court
+                
+                # Si la rotation nécessaire est inf"rieur à 90 degrés, il peut être plus efficace de reculer
+                if abs(delta_angle) > 90:
+                    # Ajustement de l'angle pour la marche arrière
+                    if delta_angle < 0:
+                        delta_angle = delta_angle + 180
+                    else:
+                        delta_angle = delta_angle - 180             
+                    
+                    # Calcul de la distance à parcourir pour atteindre la position en marche arrière
+                    distance = int(math.sqrt((coord["X"] - coord_prec[0])**2 + (coord["Y"] - coord_prec[1])**2))
+                    #print("Distance", distance, "Delta angle", delta_angle, "Angle destination", angle_destination, "Angle actuel", angle_prec)
+                    # Si la distance n'est pas nulle, on les actions tourner et avancer
+                    if distance != 0:
+                        # On ajoute l'action de rotation
+                        angle_deplacement = angle_deplacement + 180
+                        new_pos = (coord_prec[0], coord_prec[1], angle_deplacement, "0")
+                        print(180 - angle_destination)
+                        self.pos_waiting_list[numero] = new_pos
+                        
+                        new_x = int(coord_prec[0] - distance * math.cos(math.radians(angle_deplacement)))
+                        new_y = int(coord_prec[1] - distance * math.sin(math.radians(angle_deplacement)))
+                        
+                        new_pos = (new_x, new_y, angle_deplacement, "0") # Ajout coord après distance
+                        self.pos_waiting_list[numero+1] = new_pos
+                        
+                        # Création de la nouvelle action
+                        strategie = {}
+                        strategie[str(numero)] = {"Déplacement": {"Rotation": int(delta_angle * 10), 'aknowledge' : 278}, "Action": action, "Special": {}, "Vitesse": vitesse}
+                        strategie[str(numero+1)] = {"Déplacement": {"Ligne_Droite": -distance, 'aknowledge' : 277}, "Action": {}, "Special": {}, "Vitesse": vitesse}
+                        
+                        numero += 1
+                        if angle_arrivee is not None:
+                            # Calcul le delta angle pour l'angle d'arrivée en fonction de l'angle de destination
+                            coord["T"] = int((angle_arrivee - angle_deplacement) % 360)
+                            strategie[str(numero+1)] = {"Déplacement": {"Rotation": int(coord["T"]*10)}, "Action": {}, "Special": {}, "Vitesse": vitesse}
+                            print(f"|  Rotation : {delta_angle} | Distance : {distance} | Reculer | Rotation : {coord['T']}")
+                            new_pos = (new_x, new_y, coord["T"], "0")
+                            self.pos_waiting_list[numero+1] = new_pos
+                            numero += 1
+                        else:
+                            print(f"| Rotation : {delta_angle} | Distance : {distance} ")
+                    else:
+                        pass
+                else:
+                    new_pos = (int(coord["X"]), int(coord["Y"]), coord["T"], "0")
+                    print(f"| Coord : {coord['X']}, {coord['Y']} | Angle arrivée : {coord["T"]}")
+                    strategie[str(numero)]["Déplacement"]["Coord"]["T"] = int(coord["T"] * 10)
                     self.pos_waiting_list[numero] = new_pos
                     
-                    new_x = int(coord_prec[0] - distance * math.cos(math.radians(angle_deplacement)))
-                    new_y = int(coord_prec[1] - distance * math.sin(math.radians(angle_deplacement)))
-                    
-                    new_pos = (new_x, new_y, angle_deplacement, "0") # Ajout coord après distance
-                    self.pos_waiting_list[numero+1] = new_pos
-                    
-                    # Création de la nouvelle action
-                    strategie = {}
-                    strategie[str(numero)] = {"Déplacement": {"Rotation": delta_angle * 10}, "Action": {}, "Special": {}}
-                    strategie[str(numero+1)] = {"Déplacement": {"Ligne_Droite": -distance}, "Action": {}, "Special": {}}
-                    
-                    numero += 1
-                    if angle_arrivee is not None:
-                        # Calcul le delta angle pour l'angle d'arrivée en fonction de l'angle de destination
-                        coord["T"] = int((angle_arrivee - angle_deplacement) % 360)
-                        strategie[str(numero+1)] = {"Déplacement": {"Rotation": coord["T"]*10}, "Action": {}, "Special": {}}
-                        print(f"|  Rotation : {delta_angle} | Distance : {distance} | Reculer | Rotation : {coord['T']}")
-                        new_pos = (new_x, new_y, coord["T"], "0")
-                        self.pos_waiting_list[numero+1] = new_pos
-                        numero += 1
-                    else:
-                        print(f"| Rotation : {delta_angle} | Distance : {distance} ")
-                else:
-                    pass
-            else:
-                new_pos = (int(coord["X"]), int(coord["Y"]), coord["T"], "0")
-                print(f"| Coord : {coord['X']}, {coord['Y']} | Angle arrivée : {coord["T"]}")
-                strategie[str(numero)]["Déplacement"]["Coord"]["T"] = int(coord["T"] * 10)
+            elif "Ligne_Droite" in strat["Déplacement"]:
+                distance = strat["Déplacement"]["Ligne_Droite"]
+                print(f"| Distance : {distance}")
+                # Calcul de la position d'arrivée en fonction de la coordonnée précédente       
+                x = coord_prec[0] + distance * math.cos(math.radians(coord_prec[2]))
+                y = coord_prec[1] + distance * math.sin(math.radians(coord_prec[2]))
+                new_pos = (int(x), int(y), coord_prec[2], "0")
                 self.pos_waiting_list[numero] = new_pos
                 
-        elif "Ligne_Droite" in strat["Déplacement"]:
-            distance = strat["Déplacement"]["Ligne_Droite"]
-            print(f"| Distance : {distance}")
-            # Calcul de la position d'arrivée en fonction de la coordonnée précédente       
-            x = coord_prec[0] + distance * math.cos(math.radians(coord_prec[2]))
-            y = coord_prec[1] + distance * math.sin(math.radians(coord_prec[2]))
-            new_pos = (int(x), int(y), coord_prec[2], "0")
-            self.pos_waiting_list[numero] = new_pos
-            
-        elif "Rotation" in strat["Déplacement"]:
-            angle = strat["Déplacement"]["Rotation"]
-            print(f"| Rotation : {angle}")
-            # Calcul de l'angle d'arrivée en fonction de l'angle précédent
-            if _action == "" or True :
-                x = coord_prec[0]
-                y = coord_prec[1]
-            else:
-                x = self.pos_waiting_list[numero][0]
-                y = self.pos_waiting_list[numero][1]
-            
-            strategie[str(numero)]["Déplacement"]["Rotation"] = angle * 10
-            angle = (coord_prec[2] + angle)
-            new_pos = (x, y, angle, "0")
-            self.pos_waiting_list[numero] = new_pos
-        
-        new_window = None
-        
-        with open("data/strategie.json", "r") as file:
-            try:
-                data = json.load(file)
-            except:
-                data = {}
-            try:
-                data.update(strategie)
-            except KeyError:
-                pass
+            elif "Rotation" in strat["Déplacement"]:
+                angle = strat["Déplacement"]["Rotation"]
+                print(f"| Rotation : {angle}")
+                # Calcul de l'angle d'arrivée en fonction de l'angle précédent
+                if _action == "" or True :
+                    x = coord_prec[0]
+                    y = coord_prec[1]
+                else:
+                    x = self.pos_waiting_list[numero][0]
+                    y = self.pos_waiting_list[numero][1]
                 
-        with open("data/strategie.json", "w") as file:
-            json.dump(data, file, indent=4)
-        
-        if self.action_window is not None:
-            self.action_window.close()
-            self.action_window = None
-        
-        if numero >= self.numero_strategie and _action == "":
-            self.numero_strategie += 1 + (numero - id_action)
-        
-        # Si l'action est next ou back, on ouvre une nouvelle fenêtre de configuration avec les valeurs de l'action suivante ou précédente
-        if _action == "next" and numero < self.numero_strategie:
-            strategie = data[str(numero+1)]
-            if "Coord" in strategie["Déplacement"]:
-                strategie["Déplacement"]["Coord"]["T"] = strategie["Déplacement"]["Coord"]["T"]//10
-            elif "Rotation" in strategie["Déplacement"]:
-                strategie["Déplacement"]["Rotation"] = strategie["Déplacement"]["Rotation"]//10
+                strategie[str(numero)]["Déplacement"]["Rotation"] = int(angle * 10)
+                angle = (coord_prec[2] + angle)
+                new_pos = (x, y, angle, "0")
+                self.pos_waiting_list[numero] = new_pos
             
-            try:
-                new_window = IHM_Action_Aux(self.manager, numero+1, self.pos_waiting_list[numero+1], _callback_save=self.save_action, _config = strategie, _callback_delete=self.delete_action, _id="New_wind")
-            except KeyError:
-                print("Erreur dans la récupération de la configuration de l'action")
-        
-        elif _action == "back" and numero > 1:
-            strategie = data[str(numero-1)]
-            if "Coord" in strategie["Déplacement"]:
-                strategie["Déplacement"]["Coord"]["T"] = strategie["Déplacement"]["Coord"]["T"]//10
-            elif "Rotation" in strategie["Déplacement"]:
-                strategie["Déplacement"]["Rotation"] = strategie["Déplacement"]["Rotation"]//10
-            
-            try:
-                new_window = IHM_Action_Aux(self.manager, numero-1, self.pos_waiting_list[numero-1], _callback_save=self.save_action, _config = strategie, _callback_delete=self.delete_action, _id="New_wind")
-            except KeyError:
-                print("Erreur dans la récupération de la configuration de l'action")
-        else:
             new_window = None
-        
-        self.action_window = new_window
+            
+            with open("data/strategie.json", "r") as file:
+                try:
+                    data = json.load(file)
+                except:
+                    data = {}
+                try:
+                    data.update(strategie)
+                except KeyError:
+                    pass
+                    
+            with open("data/strategie.json", "w") as file:
+                json.dump(data, file, indent=4)
+            
+            if self.action_window is not None:
+                self.action_window.close()
+                self.action_window = None
+            
+            if numero >= self.numero_strategie and _action == "":
+                self.numero_strategie += 1 + (numero - id_action)
+            
+            # Si l'action est next ou back, on ouvre une nouvelle fenêtre de configuration avec les valeurs de l'action suivante ou précédente
+            if _action == "next" and numero < self.numero_strategie:
+                strategie = data[str(numero+1)]
+                if "Coord" in strategie["Déplacement"]:
+                    strategie["Déplacement"]["Coord"]["T"] = strategie["Déplacement"]["Coord"]["T"]//10
+                elif "Rotation" in strategie["Déplacement"]:
+                    strategie["Déplacement"]["Rotation"] = strategie["Déplacement"]["Rotation"]//10
+                
+                try:
+                    new_window = IHM_Action_Aux(self.manager, numero+1, self.pos_waiting_list[numero+1], _callback_save=self.save_action, _config = strategie, _callback_delete=self.delete_action, _id="New_wind")
+                except KeyError:
+                    print("Erreur dans la récupération de la configuration de l'action")
+            
+            elif _action == "back" and numero > 1:
+                strategie = data[str(numero-1)]
+                if "Coord" in strategie["Déplacement"]:
+                    strategie["Déplacement"]["Coord"]["T"] = strategie["Déplacement"]["Coord"]["T"]//10
+                elif "Rotation" in strategie["Déplacement"]:
+                    strategie["Déplacement"]["Rotation"] = strategie["Déplacement"]["Rotation"]//10
+                
+                try:
+                    new_window = IHM_Action_Aux(self.manager, numero-1, self.pos_waiting_list[numero-1], _callback_save=self.save_action, _config = strategie, _callback_delete=self.delete_action, _id="New_wind")
+                except KeyError:
+                    print("Erreur dans la récupération de la configuration de l'action")
+            else:
+                new_window = None
+            
+            self.action_window = new_window
+        except Exception as e:
+            print("Erreur dans la sauvegarde de l'action :", e)
         
         
     
@@ -1254,7 +1261,7 @@ class IHM:
             time.sleep(0.01)
     
     def run(self):
-        self.programme_simulation()
+        #self.programme_simulation()
         
         self.client_socket.set_callback(self.receive_to_server)
         self.client_socket.set_callback_stop(self.stop)

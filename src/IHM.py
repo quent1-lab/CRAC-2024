@@ -38,6 +38,8 @@ class IHM:
         self.ROBOT_Dimension = (264, 269)
         self.ROBOT = Objet(0, self.ROBOT_Dimension[0], self.ROBOT_Dimension[1], 20)
         self.ROBOT_ANGLE = 0
+        
+        self.coord_depart = (225, 225, 0, "0")
 
         self.path_picture = "data/Terrain_Jeu.png"
         self.id_compteur = 0    # Compteur pour les identifiants d'objet
@@ -46,7 +48,7 @@ class IHM:
         self.scanning = True
         self.ETAT = 0
         self.EQUIPE = "jaune"
-        self.zone_depart = 1
+        self.zone_depart = 0
         self.desactive_m = False
 
         self.Energie = {
@@ -365,8 +367,8 @@ class IHM:
                 new_waiting_list.append((int(x), int(y)))
 
             # Dessine le chemin entre le robot et le prochain point
-            x = 225
-            y = 225
+            x = self.coord_depart[0]
+            y = self.coord_depart[1]
             x = int(self.map_value(x, 0, self.FIELD_SIZE[0], self.WINDOW_SIZE[0]-5-self.BORDER_DISTANCE*self.X_RATIO, self.BORDER_DISTANCE*self.X_RATIO+5))
             y = int(self.map_value(y, 0, self.FIELD_SIZE[1], self.BORDER_DISTANCE*self.Y_RATIO+5 ,self.WINDOW_SIZE[1]-5-self.BORDER_DISTANCE*self.Y_RATIO))
             # Dessine un point bleu sur le point de départ
@@ -853,7 +855,7 @@ class IHM:
             if numero > 1: # Récupérer les coordonnées précédentes
                 coord_prec = self.pos_waiting_list[numero-1]
             else:
-                coord_prec = (225, 225, 0, "0")
+                coord_prec = self.coord_depart
             
             if "Coord" in strat["Déplacement"]:
                 coord = strat["Déplacement"]["Coord"]
@@ -1122,16 +1124,25 @@ class IHM:
     def init_match(self):
         # Définir les rectangles de départ
         shape_x = 400
-        shape_y = 350
-        start_positions = [pygame.Rect((self.FIELD_SIZE[0] - self.BORDER_DISTANCE - shape_x) * self.X_RATIO - 5, self.BORDER_DISTANCE * self.Y_RATIO + 5, shape_x * self.X_RATIO, shape_y * self.Y_RATIO),
-                           pygame.Rect(self.BORDER_DISTANCE * self.X_RATIO + 5, self.BORDER_DISTANCE * self.Y_RATIO + 5, shape_x * self.X_RATIO, shape_y * self.Y_RATIO),
-                           pygame.Rect((self.FIELD_SIZE[0] - self.BORDER_DISTANCE - shape_x) * self.X_RATIO - 5, (self.FIELD_SIZE[1] - self.BORDER_DISTANCE - shape_y) * self.Y_RATIO - 5, shape_x * self.X_RATIO, shape_y * self.Y_RATIO),
-                           pygame.Rect(self.BORDER_DISTANCE * self.X_RATIO + 5, (self.FIELD_SIZE[1] - self.BORDER_DISTANCE - shape_y) * self.Y_RATIO - 5, shape_x * self.X_RATIO, shape_y * self.Y_RATIO)]
-        angle_depart = [180, 0, 0, 180]
-        pos_r_depart = [((0 + self.ROBOT_Dimension[0]/2), (0 + self.ROBOT_Dimension[1]/2)), 
-                        ((self.FIELD_SIZE[0] - self.ROBOT_Dimension[0]/2), (0 + self.ROBOT_Dimension[1]/2)), 
-                        ((0 + self.ROBOT_Dimension[0]/2), (self.FIELD_SIZE[1] - self.ROBOT_Dimension[1]/2)), 
-                        ((self.FIELD_SIZE[0] - self.ROBOT_Dimension[0] / 2), (self.FIELD_SIZE[1] - self.ROBOT_Dimension[1]/2))]
+        shape_y = 400
+        middle_shape_y = self.FIELD_SIZE[1] / 2 - self.BORDER_DISTANCE
+        start_positions = [
+            pygame.Rect((self.FIELD_SIZE[0] - self.BORDER_DISTANCE - shape_x) * self.X_RATIO - 5, self.BORDER_DISTANCE * self.Y_RATIO - 5, shape_x * self.X_RATIO, shape_y * self.Y_RATIO),
+            pygame.Rect(self.BORDER_DISTANCE * self.X_RATIO + 5, self.BORDER_DISTANCE * self.Y_RATIO - 5, shape_x * self.X_RATIO, shape_y * self.Y_RATIO),
+            pygame.Rect((self.FIELD_SIZE[0] - self.BORDER_DISTANCE - shape_x) * self.X_RATIO + 5, (self.FIELD_SIZE[1] - self.BORDER_DISTANCE - shape_y) * self.Y_RATIO + 5, shape_x * self.X_RATIO, shape_y * self.Y_RATIO),
+            pygame.Rect(self.BORDER_DISTANCE * self.X_RATIO + 5, (self.FIELD_SIZE[1] - self.BORDER_DISTANCE - shape_y) * self.Y_RATIO + 5, shape_x * self.X_RATIO, shape_y * self.Y_RATIO),
+            pygame.Rect(self.BORDER_DISTANCE * self.X_RATIO + 5, middle_shape_y * self.Y_RATIO, shape_x * self.X_RATIO, shape_y * self.Y_RATIO),  # Milieu gauche
+            pygame.Rect((self.FIELD_SIZE[0] - self.BORDER_DISTANCE - shape_x) * self.X_RATIO - 5, middle_shape_y * self.Y_RATIO, shape_x * self.X_RATIO, shape_y * self.Y_RATIO)  # Milieu droite
+        ]
+        angle_depart = [180, 0, 0, 180, 180, 0]
+        pos_r_depart = [
+            (225, 225, 0, "0"),
+            (2775, 225, 180, "0"),
+            (225, 1775, 0, "0"),
+            (2775, 1775, 180, "0"),
+            (2755, 1000, 180, "0"),  # Milieu gauche
+            (225, 1000, 0, "0")  # Milieu droite
+        ]
         
         self.start_button.draw()
 
@@ -1144,7 +1155,8 @@ class IHM:
                     if rect.collidepoint(mouse_pos):
                         print(f"Robot commencera à la position de départ {i+1}, x: {pos_r_depart[i][0]}, y: {pos_r_depart[i][1]}, angle: {angle_depart[i]}")
                         self.zone_depart = i
-                        if self.zone_depart%2 == 0:
+                        self.coord_depart = pos_r_depart[i]  # Mise à jour de la coordonnée de départ
+                        if self.zone_depart % 2 == 0:
                             self.EQUIPE = "jaune"
                         else:
                             self.EQUIPE = "bleu"
@@ -1153,7 +1165,7 @@ class IHM:
         # Dessiner les rectangles de départ
         for i, rect in enumerate(start_positions):
             color = (0, 255, 0) if i == self.zone_depart else (255, 255, 255)
-            pygame.draw.rect(self.lcd, color, rect, 10)
+            pygame.draw.rect(self.lcd, color, rect, 20)
  
     def start_match(self):# Démarre le match
         self.ETAT = 1
@@ -1263,7 +1275,7 @@ class IHM:
             time.sleep(0.01)
     
     def run(self):
-        #self.programme_simulation()
+        self.programme_simulation()
         
         self.client_socket.set_callback(self.receive_to_server)
         self.client_socket.set_callback_stop(self.stop)

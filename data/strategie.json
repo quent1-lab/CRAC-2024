@@ -2,46 +2,35 @@
     "1": {
         "D\u00e9placement": {
             "Coord": {
-                "X": 1406,
-                "Y": 488,
-                "T": 120,
+                "X": 1479,
+                "Y": 898,
+                "T": -40,
                 "S": "0"
             },
             "aknowledge": 276
         },
-        "Action": {
-            "_PG_av": {
-                "id": "0x1A0",
-                "en_mvt": true,
-                "ordre": 2,
-                "akn": 133,
-                "str": "Ouvert"
-            }
-        },
+        "Action": {},
         "Special": {},
         "Vitesse": "Normal"
     },
     "2": {
         "D\u00e9placement": {
-            "Rotation": -396,
-            "aknowledge": 278
+            "Coord": {
+                "X": 1508,
+                "Y": 523,
+                "T": -850,
+                "S": "0"
+            },
+            "aknowledge": 276
         },
-        "Action": {
-            "_PG_ar": {
-                "id": "0x1A1",
-                "en_mvt": true,
-                "ordre": 2,
-                "akn": 149,
-                "str": "Ouvert"
-            }
-        },
+        "Action": {},
         "Special": {},
         "Vitesse": "Normal"
     },
     "3": {
         "D\u00e9placement": {
-            "Ligne_Droite": -371,
-            "aknowledge": 277
+            "Rotation": -142,
+            "aknowledge": 278
         },
         "Action": {},
         "Special": {},
@@ -49,8 +38,8 @@
     },
     "4": {
         "D\u00e9placement": {
-            "Rotation": 525,
-            "aknowledge": 278
+            "Ligne_Droite": -977,
+            "aknowledge": 277
         },
         "Action": {},
         "Special": {},
@@ -58,17 +47,13 @@
     },
     "5": {
         "D\u00e9placement": {
-            "Ligne_Droite": -940,
-            "aknowledge": 277
-        },
-        "Action": {},
-        "Special": {},
-        "Vitesse": "Normal"
-    },
-    "6": {
-        "D\u00e9placement": {
-            "Rotation": -1140,
-            "aknowledge": 278
+            "Coord": {
+                "X": 999,
+                "Y": 1466,
+                "T": -1780,
+                "S": "0"
+            },
+            "aknowledge": 276
         },
         "Action": {},
         "Special": {},

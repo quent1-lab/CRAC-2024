@@ -1045,7 +1045,7 @@ class IHM:
             strategie = json.load(file)
         
         # Ajout des méta-données de la stratégie
-        strategie["meta"] = {"Nom": data["Nom"], "Nb_points": nb_points}
+        strategie["meta"] = {"Nom": data["Nom"], "Nb_points": nb_points, "Equipe": self.EQUIPE, "Zone": self.zone_depart}
 
         # Sauvegarde de la stratégie
         with open(f"data/strategies/strategie_{name_strat}.json", "w") as file:
@@ -1064,8 +1064,19 @@ class IHM:
             json.dump(strategie, file, indent=4)
             
         if "meta" in strategie:
+            pos_r_depart = [
+            (225, 225, 0, "0"),
+            (2775, 225, 180, "0"),
+            (225, 1775, 0, "0"),
+            (2775, 1775, 180, "0"),
+            (2755, 1000, 180, "0"),  # Milieu gauche
+            (225, 1000, 0, "0")  # Milieu droite
+            ]
             meta = strategie["meta"]
             points = meta["Nb_points"]
+            self.EQUIPE = meta["Equipe"]
+            self.zone_depart = meta["Zone"]
+            self.coord_depart = pos_r_depart[self.zone_depart]
             strategie.pop("meta")
             
         self.pos_waiting_list = {}

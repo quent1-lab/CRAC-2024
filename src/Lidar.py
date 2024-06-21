@@ -69,9 +69,9 @@ class LidarScanner:
             
             angle = point[1]
             
-            if self.sens == "avant" and (angle < 300 and angle > 60):
+            if self.sens == "avant" and (angle < 320 or angle > 40):
                 continue
-            elif self.sens == "arriere" and (120 > angle < 240):
+            elif self.sens == "arriere" and (angle < 140 or angle > 220):
                 continue
             
             new_angle = angle - self.ROBOT_ANGLE
@@ -283,14 +283,12 @@ class LidarScanner:
                         
                         if self.en_mvt and len(new_objets) > 0:
                             i += 1
-                            if i >= 2:
-                                logging.info(f"Objet détecté à {new_objets[0].x} mm")
+                            if i >= 3:
                                 self.client_socket.add_to_send_list(self.client_socket.create_message(4, "lidar", {"etat": "pause"}))
                                 self.en_mvt = False
                                 i = 0
                                 Time = time.time()
-                        elif not self.en_mvt and len(new_objets) == 0 and (time.time() - Time) > 3:
-                            logging.info(f"Objet hors de portée")
+                        elif not self.en_mvt and (len(new_objets) == 0 or (time.time() - Time) > 3):
                             self.client_socket.add_to_send_list(self.client_socket.create_message(4, "lidar", {"etat": "resume"}))    
                             self.en_mvt = True                                                                  
                     

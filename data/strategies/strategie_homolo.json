@@ -16,6 +16,13 @@
                 "ordre": 2,
                 "akn": 133,
                 "str": "Ouvert"
+            },
+            "_PG_av_": {
+                "id": "0x1A0",
+                "en_mvt": false,
+                "ordre": 3,
+                "akn": 133,
+                "str": "Plante"
             }
         },
         "Special": {},
@@ -46,5 +53,11 @@
         "Action": {},
         "Special": {},
         "Vitesse": "Normal"
+    },
+    "meta": {
+        "Nom": "strategie_homolo",
+        "Nb_points": 14,
+        "Equipe": "jaune", 
+        "Zone": 0
     }
 }

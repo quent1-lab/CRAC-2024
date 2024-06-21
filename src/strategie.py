@@ -47,6 +47,7 @@ class Strategie:
         
         self.ETAT = 0
         self.EQUIPE = "jaune"
+        self.color_strat = "jaune"
         self.state_lidar = ""
         self.state_strat = 0
         self.TIMER = 0
@@ -113,6 +114,8 @@ class Strategie:
                         if "meta" in self.strategie:
                             self.points = self.strategie["meta"]["Nb_points"]
                             self.nom = self.strategie["meta"]["Nom"]
+                            if "Equipe" in self.strategie["meta"]:
+                                self.color_strat = self.strategie["meta"]["Equipe"]
                             
                             # Retirer les méta-données de la stratégie
                             self.strategie.pop("meta")
@@ -196,7 +199,7 @@ class Strategie:
                 if self.coord_prec != [0,0]:
                     # Si le robot n'a pas bougé d'un rayon de 3cm depuis 6 secondes, on relance l'action précédente
                     distance_ = int(math.sqrt((self.coord_prec[0] - self.ROBOT_coord[0])**2 + (self.coord_prec[1] - self.ROBOT_coord[1])**2))
-                    logging.info(f"STRAT : Distance parcourue en 6s : {distance_}")
+                    
                     if distance_ == 0:
                         
                         if self.state_strat == "wait_aknowledge_apres_mvt" or self.state_strat == "action_apres_mvt":
@@ -219,21 +222,21 @@ class Strategie:
                 if self.action == 17 and self.EQUIPE == "bleu":
                     # Faire une exception pour la stratégie bleu
                     # Tourner de 180°
-                    self.rotate({"Rotation": 1800, "aknowledge": 276}, [])
-                    self.wait_for_aknowledge(278)
-                    #self.send_actions([{"id": 0x1A0, "ordre": 17, "en_mvt": False, "akn": 149, "str" :"Plante"}], [])
-                    self.ligne_droite({"Ligne_Droite": -1600, "aknowledge": 277}, [])
-                    self.wait_for_aknowledge(277)
-                    self.state_strat = "idle"
-                elif self.action == 19 and self.EQUIPE == "bleu":
-                    self.ligne_droite({"Ligne_Droite": 100, "aknowledge": 277}, [])
-                    self.wait_for_aknowledge(277)
-                    self.state_strat = "idle"
-                elif self.action == 21 and self.EQUIPE == "bleu":
-                    self.ligne_droite({"Ligne_Droite": 400, "aknowledge": 277}, [])
-                    self.wait_for_aknowledge(277)
-                    self.send_actions([{"id": 0x1A1, "ordre": 3, "en_mvt": False, "akn": 149, "str" :"Plante"}], [])
-
+                #     self.rotate({"Rotation": 1800, "aknowledge": 276}, [])
+                #     self.wait_for_aknowledge(278)
+                #     #self.send_actions([{"id": 0x1A0, "ordre": 17, "en_mvt": False, "akn": 149, "str" :"Plante"}], [])
+                #     self.ligne_droite({"Ligne_Droite": -1600, "aknowledge": 277}, [])
+                #     self.wait_for_aknowledge(277)
+                #     self.state_strat = "idle"
+                # elif self.action == 19 and self.EQUIPE == "bleu":
+                #     self.ligne_droite({"Ligne_Droite": 100, "aknowledge": 277}, [])
+                #     self.wait_for_aknowledge(277)
+                #     self.state_strat = "idle"
+                # elif self.action == 21 and self.EQUIPE == "bleu":
+                #     self.ligne_droite({"Ligne_Droite": 400, "aknowledge": 277}, [])
+                #     self.wait_for_aknowledge(277)
+                #     self.send_actions([{"id": 0x1A1, "ordre": 3, "en_mvt": False, "akn": 149, "str" :"Plante"}], [])
+                    pass
                 else:
                     try:
                         self.action_actuelle["Item"] = self.strategie[str(self.action)]
@@ -265,11 +268,13 @@ class Strategie:
                         self.ancienne_vit = item["Vitesse"]
                         logging.info(f"STRAT : Changement de vitesse : {item['Vitesse']}")
                         if item["Vitesse"] == "Rapide":
-                            self.client_strat.add_to_send_list(self.client_strat.create_message(2, "set_vit",{ "vitesse": 1400}))
+                            self.client_strat.add_to_send_list(self.client_strat.create_message(2, "set_vit",{ "vitesse": 2000}))
                         elif item["Vitesse"] == "Lent":
+                            self.client_strat.add_to_send_list(self.client_strat.create_message(2, "set_vit",{ "vitesse": 15}))
+                        elif item["Vitesse"] == "Tres_Lent":
                             self.client_strat.add_to_send_list(self.client_strat.create_message(2, "set_vit",{ "vitesse": 5}))
                         elif item["Vitesse"] == "Normal":
-                            self.client_strat.add_to_send_list(self.client_strat.create_message(2, "set_vit",{ "vitesse": 800}))
+                            self.client_strat.add_to_send_list(self.client_strat.create_message(2, "set_vit",{ "vitesse": 1200}))
                     time.sleep(0.02)
                 
                 if "Coord" in deplacement:
@@ -430,13 +435,13 @@ class Strategie:
             
             pos = [0, 0, 0, 0]
             
-            if self.EQUIPE == "bleu":
+            if self.EQUIPE == "bleu" and self.color_strat == "jaune":
                 pos[0] = int(self.map_value(deplacement["Coord"]["X"], 0, 3000, 3000, 0))
                 pos[1] = deplacement["Coord"]["Y"]
                 pos[2] = int((1800 - deplacement["Coord"]["T"]) % 3600)
                 pos[3] = deplacement["Coord"]["S"]
                 
-            elif self.EQUIPE == "jaune":
+            elif self.EQUIPE == "jaune" or self.EQUIPE == "bleu":
                 # Envoi de la commande de déplacement
                 pos = [deplacement["Coord"]["X"], deplacement["Coord"]["Y"], int(deplacement["Coord"]["T"]), deplacement["Coord"]["S"]]                
             
@@ -459,7 +464,7 @@ class Strategie:
         # Envoi de la commande de rotation
         angle = deplacement["Rotation"]
         
-        if self.EQUIPE == "bleu":
+        if self.EQUIPE == "bleu" and self.color_strat == "jaune":
             angle = -angle
         
         akn.append(deplacement["aknowledge"])

@@ -15,7 +15,7 @@ import  os, re
 logging.basicConfig(filename='ihm_robot.log', level=logging.INFO, datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
 
 class IHM_Robot:
-    version = "1.064"
+    version = "1.065"
     points = 50
     def __init__(self):
         
@@ -104,7 +104,7 @@ class IHM_Robot:
         
         self.button_favori = [
                 Button(self.screen, (420, 90, 360, 60), self.theme_path, "Recalage", font, lambda : self.button_menu_action(9), color=(100, 0, 200)),
-                Button(self.screen, (420, 160, 360, 100), self.theme_path, "Homologation", font, lambda : self.strategie_action("Homologation",True), color=(100, 200, 100))
+                Button(self.screen, (420, 160, 360, 100), self.theme_path, "Homologation", font, lambda : self.strategie_action("homolo",True), color=(100, 200, 100))
         ]
         
         self.recalage_is_playing = False

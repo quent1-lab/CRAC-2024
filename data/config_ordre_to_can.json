@@ -101,6 +101,7 @@
     "Vitesse": {
         "Normal": 0,
         "Lent": 0,
-        "Rapide": 0
+        "Rapide": 0,
+        "Tres_Lent": 0
     }
 }

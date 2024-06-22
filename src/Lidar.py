@@ -60,7 +60,7 @@ class LidarScanner:
             
             distance = point[2]
             
-            if distance > 400:
+            if distance > 500:
                 continue
             
             # Filtre tous les points qui sont à moins de 200 mm du robot
@@ -288,7 +288,7 @@ class LidarScanner:
                                 self.en_mvt = False
                                 i = 0
                                 Time = time.time()
-                        elif not self.en_mvt and (len(new_objets) == 0 or (time.time() - Time) > 3):
+                        elif not self.en_mvt and (len(new_objets) == 0 and (time.time() - Time) > 3):
                             self.client_socket.add_to_send_list(self.client_socket.create_message(4, "lidar", {"etat": "resume"}))    
                             self.en_mvt = True
                             logging.info(f"Objet hors de portée")

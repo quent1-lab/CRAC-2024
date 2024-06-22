@@ -260,7 +260,7 @@ class Strategie:
             
             elif self.state_strat == "reprise":
                 """ Reprise de la stratégie après une pause """
-                if "Coord" in item:
+                if "Coord_arrivee" in item:
                     coord = self.action_actuelle["Item"]["Coord_arrivee"]
                     logging.info(f"STRAT : Reprise de la stratégie : {coord}")
                     # Chargement de la vitesse

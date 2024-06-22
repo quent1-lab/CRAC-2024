@@ -257,12 +257,12 @@ class Strategie:
                 """ Reprise de la stratégie après une pause """
                 if "Coord" in item:
                     coord = self.action_actuelle["Item"]["Coord_arrivee"]
-                    
+                    logging.info(f"STRAT : Reprise de la stratégie : {coord}")
                     # Chargement de la vitesse
                     if "Vitesse" in item:
                         if item["Vitesse"] != self.ancienne_vit:
                             self.ancienne_vit = item["Vitesse"]
-                            logging.info(f"STRAT : Changement de vitesse : {item['Vitesse']}")
+                            logging.info(f"STRAT : Changement de vitesse reprise: {item['Vitesse']}")
                             if item["Vitesse"] == "Rapide":
                                 self.client_strat.add_to_send_list(self.client_strat.create_message(2, "set_vit",{ "vitesse": 2000}))
                             elif item["Vitesse"] == "Lent":
@@ -274,10 +274,12 @@ class Strategie:
                         time.sleep(0.02)
                     
                     self.move(coord,wait_aknowlodege)
+                    logging.info("STRAT : Fin de la reprise")
                     
                     self.state_strat = "action_en_mvt"
                 else:
                     self.state_strat = "deplac"
+                    logging.info(f"START : reprise de la stratégie : {self.action_actuelle['Item']}")
                 
                 
             elif self.state_strat == "deplac":

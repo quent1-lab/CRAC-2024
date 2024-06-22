@@ -513,7 +513,7 @@ class IHM_Robot:
                 draw_text_center(self.screen, "Erreur de réception des données des batteries", x=self.width//2, y=self.height//2 - 65, font=font, color=(255, 255, 255))
                 draw_text_center(self.screen, "La carte énergie est-elle alimenté ?", x=self.width//2, y=self.height//2 + - 35, font=font, color=(255, 255, 255))
             if error == 0x11:
-                draw_text_center(self.screen, "ARU activé", x=self.width//2, y=self.height//2+15, font=font, color=(255, 255, 255))
+                draw_text_center(self.screen, "BAU activé", x=self.width//2, y=self.height//2+15, font=font, color=(255, 255, 255))
     
     def page_play(self):
         # Cette page affiche la stratégie en cours

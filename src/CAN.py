@@ -264,7 +264,7 @@ class ComCAN:
             self.client.set_callback(self.receive_to_server)
             self.client.connect()
             self.connect()
-            print("BusCAN : Connecté au serveur")
+            logging.info("BusCAN : Connecté au serveur")
             while self.is_connected:
                 data = self.receive()
                 if data is not None:

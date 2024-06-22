@@ -16,6 +16,13 @@
                 "ordre": 2,
                 "akn": 133,
                 "str": "Ouvert"
+            },
+            "_PG_av_": {
+                "id": "0x1A0",
+                "en_mvt": false,
+                "ordre": 3,
+                "akn": 133,
+                "str": "Plante"
             }
         },
         "Special": {},
@@ -43,7 +50,15 @@
             "Ligne_Droite": -403,
             "aknowledge": 277
         },
-        "Action": {},
+        "Action": {
+            "_PG_ar": {
+                "id": "0x1A1",
+                "en_mvt": false,
+                "ordre": 3,
+                "akn": 149,
+                "str": "Plante"
+            }
+        },
         "Special": {},
         "Vitesse": "Normal"
     },
@@ -155,5 +170,11 @@
         },
         "Special": {},
         "Vitesse": "Normal"
+    },
+    "meta": {
+        "Nom": "strategie_test1",
+        "Nb_points": 20,
+        "Equipe": "jaune",
+        "Zone": 0
     }
 }

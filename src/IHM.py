@@ -1286,7 +1286,7 @@ class IHM:
             time.sleep(0.01)
     
     def run(self):
-        self.programme_simulation()
+        #self.programme_simulation()
         
         self.client_socket.set_callback(self.receive_to_server)
         self.client_socket.set_callback_stop(self.stop)

@@ -885,7 +885,7 @@ class IHM_Robot:
         
         handle_temp_raspberry = threading.Thread(target=self.get_temp_raspberry)
         handle_temp_raspberry.start()
-        
+        logging.info("IHM : Lancement de l'IHM")
         while self.is_running:
             try:
                 # Si une erreur est survenue lors de la réception des données des batteries
@@ -981,7 +981,7 @@ class IHM_Robot:
                 pygame.display.flip()
                 self.clock.tick(30)
             except Exception as e:
-                logging.error(f"Erreur : {str(e)}")
+                logging.error(f"Erreur dans le run: {str(e)}")
         pygame.quit()
 
 if __name__ == "__main__":

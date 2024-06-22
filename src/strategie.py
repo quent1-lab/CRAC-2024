@@ -207,7 +207,7 @@ class Strategie:
                         else:
                             self.liste_aknowledge = []
                             wait_aknowlodege = []
-                            self.state_strat = "deplac"
+                            self.state_strat = "reprise"
                             self.state_lidar = "resume"
                             logging.info("STRAT : Relance de la pause")
                         self.lidar_stop = False
@@ -251,6 +251,30 @@ class Strategie:
                     
                     item = self.strategie[str(self.action)]
                     wait_aknowlodege = []
+            
+            elif self.state_strat == "reprise":
+                """ Reprise de la stratégie après une pause """
+                coord = self.action_actuelle["Item"]["Coord_arrivee"]
+                
+                # Chargement de la vitesse
+                if "Vitesse" in item:
+                    if item["Vitesse"] != self.ancienne_vit:
+                        self.ancienne_vit = item["Vitesse"]
+                        logging.info(f"STRAT : Changement de vitesse : {item['Vitesse']}")
+                        if item["Vitesse"] == "Rapide":
+                            self.client_strat.add_to_send_list(self.client_strat.create_message(2, "set_vit",{ "vitesse": 2000}))
+                        elif item["Vitesse"] == "Lent":
+                            self.client_strat.add_to_send_list(self.client_strat.create_message(2, "set_vit",{ "vitesse": 15}))
+                        elif item["Vitesse"] == "Tres_Lent":
+                            self.client_strat.add_to_send_list(self.client_strat.create_message(2, "set_vit",{ "vitesse": 5}))
+                        elif item["Vitesse"] == "Normal":
+                            self.client_strat.add_to_send_list(self.client_strat.create_message(2, "set_vit",{ "vitesse": 1200}))
+                    time.sleep(0.02)
+                
+                self.move(coord,wait_aknowlodege)
+                
+                self.state_strat = "action_en_mvt"
+                
                 
             elif self.state_strat == "deplac":
 

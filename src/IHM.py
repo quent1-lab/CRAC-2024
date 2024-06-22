@@ -859,6 +859,7 @@ class IHM:
             
             if "Coord" in strat["Déplacement"]:
                 coord = strat["Déplacement"]["Coord"]
+                coord_arrivee = (0,0,0,0)
                 
                 
                 """if coord["T"] == "":
@@ -931,8 +932,8 @@ class IHM:
                         
                         # Création de la nouvelle action
                         strategie = {}
-                        strategie[str(numero)] = {"Déplacement": {"Rotation": int(delta_angle * 10), 'aknowledge' : 278}, "Action": action, "Special": {}, "Vitesse": vitesse}
-                        strategie[str(numero+1)] = {"Déplacement": {"Ligne_Droite": -distance, 'aknowledge' : 277}, "Action": {}, "Special": {}, "Vitesse": vitesse}
+                        strategie[str(numero)] = {"Déplacement": {"Rotation": int(delta_angle * 10), 'aknowledge' : 278}, "Action": action, "Special": {}, "Vitesse": vitesse, "Coord_arrivee": {"Coord": {"X": coord_prec[0], "Y": coord_prec[1], "T": angle_deplacement, "S": "0"}, "aknowledge": 276}}
+                        strategie[str(numero+1)] = {"Déplacement": {"Ligne_Droite": -distance, 'aknowledge' : 277}, "Action": {}, "Special": {}, "Vitesse": vitesse, "Coord_arrivee": {"Coord": {"X": new_x, "Y": new_y, "T": angle_arrivee,"S": "0"},"aknowledge": 276}}
                         
                         numero += 1
                         if angle_arrivee is not None:
@@ -940,7 +941,7 @@ class IHM:
                             angle_a = int(angle_arrivee - angle_deplacement)
                             
                             coord["T"] = angle_a
-                            strategie[str(numero+1)] = {"Déplacement": {"Rotation": int(coord["T"]*10), 'aknowledge' : 278}, "Action": {}, "Special": {}, "Vitesse": vitesse}
+                            strategie[str(numero+1)] = {"Déplacement": {"Rotation": int(coord["T"]*10), 'aknowledge' : 278}, "Action": {}, "Special": {}, "Vitesse": vitesse, "Coord_arrivee": {"Coord": {"X": new_x, "Y": new_y, "T": angle_arrivee,"S": "0"},"aknowledge": 276}}
                             print(f"|  Rotation : {delta_angle} | Distance : {distance} | Reculer | Rotation : {coord['T']}")
                             new_pos = (new_x, new_y, angle_arrivee, "0")
                             self.pos_waiting_list[numero+1] = new_pos
@@ -953,6 +954,7 @@ class IHM:
                     new_pos = (int(coord["X"]), int(coord["Y"]), coord["T"], "0")
                     print(f"| Coord : {coord['X']}, {coord['Y']} | Angle arrivée : {coord["T"]}")
                     strategie[str(numero)]["Déplacement"]["Coord"]["T"] = int(coord["T"] * 10)
+                    strategie[str(numero)]["Coord_arrivee"] = {"Coord": {"X": coord["X"], "Y": coord["Y"], "T": coord["T"], "S": "0"}, "aknowledge": 276}
                     self.pos_waiting_list[numero] = new_pos
                     
             elif "Ligne_Droite" in strat["Déplacement"]:
@@ -961,6 +963,7 @@ class IHM:
                 # Calcul de la position d'arrivée en fonction de la coordonnée précédente       
                 x = coord_prec[0] + distance * math.cos(math.radians(coord_prec[2]))
                 y = coord_prec[1] + distance * math.sin(math.radians(coord_prec[2]))
+                strategie[str(numero)]["Coord_arrivee"] = {"Coord": {"X": x, "Y": y, "T": coord_prec[2],"S": "0"},"aknowledge": 276}
                 new_pos = (int(x), int(y), coord_prec[2], "0")
                 self.pos_waiting_list[numero] = new_pos
                 
@@ -976,6 +979,7 @@ class IHM:
                     y = self.pos_waiting_list[numero][1]
                 
                 strategie[str(numero)]["Déplacement"]["Rotation"] = int(angle * 10)
+                strategie[str(numero)]["Coord_arrivee"] = {"Coord": {"X": x, "Y": y, "T": coord_prec[2] + angle ,"S": "0"},"aknowledge": 276}
                 angle = (coord_prec[2] + angle)
                 new_pos = (x, y, angle, "0")
                 self.pos_waiting_list[numero] = new_pos

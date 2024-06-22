@@ -60,7 +60,7 @@ class LidarScanner:
             
             distance = point[2]
             
-            if distance > 550:
+            if distance > 350:
                 continue
             
             # Filtre tous les points qui sont à moins de 200 mm du robot

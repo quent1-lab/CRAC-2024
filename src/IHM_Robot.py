@@ -15,7 +15,7 @@ import  os, re
 logging.basicConfig(filename='ihm_robot.log', level=logging.INFO, datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
 
 class IHM_Robot:
-    version = "1.067"
+    version = "1.068"
     points = 50
     def __init__(self):
         
@@ -161,6 +161,9 @@ class IHM_Robot:
             Button(self.screen, (380, 300, 150, 60), self.theme_path, "COMB TAKE", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 12}))),
             
             Button(self.screen, (560, 160, 150, 60), self.theme_path, "COMB DROPOFF", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": self.id_card_action, "byte1": 13}))),
+            
+            Button(self.screen, (560, 230, 150, 60), self.theme_path, "PANNEAU", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 0x1A0, "byte1": 17}))),
+            Button(self.screen, (560, 300, 150, 60), self.theme_path, "LEVER", font, lambda : self.client.add_to_send_list(self.client.create_message(2, "CAN", {"id": 0x1A0, "byte1": 16}))),
         ]
         
         self.button_tests_special = [

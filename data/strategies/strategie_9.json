@@ -673,7 +673,7 @@
     },
     "29": {
         "D\u00e9placement": {
-            "Rotation": -500,
+            "Rotation": -498,
             "aknowledge": 278
         },
         "Action": {
@@ -691,7 +691,7 @@
             "Coord": {
                 "X": 992,
                 "Y": 1317,
-                "T": -29,
+                "T": 331.18920625702697,
                 "S": "0"
             },
             "aknowledge": 276
@@ -702,29 +702,14 @@
             "Ligne_Droite": -844,
             "aknowledge": 277
         },
-        "Action": {
-            "_PG_av": {
-                "id": "0x1A0",
-                "en_mvt": false,
-                "ordre": 2,
-                "akn": 133,
-                "str": "Ouvert"
-            },
-            "_PG_ar": {
-                "id": "0x1A1",
-                "en_mvt": false,
-                "ordre": 2,
-                "akn": 149,
-                "str": "Ouvert"
-            }
-        },
+        "Action": {},
         "Special": {},
         "Vitesse": "Normal",
         "Coord_arrivee": {
             "Coord": {
-                "X": 253.82096717435002,
-                "Y": 1726.1793194879085,
-                "T": -29,
+                "X": 252.47377307690988,
+                "Y": 1723.7394248076994,
+                "T": 331.18920625702697,
                 "S": "0"
             },
             "aknowledge": 276

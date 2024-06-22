@@ -250,6 +250,7 @@ class ComCAN:
                 # Format des données : vitesse (short)
                 dataCan = struct.pack('h', data["vitesse"])
                 messageCan = can.Message(arbitration_id=0x29, data=dataCan, is_extended_id=False)
+                logging.info(f"BusCAN : Vitesse envoyée : {messageCAN}")
                 self.send(messageCan)
 
         except Exception as e:

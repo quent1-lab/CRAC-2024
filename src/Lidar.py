@@ -69,9 +69,9 @@ class LidarScanner:
             
             angle = point[1]
             
-            if self.sens == "avant" and (angle < 320 and angle > 40):
+            if self.sens == "avant" and (angle < 300 and angle > 60):
                 continue
-            elif self.sens == "arriere" and (angle < 140 and angle > 220):
+            elif self.sens == "arriere" and (angle < 120 and angle > 240):
                 continue
             
             new_angle = angle - self.ROBOT_ANGLE

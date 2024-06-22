@@ -224,18 +224,19 @@ class Strategie:
                     # Tourner de 180°
                     self.rotate({"Rotation": 1800, "aknowledge": 276}, [])
                     self.wait_for_aknowledge(278)
-                    #self.send_actions([{"id": 0x1A0, "ordre": 17, "en_mvt": False, "akn": 149, "str" :"Plante"}], [])
+                    #self.send_actions([{"id": 0x1A0, "ordre": 17, "en_mvt": False, "akn": 149, "str" :"Plante"}])
                     self.ligne_droite({"Ligne_Droite": -1600, "aknowledge": 277}, [])
                     self.wait_for_aknowledge(277)
                     self.state_strat = "idle"
                 elif self.action == 19 and self.EQUIPE == "bleu":
                     self.ligne_droite({"Ligne_Droite": 100, "aknowledge": 277}, [])
                     self.wait_for_aknowledge(277)
+                    self.send_actions([{"id": 0x1A1, "ordre": 3, "en_mvt": False, "akn": 149, "str" :"Plante"}])
                     self.state_strat = "idle"
                 elif self.action == 21 and self.EQUIPE == "bleu":
                     self.ligne_droite({"Ligne_Droite": 400, "aknowledge": 277}, [])
                     self.wait_for_aknowledge(277)
-                    self.send_actions([{"id": 0x1A1, "ordre": 3, "en_mvt": False, "akn": 149, "str" :"Plante"}], [])
+                    
                     #pass
                 else:
                     try:

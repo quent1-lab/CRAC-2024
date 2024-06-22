@@ -983,6 +983,7 @@ class IHM_Robot:
 
                 pygame.display.flip()
                 self.clock.tick(30)
+                self.objets = []
             except Exception as e:
                 logging.error(f"Erreur dans le run: {str(e)}")
         pygame.quit()

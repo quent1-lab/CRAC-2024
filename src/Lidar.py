@@ -290,7 +290,10 @@ class LidarScanner:
                                 Time = time.time()
                         elif not self.en_mvt and (len(new_objets) == 0 or (time.time() - Time) > 3):
                             self.client_socket.add_to_send_list(self.client_socket.create_message(4, "lidar", {"etat": "resume"}))    
-                            self.en_mvt = True                                                                  
+                            self.en_mvt = True
+                        
+                        new_objets = []
+                        self.new_scan = []                                                                  
                     
                     #logging.info(f"New scan: {self.new_scan}")
                     #self.client_socket.add_to_send_list(self.client_socket.create_message(10, "points", self.generate_JSON_Points(self.new_scan)))

@@ -291,6 +291,9 @@ class LidarScanner:
                         elif not self.en_mvt and (len(new_objets) == 0 or (time.time() - Time) > 3):
                             self.client_socket.add_to_send_list(self.client_socket.create_message(4, "lidar", {"etat": "resume"}))    
                             self.en_mvt = True
+                            logging.info(f"Objet hors de portée")
+                        elif len(new_objets) == 0:
+                            i = 0
                         
                         new_objets = []
                         self.new_scan = []                                                                  

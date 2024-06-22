@@ -100,6 +100,11 @@ class Strategie:
                         self.type_mvt = "immobile"
                     else:
                         logging.info("STRAT : Pause du robot")
+                # elif self.state_lidar == "resume":
+                #     if self.state_strat == "pause_en_mvt":
+                #         self.state_strat = "deplac"
+                #     logging.info("STRAT : Reprise du robot")
+                    
 
             
             elif message["cmd"] == "strategie":
@@ -209,7 +214,7 @@ class Strategie:
                             wait_aknowlodege = []
                             self.state_strat = "reprise"
                             self.state_lidar = "resume"
-                            logging.info("STRAT : Relance de la pause")
+                            logging.info("STRAT : Relance d'après pause")
                         self.lidar_stop = False
                         
                 self.temps_pause = time.time()
@@ -425,7 +430,7 @@ class Strategie:
             
             elif self.state_strat == "pause":
                 if self.state_lidar == "resume":
-                    self.state_strat = "deplac"
+                    self.state_strat = "reprise"
             
             elif self.state_strat == "arret_urg":
                 self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 503, "byte1": 0})) 
@@ -433,19 +438,19 @@ class Strategie:
                 self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 503, "byte1": 1}))
                 #self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 1, "byte1": 0}))
                 time.sleep(1)
-                self.state_strat = "pause_en_mvt"
+                self.state_strat = "pause"
             
             elif self.state_strat == "pause_en_mvt":
                 if self.state_lidar == "resume":
                     # Réactiver l'asservissement
                     #self.client_strat.add_to_send_list(self.client_strat.create_message(2, "desa", False)) 
-                    logging.info("STRAT : Reprise de la stratégie")
+                    logging.info("STRAT : Reprise de la stratégie après pause en mvt")
                     deplac = item["Déplacement"]
                     wait_aknowlodege = []
                     self.liste_aknowledge = []
                     
                     if "Coord" in deplac:
-                        logging.info("STRAT : Reprise du déplacement")
+                        logging.info("STRAT : Reprise du déplacement en coordonnées")
                         self.move(deplac,wait_aknowlodege)
                         
                     elif "Ligne_Droite" in deplac:

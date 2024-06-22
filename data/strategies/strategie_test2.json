@@ -244,6 +244,13 @@
                 "ordre": 13,
                 "akn": 134,
                 "str": "Deposer"
+            },
+            "_P_ar": {
+                "id": "0x1A1",
+                "en_mvt": false,
+                "ordre": 4,
+                "akn": 134,
+                "str": "Lever"
             }
         },
         "Special": {},
@@ -452,7 +459,7 @@
     },
     "meta": {
         "Nom": "strategie_test2",
-        "Nb_points": 56,
+        "Nb_points": 0,
         "Equipe": "jaune",
         "Zone": 0
     }

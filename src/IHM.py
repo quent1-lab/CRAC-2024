@@ -850,7 +850,7 @@ class IHM:
             strat.pop("id_action")
             
             strategie = {str(numero): strat}
-            print(f"\n[ Enregistrement ...\n| ID : {numero} | Déplacement", strat["Déplacement"], "\n| Action", action, "| Special", strat["Special"])
+            print(f"\n[ Enregistrement {_action} ...\n| ID : {numero} | Déplacement", strat["Déplacement"], "\n| Action", action, "| Special", strat["Special"])
             
             if numero > 1: # Récupérer les coordonnées précédentes
                 coord_prec = self.pos_waiting_list[numero-1]
@@ -1286,7 +1286,7 @@ class IHM:
             time.sleep(0.01)
     
     def run(self):
-        #self.programme_simulation()
+        self.programme_simulation()
         
         self.client_socket.set_callback(self.receive_to_server)
         self.client_socket.set_callback_stop(self.stop)

@@ -534,7 +534,7 @@ class Strategie:
                 if id in self.liste_aknowledge:
                     self.liste_aknowledge.remove(id)
     
-    def send_actions(self, actions, akn):
+    def send_actions(self, actions, akn = None):
         for action in actions:
             self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": action["id"], "byte1": action["ordre"]}))
             if action["ordre"] == 9:

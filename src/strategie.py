@@ -489,6 +489,9 @@ class Strategie:
             self.client_strat.add_to_send_list(self.client_strat.create_message(
                 2, "clic", {"x": pos[0], "y": pos[1], "theta": pos[2], "sens": pos[3]}))
             
+            # Envoie des Coord X et Y à l'IHM
+            self.client_strat.add_to_send_list(self.client_strat.create_message(9,"coord_p", {"X" : pos[0], "Y": pos[1]}))
+            
             akn.append(deplacement["aknowledge"])
             self.type_mvt = "XYT"
             
@@ -525,6 +528,11 @@ class Strategie:
         
         # Envoyez la position au CAN
         self.client_strat.add_to_send_list(self.client_strat.create_message(2, "deplacement", {"distance": distance}))
+        
+        x = int(self.ROBOT_coord[0] + distance * math.cos(math.radians(self.ROBOT_coord[2])))
+        y = int(self.ROBOT_coord[1] + distance * math.sin(math.radians(self.ROBOT_coord[2])))
+        # Envoie des Coord X et Y à l'IHM
+        self.client_strat.add_to_send_list(self.client_strat.create_message(9,"coord_p", {"X" : x, "Y": y}))
         
         self.type_mvt = "ligne"
     

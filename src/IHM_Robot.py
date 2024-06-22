@@ -185,6 +185,7 @@ class IHM_Robot:
         self.liste_aknowledge = []
         self.text_page_play = ""
         self.is_started = False
+        self.point_strat = None
         
         with open("data/config_ordre_to_can.json", "r",encoding="utf-8") as f:
             self.config_strategie = json.load(f)
@@ -554,6 +555,21 @@ class IHM_Robot:
         # Dessine l'image
         self.screen.blit(image_terrain, (40, 0))
         
+        # Dessine le points suivants de la strat
+        if self.point_strat is not None:
+            x,y,angle = self.ROBOT_pos
+            x_r = int(self.map_value(x, 0, 3000, 760, 40))
+            y_r = int(self.map_value(y, 0, 2000, 0, 480))
+            
+            x = int(self.map_value(self.point_strat[0], 0, 3000, 40, 760))
+            y = int(self.map_value(self.point_strat[1], 0, 2000, 0, 480))
+            
+            pygame.draw.line(
+                self.screen, pygame.Color(0, 255, 0), (x_r, y_r), (x,y), 3)
+            
+            # Dessine le points de départ
+            pygame.draw.circle(self.screen, pygame.Color(0, 0, 255), (x, y), 5)
+        
         self.draw_robot()
         
         for objet in self.objets:
@@ -561,8 +577,9 @@ class IHM_Robot:
 
     def page_points(self):
         # Dessine les points estimés par le robot
-        font = pygame.font.SysFont("Arial", 50)
-        draw_text_center(self.screen, f"{self.points} points :|", x=self.width//2, y=250, font=font, color=(255, 255, 255))
+        font = pygame.font.SysFont("Arial", 70)
+        smiley = ";D" if self.points > 70 else ":("
+        draw_text_center(self.screen, f"{self.points} points {smiley}", x=self.width//2, y=250, font=font, color=(255, 255, 255))
     
     def page_recalage(self):
         # Dessine le terrain de jeu en 720x480
@@ -842,6 +859,10 @@ class IHM_Robot:
             elif message["cmd"] == "coord":
                 coord = message["data"]
                 self.ROBOT_pos = (int(coord["x"]), int(coord["y"]), int(coord["theta"]/10))
+            
+            elif message["cmd"] == "coord_p":
+                points = message["data"]
+                self.point_strat = (points["X"] , points["Y"])
         except Exception as e:
             print(f"Erreur lors de la réception du message : {str(e)}")
         

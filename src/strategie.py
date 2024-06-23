@@ -273,7 +273,7 @@ class Strategie:
             elif self.state_strat == "reprise":
                 """ Reprise de la stratégie après une pause """
                 
-                self.action += 1
+                #self.action += 1
                 self.action_actuelle["Item"] = self.strategie[str(self.action)]
                 item = self.strategie[str(self.action)]
                 if "Coord_arrivee" in item:

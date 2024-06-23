@@ -564,6 +564,12 @@ class IHM_Robot:
             x = int(self.map_value(self.point_strat[0], 0, 3000, 40, 760))
             y = int(self.map_value(self.point_strat[1], 0, 2000, 0, 480))
             
+            if self.EQUIPE == "bleu":
+                x_r = int(self.map_value(x_r, 40, 760, 760, 40))
+                y_r = int(self.map_value(y_r, 0, 480, 480, 0))
+                x = int(self.map_value(x, 40, 760, 760, 40))
+                y = int(self.map_value(y, 0, 480, 480, 0))
+            
             pygame.draw.line(
                 self.screen, pygame.Color(0, 255, 0), (x_r, y_r), (x,y), 20)
             

@@ -15,7 +15,7 @@ import  os, re
 logging.basicConfig(filename='ihm_robot.log', level=logging.INFO, datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
 
 class IHM_Robot:
-    version = "1.075"
+    version = "1.076"
     points = 50
     def __init__(self):
         
@@ -561,7 +561,7 @@ class IHM_Robot:
             x_r = int(self.map_value(x, 0, 3000, 40, 760))
             y_r = int(self.map_value(y, 0, 2000, 0, 480))
             
-            x = int(self.map_value(self.point_strat[0], 0, 3000, 40, 760))
+            x = int(self.map_value(self.point_strat[0], 0, 3000, 760, 40))
             y = int(self.map_value(self.point_strat[1], 0, 2000, 0, 480))
             
             if self.EQUIPE == "bleu":

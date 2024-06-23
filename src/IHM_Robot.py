@@ -15,7 +15,7 @@ import  os, re
 logging.basicConfig(filename='ihm_robot.log', level=logging.INFO, datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
 
 class IHM_Robot:
-    version = "1.071"
+    version = "1.072"
     points = 50
     def __init__(self):
         
@@ -565,7 +565,7 @@ class IHM_Robot:
             y = int(self.map_value(self.point_strat[1], 0, 2000, 0, 480))
             
             pygame.draw.line(
-                self.screen, pygame.Color(0, 255, 0), (x_r, y_r), (x,y), 3)
+                self.screen, pygame.Color(0, 255, 0), (x_r, y_r), (x,y), 5)
             
             # Dessine le points de départ
             pygame.draw.circle(self.screen, pygame.Color(0, 0, 255), (x, y), 5)

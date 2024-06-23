@@ -15,7 +15,7 @@ import  os, re
 logging.basicConfig(filename='ihm_robot.log', level=logging.INFO, datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
 
 class IHM_Robot:
-    version = "1.077"
+    version = "1.078"
     points = 50
     def __init__(self):
         
@@ -564,9 +564,9 @@ class IHM_Robot:
             x = int(self.map_value(self.point_strat[0], 0, 3000, 760, 40))
             y = int(self.map_value(self.point_strat[1], 0, 2000, 0, 480))
             
-            if self.EQUIPE == "bleu":
-                x_r = int(self.map_value(x_r, 40, 760, 760, 40))
-                x = int(self.map_value(x, 40, 760, 760, 40))
+            # if self.EQUIPE == "bleu":
+            #     x_r = int(self.map_value(x_r, 40, 760, 760, 40))
+            #     x = int(self.map_value(x, 40, 760, 760, 40))
             
             pygame.draw.line(
                 self.screen, pygame.Color(0, 255, 0), (x_r, y_r), (x,y), 20)

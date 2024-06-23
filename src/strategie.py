@@ -224,7 +224,7 @@ class Strategie:
             if self.state_strat == "idle":
                 # Etat d'attente et de récupération de la nouvelle action
                 self.action += 1
-                if self.action == 20 and self.EQUIPE == "bleu":
+                if self.action == 21 and self.EQUIPE == "bleu":
                     # Faire une exception pour la stratégie bleu
                     # Tourner de 180°
                     self.rotate({"Rotation": 1800, "aknowledge": 276}, [])
@@ -233,12 +233,12 @@ class Strategie:
                     self.ligne_droite({"Ligne_Droite": -1600, "aknowledge": 277}, [])
                     self.wait_for_aknowledge(277)
                     self.state_strat = "idle"
-                elif self.action == 22 and self.EQUIPE == "bleu":
+                elif self.action == 23 and self.EQUIPE == "bleu":
                     self.ligne_droite({"Ligne_Droite": 100, "aknowledge": 277}, [])
                     self.wait_for_aknowledge(277)
                     self.send_actions([{"id": 0x1A1, "ordre": 3, "en_mvt": False, "akn": 149, "str" :"Plante"}])
                     self.state_strat = "idle"
-                elif self.action == 23 and self.EQUIPE == "bleu":
+                elif self.action == 246 and self.EQUIPE == "bleu":
                     self.ligne_droite({"Ligne_Droite": 400, "aknowledge": 277}, [])
                     self.wait_for_aknowledge(277)
                     

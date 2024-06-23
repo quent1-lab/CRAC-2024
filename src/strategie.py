@@ -89,6 +89,7 @@ class Strategie:
             elif message["cmd"] == "lidar":
                 if self.action != 1 and self.action != 2:
                     self.state_lidar = message["data"]["etat"]
+                    logging.info(f"STRAT : Etat du lidar : {self.state_lidar}")
                     
                     if self.state_lidar == "pause":      
                         lidar_stop = True        
@@ -105,6 +106,8 @@ class Strategie:
                     #     if self.state_strat == "pause_en_mvt":
                     #         self.state_strat = "deplac"
                     #     logging.info("STRAT : Reprise du robot")
+                else:
+                    logging.info(f"STRAT : Lidar en pause pour les actions 1 et 2")
                     
 
             

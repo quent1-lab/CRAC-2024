@@ -87,7 +87,7 @@ class Strategie:
                 self.ROBOT_coord = [coord["x"], coord["y"], int(coord["theta"]/10)]
 
             elif message["cmd"] == "lidar":
-                if self.action != 1 and self.action != 2:
+                if self.action != 1 and self.action != 2 and self.action != 3:
                     self.state_lidar = message["data"]["etat"]
                     logging.info(f"STRAT : Etat du lidar : {self.state_lidar}")
                     
@@ -275,6 +275,7 @@ class Strategie:
                 
                 self.action += 1
                 self.action_actuelle["Item"] = self.strategie[str(self.action)]
+                item = self.strategie[str(self.action)]
                 if "Coord_arrivee" in item:
                     coord = self.action_actuelle["Item"]["Coord_arrivee"]
                     logging.info(f"STRAT : Reprise de la stratégie : {coord}")

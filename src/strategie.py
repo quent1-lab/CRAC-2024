@@ -242,8 +242,8 @@ class Strategie:
                     self.wait_for_aknowledge(277)
                     self.send_actions([{"id": 0x1A0, "ordre": 2, "en_mvt": False, "akn": 149, "str" :"Ouvert"}])
                     self.state_strat = "idle"
-                elif self.action == 246 and self.EQUIPE == "bleu":
-                    self.ligne_droite({"Ligne_Droite": -400, "aknowledge": 277}, [])
+                elif self.action == 25 and self.EQUIPE == "bleu":
+                    self.ligne_droite({"Ligne_Droite": 400, "aknowledge": 277}, [])
                     self.wait_for_aknowledge(277)
                     self.send_actions([{"id": 0x1A0, "ordre": 3, "en_mvt": False, "akn": 149, "str" :"Plante"}])
                     self.state_strat = "idle"

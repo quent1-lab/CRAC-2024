@@ -236,15 +236,19 @@ class Strategie:
                     self.wait_for_aknowledge(277)
                     self.state_strat = "idle"
                 elif self.action == 23 and self.EQUIPE == "bleu":
+                    # self.rotate({"Rotation": -100, "aknowledge": 276}, [])
+                    # self.wait_for_aknowledge(278)
                     self.ligne_droite({"Ligne_Droite": 100, "aknowledge": 277}, [])
                     self.wait_for_aknowledge(277)
-                    self.send_actions([{"id": 0x1A1, "ordre": 3, "en_mvt": False, "akn": 149, "str" :"Plante"}])
+                    self.send_actions([{"id": 0x1A1, "ordre": 2, "en_mvt": False, "akn": 149, "str" :"Ouvert"}])
                     self.state_strat = "idle"
                 elif self.action == 246 and self.EQUIPE == "bleu":
                     self.ligne_droite({"Ligne_Droite": 400, "aknowledge": 277}, [])
                     self.wait_for_aknowledge(277)
+                    self.send_actions([{"id": 0x1A1, "ordre": 3, "en_mvt": False, "akn": 149, "str" :"Plante"}])
+                    self.state_strat = "idle"
                     
-                    pass
+                    #pass
                 else:
                     try:
                         self.action_actuelle["Item"] = self.strategie[str(self.action)]

@@ -226,6 +226,8 @@ class Strategie:
                 self.action += 1
                 if self.action == 21 and self.EQUIPE == "bleu":
                     # Faire une exception pour la stratégie bleu
+                    self.ligne_droite({"Ligne_Droite": 100, "aknowledge": 277}, [])
+                    self.wait_for_aknowledge(277)
                     # Tourner de 180°
                     self.rotate({"Rotation": 1800, "aknowledge": 276}, [])
                     self.wait_for_aknowledge(278)

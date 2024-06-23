@@ -87,23 +87,24 @@ class Strategie:
                 self.ROBOT_coord = [coord["x"], coord["y"], int(coord["theta"]/10)]
 
             elif message["cmd"] == "lidar":
-                self.state_lidar = message["data"]["etat"]
-                
-                if self.state_lidar == "pause":      
-                    lidar_stop = True        
-                    if self.type_mvt == "XYT" or self.type_mvt == "ligne":
-                        logging.info("STRAT : Pause du robot en mvt")
-                        # Arrêter le robot
-                        #self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 1, "byte1": 0}))
-                        
-                        self.state_strat = "arret_urg"
-                        self.type_mvt = "immobile"
-                    else:
-                        logging.info("STRAT : Pause du robot")
-                # elif self.state_lidar == "resume":
-                #     if self.state_strat == "pause_en_mvt":
-                #         self.state_strat = "deplac"
-                #     logging.info("STRAT : Reprise du robot")
+                if self.action != 1 and self.action != 2:
+                    self.state_lidar = message["data"]["etat"]
+                    
+                    if self.state_lidar == "pause":      
+                        lidar_stop = True        
+                        if self.type_mvt == "XYT" or self.type_mvt == "ligne":
+                            logging.info("STRAT : Pause du robot en mvt")
+                            # Arrêter le robot
+                            #self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": 1, "byte1": 0}))
+                            
+                            self.state_strat = "arret_urg"
+                            self.type_mvt = "immobile"
+                        else:
+                            logging.info("STRAT : Pause du robot")
+                    # elif self.state_lidar == "resume":
+                    #     if self.state_strat == "pause_en_mvt":
+                    #         self.state_strat = "deplac"
+                    #     logging.info("STRAT : Reprise du robot")
                     
 
             

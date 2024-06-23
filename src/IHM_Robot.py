@@ -15,7 +15,7 @@ import  os, re
 logging.basicConfig(filename='ihm_robot.log', level=logging.INFO, datefmt='%d/%m/%Y %H:%M:%S', format='%(asctime)s - %(levelname)s - %(message)s')
 
 class IHM_Robot:
-    version = "1.073"
+    version = "1.074"
     points = 50
     def __init__(self):
         
@@ -558,7 +558,7 @@ class IHM_Robot:
         # Dessine le points suivants de la strat
         if self.point_strat is not None:
             x,y,angle = self.ROBOT_pos
-            x_r = int(self.map_value(x, 0, 3000, 40, 760))
+            x_r = int(self.map_value(x, 0, 3000, 760, 40))
             y_r = int(self.map_value(y, 0, 2000, 0, 480))
             
             x = int(self.map_value(self.point_strat[0], 0, 3000, 40, 760))

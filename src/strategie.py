@@ -553,7 +553,7 @@ class Strategie:
         for action in actions:
             self.client_strat.add_to_send_list(self.client_strat.create_message(2, "CAN", {"id": action["id"], "byte1": action["ordre"]}))
             if action["ordre"] == 9:
-                time.sleep(2.6)
+                time.sleep(3)
             else:
                 time.sleep(0.7)
             #akn.append(action["akn"])

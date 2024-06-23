@@ -558,17 +558,17 @@ class IHM_Robot:
         # Dessine le points suivants de la strat
         if self.point_strat is not None:
             x,y,angle = self.ROBOT_pos
-            x_r = int(self.map_value(x, 0, 3000, 760, 40))
+            x_r = int(self.map_value(x, 0, 3000, 40, 760))
             y_r = int(self.map_value(y, 0, 2000, 0, 480))
             
             x = int(self.map_value(self.point_strat[0], 0, 3000, 40, 760))
             y = int(self.map_value(self.point_strat[1], 0, 2000, 0, 480))
             
             pygame.draw.line(
-                self.screen, pygame.Color(0, 255, 0), (x_r, y_r), (x,y), 5)
+                self.screen, pygame.Color(0, 255, 0), (x_r, y_r), (x,y), 20)
             
             # Dessine le points de départ
-            pygame.draw.circle(self.screen, pygame.Color(0, 0, 255), (x, y), 5)
+            pygame.draw.circle(self.screen, pygame.Color(0, 0, 255), (x, y), 10)
         
         self.draw_robot()
         
